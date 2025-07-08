@@ -1,7 +1,3 @@
 export default function Home() {
-  return (
-    <div className="">
-      Medilogic
-    </div>
-  );
+  return <div className="">Medilogic</div>;
 }
