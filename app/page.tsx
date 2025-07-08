@@ -1,5 +1,3 @@
 export default function Home() {
-  return (
-  <div className=""> <div>This is </div>Medilogic</div>
-);
+  return <div className="">Medilogic</div>;
 }
