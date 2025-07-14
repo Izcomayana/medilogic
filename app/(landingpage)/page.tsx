@@ -20,12 +20,12 @@ import {
   TrendingUp,
   Lock,
   Award,
-  //   Zap,
+  Zap,
   //   Phone,
   //   ChevronRight,
-    Globe,
-  //   Database,
-    UserCheck,
+  Globe,
+  Database,
+  UserCheck,
 } from "lucide-react";
 
 // Custom hook for intersection observer
@@ -59,8 +59,8 @@ export default function HomePage() {
   const [audienceRef, audienceInView] = useInView(0.1);
   const [featuresRef, featuresInView] = useInView(0.1);
   const [aiRef, aiInView] = useInView(0.1);
-  const [securityRef, securityInView] = useInView(0.1)
-  // const [quickStartRef, quickStartInView] = useInView(0.1)
+  const [securityRef, securityInView] = useInView(0.1);
+  const [quickStartRef, quickStartInView] = useInView(0.1);
   // const [ctaRef, ctaInView] = useInView(0.1)
 
   // useEffect(() => {
@@ -414,24 +414,34 @@ export default function HomePage() {
         </div>
       </section>
 
-       {/* Security & Compliance */}
-      <section ref={securityRef} className="py-20 px-4 bg-gradient-to-br from-gray-900 to-gray-800 text-white relative overflow-hidden">
+      {/* Security & Compliance */}
+      <section
+        ref={securityRef}
+        className="py-20 px-4 bg-gradient-to-br from-gray-900 to-gray-800 text-white relative overflow-hidden"
+      >
         <div className="absolute inset-0  opacity-20"></div>
 
-                  <div className="container mx-auto max-w-7xl relative">
-          <div className={`text-center mb-16 ${fadeInUp} ${securityInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}>
+        <div className="container mx-auto max-w-7xl relative">
+          <div
+            className={`text-center mb-16 ${fadeInUp} ${securityInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+          >
             <div className="inline-flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300 backdrop-blur-sm">
               <Shield className="w-4 h-4" />
               Serious About Security & Compliance
             </div>
             <h2 className="text-3xl md:text-5xl font-bold mb-6">
-              We&apos;re compliant and audit-ready so you don&apos;t have to worry
+              We&apos;re compliant and audit-ready so you don&apos;t have to
+              worry
             </h2>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { icon: UserCheck, title: "GDPR-Compliant", desc: "Signup & Data Handling" },
+              {
+                icon: UserCheck,
+                title: "GDPR-Compliant",
+                desc: "Signup & Data Handling",
+              },
               { icon: Lock, title: "Field-Level", desc: "Encryption" },
               { icon: Award, title: "ISO 27001-Aligned", desc: "Architecture" },
               { icon: Globe, title: "NHS DSP Toolkit", desc: "Ready" },
@@ -439,7 +449,9 @@ export default function HomePage() {
               <Card
                 key={index}
                 className={`bg-white/10 border-white/20 backdrop-blur-sm hover:bg-white/20 transition-all duration-500 group hover:-translate-y-2 hover:scale-105 ${fadeInUp} ${
-                  securityInView ? "opacity-100 translate-y-0 rotate-0" : "opacity-0 translate-y-12 rotate-3"
+                  securityInView
+                    ? "opacity-100 translate-y-0 rotate-0"
+                    : "opacity-0 translate-y-12 rotate-3"
                 }`}
                 style={staggerDelay(index)}
               >
@@ -447,7 +459,9 @@ export default function HomePage() {
                   <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300 backdrop-blur-sm">
                     <item.icon className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-xl font-bold mb-2 group-hover:text-green-300 transition-colors duration-300">{item.title}</h3>
+                  <h3 className="text-xl font-bold mb-2 group-hover:text-green-300 transition-colors duration-300">
+                    {item.title}
+                  </h3>
                   <p className="text-gray-300 mb-4">{item.desc}</p>
                   <CheckCircle className="w-6 h-6 text-green-400 mx-auto group-hover:scale-125 transition-transform duration-300" />
                 </CardContent>
@@ -456,6 +470,63 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Quick Start */}
+      <section ref={quickStartRef} className="py-20 px-4 bg-white">
+        <div className="container mx-auto max-w-7xl">
+          <div
+            className={`text-center mb-16 ${fadeInUp} ${quickStartInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+          >
+            <div className="inline-flex items-center gap-2 bg-[#15941f]/10 text-[#15941f] px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300">
+              <Zap className="w-4 h-4 animate-pulse" />
+              Start Fast, Stay in Control
+            </div>
+            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">
+              Quick organization onboarding with secure invite codes
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                icon: UserCheck,
+                title: "Role-based access",
+                desc: "with data isolation",
+              },
+              {
+                icon: Database,
+                title: "Scalable infrastructure",
+                desc: "for NHS-level operations",
+              },
+              {
+                icon: Shield,
+                title: "Secure invite codes",
+                desc: "for quick onboarding",
+              },
+            ].map((item, index) => (
+              <div
+                key={index}
+                className={`text-center group hover:-translate-y-2 transition-all duration-500 ${fadeInUp} ${
+                  quickStartInView
+                    ? "opacity-100 translate-y-0 scale-100"
+                    : "opacity-0 translate-y-12 scale-90"
+                }`}
+                style={staggerDelay(index)}
+              >
+                <div className="w-20 h-20 bg-gradient-to-br from-[#15941f] to-green-400 rounded-3xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300 shadow-lg group-hover:shadow-xl">
+                  <item.icon className="w-10 h-10 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-[#15941f] transition-colors duration-300">
+                  {item.title}
+                </h3>
+                <p className="text-gray-600 text-lg">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      
     </div>
   );
 }
