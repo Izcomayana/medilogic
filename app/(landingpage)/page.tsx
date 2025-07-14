@@ -21,8 +21,8 @@ import {
   Lock,
   Award,
   Zap,
-    Phone,
-  //   ChevronRight,
+  Phone,
+  ChevronRight,
   Globe,
   Database,
   UserCheck,
@@ -54,18 +54,13 @@ function useInView(threshold = 0.1) {
 }
 
 export default function HomePage() {
-  // const [isVisible, setIsVisible] = useState(false)
   const [heroRef, heroInView] = useInView(0.1);
   const [audienceRef, audienceInView] = useInView(0.1);
   const [featuresRef, featuresInView] = useInView(0.1);
   const [aiRef, aiInView] = useInView(0.1);
   const [securityRef, securityInView] = useInView(0.1);
   const [quickStartRef, quickStartInView] = useInView(0.1);
-  const [ctaRef, ctaInView] = useInView(0.1)
-
-  // useEffect(() => {
-  //   setIsVisible(true)
-  // }, [])
+  const [ctaRef, ctaInView] = useInView(0.1);
 
   const fadeInUp = "transition-all duration-700 ease-out";
   const staggerDelay = (index: number) => ({
@@ -527,11 +522,16 @@ export default function HomePage() {
       </section>
 
       {/* CTA Section */}
-      <section ref={ctaRef} className="py-20 px-4 bg-gradient-to-br from-[#15941f] to-green-600 text-white relative overflow-hidden">
+      <section
+        ref={ctaRef}
+        className="py-20 px-4 bg-gradient-to-br from-[#15941f] to-green-600 text-white relative overflow-hidden"
+      >
         <div className="absolute inset-0 opacity-20"></div>
-        
+
         <div className="container mx-auto max-w-4xl text-center relative">
-          <div className={`${fadeInUp} ${ctaInView ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-12 scale-95"}`}>
+          <div
+            className={`${fadeInUp} ${ctaInView ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-12 scale-95"}`}
+          >
             <div className="inline-flex items-center gap-2 bg-white/20 text-white px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300 backdrop-blur-sm">
               <Phone className="w-4 h-4 animate-pulse" />
               Ready to Modernize Your Logistics?
@@ -539,7 +539,10 @@ export default function HomePage() {
             <h2 className="text-3xl md:text-5xl font-bold mb-6">
               Take the first step toward secure, AI-enhanced logistics.
             </h2>
-            <div className={`flex flex-col sm:flex-row gap-6 justify-center items-center mt-12 ${fadeInUp} ${ctaInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`} style={{ transitionDelay: "300ms" }}>
+            <div
+              className={`flex flex-col sm:flex-row gap-6 justify-center items-center mt-12 ${fadeInUp} ${ctaInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+              style={{ transitionDelay: "300ms" }}
+            >
               <Button
                 size="lg"
                 className="bg-white text-[#15941f] hover:bg-gray-100 px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group hover:scale-105"
@@ -558,6 +561,78 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-16 px-4">
+        <div className="container mx-auto max-w-7xl">
+          <div className="grid md:grid-cols-4 gap-8 mb-12">
+            <div className="col-span-2">
+              <div className="flex items-center space-x-2 mb-6 group">
+                <div className="bg-[#15941f] rounded p-2 group-hover:scale-110 transition-transform duration-300">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="3.5"
+                    className="text-white group-hover:rotate-90 transition-transform duration-300"
+                  >
+                    <path d="M5 12h14"></path>
+                    <path d="M12 5v14"></path>
+                  </svg>
+                </div>
+                <span className="text-2xl font-bold">Medilogic</span>
+              </div>
+              <p className="text-gray-400 text-lg max-w-md">
+                Transforming healthcare logistics with AI-powered precision and
+                NHS-compliant security.
+              </p>
+            </div>
+
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
+              <ul className="space-y-3">
+                {["About", "Features", "Compliance", "Contact"].map((link) => (
+                  <li key={link}>
+                    <a
+                      href={`#${link.toLowerCase()}`}
+                      className="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2 group"
+                    >
+                      <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      {link}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-lg font-semibold mb-4">Legal</h4>
+              <ul className="space-y-3">
+                {["Terms of Use", "Privacy Policy"].map((link) => (
+                  <li key={link}>
+                    <a
+                      href="#"
+                      className="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2 group"
+                    >
+                      <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                      {link}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div className="border-t border-gray-800 pt-8 text-center">
+            <p className="text-gray-400">
+              © 2025 Medilogic Ltd. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
