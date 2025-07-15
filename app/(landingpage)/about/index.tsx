@@ -3,6 +3,8 @@ import Hero from "./components/Hero";
 import WhyMedilogic from "./components/WhyMedilogic";
 import WhatMakesUsDiff from "./components/WhatMakesUsDiff";
 import WhoWeServe from "./components/WhoWeServe";
+import Vision from "./components/Vision";
+import Compliance from "./components/Compliance";
 
 export const About = () => {
   return (
@@ -11,10 +13,8 @@ export const About = () => {
       <WhyMedilogic />
       <WhatMakesUsDiff />
       <WhoWeServe />
-      {/* <Vision /> */}
-
-      {/* Compliance by Design */}
-      {/* <ComplianceSection /> */}
+      <Vision />
+      <Compliance />
 
       {/* CTA Section */}
       {/* <CTASection /> */}
