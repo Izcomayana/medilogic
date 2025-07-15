@@ -11,7 +11,7 @@ export const Hero = () => {
   return (
     <section
       ref={heroRef}
-      className="relative pt-24 pb-16 px-4 overflow-hidden"
+      className="relative pt-24 pb-16 px-4 overflow-hidden lg:pt-32"
     >
       <div className="absolute inset-0 bg-gradient-to-br from-[#15941f]/5 to-transparent"></div>
 

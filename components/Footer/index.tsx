@@ -1,4 +1,7 @@
+"use client";
+
 import { ChevronRight } from "lucide-react";
+import Link from "next/link";
 import React from "react";
 
 export const Footer = () => {
@@ -8,22 +11,28 @@ export const Footer = () => {
         <div className="grid md:grid-cols-4 gap-8 mb-12">
           <div className="col-span-2">
             <div className="flex items-center space-x-2 mb-6 group">
-              <div className="bg-[#15941f] rounded p-2 group-hover:scale-110 transition-transform duration-300">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="3.5"
-                  className="text-white group-hover:rotate-90 transition-transform duration-300"
-                >
-                  <path d="M5 12h14"></path>
-                  <path d="M12 5v14"></path>
-                </svg>
-              </div>
-              <span className="text-2xl font-bold">Medilogic</span>
+              <Link href="/" className="flex items-center space-x-2 group">
+                <div className="bg-[#15941f] p-1 rounded transition-transform duration-200 group-hover:scale-110">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="3.5"
+                    className="lucide lucide-plus h-8 w-8 text-gray-50 rotate-0 transition-transform duration-300 group-hover:rotate-90"
+                    aria-hidden="true"
+                  >
+                    <path d="M5 12h14"></path>
+                    <path d="M12 5v14"></path>
+                  </svg>
+                </div>
+
+                <span className="text-white text-2xl font-bold tracking-tight">
+                  Medilogic
+                </span>
+              </Link>
             </div>
             <p className="text-gray-400 text-lg max-w-md">
               Transforming healthcare logistics with AI-powered precision and

@@ -70,6 +70,16 @@ export const Security = () => {
               </Card>
             ))}
           </div>
+
+          <div className="text-center mt-12">
+            <h3 className="text-xl font-bold">
+              ✅ Real-Time Compliance Dashboard
+            </h3>
+            <p className="text-base mt-4">
+              Instantly monitor GDPR, NHS, ISO 27001, and UK waste regulation
+              compliance.
+            </p>
+          </div>
         </div>
       </section>
     </>

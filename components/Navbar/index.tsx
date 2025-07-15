@@ -28,7 +28,7 @@ export default function Navbar() {
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center space-x-2 group">
-              <div className="bg-green-500 rounded transition-transform duration-200 group-hover:scale-110">
+              <div className="rounded transition-transform duration-200 group-hover:scale-110">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="12"
