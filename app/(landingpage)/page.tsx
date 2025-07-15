@@ -8,6 +8,7 @@ import { Security } from "./components/S&C";
 import { QuickStart } from "./components/QuickStart";
 import { CTA } from "../../components/CTA";
 import { KeyFeatures } from "./components/KeyFeatures";
+import { Phone } from "lucide-react";
 
 export default function HomePage() {
   return (
@@ -19,7 +20,11 @@ export default function HomePage() {
       <AIAnalytics />
       <Security />
       <QuickStart />
-      <CTA />
+      <CTA
+        badgeText={"Ready to Modernize Your Logistics?"}
+        badgeIcon={<Phone className="w-4 h-4 animate-pulse" />}
+        heading={"Take the first step toward secure, AI-enhanced logistics."}
+      />
     </div>
   );
 }

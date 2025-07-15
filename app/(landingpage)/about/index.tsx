@@ -8,6 +8,7 @@ import WhoWeServe from "./components/WhoWeServe";
 import Vision from "./components/Vision";
 import Compliance from "./components/Compliance";
 import { CTA } from "../../../components/CTA";
+import { Rocket } from "lucide-react";
 
 export const About = () => {
   return (
@@ -18,7 +19,14 @@ export const About = () => {
       <WhoWeServe />
       <Vision />
       <Compliance />
-      <CTA />
+      <CTA
+        badgeText={"Ready to take control of your logistics?"}
+        badgeIcon={<Rocket className="w-4 h-4 animate-pulse" />}
+        heading={"Join the Movement"}
+        subText={
+          "Medilogic is already supporting healthcare providers across the UK — helping them save time, reduce costs, and meet compliance with confidence."
+        }
+      />
     </div>
   );
 };
