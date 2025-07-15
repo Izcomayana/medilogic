@@ -4,6 +4,8 @@ import Hero from "./components/Hero";
 import SuperAdmin from "./components/SuperAdmin";
 import ClinicAdmin from "./components/ClinicAdmin";
 import Driver from "./components/Driver";
+import Client from "./components/Client";
+import AIAnalytics from "./components/AIAnalytics";
 
 export const Features = () => {
   return (
@@ -12,12 +14,10 @@ export const Features = () => {
       <SuperAdmin />
       <ClinicAdmin />
       <Driver />
-      {/* <Client /> */}
-      {/* <AIAnalytics /> */}
-
-      {/* <SecuritySection /> */}
-
-      {/* <FeaturesCTASection /> */}
+      <Client />
+      <AIAnalytics />
+      {/* <Security /> */}
+      {/* <FeaturesCTA /> */}
     </div>
   );
 };
