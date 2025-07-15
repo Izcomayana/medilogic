@@ -41,7 +41,7 @@ export const CTA = () => {
               size="lg"
               className="border-white text-white hover:bg-white hover:text-[#15941f] px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 bg-transparent hover:scale-105"
             >
-              Contact Sales
+              Contact Us
             </Button>
           </div>
         </div>
