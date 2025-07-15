@@ -7,7 +7,7 @@ import WhatMakesUsDiff from "./components/WhatMakesUsDiff";
 import WhoWeServe from "./components/WhoWeServe";
 import Vision from "./components/Vision";
 import Compliance from "./components/Compliance";
-import { CTA } from "../components/CTA";
+import { CTA } from "../../../components/CTA";
 
 export const About = () => {
   return (

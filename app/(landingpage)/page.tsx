@@ -6,7 +6,7 @@ import { Hero } from "./components/Hero";
 import { BFHP } from "./components/BFHP";
 import { Security } from "./components/S&C";
 import { QuickStart } from "./components/QuickStart";
-import { CTA } from "./components/CTA";
+import { CTA } from "../../components/CTA";
 import { KeyFeatures } from "./components/KeyFeatures";
 
 export default function HomePage() {

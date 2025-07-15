@@ -1,6 +1,6 @@
 import React from "react";
-import { useInView } from "../../hooks/useInView";
-import { fadeInUp } from "../../hooks/annimation";
+import { useInView } from "../../app/(landingpage)/hooks/useInView";
+import { fadeInUp } from "../../app/(landingpage)/hooks/annimation";
 import { ArrowRight, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
