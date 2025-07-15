@@ -3,6 +3,8 @@ import Hero from "./components/Hero";
 import NHSSolution from "./components/NHSSolutions";
 import PrivatePractice from "./components/PrivatePractice";
 import WasteDisposal from "./components/WasteDisposal";
+import Courier from "./components/Courier";
+import UnifiedPlatform from "./components/UnifiedPlatform";
 
 export const Solutions = () => {
   return (
@@ -11,15 +13,9 @@ export const Solutions = () => {
       <NHSSolution />
       <PrivatePractice />
       <WasteDisposal />
-
-      {/* Medical Couriers & Logistics Providers */}
-      {/* <CourierSection /> */}
-
-      {/* One Platform, Multiple Solutions */}
-      {/* <UnifiedPlatformSection /> */}
-
-      {/* CTA Section */}
-      {/* <CTASection /> */}
+      <UnifiedPlatform />
+      <Courier />
+      {/* <CTA /> */}
     </div>
   );
 };
