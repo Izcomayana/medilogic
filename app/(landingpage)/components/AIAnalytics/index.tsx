@@ -18,11 +18,11 @@ export const AIAnalytics = () => {
               AI & Trip Analytics Engine
             </div>
             <h2 className="text-3xl md:text-5xl font-bold text-gray-900 mb-6">
-              Predictive insights for smarter decisions
+              AI-Optimized Routing & Scheduling
             </h2>
             <p className="text-xl text-gray-600 mb-8">
-              Medilogic&apos;s AI engine helps optimize routes, reduce costs,
-              and streamline operations.
+              Medilogic&apos;s AI engine helps reduce costs, streamline
+              operations and intelligent trip planning.
             </p>
 
             <div className="space-y-6">
