@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React from "react";
 import { fadeInUp, staggerDelay } from "../../hooks/annimation";
 import {
   Brain,
@@ -10,29 +10,7 @@ import {
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
-function useInView(threshold = 0.1) {
-  const [isInView, setIsInView] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true);
-        }
-      },
-      { threshold },
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => observer.disconnect();
-  }, [threshold]);
-
-  return [ref, isInView] as const;
-}
+import { useInView } from "../../hooks/useInView";
 
 export const KeyFeatures = () => {
   const [keyFeaturesRef, keyFeaturesInView] = useInView(0.1);
