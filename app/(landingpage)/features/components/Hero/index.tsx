@@ -36,7 +36,7 @@ export default function Hero() {
             className={`text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight ${fadeInUp} ${heroInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
             style={{ transitionDelay: "400ms" }}
           >
-            Every User Gets{" "}  <br />
+            Every User Gets <br />
             <span className="text-[#15941f] relative">
               Exactly What They Need
               <div
