@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Hero from "./components/Hero";
+import { Hero } from "@/components/Hero";
 import SuperAdmin from "./components/SuperAdmin";
 import ClinicAdmin from "./components/ClinicAdmin";
 import Driver from "./components/Driver";
@@ -9,12 +9,32 @@ import Client from "./components/Client";
 import AIAnalytics from "@/components/AIAnalytics";
 import { Security } from "@/components/Security";
 import { CTA } from "@/components/CTA";
-import { Calendar } from "lucide-react";
+import { ArrowRight, Calendar, Play, Settings, Users } from "lucide-react";
 
 export const Features = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white overflow-x-hidden">
-      <Hero />
+      <Hero
+        badgeIcon={<Settings className="w-4 h-4" />}
+        badgeText="Platform Features"
+        heading={"Every User Gets"}
+        heading2={"Exactly What They Need"}
+        subText={
+          "Medilogic gives every user — from super admins to drivers — exactly what they need. No more, no less. Explore the platform's core features by user role below."
+        }
+        descBadgeIcon={<Users className="w-4 h-4 mr-2" />}
+        descBadgeText={"Role-Based Features"}
+        descBadgeIcon2={<Settings className="w-4 h-4 mr-2" />}
+        descBadgeText2={"Tailored Workflows"}
+        CTABtn="Schedule a Live Demo"
+        CTABtnIcon={
+          <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+        }
+        CTABtn2="Contact Us"
+        CTABtn2Icon={
+          <Play className="mr-2 w-5 h-5 group-hover:scale-110 transition-transform" />
+        }
+      />
       <SuperAdmin />
       <ClinicAdmin />
       <Driver />
