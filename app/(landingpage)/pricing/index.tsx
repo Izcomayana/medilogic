@@ -7,6 +7,8 @@ import FreeTrial from "./components/FreeTrial";
 import SubscriptionPlans from "./components/SubscriptionsPlans";
 import MarketAffordability from "./components/MarketAffordability";
 import RevenueTransparency from "./components/RevenueTransparency";
+import ValueProposition from "./components/ValueProposition";
+import PricingCTA from "./components/PricingCTA/indes";
 
 export const Pricing = () => {
   return (
@@ -28,8 +30,8 @@ export const Pricing = () => {
       <SubscriptionPlans />
       <MarketAffordability />
       <RevenueTransparency />
-      {/* <ValueProposition /> */}
-      {/* <CTA /> */}
+      <ValueProposition />
+      <PricingCTA />
     </div>
   );
 };
