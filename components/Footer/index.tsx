@@ -60,7 +60,12 @@ export const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Legal</h4>
             <ul className="space-y-3">
-              {["Compliance", "Terms of Use", "Privacy Policy"].map((link) => (
+              {[
+                "Help Center",
+                "Compliance",
+                "Terms of Use",
+                "Privacy Policy",
+              ].map((link) => (
                 <li key={link}>
                   <Link
                     href={`${link.toLowerCase()}`}
