@@ -5,6 +5,8 @@ import { DollarSign, Shield, Zap } from "lucide-react";
 import React from "react";
 import FreeTrial from "./components/FreeTrial";
 import SubscriptionPlans from "./components/SubscriptionsPlans";
+import MarketAffordability from "./components/MarketAffordability";
+import RevenueTransparency from "./components/RevenueTransparency";
 
 export const Pricing = () => {
   return (
@@ -24,8 +26,8 @@ export const Pricing = () => {
       />
       <FreeTrial />
       <SubscriptionPlans />
-      {/* <MarketAffordability /> */}
-      {/* <RevenueTransparency /> */}
+      <MarketAffordability />
+      <RevenueTransparency />
       {/* <ValueProposition /> */}
       {/* <CTA /> */}
     </div>
