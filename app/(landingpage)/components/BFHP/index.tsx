@@ -9,10 +9,20 @@ import dynamic from "next/dynamic";
 export const BFHP = () => {
   const [audienceRef, audienceInView] = useInView(0.1);
 
-  const Building2 = dynamic(() => import("lucide-react").then(m => m.Building2), { ssr: false });
-  const Truck = dynamic(() => import('lucide-react').then(m => m.Truck), { ssr: false });
-  const Stethoscope = dynamic(() => import('lucide-react').then(m => m.Stethoscope), { ssr: false });
-  const Recycle = dynamic(() => import('lucide-react').then(m => m.Recycle), { ssr: false });
+  const Building2 = dynamic(
+    () => import("lucide-react").then((m) => m.Building2),
+    { ssr: false },
+  );
+  const Truck = dynamic(() => import("lucide-react").then((m) => m.Truck), {
+    ssr: false,
+  });
+  const Stethoscope = dynamic(
+    () => import("lucide-react").then((m) => m.Stethoscope),
+    { ssr: false },
+  );
+  const Recycle = dynamic(() => import("lucide-react").then((m) => m.Recycle), {
+    ssr: false,
+  });
 
   return (
     <>
