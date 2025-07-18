@@ -4,6 +4,9 @@ import { Hero } from "@/components/Hero";
 import { BookOpen, HelpCircle } from "lucide-react";
 import GettingStarted from "./components/GettingStarted";
 import PlatformUsage from "./components/PlatformUsage";
+import Troubleshooting from "./components/TroubleShooting";
+import ComplianceSecurity from "./components/ComplianceSecurity";
+import ContactSupport from "./components/ContactSupport";
 
 export const HelpCenter = () => {
   return (
@@ -24,12 +27,9 @@ export const HelpCenter = () => {
       />
       <GettingStarted />
       <PlatformUsage />
-
-      {/* <Troubleshooting /> */}
-
-      {/* <ComplianceSecurity /> */}
-
-      {/* <ContactSupport /> */}
+      <Troubleshooting />
+      <ComplianceSecurity />
+      <ContactSupport />
     </div>
   );
 };
