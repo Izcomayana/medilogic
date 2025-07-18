@@ -1,5 +1,5 @@
 import { HelpCenter } from ".";
 
-export default function HelpCenterFunction() {
+export default function HelpCenterPage() {
   return <HelpCenter />;
 }

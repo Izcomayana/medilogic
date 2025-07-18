@@ -43,7 +43,7 @@ export const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-3">
-              {["About", "Features", "Testimonials", "Contact"].map((link) => (
+              {["Features", "Solutions", "Testimonials", "Contact"].map((link) => (
                 <li key={link}>
                   <Link
                     href={`${link.toLowerCase()}`}
@@ -61,7 +61,7 @@ export const Footer = () => {
             <h4 className="text-lg font-semibold mb-4">Legal</h4>
             <ul className="space-y-3">
               {[
-                "Help Center",
+                "HelpCenter",
                 "Compliance",
                 "Terms of Use",
                 "Privacy Policy",
