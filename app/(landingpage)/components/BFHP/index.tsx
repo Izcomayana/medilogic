@@ -2,11 +2,17 @@
 
 import { useInView } from "../../hooks/useInView";
 import { fadeInUp, staggerDelay } from "../../hooks/annimation";
-import { Truck, Building2, Stethoscope, Recycle } from "lucide-react";
+// import { Stethoscope, Recycle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import dynamic from "next/dynamic";
 
 export const BFHP = () => {
   const [audienceRef, audienceInView] = useInView(0.1);
+
+  const Building2 = dynamic(() => import("lucide-react").then(m => m.Building2), { ssr: false });
+  const Truck = dynamic(() => import('lucide-react').then(m => m.Truck), { ssr: false });
+  const Stethoscope = dynamic(() => import('lucide-react').then(m => m.Stethoscope), { ssr: false });
+  const Recycle = dynamic(() => import('lucide-react').then(m => m.Recycle), { ssr: false });
 
   return (
     <>
