@@ -14,18 +14,20 @@ export const BFHP = () => {
     { ssr: false },
   );
 
-  const Truck = dynamic(() => import("lucide-react").then((m) => m.Truck), {
-    ssr: false,
-  });
-
   const Stethoscope = dynamic(
     () => import("lucide-react").then((m) => m.Stethoscope),
     { ssr: false },
   );
 
-  const Recycle = dynamic(() => import("lucide-react").then((m) => m.Recycle), {
-    ssr: false,
-  });
+  const Recycle = dynamic(
+    () => import("lucide-react").then((m) => m.Recycle),
+    { ssr: false },
+  );
+
+  const Truck = dynamic(
+    () => import("lucide-react").then((m) => m.Truck),
+    { ssr: false },
+  );
 
   return (
     <>
