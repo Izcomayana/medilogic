@@ -10,7 +10,7 @@ export default function SocialMedia() {
   const socialLinks = [
     { name: "LinkedIn", icon: Linkedin, href: "#" },
     { name: "Twitter / X", icon: Twitter, href: "#" },
-    { name: "YouTube / Blog", icon: Youtube, href: "#" }, // Assuming YouTube or a blog for the icon
+    { name: "YouTube / Blog", icon: Youtube, href: "#" },
   ];
 
   return (

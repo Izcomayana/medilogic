@@ -43,15 +43,15 @@ export const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-3">
-              {["About", "Features", "Compliance", "Contact"].map((link) => (
+              {["About", "Features", "Testimonials", "Contact"].map((link) => (
                 <li key={link}>
-                  <a
-                    href={`#${link.toLowerCase()}`}
+                  <Link
+                    href={`${link.toLowerCase()}`}
                     className="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2 group"
                   >
                     <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     {link}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -60,15 +60,15 @@ export const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Legal</h4>
             <ul className="space-y-3">
-              {["Terms of Use", "Privacy Policy"].map((link) => (
+              {["Compliance", "Terms of Use", "Privacy Policy"].map((link) => (
                 <li key={link}>
-                  <a
-                    href="#"
+                  <Link
+                    href={`${link.toLowerCase()}`}
                     className="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2 group"
                   >
                     <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     {link}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

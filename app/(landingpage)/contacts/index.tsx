@@ -29,7 +29,7 @@ export const Contact = () => {
       <ContactInfo />
       <SocialMedia />
       <CTA
-        badgeText={"Raech out "}
+        badgeText={"Reach out to us"}
         badgeIcon={<Hand />}
         heading={"We're Ready to Help"}
         subText="Whether you’re looking for a demo, need support, or want to explore how Medilogic fits your workflow — we’re just a message away."
