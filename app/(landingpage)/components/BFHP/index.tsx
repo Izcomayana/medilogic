@@ -11,18 +11,20 @@ export const BFHP = () => {
 
   const Building2 = dynamic(
     () => import("lucide-react").then((m) => m.Building2),
-    { ssr: false },
+    { ssr: false }
   );
-  const Truck = dynamic(() => import("lucide-react").then((m) => m.Truck), {
-    ssr: false,
-  });
+  const Truck = dynamic(
+    () => import("lucide-react").then((m) => m.Truck), 
+    { ssr: false }
+  );
   const Stethoscope = dynamic(
     () => import("lucide-react").then((m) => m.Stethoscope),
-    { ssr: false },
+    { ssr: false }
   );
-  const Recycle = dynamic(() => import("lucide-react").then((m) => m.Recycle), {
-    ssr: false,
-  });
+  const Recycle = dynamic(
+    () => import("lucide-react").then((m) => m.Recycle), 
+    { ssr: false }
+  );
 
   return (
     <>
