@@ -1,235 +1,255 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { useState, useRef, useEffect, type FormEvent } from "react"
-import axios from "axios"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Eye, EyeOff, Mail, Lock, ArrowRight, AlertCircle } from "lucide-react"
-import { Checkbox } from "@/components/ui/checkbox"
+import type React from "react";
+import { useState, useRef, useEffect, type FormEvent } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Eye, EyeOff, Mail, Lock, ArrowRight, AlertCircle } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const Login: React.FC = () => {
-  const router = useRouter()
-  const [step, setStep] = useState<1 | 2>(1)
+  const router = useRouter();
+  const [step, setStep] = useState<1 | 2>(1);
 
   // Form fields
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [otpCode, setOtpCode] = useState("")
-  const [sessionId, setSessionId] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [otpCode, setOtpCode] = useState("");
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   // const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [showPassword, setShowPassword] = useState(false)
-  const [rememberMe, setRememberMe] = useState(false)
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
   const [errors, setErrors] = useState<{
-    email?: string
-    password?: string
-    otp?: string
-    general?: string
-  }>({})
+    email?: string;
+    password?: string;
+    otp?: string;
+    general?: string;
+  }>({});
 
   const validateForm = () => {
-    const newErrors: { email?: string; password?: string } = {}
+    const newErrors: { email?: string; password?: string } = {};
 
     if (!email.trim()) {
-      newErrors.email = "Email address is required"
+      newErrors.email = "Email address is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      newErrors.email = "Please enter a valid email address"
+      newErrors.email = "Please enter a valid email address";
     }
 
     if (!password.trim()) {
-      newErrors.password = "Password is required"
+      newErrors.password = "Password is required";
     } else if (password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters long"
+      newErrors.password = "Password must be at least 6 characters long";
     }
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const validateOtp = () => {
-    const newErrors: { otp?: string } = {}
+    const newErrors: { otp?: string } = {};
 
     if (!otpCode.trim()) {
-      newErrors.otp = "OTP code is required"
+      newErrors.otp = "OTP code is required";
     } else if (otpCode.length !== 6) {
-      newErrors.otp = "OTP must be 6 digits"
+      newErrors.otp = "OTP must be 6 digits";
     } else if (!/^\d+$/.test(otpCode)) {
-      newErrors.otp = "OTP must contain only numbers"
+      newErrors.otp = "OTP must contain only numbers";
     }
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   // Clear errors when user types
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value)
+    setEmail(e.target.value);
     if (errors.email) {
-      setErrors((prev) => ({ ...prev, email: undefined }))
+      setErrors((prev) => ({ ...prev, email: undefined }));
     }
-  }
+  };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value)
+    setPassword(e.target.value);
     if (errors.password) {
-      setErrors((prev) => ({ ...prev, password: undefined }))
+      setErrors((prev) => ({ ...prev, password: undefined }));
     }
-  }
+  };
 
   const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, "").slice(0, 6)
-    setOtpCode(value)
+    const value = e.target.value.replace(/\D/g, "").slice(0, 6);
+    setOtpCode(value);
     if (errors.otp) {
-      setErrors((prev) => ({ ...prev, otp: undefined }))
+      setErrors((prev) => ({ ...prev, otp: undefined }));
     }
-  }
+  };
 
   // Refs for inputs to autofocus
-  const emailRef = useRef<HTMLInputElement>(null)
-  const passwordRef = useRef<HTMLInputElement>(null)
-  const otpRef = useRef<HTMLInputElement>(null)
+  const emailRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const otpRef = useRef<HTMLInputElement>(null);
 
   // Autofocus inputs on step change
   useEffect(() => {
     if (step === 1) {
       if (emailRef.current) {
-        emailRef.current.focus()
+        emailRef.current.focus();
       }
     } else if (step === 2) {
       if (otpRef.current) {
-        otpRef.current.focus()
+        otpRef.current.focus();
       }
     }
-  }, [step])
+  }, [step]);
 
   // Handle Step 1 form submit
   const handleStep1Submit = async (e: FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     // setErrorMessage(null)
-    setSuccessMessage(null)
+    setSuccessMessage(null);
 
     if (!validateForm()) {
-      return
+      return;
     }
 
-    setLoading(true)
+    setLoading(true);
 
     try {
-      const response = await axios.post("https://medilogic-backend.onrender.com/access/login-step-1", {
-        email,
-        password,
-      })
+      const response = await axios.post(
+        "https://medilogic-backend.onrender.com/access/login-step-1",
+        {
+          email,
+          password,
+        },
+      );
 
       if (response.data.session_id) {
-        setSessionId(response.data.session_id)
-        setStep(2)
-        setSuccessMessage("Step 1 successful. Please enter the OTP sent to your email.")
+        setSessionId(response.data.session_id);
+        setStep(2);
+        setSuccessMessage(
+          "Step 1 successful. Please enter the OTP sent to your email.",
+        );
       } else {
-        setErrors({ general: "Login step 1 failed: session_id not received." })
+        setErrors({ general: "Login step 1 failed: session_id not received." });
       }
     } catch (error: unknown) {
-      const err = error as { response?: { data?: { message?: string } } }
+      const err = error as { response?: { data?: { message?: string } } };
       if (err.response?.data?.message) {
-        setErrors({ general: err.response.data.message })
+        setErrors({ general: err.response.data.message });
       } else {
-        setErrors({ general: "An error occurred during login. Please try again." })
+        setErrors({
+          general: "An error occurred during login. Please try again.",
+        });
       }
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   // Handle Step 2 form submit
   const handleStep2Submit = async (e: FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     // setErrorMessage(null)
-    setSuccessMessage(null)
+    setSuccessMessage(null);
 
     if (!validateOtp()) {
-      return
+      return;
     }
 
     if (!sessionId) {
-      setErrors({ general: "Session ID missing. Please restart login." })
-      return
+      setErrors({ general: "Session ID missing. Please restart login." });
+      return;
     }
 
-    setLoading(true)
+    setLoading(true);
 
     try {
-      const response = await axios.post("https://medilogic-backend.onrender.com/access/login-step-2", {
-        session_id: sessionId,
-        code: otpCode,
-      })
+      const response = await axios.post(
+        "https://medilogic-backend.onrender.com/access/login-step-2",
+        {
+          session_id: sessionId,
+          code: otpCode,
+        },
+      );
 
       if (response.data.token) {
-        localStorage.setItem("authToken", response.data.token)
-        setSuccessMessage("Login successful! Redirecting to dashboard...")
+        localStorage.setItem("authToken", response.data.token);
+        setSuccessMessage("Login successful! Redirecting to dashboard...");
         setTimeout(() => {
-          router.push("/dashboard")
-        }, 1500)
+          router.push("/dashboard");
+        }, 1500);
       } else {
-        setErrors({ general: "Login step 2 failed: token not received." })
+        setErrors({ general: "Login step 2 failed: token not received." });
       }
     } catch (error: unknown) {
-      const err = error as { response?: { data?: { message?: string } } }
+      const err = error as { response?: { data?: { message?: string } } };
       if (err.response?.data?.message) {
-        setErrors({ general: err.response.data.message })
+        setErrors({ general: err.response.data.message });
       } else {
-        setErrors({ general: "Invalid OTP code. Please try again." })
+        setErrors({ general: "Invalid OTP code. Please try again." });
       }
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   // Handle Request OTP Again button
   const handleRequestOtpAgain = async () => {
     if (!email || !password) {
-      setErrors({ general: "Email and password are required to request OTP again." })
-      return
+      setErrors({
+        general: "Email and password are required to request OTP again.",
+      });
+      return;
     }
 
-    setLoading(true)
+    setLoading(true);
     // setErrorMessage(null)
-    setSuccessMessage(null)
+    setSuccessMessage(null);
 
     try {
-      const response = await axios.post("https://medilogic-backend.onrender.com/access/login-step-1", {
-        email,
-        password,
-      })
+      const response = await axios.post(
+        "https://medilogic-backend.onrender.com/access/login-step-1",
+        {
+          email,
+          password,
+        },
+      );
 
       if (response.data.session_id) {
-        setSessionId(response.data.session_id)
-        setSuccessMessage("OTP has been resent. Please check your email.")
+        setSessionId(response.data.session_id);
+        setSuccessMessage("OTP has been resent. Please check your email.");
       } else {
-        setErrors({ general: "Failed to resend OTP: session_id not received." })
+        setErrors({
+          general: "Failed to resend OTP: session_id not received.",
+        });
       }
     } catch (error: unknown) {
-      const err = error as { response?: { data?: { message?: string } } }
+      const err = error as { response?: { data?: { message?: string } } };
       if (err.response?.data?.message) {
-        setErrors({ general: err.response.data.message })
+        setErrors({ general: err.response.data.message });
       } else {
-        setErrors({ general: "An error occurred while requesting OTP again." })
+        setErrors({ general: "An error occurred while requesting OTP again." });
       }
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center px-4 pt-8 pb-12">
       <div className="w-full max-w-md">
         {/* Logo and Header */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center space-x-2 group mb-6">
+          <Link
+            href="/"
+            className="inline-flex items-center space-x-2 group mb-6"
+          >
             <div className="bg-[#15941f] rounded transition-transform duration-200 group-hover:scale-110">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -246,11 +266,15 @@ const Login: React.FC = () => {
                 <path d="M12 5v14"></path>
               </svg>
             </div>
-            <span className="text-[#15941f] text-2xl font-bold tracking-tight">Medilogic</span>
+            <span className="text-[#15941f] text-2xl font-bold tracking-tight">
+              Medilogic
+            </span>
           </Link>
           <h1 className="text-3xl font-bold text-gray-50 mb-2">Welcome Back</h1>
           <p className="text-gray-300">
-            {step === 1 ? "Sign in to your Medilogic account" : "Enter the verification code sent to your email"}
+            {step === 1
+              ? "Sign in to your Medilogic account"
+              : "Enter the verification code sent to your email"}
           </p>
         </div>
 
@@ -258,7 +282,10 @@ const Login: React.FC = () => {
           <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
             <form onSubmit={handleStep1Submit} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                <Label
+                  htmlFor="email"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Email
                 </Label>
                 <div className="relative">
@@ -292,7 +319,10 @@ const Login: React.FC = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-sm font-medium text-gray-700">
+                <Label
+                  htmlFor="password"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Password
                 </Label>
                 <div className="relative">
@@ -318,7 +348,11 @@ const Login: React.FC = () => {
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-transparent text-gray-400 hover:text-gray-600 hover:bg-transparent transition-colors p-2 h-auto"
                   >
-                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
                   </Button>
                   {errors.password && (
                     <AlertCircle className="absolute right-10 top-1/2 transform -translate-y-1/2 text-red-500 h-5 w-5" />
@@ -337,7 +371,9 @@ const Login: React.FC = () => {
                 <div className="bg-red-50 border border-red-200 rounded-lg p-3">
                   <div className="flex items-center space-x-2 text-red-700">
                     <AlertCircle className="h-5 w-5" />
-                    <span className="text-sm font-medium">{errors.general}</span>
+                    <span className="text-sm font-medium">
+                      {errors.general}
+                    </span>
                   </div>
                 </div>
               )}
@@ -346,14 +382,20 @@ const Login: React.FC = () => {
               {successMessage && (
                 <div className="bg-green-50 border border-green-200 rounded-lg p-3">
                   <div className="flex items-center space-x-2 text-green-700">
-                    <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                    <svg
+                      className="h-5 w-5"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
                       <path
                         fillRule="evenodd"
                         d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                         clipRule="evenodd"
                       />
                     </svg>
-                    <span className="text-sm font-medium">{successMessage}</span>
+                    <span className="text-sm font-medium">
+                      {successMessage}
+                    </span>
                   </div>
                 </div>
               )}
@@ -364,10 +406,15 @@ const Login: React.FC = () => {
                   <Checkbox
                     id="remember"
                     checked={rememberMe}
-                    onCheckedChange={(checked: boolean) => setRememberMe(checked as boolean)}
+                    onCheckedChange={(checked: boolean) =>
+                      setRememberMe(checked as boolean)
+                    }
                     className="border-gray-300 data-[state=checked]:bg-[#15941f] data-[state=checked]:border-[#15941f]"
                   />
-                  <Label htmlFor="remember" className="text-sm text-gray-600 cursor-pointer">
+                  <Label
+                    htmlFor="remember"
+                    className="text-sm text-gray-600 cursor-pointer"
+                  >
                     Remember me
                   </Label>
                 </div>
@@ -411,11 +458,17 @@ const Login: React.FC = () => {
               <div className="text-center space-y-2">
                 <p className="text-xs text-gray-500">
                   By signing in, you agree to our{" "}
-                  <Link href="/terms" className="text-[#15941f] hover:underline">
+                  <Link
+                    href="/terms"
+                    className="text-[#15941f] hover:underline"
+                  >
                     Terms of Service
                   </Link>{" "}
                   and{" "}
-                  <Link href="/privacy" className="text-[#15941f] hover:underline">
+                  <Link
+                    href="/privacy"
+                    className="text-[#15941f] hover:underline"
+                  >
                     Privacy Policy
                   </Link>
                 </p>
@@ -428,7 +481,10 @@ const Login: React.FC = () => {
           <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
             <form onSubmit={handleStep2Submit} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="otp" className="text-sm font-medium text-gray-700">
+                <Label
+                  htmlFor="otp"
+                  className="text-sm font-medium text-gray-700"
+                >
                   Verification Code
                 </Label>
                 <div className="relative">
@@ -468,7 +524,9 @@ const Login: React.FC = () => {
                 <div className="bg-red-50 border border-red-200 rounded-lg p-3">
                   <div className="flex items-center space-x-2 text-red-700">
                     <AlertCircle className="h-5 w-5" />
-                    <span className="text-sm font-medium">{errors.general}</span>
+                    <span className="text-sm font-medium">
+                      {errors.general}
+                    </span>
                   </div>
                 </div>
               )}
@@ -477,14 +535,20 @@ const Login: React.FC = () => {
               {successMessage && (
                 <div className="bg-green-50 border border-green-200 rounded-lg p-3">
                   <div className="flex items-center space-x-2 text-green-700">
-                    <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                    <svg
+                      className="h-5 w-5"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
                       <path
                         fillRule="evenodd"
                         d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                         clipRule="evenodd"
                       />
                     </svg>
-                    <span className="text-sm font-medium">{successMessage}</span>
+                    <span className="text-sm font-medium">
+                      {successMessage}
+                    </span>
                   </div>
                 </div>
               )}
@@ -537,14 +601,19 @@ const Login: React.FC = () => {
 
         {/* Support Information */}
         <div className="mt-8 text-center">
-          <p className="text-sm text-gray-300 mb-2">Need help getting started?</p>
-          <Link href="/help" className="text-[#15941f] hover:text-[#117a1a] font-medium text-sm transition-colors">
+          <p className="text-sm text-gray-300 mb-2">
+            Need help getting started?
+          </p>
+          <Link
+            href="/help"
+            className="text-[#15941f] hover:text-[#117a1a] font-medium text-sm transition-colors"
+          >
             Visit our Help Center
           </Link>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
