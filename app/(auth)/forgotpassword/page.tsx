@@ -31,9 +31,11 @@ const Forgotpassword: React.FC = () => {
     try {
       await axios.post(
         "https://medilogic-backend.onrender.com/access/request-password-reset",
-        { email }
+        { email },
       );
-      setSuccessMessage("If the email exists, a password reset link has been sent.");
+      setSuccessMessage(
+        "If the email exists, a password reset link has been sent.",
+      );
     } catch (error: unknown) {
       const err = error as { response?: { data?: { detail?: string } } };
       if (err.response?.data?.detail) {
@@ -52,12 +54,43 @@ const Forgotpassword: React.FC = () => {
         <title>Forgot Password - Medilogic</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div style={{ maxWidth: 400, margin: "auto", padding: 20, display: "flex", flexDirection: "column", justifyContent: "center", height: "100vh" }}>
-        <header style={{ display: "flex", alignItems: "center", marginBottom: 20 }}>
-          <Link href="/" aria-label="Home" style={{ position: "absolute", width: 0, height: 0, overflow: "hidden" }}>
+      <div
+        style={{
+          maxWidth: 400,
+          margin: "auto",
+          padding: 20,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          height: "100vh",
+        }}
+      >
+        <header
+          style={{ display: "flex", alignItems: "center", marginBottom: 20 }}
+        >
+          <Link
+            href="/"
+            aria-label="Home"
+            style={{
+              position: "absolute",
+              width: 0,
+              height: 0,
+              overflow: "hidden",
+            }}
+          >
             Logo
           </Link>
-          <Link href="/" aria-label="Home" style={{ marginLeft: 40, fontWeight: "bold", fontSize: 24, textDecoration: "none", color: "inherit" }}>
+          <Link
+            href="/"
+            aria-label="Home"
+            style={{
+              marginLeft: 40,
+              fontWeight: "bold",
+              fontSize: 24,
+              textDecoration: "none",
+              color: "inherit",
+            }}
+          >
             Medilogic
           </Link>
         </header>
@@ -93,7 +126,14 @@ const Forgotpassword: React.FC = () => {
             </div>
           )}
         </form>
-        <nav style={{ marginTop: 20, display: "flex", justifyContent: "space-between", fontSize: 14 }}>
+        <nav
+          style={{
+            marginTop: 20,
+            display: "flex",
+            justifyContent: "space-between",
+            fontSize: 14,
+          }}
+        >
           <Link href="/login" className="underline">
             Go back to Login
           </Link>

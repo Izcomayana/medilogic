@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 
 const Register: React.FC = () => {
   const router = useRouter();
@@ -37,9 +38,11 @@ const Register: React.FC = () => {
     if (!formData.acceptCookies) {
       setShowCookiePopup(true);
     }
-  }, []);
+  }, [formData.acceptCookies]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const target = e.target as HTMLInputElement | HTMLSelectElement;
     const { name, value, type } = target;
     const checked = (target as HTMLInputElement).checked;
@@ -82,20 +85,23 @@ const Register: React.FC = () => {
 
     setLoading(true);
     try {
-      const response = await fetch("https://medilogic-backend.onrender.com/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        "https://medilogic-backend.onrender.com/auth/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            password: formData.password,
+            role: formData.role,
+            inviteCode: formData.inviteCode,
+            acceptTerms: formData.acceptTerms,
+          }),
         },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-          role: formData.role,
-          inviteCode: formData.inviteCode,
-          acceptTerms: formData.acceptTerms,
-        }),
-      });
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -106,6 +112,7 @@ const Register: React.FC = () => {
 
       setSuccessMessage("Signup successful! Redirecting to login...");
       setTimeout(() => router.push("/login"), 1500);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_error) {
       setErrorMessage("Network error. Please try again.");
     } finally {
@@ -128,10 +135,30 @@ const Register: React.FC = () => {
         <title>Medilogic Register</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div style={{ maxWidth: "400px", margin: "auto", textAlign: "center", padding: "30px" }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "10px" }}>
+      <div
+        style={{
+          maxWidth: "400px",
+          margin: "auto",
+          textAlign: "center",
+          padding: "30px",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            marginBottom: "10px",
+          }}
+        >
           <Link href="/">
-            <img src="/logo.png" alt="Medilogic Logo" style={{ height: "40px", marginRight: "10px" }} />
+            <Image
+              src="/logo.png"
+              alt="Medilogic Logo"
+              width={200}
+              height={200}
+              style={{ height: "40px", marginRight: "10px" }}
+            />
           </Link>
           <div style={{ fontSize: "24px", fontWeight: "bold" }}>Medilogic</div>
         </div>
@@ -236,11 +263,30 @@ const Register: React.FC = () => {
                 disabled={loading}
                 required
               />
-              I accept the <a href="/terms-of-service" target="_blank" rel="noopener noreferrer">Terms of Service</a> and <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+              I accept the{" "}
+              <a
+                href="/terms-of-service"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Terms of Service
+              </a>{" "}
+              and{" "}
+              <a
+                href="/privacy-policy"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Privacy Policy
+              </a>
             </label>
           </div>
           <div>
-            <button type="submit" disabled={loading || !formData.acceptTerms} style={{ width: "100%" }}>
+            <button
+              type="submit"
+              disabled={loading || !formData.acceptTerms}
+              style={{ width: "100%" }}
+            >
               {loading ? "Registering..." : "Register"}
             </button>
           </div>
@@ -281,13 +327,27 @@ const Register: React.FC = () => {
           >
             <h2>Medilogic – Terms of Service</h2>
             <p>Effective Date: July 10, 2025</p>
-            <p>Welcome to Medilogic! These Terms of Service (“Terms”) govern your access to and use of the Medilogic platform and services.</p>
-            <p>By creating an account or using our services, you agree to these Terms. If you do not agree, please do not use our platform.</p>
+            <p>
+              Welcome to Medilogic! These Terms of Service (“Terms”) govern your
+              access to and use of the Medilogic platform and services.
+            </p>
+            <p>
+              By creating an account or using our services, you agree to these
+              Terms. If you do not agree, please do not use our platform.
+            </p>
             <hr />
             <h3>1. Use of Service</h3>
-            <p>Medilogic provides software to manage medical logistics operations. You may use the service only in compliance with applicable laws, regulations, and these Terms.</p>
+            <p>
+              Medilogic provides software to manage medical logistics
+              operations. You may use the service only in compliance with
+              applicable laws, regulations, and these Terms.
+            </p>
             <h3>2. Eligibility</h3>
-            <p>You must be at least 18 years old or authorized by an organization to use Medilogic. Accounts must be registered with accurate and up-to-date information.</p>
+            <p>
+              You must be at least 18 years old or authorized by an organization
+              to use Medilogic. Accounts must be registered with accurate and
+              up-to-date information.
+            </p>
             <h3>3. User Responsibilities</h3>
             <ul>
               <li>Use Medilogic lawfully and responsibly.</li>
@@ -295,11 +355,22 @@ const Register: React.FC = () => {
               <li>Immediately report any unauthorized use of your account.</li>
             </ul>
             <h3>4. Organization Accounts</h3>
-            <p>If you are an admin, you are responsible for all activity under your organization. You must ensure your users comply with these terms.</p>
+            <p>
+              If you are an admin, you are responsible for all activity under
+              your organization. You must ensure your users comply with these
+              terms.
+            </p>
             <h3>5. Payment & Subscriptions</h3>
-            <p>Some features require a paid subscription. By subscribing, you authorize Medilogic to charge you periodically. Prices may vary by country and user type (e.g., UK vs. Nigeria).</p>
+            <p>
+              Some features require a paid subscription. By subscribing, you
+              authorize Medilogic to charge you periodically. Prices may vary by
+              country and user type (e.g., UK vs. Nigeria).
+            </p>
             <h3>6. Data & Privacy</h3>
-            <p>Our Privacy Policy explains how we collect and use your data. You agree to our use of your data as described there.</p>
+            <p>
+              Our Privacy Policy explains how we collect and use your data. You
+              agree to our use of your data as described there.
+            </p>
             <h3>7. Suspension & Termination</h3>
             <ul>
               <li>Violate these terms</li>
@@ -307,15 +378,30 @@ const Register: React.FC = () => {
               <li>Misuse the platform</li>
             </ul>
             <h3>8. Changes to Terms</h3>
-            <p>We may update these Terms from time to time. You will be notified of material changes. Continued use means you accept the revised Terms.</p>
+            <p>
+              We may update these Terms from time to time. You will be notified
+              of material changes. Continued use means you accept the revised
+              Terms.
+            </p>
             <h3>9. Governing Law</h3>
             <ul>
-              <li><strong>UK law</strong> for users in the United Kingdom.</li>
-              <li><strong>Nigerian law</strong> for users in Nigeria.</li>
+              <li>
+                <strong>UK law</strong> for users in the United Kingdom.
+              </li>
+              <li>
+                <strong>Nigerian law</strong> for users in Nigeria.
+              </li>
             </ul>
             <h3>10. Contact</h3>
-            <p>If you have any questions about these terms, contact us at:<br />📧 <strong>support@medilogicapp.com</strong></p>
-            <button onClick={handleCloseTermsModal} style={{ marginTop: "10px" }}>
+            <p>
+              If you have any questions about these terms, contact us at:
+              <br />
+              📧 <strong>support@medilogicapp.com</strong>
+            </p>
+            <button
+              onClick={handleCloseTermsModal}
+              style={{ marginTop: "10px" }}
+            >
               Close
             </button>
           </div>
@@ -338,8 +424,8 @@ const Register: React.FC = () => {
           }}
         >
           <p>
-            This site uses cookies to improve your experience. By continuing to use the site,
-            you accept our use of cookies.
+            This site uses cookies to improve your experience. By continuing to
+            use the site, you accept our use of cookies.
           </p>
           <button onClick={handleAcceptCookies} style={{ marginTop: "10px" }}>
             Accept Cookies
