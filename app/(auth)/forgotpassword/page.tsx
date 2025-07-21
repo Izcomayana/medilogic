@@ -1,0 +1,1 @@
+app/(auth)/forgotpassword/page.tsx
