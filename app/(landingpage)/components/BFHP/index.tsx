@@ -2,7 +2,7 @@
 
 import { useInView } from "../../hooks/useInView";
 import { fadeInUp, staggerDelay } from "../../hooks/annimation";
-import { Truck, Building2, Stethoscope, Recycle } from "lucide-react";
+import { Building2, Truck, Stethoscope, Recycle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 export const BFHP = () => {

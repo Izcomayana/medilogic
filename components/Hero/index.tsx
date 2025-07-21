@@ -3,6 +3,7 @@ import { useInView } from "@/app/(landingpage)/hooks/useInView";
 import { fadeInUp } from "@/app/(landingpage)/hooks/annimation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+// import { Search } from "lucide-react";
 
 type HeroProps = {
   badgeIcon?: React.ReactNode;
@@ -68,7 +69,7 @@ export const Hero: React.FC<HeroProps> = ({
             className={`text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight ${fadeInUp} ${heroInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
             style={{ transitionDelay: "400ms" }}
           >
-            {heading}{" "}
+            {heading} <br />
             <span className="text-[#15941f] relative">
               {heading2}
               <div
@@ -144,6 +145,16 @@ export const Hero: React.FC<HeroProps> = ({
               className={`max-w-3xl mx-auto ${fadeInUp} ${heroInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
               style={{ transitionDelay: "1000ms" }}
             >
+              {/* <div className="relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <Input
+                type="text"
+                placeholder="Search for answers..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-12 pr-4 py-4 text-lg rounded-xl border-2 border-gray-200 focus:border-[#15941f] transition-colors duration-300"
+              />
+            </div> */}
               <p className="text-lg text-gray-600 leading-relaxed">
                 {descSubText}
               </p>
