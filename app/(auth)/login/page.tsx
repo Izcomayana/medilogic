@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, Mail, Lock, ArrowRight, AlertCircle } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
+import qs from "qs";
 
 const Login: React.FC = () => {
   const router = useRouter();
@@ -57,8 +58,8 @@ const Login: React.FC = () => {
 
     if (!otpCode.trim()) {
       newErrors.otp = "OTP code is required";
-    } else if (otpCode.length !== 6) {
-      newErrors.otp = "OTP must be 6 digits";
+    } else if (otpCode.length !== 4) {
+      newErrors.otp = "OTP must be 4 digits";
     } else if (!/^\d+$/.test(otpCode)) {
       newErrors.otp = "OTP must contain only numbers";
     }
@@ -83,7 +84,7 @@ const Login: React.FC = () => {
   };
 
   const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, "").slice(0, 6);
+    const value = e.target.value.replace(/\D/g, "").slice(0, 4);
     setOtpCode(value);
     if (errors.otp) {
       setErrors((prev) => ({ ...prev, otp: undefined }));
@@ -123,11 +124,18 @@ const Login: React.FC = () => {
     try {
       const response = await axios.post(
         "https://medilogic-backend.onrender.com/access/login-step-1",
-        {
-          email,
+        qs.stringify({
+          username: email,
           password,
+        }),
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
         },
       );
+
+      console.log("Login Step 1 response:", response.data);
 
       if (response.data.session_id) {
         setSessionId(response.data.session_id);
@@ -150,6 +158,11 @@ const Login: React.FC = () => {
     } finally {
       setLoading(false);
     }
+
+    console.log(
+      "Login payload →",
+      JSON.stringify({ username: email, password }),
+    );
   };
 
   // Handle Step 2 form submit
@@ -173,13 +186,19 @@ const Login: React.FC = () => {
       const response = await axios.post(
         "https://medilogic-backend.onrender.com/access/login-step-2",
         {
+          email,
           session_id: sessionId,
           code: otpCode,
         },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
       );
 
-      if (response.data.token) {
-        localStorage.setItem("authToken", response.data.token);
+      if (response.data.access_token) {
+        localStorage.setItem("authToken", response.data.access_token);
         setSuccessMessage("Login successful! Redirecting to dashboard...");
         setTimeout(() => {
           router.push("/dashboard");
@@ -216,7 +235,7 @@ const Login: React.FC = () => {
       const response = await axios.post(
         "https://medilogic-backend.onrender.com/access/login-step-1",
         {
-          email,
+          username: email,
           password,
         },
       );
@@ -494,7 +513,7 @@ const Login: React.FC = () => {
                     ref={otpRef}
                     value={otpCode}
                     onChange={handleOtpChange}
-                    placeholder="Enter 6-digit code"
+                    placeholder="Enter 4-digit code"
                     className={`h-12 text-center text-lg font-mono tracking-widest transition-all duration-200 focus:outline-none focus:ring-1 ${
                       errors.otp
                         ? "border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-200"
@@ -504,7 +523,7 @@ const Login: React.FC = () => {
                     disabled={loading}
                     inputMode="numeric"
                     pattern="[0-9]*"
-                    maxLength={6}
+                    maxLength={4}
                     autoComplete="one-time-code"
                   />
                   {errors.otp && (
