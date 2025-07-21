@@ -57,13 +57,15 @@ const Login: React.FC = () => {
     try {
       const response = await axios.post(
         "https://medilogic-backend.onrender.com/access/login-step-1",
-        { email, password }
+        { email, password },
       );
 
       if (response.data.session_id) {
         setSessionId(response.data.session_id);
         setStep(2);
-        setSuccessMessage("Step 1 successful. Please enter the OTP sent to your email.");
+        setSuccessMessage(
+          "Step 1 successful. Please enter the OTP sent to your email.",
+        );
       } else {
         setErrorMessage("Login step 1 failed: session_id not received.");
       }
@@ -93,7 +95,7 @@ const Login: React.FC = () => {
     try {
       const response = await axios.post(
         "https://medilogic-backend.onrender.com/access/login-step-2",
-        { session_id: sessionId, code: otpCode }
+        { session_id: sessionId, code: otpCode },
       );
 
       if (response.data.token) {
@@ -130,7 +132,7 @@ const Login: React.FC = () => {
     try {
       const response = await axios.post(
         "https://medilogic-backend.onrender.com/access/login-step-1",
-        { email, password }
+        { email, password },
       );
 
       if (response.data.session_id) {
@@ -155,7 +157,16 @@ const Login: React.FC = () => {
     <div className="max-w-md mx-auto mt-20 p-4">
       <header>
         <div style={{ display: "flex", alignItems: "center" }}>
-          <Link href="/" aria-label="Home" style={{ position: "absolute", width: 0, height: 0, overflow: "hidden" }}>
+          <Link
+            href="/"
+            aria-label="Home"
+            style={{
+              position: "absolute",
+              width: 0,
+              height: 0,
+              overflow: "hidden",
+            }}
+          >
             Logo
           </Link>
           <Link href="/" aria-label="Home">
@@ -253,7 +264,9 @@ const Login: React.FC = () => {
         <div
           role="alert"
           className={`mt-4 p-3 rounded ${
-            errorMessage ? "bg-red-100 text-red-700" : "bg-green-100 text-green-700"
+            errorMessage
+              ? "bg-red-100 text-red-700"
+              : "bg-green-100 text-green-700"
           }`}
         >
           {errorMessage || successMessage}
