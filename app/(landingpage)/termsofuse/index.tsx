@@ -5,6 +5,8 @@ import { FileText } from "lucide-react";
 import React from "react";
 import UseOfService from "./components/UseOfService";
 import Eligibility from "./components/Eligibility";
+import UserResponsibilities from "./components/UserResponsibilty";
+import OrganizationAccounts from "./components/OrganizationAccounts";
 
 export const TermsOfUse = () => {
   return (
@@ -26,8 +28,8 @@ export const TermsOfUse = () => {
       />
       <UseOfService />
       <Eligibility />
-      {/* <UserResponsibilities /> */}
-      {/* <OrganizationAccounts /> */}
+      <UserResponsibilities />
+      <OrganizationAccounts />
       {/* <PaymentSubscription /> */}
       {/* <DataPrivacy /> */}
       {/* <SuspensionTermination /> */}
