@@ -11,13 +11,15 @@ import PaymentSubscription from "./components/PaymentSubscription";
 import DataPrivacy from "./components/DataPrivacy";
 import SuspensionTermination from "./components/SuspensionTermination";
 import ChangesToTerms from "./components/ChangesToTerms";
+import GoverningLaw from "./components/GoverningLaw";
+import ContactSection from "./components/Contact";
 
 export const TermsOfUse = () => {
   return (
     <main className="min-h-screen">
       <Hero
         badgeIcon={<FileText className="h-8 w-8 text-white" />}
-        badgeText="Terms of Service"
+        badgeText="Terms of Services"
         heading={"Your Use of"}
         heading2={"Our Services,"}
         heading3="Explained"
@@ -38,8 +40,8 @@ export const TermsOfUse = () => {
       <DataPrivacy />
       <SuspensionTermination />
       <ChangesToTerms />
-      {/* <GoverningLaw /> */}
-      {/* <Contact /> */}
+      <GoverningLaw />
+      <ContactSection />
     </main>
   );
 };
