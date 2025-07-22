@@ -19,7 +19,7 @@ export const TermsOfUse = () => {
     <main className="min-h-screen">
       <Hero
         badgeIcon={<FileText className="h-8 w-8 text-white" />}
-        badgeText="Terms of Services"
+        badgeText="Effective Date: July 10, 2025"
         heading={"Your Use of"}
         heading2={"Our Services,"}
         heading3="Explained"
