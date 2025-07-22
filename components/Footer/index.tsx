@@ -5,6 +5,13 @@ import Link from "next/link";
 import React from "react";
 
 export const Footer = () => {
+  const LegalLinks = [
+    { name: "Help center", href: "/helpcenter" },
+    { name: "Compliance", href: "/compliance" },
+    { name: "Terms Of Use", href: "/termsofuse" },
+    { name: "Privacy Policy", href: "/privacypolicy" },
+  ];
+
   return (
     <footer className="bg-gray-900 text-white py-16 px-4">
       <div className="container mx-auto max-w-7xl">
@@ -62,19 +69,17 @@ export const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Legal</h4>
             <ul className="space-y-3">
-              {["HelpCenter", "Compliance", "TermsofUse", "PrivacyPolicy"].map(
-                (link) => (
-                  <li key={link}>
-                    <Link
-                      href={`${link.toLowerCase()}`}
-                      className="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2 group"
-                    >
-                      <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                      {link}
-                    </Link>
-                  </li>
-                ),
-              )}
+              {LegalLinks.map((link) => (
+                <li key={link.name}>
+                  <Link
+                    href={link.href}
+                    className="text-gray-400 hover:text-white transition-colors duration-200 flex items-center gap-2 group"
+                  >
+                    <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
