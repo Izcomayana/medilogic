@@ -7,6 +7,8 @@ import UseOfService from "./components/UseOfService";
 import Eligibility from "./components/Eligibility";
 import UserResponsibilities from "./components/UserResponsibilty";
 import OrganizationAccounts from "./components/OrganizationAccounts";
+import PaymentSubscription from "./components/PaymentSubscription";
+import DataPrivacy from "./components/DataPrivacy";
 
 export const TermsOfUse = () => {
   return (
@@ -30,8 +32,8 @@ export const TermsOfUse = () => {
       <Eligibility />
       <UserResponsibilities />
       <OrganizationAccounts />
-      {/* <PaymentSubscription /> */}
-      {/* <DataPrivacy /> */}
+      <PaymentSubscription />
+      <DataPrivacy />
       {/* <SuspensionTermination /> */}
       {/* <ChangesToTerms /> */}
       {/* <GoverningLaw /> */}
