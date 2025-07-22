@@ -8,6 +8,8 @@ import InformationCollection from "./components/InformationCollection";
 import DataUsage from "./components/DataUsage";
 import DataSecurity from "./components/DataSecurity";
 import GDPRCompliance from "./components/GDPRCompliance";
+import DataSharing from "./components/DataSharing";
+import InternationalTransfers from "./components/InternationalTransfers";
 
 export const PrivacyPolicy = () => {
   return (
@@ -32,8 +34,8 @@ export const PrivacyPolicy = () => {
       <DataUsage />
       <DataSecurity />
       <GDPRCompliance />
-      {/* <DataSharing /> */}
-      {/* <InternationalTransfers /> */}
+      <DataSharing />
+      <InternationalTransfers />
       {/* <DataRetention /> */}
       {/* <CookiesSection /> */}
       {/* <PolicyChangesSection /> */}
