@@ -12,6 +12,8 @@ import DataSharing from "./components/DataSharing";
 import InternationalTransfers from "./components/InternationalTransfers";
 import DataRetention from "./components/DataRetention";
 import CookiesSection from "./components/CookiesSection";
+import ContactSection from "./components/ContactSection";
+import PolicyChanges from "./components/PolicyChanges";
 
 export const PrivacyPolicy = () => {
   return (
@@ -40,8 +42,8 @@ export const PrivacyPolicy = () => {
       <InternationalTransfers />
       <DataRetention />
       <CookiesSection />
-      {/* <PolicyChangesSection /> */}
-      {/* <ContactSection /> */}
+      <PolicyChanges />
+      <ContactSection />
     </main>
   );
 };
