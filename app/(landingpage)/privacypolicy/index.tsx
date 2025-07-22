@@ -4,6 +4,8 @@ import { Hero } from "@/components/Hero";
 import { Shield } from "lucide-react";
 import React from "react";
 import WhoWeAre from "./components/WhoWeAre";
+import InformationCollection from "./components/InformationCollection";
+import DataUsage from "./components/DataUsage";
 
 export const PrivacyPolicy = () => {
   return (
@@ -24,13 +26,13 @@ export const PrivacyPolicy = () => {
         descSubText="Important: If you do not agree to these Terms, please do not use Medilogic."
       />
       <WhoWeAre />
-      {/* <InformationCollectionSection /> */}
-      {/* <DataUsageSection /> */}
-      {/* <DataSecuritySection /> */}
-      {/* <GDPRComplianceSection /> */}
-      {/* <DataSharingSection /> */}
-      {/* <InternationalTransfersSection /> */}
-      {/* <DataRetentionSection /> */}
+      <InformationCollection />
+      <DataUsage />
+      {/* <DataSecurity /> */}
+      {/* <GDPRCompliance /> */}
+      {/* <DataSharing /> */}
+      {/* <InternationalTransfers /> */}
+      {/* <DataRetention /> */}
       {/* <CookiesSection /> */}
       {/* <PolicyChangesSection /> */}
       {/* <ContactSection /> */}
