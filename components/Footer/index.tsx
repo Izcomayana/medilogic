@@ -62,7 +62,7 @@ export const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Legal</h4>
             <ul className="space-y-3">
-              {["HelpCenter", "Compliance", "TermsofUse", "Privacy Policy"].map(
+              {["HelpCenter", "Compliance", "TermsofUse", "PrivacyPolicy"].map(
                 (link) => (
                   <li key={link}>
                     <Link
