@@ -1,15 +1,19 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { Search, User, Activity, Monitor } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
+import { motion } from "framer-motion";
+import { Search, User, Activity, Monitor } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function InformationCollection() {
   const dataTypes = [
     {
       icon: User,
       title: "Personal Information",
-      items: ["Name, email address, phone number", "Job title, organization details", "User login credentials"],
+      items: [
+        "Name, email address, phone number",
+        "Job title, organization details",
+        "User login credentials",
+      ],
       color: "bg-blue-100 text-blue-600",
     },
     {
@@ -32,7 +36,7 @@ export default function InformationCollection() {
       ],
       color: "bg-purple-100 text-purple-600",
     },
-  ]
+  ];
 
   return (
     <section className="py-16 bg-white">
@@ -48,11 +52,15 @@ export default function InformationCollection() {
             <div className="bg-[#15941f] rounded-full p-3 mr-4">
               <Search className="h-6 w-6 text-white" />
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">2. Information We Collect</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+              2. Information We Collect
+            </h2>
           </div>
 
           <div className="mb-8">
-            <p className="text-lg text-gray-700 leading-relaxed">We collect the following types of information:</p>
+            <p className="text-lg text-gray-700 leading-relaxed">
+              We collect the following types of information:
+            </p>
           </div>
 
           <div className="space-y-6">
@@ -67,7 +75,9 @@ export default function InformationCollection() {
                 <Card className="hover:shadow-lg transition-shadow duration-300">
                   <CardContent className="p-6">
                     <div className="flex items-start space-x-4">
-                      <div className={`rounded-full p-3 flex-shrink-0 ${dataType.color}`}>
+                      <div
+                        className={`rounded-full p-3 flex-shrink-0 ${dataType.color}`}
+                      >
                         <dataType.icon className="h-6 w-6" />
                       </div>
                       <div className="flex-1">
@@ -76,7 +86,10 @@ export default function InformationCollection() {
                         </h3>
                         <ul className="space-y-2">
                           {dataType.items.map((item, itemIndex) => (
-                            <li key={itemIndex} className="flex items-start space-x-2">
+                            <li
+                              key={itemIndex}
+                              className="flex items-start space-x-2"
+                            >
                               <div className="w-2 h-2 bg-[#15941f] rounded-full mt-2 flex-shrink-0"></div>
                               <span className="text-gray-600">{item}</span>
                             </li>
@@ -92,5 +105,5 @@ export default function InformationCollection() {
         </motion.div>
       </div>
     </section>
-  )
+  );
 }

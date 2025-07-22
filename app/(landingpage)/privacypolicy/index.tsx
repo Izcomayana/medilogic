@@ -6,6 +6,8 @@ import React from "react";
 import WhoWeAre from "./components/WhoWeAre";
 import InformationCollection from "./components/InformationCollection";
 import DataUsage from "./components/DataUsage";
+import DataSecurity from "./components/DataSecurity";
+import GDPRCompliance from "./components/GDPRCompliance";
 
 export const PrivacyPolicy = () => {
   return (
@@ -28,8 +30,8 @@ export const PrivacyPolicy = () => {
       <WhoWeAre />
       <InformationCollection />
       <DataUsage />
-      {/* <DataSecurity /> */}
-      {/* <GDPRCompliance /> */}
+      <DataSecurity />
+      <GDPRCompliance />
       {/* <DataSharing /> */}
       {/* <InternationalTransfers /> */}
       {/* <DataRetention /> */}

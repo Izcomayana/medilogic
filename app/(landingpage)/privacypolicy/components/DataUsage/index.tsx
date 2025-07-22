@@ -1,8 +1,15 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { Target, UserCheck, Truck, BarChart3, MessageSquare, Shield } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
+import { motion } from "framer-motion";
+import {
+  Target,
+  UserCheck,
+  Truck,
+  BarChart3,
+  MessageSquare,
+  Shield,
+} from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function DataUsage() {
   const usageTypes = [
@@ -24,14 +31,15 @@ export default function DataUsage() {
     {
       icon: MessageSquare,
       title: "Communication",
-      description: "Communicate with you regarding your account or support requests",
+      description:
+        "Communicate with you regarding your account or support requests",
     },
     {
       icon: Shield,
       title: "Platform Improvement",
       description: "Improve platform functionality and security",
     },
-  ]
+  ];
 
   return (
     <section className="py-16 bg-gray-50">
@@ -47,11 +55,15 @@ export default function DataUsage() {
             <div className="bg-[#15941f] rounded-full p-3 mr-4">
               <Target className="h-6 w-6 text-white" />
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">3. How We Use Your Information</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+              3. How We Use Your Information
+            </h2>
           </div>
 
           <div className="mb-8">
-            <p className="text-lg text-gray-700 leading-relaxed">We use your data to:</p>
+            <p className="text-lg text-gray-700 leading-relaxed">
+              We use your data to:
+            </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
@@ -70,8 +82,12 @@ export default function DataUsage() {
                         <usage.icon className="h-6 w-6 text-[#15941f]" />
                       </div>
                       <div>
-                        <h3 className="text-lg font-semibold text-gray-900 mb-2">{usage.title}</h3>
-                        <p className="text-gray-600 text-sm leading-relaxed">{usage.description}</p>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                          {usage.title}
+                        </h3>
+                        <p className="text-gray-600 text-sm leading-relaxed">
+                          {usage.description}
+                        </p>
                       </div>
                     </div>
                   </CardContent>
@@ -82,5 +98,5 @@ export default function DataUsage() {
         </motion.div>
       </div>
     </section>
-  )
+  );
 }
