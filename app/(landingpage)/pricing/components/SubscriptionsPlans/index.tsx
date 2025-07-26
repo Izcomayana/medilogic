@@ -22,7 +22,7 @@ export default function SubscriptionPlans() {
       icon: Stethoscope,
       segment: "Small Clinics",
       plan: "Starter",
-      price: "£49",
+      price: "£59",
       features: [
         "Digital trip logs",
         "Basic compliance reports",

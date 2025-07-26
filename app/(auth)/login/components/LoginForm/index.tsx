@@ -185,11 +185,19 @@ export default function LoginForm({
         <div className="text-center space-y-2">
           <p className="text-xs text-gray-500">
             By signing in, you agree to our{" "}
-            <Link href="/terms" className="text-[#15941f] hover:underline">
+            <Link
+              target="_blank"
+              href="/terms"
+              className="text-[#15941f] hover:underline"
+            >
               Terms of Service
             </Link>{" "}
             and{" "}
-            <Link href="/privacy" className="text-[#15941f] hover:underline">
+            <Link
+              target="_blank"
+              href="/privacy"
+              className="text-[#15941f] hover:underline"
+            >
               Privacy Policy
             </Link>
           </p>
