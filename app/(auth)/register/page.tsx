@@ -26,7 +26,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-// import Image from "next/image";
+import TermsModal from "./components/TermsModal";
+import CookiePopup from "./components/CookiePopup";
 
 const Register: React.FC = () => {
   const router = useRouter();
@@ -49,11 +50,8 @@ const Register: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  // State for terms and conditions modal visibility
   const [showTermsModal, setShowTermsModal] = useState(false);
-
-  // State for cookie consent popup visibility
-  const [showCookiePopup, setShowCookiePopup] = useState(false);
+  const [showCookiePopup, setShowCookiePopup] = useState(true);
 
   const [errors, setErrors] = useState<{
     name?: string;
@@ -148,32 +146,12 @@ const Register: React.FC = () => {
     }));
   };
 
-  // Password validation: at least 6 characters
-  // const isValidPassword = (password: string) => {
-  //   return password.length >= 6;
-  // };
-
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage("");
     setSuccessMessage("");
 
     if (!validateForm()) return;
-
-    // if (!formData.acceptTerms) {
-    //   setErrorMessage("You must accept the terms and conditions.");
-    //   return;
-    // }
-
-    // if (!isValidPassword(formData.password)) {
-    //   setErrorMessage("Password must be at least 6 characters long.");
-    //   return;
-    // }
-
-    // if (formData.password !== formData.retypePassword) {
-    //   setErrorMessage("Passwords do not match.");
-    //   return;
-    // }
 
     setLoading(true);
     try {
@@ -215,10 +193,6 @@ const Register: React.FC = () => {
   const handleAcceptCookies = () => {
     setFormData((prev) => ({ ...prev, acceptCookies: true }));
     setShowCookiePopup(false);
-  };
-
-  const handleCloseTermsModal = () => {
-    setShowTermsModal(false);
   };
 
   return (
@@ -563,132 +537,13 @@ const Register: React.FC = () => {
           </div>
 
           {/* Terms and Conditions Modal */}
-          {showTermsModal && (
-            <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center px-4">
-              <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto p-6 space-y-4">
-                <h2 className="text-2xl font-bold text-zinc-900 dark:text-white">
-                  Medilogic – Terms of Service
-                </h2>
-                <p className="text-sm text-zinc-500 dark:text-zinc-300">
-                  Effective Date: July 10, 2025
-                </p>
-                <p>
-                  Welcome to Medilogic! These Terms of Service (“Terms”) govern
-                  your access to and use of the Medilogic platform and services.
-                </p>
-                <p>
-                  By creating an account or using our services, you agree to
-                  these Terms. If you do not agree, please do not use our
-                  platform.
-                </p>
-
-                <hr className="my-2" />
-
-                <div className="space-y-3 text-sm leading-relaxed">
-                  <h3 className="font-semibold">1. Use of Service</h3>
-                  <p>
-                    Medilogic provides software to manage medical logistics
-                    operations. You may use the service only in compliance with
-                    applicable laws, regulations, and these Terms.
-                  </p>
-
-                  <h3 className="font-semibold">2. Eligibility</h3>
-                  <p>
-                    You must be at least 18 years old or authorized by an
-                    organization to use Medilogic. Accounts must be registered
-                    with accurate and up-to-date information.
-                  </p>
-
-                  <h3 className="font-semibold">3. User Responsibilities</h3>
-                  <ul className="list-disc list-inside ml-4">
-                    <li>Use Medilogic lawfully and responsibly.</li>
-                    <li>Keep your login credentials confidential.</li>
-                    <li>
-                      Immediately report any unauthorized use of your account.
-                    </li>
-                  </ul>
-
-                  <h3 className="font-semibold">4. Organization Accounts</h3>
-                  <p>
-                    If you are an admin, you are responsible for all activity
-                    under your organization. You must ensure your users comply
-                    with these terms.
-                  </p>
-
-                  <h3 className="font-semibold">5. Payment & Subscriptions</h3>
-                  <p>
-                    Some features require a paid subscription. By subscribing,
-                    you authorize Medilogic to charge you periodically. Prices
-                    may vary by country and user type (e.g., UK vs. Nigeria).
-                  </p>
-
-                  <h3 className="font-semibold">6. Data & Privacy</h3>
-                  <p>
-                    Our Privacy Policy explains how we collect and use your
-                    data. You agree to our use of your data as described there.
-                  </p>
-
-                  <h3 className="font-semibold">7. Suspension & Termination</h3>
-                  <ul className="list-disc list-inside ml-4">
-                    <li>Violate these terms</li>
-                    <li>Fail to pay subscription fees</li>
-                    <li>Misuse the platform</li>
-                  </ul>
-
-                  <h3 className="font-semibold">8. Changes to Terms</h3>
-                  <p>
-                    We may update these Terms from time to time. You will be
-                    notified of material changes. Continued use means you accept
-                    the revised Terms.
-                  </p>
-
-                  <h3 className="font-semibold">9. Governing Law</h3>
-                  <ul className="list-disc list-inside ml-4">
-                    <li>
-                      <strong>UK law</strong> for users in the United Kingdom.
-                    </li>
-                    <li>
-                      <strong>Nigerian law</strong> for users in Nigeria.
-                    </li>
-                  </ul>
-
-                  <h3 className="font-semibold">10. Contact</h3>
-                  <p>
-                    If you have any questions about these terms, contact us at:{" "}
-                    <br />
-                    📧 <strong>support@medilogicapp.com</strong>
-                  </p>
-                </div>
-
-                <div className="flex justify-end">
-                  <button
-                    onClick={handleCloseTermsModal}
-                    className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
-                  >
-                    Close
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+          <TermsModal
+            isOpen={showTermsModal}
+            onClose={() => setShowTermsModal(false)}
+          />
 
           {/* Cookie Consent Popup */}
-          {showCookiePopup && (
-            <div className="fixed bottom-6 left-6 z-50 max-w-sm w-full bg-white dark:bg-zinc-900 shadow-lg rounded-lg p-4 border border-zinc-200 dark:border-zinc-700">
-              <p className="text-sm text-zinc-700 dark:text-zinc-300">
-                This site uses cookies to improve your experience. By continuing
-                to use the site, you accept our use of cookies.
-              </p>
-              <div className="mt-4 text-right">
-                <button
-                  onClick={handleAcceptCookies}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition cursor-pointer"
-                >
-                  Accept Cookies
-                </button>
-              </div>
-            </div>
-          )}
+          {showCookiePopup && <CookiePopup onAccept={handleAcceptCookies} />}
         </div>
       </div>
     </>
