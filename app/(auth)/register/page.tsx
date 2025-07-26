@@ -1,22 +1,21 @@
 "use client";
 
 import React from "react";
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "@/components/ui/select";
-// import { useRouter } from "next/navigation";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import Link from "next/link";
 import { Label } from "@/components/ui/label";
 import {
   AlertCircle,
   Mail,
   Lock,
-  // ShieldUser,
-  // CarTaxiFront,
+  ShieldUser,
+  CarTaxiFront,
   Code,
   ArrowRight,
   CircleUserRound,
@@ -28,7 +27,7 @@ import CookiePopup from "./components/CookiePopup";
 import { RegisterFormHeader } from "./components/Header";
 import { InputField } from "./components/InputField";
 import { useRegister } from "./useRegister";
-import { RoleSelector } from "./components/RoleSelector";
+// import { RoleSelector } from "./components/RoleSelector";
 
 const Register: React.FC = () => {
   const {
@@ -44,7 +43,7 @@ const Register: React.FC = () => {
     handleCheckboxChange,
     successMessage,
     errorMessage,
-    // handleRoleChange,
+    handleRoleChange,
     showTermsModal,
     setShowTermsModal,
     showCookiePopup,
@@ -122,8 +121,8 @@ const Register: React.FC = () => {
                 setShow={setShowRetypePassword}
               />
 
-              <RoleSelector />
-              {/* <div>
+              {/* <RoleSelector /> */}
+              <div>
                 <Select
                   name="role"
                   value={formData.role}
@@ -162,7 +161,7 @@ const Register: React.FC = () => {
                     <span>{errors.role}</span>
                   </div>
                 )}
-              </div> */}
+              </div>
 
               <InputField
                 label="Invite Code"
