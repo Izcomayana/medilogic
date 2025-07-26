@@ -73,41 +73,43 @@ export function useLogin() {
     }
   }, [step]);
 
-const handleStep1Submit = async (e: FormEvent) => {
-  e.preventDefault();
-  setSuccessMessage(null);
-  if (!validateForm()) return;
+  const handleStep1Submit = async (e: FormEvent) => {
+    e.preventDefault();
+    setSuccessMessage(null);
+    if (!validateForm()) return;
 
-  setLoading(true);
-  try {
-    const response = await axios.post(
-      "https://medilogic-backend.onrender.com/access/login-step-1",
-      qs.stringify({ username: email, password }),
-      {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        "https://medilogic-backend.onrender.com/access/login-step-1",
+        qs.stringify({ username: email, password }),
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
         },
-      }
-    );
+      );
 
-    if (response.data.session_id) {
-      setSessionId(response.data.session_id);
-      setStep(2);
-      setSuccessMessage("OTP sent to your email.");
-    } else {
-      setErrors({ general: "Session ID not received. Please try again." });
+      if (response.data.session_id) {
+        setSessionId(response.data.session_id);
+        setStep(2);
+        setSuccessMessage("OTP sent to your email.");
+      } else {
+        setErrors({ general: "Session ID not received. Please try again." });
+      }
+    } catch (error: any) {
+      // Safe fallback parsing
+      const msg =
+        error?.response?.data?.message ??
+        error?.response?.data?.detail ??
+        "An unexpected error occurred. Please try again.";
+      setErrors({
+        general: typeof msg === "string" ? msg : JSON.stringify(msg),
+      });
+    } finally {
+      setLoading(false);
     }
-  } catch (error: any) {
-    // Safe fallback parsing
-    const msg =
-      error?.response?.data?.message ??
-      error?.response?.data?.detail ??
-      "An unexpected error occurred. Please try again.";
-    setErrors({ general: typeof msg === "string" ? msg : JSON.stringify(msg) });
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   const handleStep2Submit = async (e: FormEvent) => {
     e.preventDefault();
