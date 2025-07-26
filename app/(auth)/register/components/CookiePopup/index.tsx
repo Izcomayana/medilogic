@@ -12,12 +12,14 @@ const CookiePopup: React.FC<CookiePopupProps> = ({ onAccept }) => {
         This site uses cookies to improve your experience. By continuing to use
         the site, you accept our use of cookies.
       </p>
-      <button
-        onClick={onAccept}
-        className="mt-3 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-      >
-        Accept Cookies
-      </button>
+      <div className="w-full flex justify-end">
+        <button
+          onClick={onAccept}
+          className="mt-3 p-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
+        >
+          Accept Cookies
+        </button>
+      </div>
     </div>
   );
 };

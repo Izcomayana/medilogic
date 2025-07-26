@@ -221,7 +221,6 @@ const Register: React.FC = () => {
                     placeholder="Enter your full name"
                     value={formData.name}
                     onChange={handleChange}
-                    required
                     disabled={loading}
                     autoComplete="name"
                     className={`pl-10 h-12 transition-all duration-200 focus:outline-none focus:ring-1 ${
@@ -231,10 +230,10 @@ const Register: React.FC = () => {
                     }`}
                   />
                 </div>
-                {errors.email && (
+                {errors.name && (
                   <div className="flex items-center space-x-1 text-red-600 text-sm mt-1">
                     <AlertCircle className="h-4 w-4" />
-                    <span>{errors.email}</span>
+                    <span>{errors.name}</span>
                   </div>
                 )}
               </div>
@@ -255,7 +254,6 @@ const Register: React.FC = () => {
                     placeholder="Email"
                     value={formData.email}
                     onChange={handleChange}
-                    required
                     autoComplete="email"
                     disabled={loading}
                     className={`pl-10 h-12 transition-all duration-200 focus:outline-none focus:ring-1 ${
@@ -265,6 +263,12 @@ const Register: React.FC = () => {
                     }`}
                   />
                 </div>
+                {errors.email && (
+                  <div className="flex items-center space-x-1 text-red-600 text-sm mt-1">
+                    <AlertCircle className="h-4 w-4" />
+                    <span>{errors.email}</span>
+                  </div>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -283,7 +287,6 @@ const Register: React.FC = () => {
                     placeholder="New Password"
                     value={formData.password}
                     onChange={handleChange}
-                    required
                     disabled={loading}
                     autoComplete="current-password"
                     className={`pl-10 pr-10 h-12 transition-all duration-200 focus:outline-none focus:ring-1 ${
@@ -304,7 +307,10 @@ const Register: React.FC = () => {
                     )}
                   </Button>
                   {errors.password && (
-                    <AlertCircle className="absolute right-10 top-1/2 transform -translate-y-1/2 text-red-500 h-5 w-5" />
+                    <div className="flex items-center space-x-1 text-red-600 text-sm mt-1">
+                      <AlertCircle className="h-4 w-4" />
+                      <span>{errors.password}</span>
+                    </div>
                   )}
                 </div>
               </div>
@@ -325,7 +331,6 @@ const Register: React.FC = () => {
                     placeholder="Re-enter Password"
                     value={formData.retypePassword}
                     onChange={handleChange}
-                    required
                     disabled={loading}
                     className={`pl-10 pr-10 h-12 transition-all duration-200 focus:outline-none focus:ring-1 ${
                       errors.retypePassword
@@ -345,7 +350,10 @@ const Register: React.FC = () => {
                     )}
                   </Button>
                   {errors.retypePassword && (
-                    <AlertCircle className="absolute right-10 top-1/2 transform -translate-y-1/2 text-red-500 h-5 w-5" />
+                    <div className="flex items-center space-x-1 text-red-600 text-sm mt-1">
+                      <AlertCircle className="h-4 w-4" />
+                      <span>{errors.retypePassword}</span>
+                    </div>
                   )}
                 </div>
               </div>
@@ -353,12 +361,17 @@ const Register: React.FC = () => {
               <div>
                 <Select
                   name="role"
-                  required
                   value={formData.role}
                   onValueChange={handleRoleChange}
                   disabled={loading}
                 >
-                  <SelectTrigger className="w-full relative cursor-pointer pl-9">
+                  <SelectTrigger
+                    className={`w-full relative cursor-pointer pl-9 transition-all duration-200 focus:outline-none focus:ring-1 ${
+                      errors.role
+                        ? "border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-200"
+                        : "border-gray-300 focus:border-[#15941f] focus:ring-[#15941f]/20"
+                    }`}
+                  >
                     <SelectValue className="" placeholder="Select Role" />
                   </SelectTrigger>
                   <SelectContent className="">
@@ -378,6 +391,12 @@ const Register: React.FC = () => {
                     </SelectItem>
                   </SelectContent>
                 </Select>
+                {errors.role && (
+                  <div className="flex items-center space-x-1 text-red-600 text-sm mt-1">
+                    <AlertCircle className="h-4 w-4" />
+                    <span>{errors.role}</span>
+                  </div>
+                )}
               </div>
 
               <div className="space-y-2">
