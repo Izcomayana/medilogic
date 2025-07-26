@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 
 export const useRegister = () => {
   const router = useRouter();
-
   const [formData, setFormData] = useState({
     name: "",
     email: "",
