@@ -77,56 +77,6 @@ export const useRegister = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-  // const [errors, setErrors] = useState<{
-  //   name?: string;
-  //   email?: string;
-  //   password?: string;
-  //   retypePassword?: string;
-  //   role?: string;
-  //   inviteCode?: string;
-  //   acceptTerms?: string;
-  // }>({});
-
-  // const validateForm = () => {
-  //   const newErrors: typeof errors = {};
-
-  //   if (!formData.name.trim()) {
-  //     newErrors.name = "Full name is required";
-  //   }
-
-  //   if (!formData.email.trim()) {
-  //     newErrors.email = "Email is required";
-  //   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-  //     newErrors.email = "Enter a valid email";
-  //   }
-
-  //   if (!formData.password.trim()) {
-  //     newErrors.password = "Password is required";
-  //   } else if (formData.password.length < 6) {
-  //     newErrors.password = "Password must be at least 6 characters";
-  //   }
-
-  //   if (!formData.retypePassword.trim()) {
-  //     newErrors.retypePassword = "Please confirm your password";
-  //   } else if (formData.password !== formData.retypePassword) {
-  //     newErrors.retypePassword = "Passwords do not match";
-  //   }
-
-  //   if (!formData.role) {
-  //     newErrors.role = "Role selection is required";
-  //   }
-
-  //   if (!formData.inviteCode.trim()) {
-  //     newErrors.inviteCode = "Invite code is required";
-  //   }
-
-  //   if (!formData.acceptTerms) {
-  //     newErrors.acceptTerms = "You must accept the terms and conditions";
-  //   }
-
-  //   setErrors(newErrors);
-  //   return Object.keys(newErrors).length === 0;
-  // };
 
   useEffect(() => {
     // Show cookie popup on page load if not accepted
@@ -156,15 +106,45 @@ export const useRegister = () => {
             email: formData.email,
             password: formData.password,
             role: formData.role,
-            inviteCode: formData.inviteCode,
-            acceptTerms: formData.acceptTerms,
+            invite_code: formData.inviteCode,
+            accept_terms: formData.acceptTerms,
           }),
         },
       );
 
       if (!response.ok) {
         const errorData = await response.json();
-        setErrorMessage(errorData.detail || "Signup failed.");
+
+        // Default fallback
+        let generalMessage = "Signup failed.";
+        const fieldErrors: typeof errors = {};
+
+        if (Array.isArray(errorData.detail)) {
+          // Backend validation errors — try mapping to fields
+          for (const err of errorData.detail) {
+            const field = err.loc?.[1]; // e.g. "inviteCode", "email", etc.
+            const msg = err.msg;
+
+            if (typeof field === "string" && msg) {
+              fieldErrors[field as keyof typeof errors] = msg;
+            }
+          }
+
+          // Fallback general message (first error)
+          if (errorData.detail.length > 0) {
+            generalMessage = errorData.detail[0].msg;
+          }
+        } else if (typeof errorData.detail === "string") {
+          // Generic error from backend
+          generalMessage = errorData.detail;
+        }
+
+        // Only show general error if no specific field errors were found
+        if (Object.keys(fieldErrors).length === 0) {
+          setErrorMessage(generalMessage);
+        }
+
+        setErrors(fieldErrors);
         setLoading(false);
         return;
       }
