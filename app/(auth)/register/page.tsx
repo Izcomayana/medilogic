@@ -22,12 +22,11 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import TermsModal from "./components/TermsModal";
+// import TermsModal from "./components/TermsModal";
 import CookiePopup from "./components/CookiePopup";
 import { RegisterFormHeader } from "./components/Header";
 import { InputField } from "./components/InputField";
 import { useRegister } from "./useRegister";
-// import { RoleSelector } from "./components/RoleSelector";
 
 const Register: React.FC = () => {
   const {
@@ -44,8 +43,6 @@ const Register: React.FC = () => {
     successMessage,
     errorMessage,
     handleRoleChange,
-    showTermsModal,
-    setShowTermsModal,
     showCookiePopup,
     handleAcceptCookies,
   } = useRegister();
@@ -121,7 +118,6 @@ const Register: React.FC = () => {
                 setShow={setShowRetypePassword}
               />
 
-              {/* <RoleSelector /> */}
               <div>
                 <Select
                   name="role"
@@ -141,10 +137,10 @@ const Register: React.FC = () => {
                   <SelectContent className="">
                     <SelectItem
                       className="relative cursor-pointer pl-9"
-                      value="clientadmin"
+                      value="client"
                     >
                       <ShieldUser className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 !h-5 !w-5" />
-                      Client Admin
+                      Client
                     </SelectItem>
                     <SelectItem
                       className="relative cursor-pointer pl-9"
@@ -211,7 +207,7 @@ const Register: React.FC = () => {
 
               <div
                 className="flex items-center space-x-2"
-                onClick={() => setShowTermsModal(true)}
+                // onClick={() => setShowTermsModal(true)}
               >
                 <Checkbox
                   id="terms"
@@ -233,6 +229,7 @@ const Register: React.FC = () => {
                   >
                     Terms of Service
                   </Link>{" "}
+                  <br className="md:hidden" />
                   and{" "}
                   <Link
                     href="/privacy-policy"
@@ -278,10 +275,10 @@ const Register: React.FC = () => {
           </div>
 
           {/* Terms and Conditions Modal */}
-          <TermsModal
+          {/* <TermsModal
             isOpen={showTermsModal}
             onClose={() => setShowTermsModal(false)}
-          />
+          /> */}
 
           {/* Cookie Consent Popup */}
           {showCookiePopup && <CookiePopup onAccept={handleAcceptCookies} />}

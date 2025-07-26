@@ -102,7 +102,7 @@ export default function LoginForm({
         </div>
 
         {/* General Error Message */}
-        {errors.general && (
+        {errors.general && typeof errors.general === "string" && (
           <div className="bg-red-50 border border-red-200 rounded-lg p-3">
             <div className="flex items-center space-x-2 text-red-700">
               <AlertCircle className="h-5 w-5" />

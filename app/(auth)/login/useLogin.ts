@@ -77,22 +77,35 @@ export function useLogin() {
     e.preventDefault();
     setSuccessMessage(null);
     if (!validateForm()) return;
+
     setLoading(true);
     try {
       const response = await axios.post(
         "https://medilogic-backend.onrender.com/access/login-step-1",
         qs.stringify({ username: email, password }),
-        { headers: { "Content-Type": "application/x-www-form-urlencoded" } },
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+        },
       );
+
       if (response.data.session_id) {
         setSessionId(response.data.session_id);
         setStep(2);
         setSuccessMessage("OTP sent to your email.");
       } else {
-        setErrors({ general: "Login step 1 failed: session_id not received." });
+        setErrors({ general: "Session ID not received. Please try again." });
       }
     } catch (error: any) {
-      setErrors({ general: error.response?.data?.message || "Login failed." });
+      // Safe fallback parsing
+      const msg =
+        error?.response?.data?.message ??
+        error?.response?.data?.detail ??
+        "An unexpected error occurred. Please try again.";
+      setErrors({
+        general: typeof msg === "string" ? msg : JSON.stringify(msg),
+      });
     } finally {
       setLoading(false);
     }
@@ -142,11 +155,18 @@ export function useLogin() {
         setErrors({ general: "Failed to resend OTP." });
       }
     } catch (error: any) {
-      setErrors({
-        general: error.response?.data?.message || "Error resending OTP.",
-      });
-    } finally {
-      setLoading(false);
+      const res = error.response?.data;
+      let message = "Login failed.";
+
+      if (Array.isArray(res?.detail)) {
+        message = res.detail.map((err: { msg: string }) => err.msg).join(" | ");
+      } else if (typeof res?.detail === "string") {
+        message = res.detail;
+      } else if (res?.message) {
+        message = res.message;
+      }
+
+      setErrors({ general: message });
     }
   };
 
