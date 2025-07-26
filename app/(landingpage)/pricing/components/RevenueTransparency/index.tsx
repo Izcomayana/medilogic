@@ -12,8 +12,8 @@ export default function RevenueTransparency() {
     {
       channel: "Starter Clinics",
       accounts: "2,000",
-      monthlyRevenue: "£98,000",
-      annualRevenue: "£1.17M",
+      monthlyRevenue: "£118,000",
+      annualRevenue: "£1.42M",
       color: "from-blue-500 to-blue-600",
     },
     {
