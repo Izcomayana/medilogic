@@ -1,34 +1,35 @@
 "use client";
 
 import React from "react";
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 // import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import {
   AlertCircle,
   Mail,
   Lock,
-  // ShieldUser,
-  // CarTaxiFront,
+  Eye,
+  EyeOff,
+  ShieldUser,
+  CarTaxiFront,
   Code,
   ArrowRight,
-  CircleUserRound,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import TermsModal from "./components/TermsModal";
 import CookiePopup from "./components/CookiePopup";
 import { RegisterFormHeader } from "./components/Header";
-import { InputField } from "./components/InputField";
+import NameInput from "./components/InputField";
 import { useRegister } from "./useRegister";
-import { RoleSelector } from "./components/RoleSelector";
 
 const Register: React.FC = () => {
   const {
@@ -44,7 +45,7 @@ const Register: React.FC = () => {
     handleCheckboxChange,
     successMessage,
     errorMessage,
-    // handleRoleChange,
+    handleRoleChange,
     showTermsModal,
     setShowTermsModal,
     showCookiePopup,
@@ -60,70 +61,134 @@ const Register: React.FC = () => {
 
           <div className="bg-white rounded-2xl shadow-xl p-4 border border-gray-100">
             <form onSubmit={handleSignup} className="space-y-4">
-              <InputField
-                label="Full Name"
-                icon={
-                  <CircleUserRound className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                }
-                name="name"
-                type="text"
-                placeholder="Enter your full name"
+              <NameInput
                 value={formData.name}
                 onChange={handleChange}
                 error={errors.name}
                 disabled={loading}
               />
 
-              <InputField
-                label="Email"
-                icon={
+              <div className="space-y-2">
+                <Label
+                  htmlFor="email"
+                  className="text-sm font-medium text-gray-700"
+                >
+                  Email
+                </Label>
+                <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                }
-                name="email"
-                type="email"
-                placeholder="Email"
-                value={formData.email}
-                onChange={handleChange}
-                error={errors.email}
-                disabled={loading}
-              />
+                  <Input
+                    id="email"
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    autoComplete="email"
+                    disabled={loading}
+                    className={`pl-10 h-12 transition-all duration-200 focus:outline-none focus:ring-1 ${
+                      errors.email
+                        ? "border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-200"
+                        : "border-gray-300 focus:border-[#15941f] focus:ring-[#15941f]/20"
+                    }`}
+                  />
+                </div>
+                {errors.email && (
+                  <div className="flex items-center space-x-1 text-red-600 text-sm mt-1">
+                    <AlertCircle className="h-4 w-4" />
+                    <span>{errors.email}</span>
+                  </div>
+                )}
+              </div>
 
-              <InputField
-                label="Password"
-                icon={
+              <div className="space-y-2">
+                <Label
+                  htmlFor="password"
+                  className="text-sm font-medium text-gray-700"
+                >
+                  Password
+                </Label>
+                <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                }
-                name="password"
-                type="password"
-                placeholder="Create your password"
-                value={formData.password}
-                onChange={handleChange}
-                error={errors.password}
-                disabled={loading}
-                password={true}
-                show={showPassword}
-                setShow={setShowPassword}
-              />
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    placeholder="New Password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    disabled={loading}
+                    autoComplete="current-password"
+                    className={`pl-10 pr-10 h-12 transition-all duration-200 focus:outline-none focus:ring-1 ${
+                      errors.password
+                        ? "border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-200"
+                        : "border-gray-300 focus:border-[#15941f] focus:ring-[#15941f]/20"
+                    }`}
+                  />
+                  <Button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-transparent text-gray-400 hover:text-gray-600 hover:bg-transparent transition-colors p-2 h-auto"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </Button>
+                  {errors.password && (
+                    <div className="flex items-center space-x-1 text-red-600 text-sm mt-1">
+                      <AlertCircle className="h-4 w-4" />
+                      <span>{errors.password}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
 
-              <InputField
-                label="Confirm Password"
-                icon={
+              <div className="space-y-2">
+                <Label
+                  htmlFor="confirmpassword"
+                  className="text-sm font-medium text-gray-700"
+                >
+                  Confirm Password
+                </Label>
+                <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                }
-                name="retypePassword"
-                type="password"
-                placeholder="Re-enter your password"
-                value={formData.retypePassword}
-                onChange={handleChange}
-                error={errors.retypePassword}
-                disabled={loading}
-                password={true}
-                show={showRetypePassword}
-                setShow={setShowRetypePassword}
-              />
+                  <Input
+                    id="confirmpassword"
+                    type={showRetypePassword ? "text" : "password"}
+                    name="retypePassword"
+                    placeholder="Re-enter Password"
+                    value={formData.retypePassword}
+                    onChange={handleChange}
+                    disabled={loading}
+                    className={`pl-10 pr-10 h-12 transition-all duration-200 focus:outline-none focus:ring-1 ${
+                      errors.retypePassword
+                        ? "border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-200"
+                        : "border-gray-300 focus:border-[#15941f] focus:ring-[#15941f]/20"
+                    }`}
+                  />
+                  <Button
+                    type="button"
+                    onClick={() => setShowRetypePassword(!showRetypePassword)}
+                    className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-transparent text-gray-400 hover:text-gray-600 hover:bg-transparent transition-colors p-2 h-auto"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5" />
+                    ) : (
+                      <Eye className="h-5 w-5" />
+                    )}
+                  </Button>
+                  {errors.retypePassword && (
+                    <div className="flex items-center space-x-1 text-red-600 text-sm mt-1">
+                      <AlertCircle className="h-4 w-4" />
+                      <span>{errors.retypePassword}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
 
-              <RoleSelector />
-              {/* <div>
+              <div>
                 <Select
                   name="role"
                   value={formData.role}
@@ -162,21 +227,35 @@ const Register: React.FC = () => {
                     <span>{errors.role}</span>
                   </div>
                 )}
-              </div> */}
+              </div>
 
-              <InputField
-                label="Invite Code"
-                icon={
-                  <Code className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                }
-                name="inviteCode"
-                type="text"
-                placeholder="Invite Code"
-                value={formData.inviteCode}
-                onChange={handleChange}
-                error={errors.inviteCode}
-                disabled={loading}
-              />
+              <div className="space-y-2">
+                <Label
+                  htmlFor="invitecode"
+                  className="text-sm font-medium text-gray-700"
+                >
+                  Invite Code
+                </Label>
+                <div className="relative">
+                  <Code className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 !h-5 !w-5" />
+
+                  <Input
+                    id="invitecode"
+                    type="text"
+                    name="inviteCode"
+                    placeholder="Invite Code"
+                    value={formData.inviteCode}
+                    onChange={handleChange}
+                    required
+                    disabled={loading}
+                    className={`pl-10 pr-10 h-12 transition-all duration-200 focus:outline-none focus:ring-1 ${
+                      errors.inviteCode
+                        ? "border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-200"
+                        : "border-gray-300 focus:border-[#15941f] focus:ring-[#15941f]/20"
+                    }`}
+                  />
+                </div>
+              </div>
 
               {/* General Error Message */}
               {errorMessage && (
@@ -210,10 +289,7 @@ const Register: React.FC = () => {
                 </div>
               )}
 
-              <div
-                className="flex items-center space-x-2"
-                onClick={() => setShowTermsModal(true)}
-              >
+              <div className="flex items-center space-x-2">
                 <Checkbox
                   id="terms"
                   name="acceptTerms"
@@ -245,7 +321,6 @@ const Register: React.FC = () => {
                   </Link>
                 </Label>
               </div>
-
               <div>
                 <Button
                   type="submit"
@@ -269,11 +344,15 @@ const Register: React.FC = () => {
                   Already have an account?
                   <Link
                     href="/login"
-                    className="text-[#15941f] hover:text-[#117a1a] hover:underline font-semibold transition-colors"
+                    className="text-[#15941f] hover:text-[#117a1a] font-semibold transition-colors"
                   >
                     Log in
                   </Link>
                 </p>
+              </div>
+
+              <div style={{ marginTop: "10px" }}>
+                Already have an account? <Link href="/login">Log in</Link>
               </div>
             </form>
           </div>
