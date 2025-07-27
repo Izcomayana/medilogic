@@ -149,7 +149,10 @@ export const useRegister = () => {
       }
 
       setSuccessMessage("Signup successful! Redirecting to login...");
-      setTimeout(() => router.push("/login"), 1500);
+      setTimeout(
+        () => router.push(`/verifyprompt?email=${formData.email}`),
+        1500,
+      );
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_error) {
       setErrorMessage("Network error. Please try again.");
