@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import Resetpassword from ".";
+import VerifyEmail from ".";
 
 const Page = () => {
   return (
@@ -8,7 +8,7 @@ const Page = () => {
         <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
       }
     >
-      <Resetpassword />
+      <VerifyEmail />
     </Suspense>
   );
 };
