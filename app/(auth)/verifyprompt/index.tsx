@@ -1,12 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+
+const COOLDOWN_DURATION = 60;
+const STORAGE_KEY = "medilogic_verify_cooldown";
 
 const VerifyPrompt = () => {
   const searchParams = useSearchParams();
@@ -23,19 +26,6 @@ const VerifyPrompt = () => {
       return;
     }
     setLoading(true);
-
-    const startCooldown = () => {
-      setCooldown(60);
-      const interval = setInterval(() => {
-        setCooldown((prev) => {
-          if (prev === 1) {
-            clearInterval(interval);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    };
 
     try {
       await axios.post(
@@ -60,6 +50,42 @@ const VerifyPrompt = () => {
       setLoading(false);
     }
   };
+
+  // ⏳ Starts the cooldown
+  const startCooldown = () => {
+    const expiresAt = Date.now() + COOLDOWN_DURATION * 1000;
+    localStorage.setItem(STORAGE_KEY, expiresAt.toString());
+    setCooldown(COOLDOWN_DURATION);
+    startCountdown(COOLDOWN_DURATION);
+  };
+
+  // ⏲️ Handles ticking countdown
+  const startCountdown = (start: number) => {
+    let timeLeft = start;
+    const interval = setInterval(() => {
+      timeLeft -= 1;
+      setCooldown(timeLeft);
+      if (timeLeft <= 0) {
+        clearInterval(interval);
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    }, 1000);
+  };
+
+  // ⏱️ Restore cooldown if it was active
+  useEffect(() => {
+    const storedExpiry = localStorage.getItem(STORAGE_KEY);
+    if (storedExpiry) {
+      const expiresAt = parseInt(storedExpiry);
+      const secondsLeft = Math.floor((expiresAt - Date.now()) / 1000);
+      if (secondsLeft > 0) {
+        setCooldown(secondsLeft);
+        startCountdown(secondsLeft);
+      } else {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center px-4 pt-8 pb-12">
