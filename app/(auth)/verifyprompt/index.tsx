@@ -34,15 +34,17 @@ const VerifyPrompt = () => {
           email,
         },
       );
-      toast.success("✅ Verification Sent", {
+      toast.success("Verification Sent", {
         description: "Check your inbox for the verification link.",
       });
+
       startCooldown();
     } catch (error: unknown) {
       const err = error as { response?: { data?: { detail?: string } } };
       const errorMsg =
         err.response?.data?.detail ||
         "An error occurred while resending verification link.";
+
       toast.error("Error", {
         description: errorMsg,
       });

@@ -8,6 +8,28 @@ import { Card, CardContent } from "@/components/ui/card";
 export const BFHP = () => {
   const [audienceRef, audienceInView] = useInView(0.1);
 
+  const Professionals = [
+    {
+      icon: Building2,
+      title: "NHS clinics & hospitals",
+      desc: "Streamlined operations for public healthcare",
+    },
+    {
+      icon: Stethoscope,
+      title: "Private medical practices",
+      desc: "Efficient logistics for private care",
+    },
+    {
+      icon: Recycle,
+      title: "Medical waste disposal companies",
+      desc: "Compliant waste management solutions",
+    },
+    {
+      icon: Truck,
+      title: "Healthcare logistics firms",
+      desc: "Optimized delivery and transport",
+    },
+  ];
   return (
     <>
       {/* Built for Healthcare Professionals 69*/}
@@ -26,28 +48,7 @@ export const BFHP = () => {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              {
-                icon: Building2,
-                title: "NHS clinics & hospitals",
-                desc: "Streamlined operations for public healthcare",
-              },
-              {
-                icon: Stethoscope,
-                title: "Private medical practices",
-                desc: "Efficient logistics for private care",
-              },
-              {
-                icon: Recycle,
-                title: "Medical waste disposal companies",
-                desc: "Compliant waste management solutions",
-              },
-              {
-                icon: Truck,
-                title: "Healthcare logistics firms",
-                desc: "Optimized delivery and transport",
-              },
-            ].map((item, index) => (
+            {Professionals.map((item, index) => (
               <Card
                 key={index}
                 className={`group hover:shadow-xl transition-all duration-500 border-0 shadow-lg hover:-translate-y-2 ${fadeInUp} ${
