@@ -148,7 +148,7 @@ export const useRegister = () => {
         return;
       }
 
-      setSuccessMessage("Signup successful! Redirecting to login...");
+      setSuccessMessage("Signup successful! Redirecting to verify prompt...");
       setTimeout(
         () => router.push(`/verifyprompt?email=${formData.email}`),
         1500,
