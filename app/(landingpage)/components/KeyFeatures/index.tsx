@@ -15,6 +15,44 @@ import { useInView } from "../../hooks/useInView";
 export const KeyFeatures = () => {
   const [keyFeaturesRef, keyFeaturesInView] = useInView(0.1);
 
+  const features = [
+    {
+      icon: Brain,
+      title: "AI-Optimized Waste Routing & Scheduling",
+      desc: "Cut transport costs and boost efficiency with intelligent trip planning.",
+      image: "/ai-optimized.png",
+      color: "from-gray-500 to-gray-600",
+    },
+    {
+      icon: Monitor,
+      title: "Real-Time Compliance Dashboard",
+      desc: "Instantly monitor GDPR, NHS, ISO 27001, and UK waste regulation compliance.",
+      image: "/compliance-dashboard.png",
+      color: "from-blue-500 to-blue-600",
+    },
+    {
+      icon: MapPin,
+      title: "Live Trip Tracking for Clinics, Drivers & Clients",
+      desc: "Track medical waste movements in real time — from pickup to disposal.",
+      image: "/trip-tracking.png",
+      color: "from-[#15941f] to-green-500",
+    },
+    {
+      icon: ClipboardCheck,
+      title: "Automated Consignment Notes & Digital Logs",
+      desc: "Generate and store all required legal documents automatically.",
+      image: "/notesandlogs.png",
+      color: "from-purple-500 to-pink-500",
+    },
+    {
+      icon: Gauge,
+      title: "Role-Based Smart Dashboards",
+      desc: "Personalized views and KPIs for Admins, Clinics, Drivers, and Waste Firms.",
+      image: "/rolebasedashboard.png",
+      color: "from-orange-500 to-orange-500",
+    },
+  ];
+
   return (
     <section
       ref={keyFeaturesRef}
@@ -34,43 +72,7 @@ export const KeyFeatures = () => {
         </div>
 
         <div className="grid lg:grid-cols-3 gap-12">
-          {[
-            {
-              icon: Brain,
-              title: "AI-Optimized Waste Routing & Scheduling",
-              desc: "Cut transport costs and boost efficiency with intelligent trip planning.",
-              image: "/ai-optimized.png",
-              color: "from-gray-500 to-gray-600",
-            },
-            {
-              icon: Monitor,
-              title: "Real-Time Compliance Dashboard",
-              desc: "Instantly monitor GDPR, NHS, ISO 27001, and UK waste regulation compliance.",
-              image: "/compliance-dashboard.png",
-              color: "from-blue-500 to-blue-600",
-            },
-            {
-              icon: MapPin,
-              title: "Live Trip Tracking for Clinics, Drivers & Clients",
-              desc: "Track medical waste movements in real time — from pickup to disposal.",
-              image: "/trip-tracking.png",
-              color: "from-[#15941f] to-green-500",
-            },
-            {
-              icon: ClipboardCheck,
-              title: "Automated Consignment Notes & Digital Logs",
-              desc: "Generate and store all required legal documents automatically.",
-              image: "/notesandlogs.png",
-              color: "from-purple-500 to-pink-500",
-            },
-            {
-              icon: Gauge,
-              title: "Role-Based Smart Dashboards",
-              desc: "Personalized views and KPIs for Admins, Clinics, Drivers, and Waste Firms.",
-              image: "/rolebasedashboard.png",
-              color: "from-orange-500 to-orange-500",
-            },
-          ].map((feature, index) => (
+          {features.map((feature, index) => (
             <Card
               key={index}
               className={`group hover:shadow-2xl transition-all duration-700 border-0 shadow-lg overflow-hidden hover:-translate-y-2 p-0 ${fadeInUp} ${
