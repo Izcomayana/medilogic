@@ -1,7 +1,7 @@
 "use client";
 
 // import { useInView } from "../../hooks/useInView";
-import { fadeInUp, staggerDelay } from "../../hooks/annimation";
+import { staggerDelay } from "../../hooks/annimation";
 import { Building2, Truck, Stethoscope, Recycle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
