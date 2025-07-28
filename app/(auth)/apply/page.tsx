@@ -5,7 +5,7 @@
 //   const handleApply = () => {
 
 //   }
-  
+
 //   return (
 //     <div className="min-h-screen bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center px-4 pt-8 pb-12">
 //       <div className="w-full max-w-md">
@@ -15,7 +15,7 @@
 
 //         <div className="bg-white rounded-2xl shadow-xl p-4 border border-gray-100">
 //             <form onSubmit={handleApply} className="space-y-4">
-            
+
 //             </form>
 //           </div>
 //       </div>
