@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { HomeLogo } from "@/components/HomeLogo";
 
 const COOLDOWN_DURATION = 60;
 const STORAGE_KEY = "medilogic_verify_cooldown";
@@ -92,29 +93,7 @@ const VerifyPrompt = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center px-4 pt-8 pb-12">
       <div className="w-full max-w-md text-center">
-        <Link
-          href="/"
-          className="inline-flex items-center space-x-2 group mb-6"
-        >
-          <div className="bg-[#15941f] rounded transition-transform duration-200 group-hover:scale-110">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="3.5"
-              className="lucide lucide-plus h-10 w-10 text-white group-hover:rotate-90 transition-transform duration-300"
-            >
-              <path d="M5 12h14"></path>
-              <path d="M12 5v14"></path>
-            </svg>
-          </div>
-          <span className="text-[#15941f] text-2xl font-bold tracking-tight">
-            Medilogic
-          </span>
-        </Link>
+        <HomeLogo />
 
         <h2 className="text-xl font-semibold text-gray-100 mb-3">
           🔒 Verify Your Email Address
