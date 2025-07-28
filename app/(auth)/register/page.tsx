@@ -23,9 +23,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 // import TermsModal from "./components/TermsModal";
-import CookiePopup from "./components/CookiePopup";
+import CookiePopup from "../components/CookiePopup";
 import { RegisterFormHeader } from "./components/Header";
-import { InputField } from "./components/InputField";
+import { InputField } from "../components/InputField";
 import { useRegister } from "./useRegister";
 
 const Register: React.FC = () => {

@@ -1,5 +1,10 @@
+"use client";
+
 import { HomeLogo } from "@/components/HomeLogo";
 import React from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AdminTab } from "./components/AdminTab";
+import { RegulatorTab } from "./components/RegulatorTab";
 
 const Apply = () => {
   return (
@@ -9,8 +14,27 @@ const Apply = () => {
           <HomeLogo />
         </div>
 
-        <div className="bg-white rounded-2xl shadow-xl p-4 border border-gray-100">
-          <form className="space-y-4"></form>
+        <div className="flex w-full flex-col gap-6">
+          <Tabs defaultValue="admin">
+            <TabsList>
+              <TabsTrigger value="admin" className="cursor-pointer mr-4">
+                Apply as Admin
+              </TabsTrigger>
+              <TabsTrigger value="regulator" className="cursor-pointer mr-4">
+                Apply as Regulator
+              </TabsTrigger>
+            </TabsList>
+
+            {/* Admin Form */}
+            <TabsContent value="admin">
+              <AdminTab />
+            </TabsContent>
+
+            {/* Regulator Form */}
+            <TabsContent value="regulator">
+              <RegulatorTab />
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
     </div>
