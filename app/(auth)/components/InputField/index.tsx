@@ -35,7 +35,7 @@ export const InputField = ({
           onChange={onChange}
           disabled={disabled}
           autoComplete={name}
-          className={`pl-10 h-12 transition-all duration-200 focus:outline-none focus:ring-1 ${
+          className={`pl-10 transition-all duration-200 focus:outline-none focus:ring-1 ${
             error
               ? "border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-200"
               : "border-gray-300 focus:border-[#15941f] focus:ring-[#15941f]/20"
