@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AlertCircle, ArrowRight, Mail } from "lucide-react";
+import { HomeLogo } from "@/components/HomeLogo";
 
 const Forgotpassword: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -70,30 +71,7 @@ const Forgotpassword: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center px-4 pt-8 pb-12">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link
-            href="/"
-            className="inline-flex items-center space-x-2 group mb-6"
-          >
-            <div className="bg-[#15941f] rounded transition-transform duration-200 group-hover:scale-110">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="12"
-                height="12"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="3.5"
-                className="lucide lucide-plus h-10 w-10 text-white rotate-0 transition-transform duration-300 group-hover:rotate-90"
-                aria-hidden="true"
-              >
-                <path d="M5 12h14"></path>
-                <path d="M12 5v14"></path>
-              </svg>
-            </div>
-            <span className="text-[#15941f] text-2xl font-bold tracking-tight">
-              Medilogic
-            </span>
-          </Link>
+          <HomeLogo />
         </div>
 
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
