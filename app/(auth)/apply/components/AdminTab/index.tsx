@@ -16,6 +16,15 @@ import { InputField } from "@/app/(auth)/components/InputField";
 import { CircleUserRound, Mail, Lock, AlertCircle } from "lucide-react";
 import { useApplyAdmin } from "./useApplyAdmin";
 import CookiePopup from "../../../components/CookiePopup";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export const AdminTab = () => {
   const {
@@ -31,6 +40,8 @@ export const AdminTab = () => {
     handleCheckboxChange,
     showCookiePopup,
     handleAcceptCookies,
+    showSuccessModal,
+    setShowSuccessModal,
   } = useApplyAdmin();
 
   return (
@@ -215,6 +226,28 @@ export const AdminTab = () => {
 
       {/* Cookie Consent Popup */}
       {showCookiePopup && <CookiePopup onAccept={handleAcceptCookies} />}
+
+      <AlertDialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-[#15941f] text-lg">
+              🎉 Application Submitted Successfully!
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-sm text-gray-600 mt-2">
+              Your application has been submitted successfully. <br />
+              The Super Admin will get back to you via the email you provided.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction
+              onClick={() => setShowSuccessModal(false)}
+              className="bg-[#15941f] hover:bg-[#117a1a] text-white"
+            >
+              <Link href="/">Okay, got it!</Link>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 };

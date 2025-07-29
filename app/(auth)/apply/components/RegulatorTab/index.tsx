@@ -23,6 +23,15 @@ import {
 } from "lucide-react";
 import { useApplyRegulator } from "./useApplyRegulator";
 import CookiePopup from "../../../components/CookiePopup";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export const RegulatorTab = () => {
   const {
@@ -38,6 +47,8 @@ export const RegulatorTab = () => {
     handleCheckboxChange,
     showCookiePopup,
     handleAcceptCookies,
+    showSuccessModal,
+    setShowSuccessModal,
   } = useApplyRegulator();
 
   return (
@@ -235,6 +246,28 @@ export const RegulatorTab = () => {
 
       {/* Cookie Consent Popup */}
       {showCookiePopup && <CookiePopup onAccept={handleAcceptCookies} />}
+
+      <AlertDialog open={showSuccessModal} onOpenChange={setShowSuccessModal}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-[#15941f] text-lg">
+              🎉 Application Submitted Successfully!
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-sm text-gray-600 mt-2">
+              Your application has been submitted successfully. <br />
+              The Super Admin will get back to you via the email you provided.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction
+              onClick={() => setShowSuccessModal(false)}
+              className="bg-[#15941f] hover:bg-[#117a1a] text-white"
+            >
+              <Link href="/">Okay, got it!</Link>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 };

@@ -10,6 +10,7 @@ export const useApplyRegulator = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   // const [successMessage, setSuccessMessage] = useState("");
   const [showCookiePopup, setShowCookiePopup] = useState(true);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -136,7 +137,7 @@ export const useApplyRegulator = () => {
           acceptCookies: formData.acceptCookies,
         });
 
-        // const errorData = await response.data;
+        setShowSuccessModal(true);
       } else {
         setError({ general: "Something went wrong. Please try again later." });
       }
@@ -187,6 +188,8 @@ export const useApplyRegulator = () => {
     setShowConfirmPassword,
     // successMessage,
     // setSuccessMessage,
+    showSuccessModal,
+    setShowSuccessModal,
     showCookiePopup,
     setShowCookiePopup,
     formData,

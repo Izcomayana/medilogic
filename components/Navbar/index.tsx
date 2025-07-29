@@ -17,7 +17,7 @@ export default function Navbar() {
     { name: "Features", href: "/features" },
     { name: "Pricing", href: "/pricing" },
     { name: "Contact", href: "/contacts" },
-    { name: "Apply as an Organization", href: "/#" },
+    { name: "Apply as an Organization", href: "/apply" },
     { name: "Login", href: "/login" },
     { name: "Register", href: "/register" },
   ];
@@ -32,7 +32,7 @@ export default function Navbar() {
     { name: "Features", href: "/features" },
     { name: "Pricing", href: "/pricing" },
     // { name: "Contact", href: "/contacts" },
-    { name: "Apply as an Organization", href: "/#" },
+    { name: "Apply as an Organization", href: "/apply" },
   ];
 
   return (

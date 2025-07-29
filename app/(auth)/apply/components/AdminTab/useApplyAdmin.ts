@@ -10,6 +10,7 @@ export const useApplyAdmin = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   // const [successMessage, setSuccessMessage] = useState("");
   const [showCookiePopup, setShowCookiePopup] = useState(true);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -126,7 +127,8 @@ export const useApplyAdmin = () => {
           acceptTerms: false,
           acceptCookies: formData.acceptCookies,
         });
-        console.log(response.data);
+
+        setShowSuccessModal(true);
       } else {
         setError({ general: "Something went wrong. Please try again later." });
       }
@@ -178,6 +180,8 @@ export const useApplyAdmin = () => {
     setShowConfirmPassword,
     // successMessage,
     // setSuccessMessage,
+    showSuccessModal,
+    setShowSuccessModal,
     showCookiePopup,
     setShowCookiePopup,
     formData,
