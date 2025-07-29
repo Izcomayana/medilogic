@@ -2,21 +2,23 @@
 
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import { toast } from "sonner";
 
-export const useApplyRegulator = () => {
+export const useApplyAdmin = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
+  // const [successMessage, setSuccessMessage] = useState("");
   const [showCookiePopup, setShowCookiePopup] = useState(true);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
-    regCountry: "",
-    regState: "",
+    orgType: "",
+    orgName: "",
     adminMessage: "",
     acceptTerms: false,
     acceptCookies: false,
@@ -27,8 +29,8 @@ export const useApplyRegulator = () => {
     email?: string;
     password?: string;
     confirmPassword?: string;
-    regCountry?: string;
-    regState?: string;
+    orgType?: string;
+    orgName?: string;
     adminMessage?: string;
     acceptTerms?: string;
     general?: string;
@@ -59,12 +61,12 @@ export const useApplyRegulator = () => {
       newError.confirmPassword = "Passwords do not match";
     }
 
-    if (!formData.regCountry.trim()) {
-      newError.regCountry = "Organization type is required";
+    if (!formData.orgType.trim()) {
+      newError.orgType = "Organization type is required";
     }
 
-    if (!formData.regState.trim()) {
-      newError.regState = "Organization name is required";
+    if (!formData.orgName.trim()) {
+      newError.orgName = "Organization name is required";
     }
 
     if (!formData.acceptTerms) {
@@ -81,9 +83,9 @@ export const useApplyRegulator = () => {
     }
   }, [formData.acceptCookies]);
 
-  const handleRegulatorRegister = async (e: React.FormEvent) => {
+  const handleAdminRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSuccessMessage("");
+    // setSuccessMessage("");
     setError({});
 
     if (!validateForm()) return;
@@ -91,14 +93,17 @@ export const useApplyRegulator = () => {
 
     try {
       const response = await axios.post(
-        "https://medilogic-backend.onrender.com/auth/admin-signup",
+        "https://medilogic-backend.onrender.com/apply",
         {
-          name: formData.name,
+          role: "admin",
+          full_name: formData.name,
           email: formData.email,
           password: formData.password,
-          regCountry: formData.regCountry,
-          regState: formData.regState,
-          adminMessage: formData.adminMessage,
+          organization_type: formData.orgType,
+          organization_name: formData.orgName,
+          message: formData.adminMessage,
+          status: "pending",
+          submitted_at: new Date().toISOString(),
         },
         {
           headers: {
@@ -108,27 +113,33 @@ export const useApplyRegulator = () => {
       );
 
       if (response.status === 201 || response.status === 200) {
-        setSuccessMessage("Signup successful! Awaiting Super Admin approval.");
+        toast.success("Signup successful!", {
+          description: "Awaiting Super Admin approval.",
+        });
         setFormData({
           name: "",
           email: "",
           password: "",
           confirmPassword: "",
-          regCountry: "",
-          regState: "",
+          orgType: "",
+          orgName: "",
           adminMessage: "",
           acceptTerms: false,
           acceptCookies: formData.acceptCookies,
         });
-        console.log(response.data);
+
+        setShowSuccessModal(true);
       } else {
         setError({ general: "Something went wrong. Please try again later." });
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       const message =
-        err?.response?.data?.message || "Network error. Please try again.";
-      setError({ general: message });
+        err.response.data.detail || "Network error. Please try again.";
+
+      toast.error("Error", {
+        description: message,
+      });
     } finally {
       setLoading(false);
     }
@@ -167,15 +178,17 @@ export const useApplyRegulator = () => {
     setShowPassword,
     showConfirmPassword,
     setShowConfirmPassword,
-    successMessage,
-    setSuccessMessage,
+    // successMessage,
+    // setSuccessMessage,
+    showSuccessModal,
+    setShowSuccessModal,
     showCookiePopup,
     setShowCookiePopup,
     formData,
     setFormData,
     error,
     setError,
-    handleRegulatorRegister,
+    handleAdminRegister,
     handleChange,
     handleCheckboxChange,
     handleAcceptCookies,
