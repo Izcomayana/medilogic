@@ -14,7 +14,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { InputField } from "@/app/(auth)/components/InputField";
 import { CircleUserRound, Mail, Lock, AlertCircle } from "lucide-react";
-import { useApplyAdmin } from "../useApplyAdmin";
+import { useApplyAdmin } from "./useApplyAdmin";
 import CookiePopup from "../../../components/CookiePopup";
 
 export const AdminTab = () => {
@@ -29,7 +29,6 @@ export const AdminTab = () => {
     showConfirmPassword,
     setShowConfirmPassword,
     handleCheckboxChange,
-    successMessage,
     showCookiePopup,
     handleAcceptCookies,
   } = useApplyAdmin();
@@ -192,26 +191,6 @@ export const AdminTab = () => {
               <div className="flex items-center space-x-2 text-red-700">
                 <AlertCircle className="h-5 w-5" />
                 <span className="text-sm font-medium">{error.general}</span>
-              </div>
-            </div>
-          )}
-
-          {/* Success Message */}
-          {successMessage && (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-              <div className="flex items-center space-x-2 text-green-700">
-                <svg
-                  className="h-5 w-5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span className="text-sm font-medium">{successMessage}</span>
               </div>
             </div>
           )}

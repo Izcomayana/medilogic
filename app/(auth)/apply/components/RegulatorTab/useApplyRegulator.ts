@@ -2,12 +2,13 @@
 
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import { toast } from "sonner";
 
 export const useApplyRegulator = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
+  // const [successMessage, setSuccessMessage] = useState("");
   const [showCookiePopup, setShowCookiePopup] = useState(true);
 
   const [formData, setFormData] = useState({
@@ -17,6 +18,7 @@ export const useApplyRegulator = () => {
     confirmPassword: "",
     regCountry: "",
     regState: "",
+    regRegion: "",
     adminMessage: "",
     acceptTerms: false,
     acceptCookies: false,
@@ -29,6 +31,7 @@ export const useApplyRegulator = () => {
     confirmPassword?: string;
     regCountry?: string;
     regState?: string;
+    regRegion?: string;
     adminMessage?: string;
     acceptTerms?: string;
     general?: string;
@@ -67,6 +70,10 @@ export const useApplyRegulator = () => {
       newError.regState = "Organization name is required";
     }
 
+    if (!formData.regRegion.trim()) {
+      newError.regRegion = "Organization region is required";
+    }
+
     if (!formData.acceptTerms) {
       newError.acceptTerms = "You must accept the terms and conditions";
     }
@@ -83,7 +90,7 @@ export const useApplyRegulator = () => {
 
   const handleRegulatorRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSuccessMessage("");
+    // setSuccessMessage("");
     setError({});
 
     if (!validateForm()) return;
@@ -91,14 +98,18 @@ export const useApplyRegulator = () => {
 
     try {
       const response = await axios.post(
-        "https://medilogic-backend.onrender.com/auth/admin-signup",
+        "https://medilogic-backend.onrender.com/apply",
         {
-          name: formData.name,
+          full_name: formData.name,
           email: formData.email,
           password: formData.password,
-          regCountry: formData.regCountry,
-          regState: formData.regState,
-          adminMessage: formData.adminMessage,
+          role: "regulator",
+          regulated_country: formData.regCountry,
+          regulated_state: formData.regState,
+          regulated_region: formData.regRegion,
+          message: formData.adminMessage,
+          status: "pending",
+          submitted_at: new Date().toISOString(),
         },
         {
           headers: {
@@ -108,7 +119,10 @@ export const useApplyRegulator = () => {
       );
 
       if (response.status === 201 || response.status === 200) {
-        setSuccessMessage("Signup successful! Awaiting Super Admin approval.");
+        toast.success("Signup successful!", {
+          description: "Awaiting Super Admin approval.",
+        });
+        // setSuccessMessage(" ");
         setFormData({
           name: "",
           email: "",
@@ -116,19 +130,23 @@ export const useApplyRegulator = () => {
           confirmPassword: "",
           regCountry: "",
           regState: "",
+          regRegion: "",
           adminMessage: "",
           acceptTerms: false,
           acceptCookies: formData.acceptCookies,
         });
-        console.log(response.data);
+
+        // const errorData = await response.data;
       } else {
         setError({ general: "Something went wrong. Please try again later." });
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       const message =
-        err?.response?.data?.message || "Network error. Please try again.";
-      setError({ general: message });
+        `Error: ${err.response.data.detail}` || "error. Please try again.";
+      toast.error("Error", {
+        description: message,
+      });
     } finally {
       setLoading(false);
     }
@@ -167,8 +185,8 @@ export const useApplyRegulator = () => {
     setShowPassword,
     showConfirmPassword,
     setShowConfirmPassword,
-    successMessage,
-    setSuccessMessage,
+    // successMessage,
+    // setSuccessMessage,
     showCookiePopup,
     setShowCookiePopup,
     formData,

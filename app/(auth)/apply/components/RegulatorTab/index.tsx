@@ -13,8 +13,15 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { InputField } from "@/app/(auth)/components/InputField";
-import { CircleUserRound, Mail, Lock, AlertCircle } from "lucide-react";
-import { useApplyRegulator } from "../useApplyRegulator";
+import {
+  CircleUserRound,
+  Mail,
+  Lock,
+  AlertCircle,
+  Globe,
+  MapPinHouse,
+} from "lucide-react";
+import { useApplyRegulator } from "./useApplyRegulator";
 import CookiePopup from "../../../components/CookiePopup";
 
 export const RegulatorTab = () => {
@@ -29,7 +36,6 @@ export const RegulatorTab = () => {
     showConfirmPassword,
     setShowConfirmPassword,
     handleCheckboxChange,
-    successMessage,
     showCookiePopup,
     handleAcceptCookies,
   } = useApplyRegulator();
@@ -107,13 +113,13 @@ export const RegulatorTab = () => {
             />
 
             <InputField
-              label="Organization Type"
+              label="Registration Country"
               icon={
-                <CircleUserRound className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                <Globe className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
               }
               name="regCountry"
               type="text"
-              placeholder="Clinic, Waste Company, etc."
+              placeholder="England"
               value={formData.regCountry}
               onChange={handleChange}
               error={error.regCountry}
@@ -121,16 +127,30 @@ export const RegulatorTab = () => {
             />
 
             <InputField
-              label="Organization Name"
+              label="Registration State"
               icon={
-                <CircleUserRound className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                <MapPinHouse className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
               }
               name="regState"
               type="text"
-              placeholder="HealthCare Plus"
+              placeholder="London"
               value={formData.regState}
               onChange={handleChange}
               error={error.regState}
+              disabled={loading}
+            />
+
+            <InputField
+              label="Registration Region"
+              icon={
+                <MapPinHouse className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+              }
+              name="regRegion"
+              type="text"
+              placeholder="London"
+              value={formData.regRegion}
+              onChange={handleChange}
+              error={error.regRegion}
               disabled={loading}
             />
 
@@ -191,26 +211,6 @@ export const RegulatorTab = () => {
               <div className="flex items-center space-x-2 text-red-700">
                 <AlertCircle className="h-5 w-5" />
                 <span className="text-sm font-medium">{error.general}</span>
-              </div>
-            </div>
-          )}
-
-          {/* Success Message */}
-          {successMessage && (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-              <div className="flex items-center space-x-2 text-green-700">
-                <svg
-                  className="h-5 w-5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span className="text-sm font-medium">{successMessage}</span>
               </div>
             </div>
           )}

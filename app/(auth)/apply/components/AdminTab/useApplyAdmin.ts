@@ -2,12 +2,13 @@
 
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import { toast } from "sonner";
 
 export const useApplyAdmin = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
+  // const [successMessage, setSuccessMessage] = useState("");
   const [showCookiePopup, setShowCookiePopup] = useState(true);
 
   const [formData, setFormData] = useState({
@@ -83,7 +84,7 @@ export const useApplyAdmin = () => {
 
   const handleAdminRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSuccessMessage("");
+    // setSuccessMessage("");
     setError({});
 
     if (!validateForm()) return;
@@ -91,14 +92,17 @@ export const useApplyAdmin = () => {
 
     try {
       const response = await axios.post(
-        "https://medilogic-backend.onrender.com/auth/admin-signup",
+        "https://medilogic-backend.onrender.com/apply",
         {
-          name: formData.name,
+          role: "admin",
+          full_name: formData.name,
           email: formData.email,
           password: formData.password,
-          orgType: formData.orgType,
-          orgName: formData.orgName,
-          adminMessage: formData.adminMessage,
+          organization_type: formData.orgType,
+          organization_name: formData.orgName,
+          message: formData.adminMessage,
+          status: "pending",
+          submitted_at: new Date().toISOString(),
         },
         {
           headers: {
@@ -108,7 +112,9 @@ export const useApplyAdmin = () => {
       );
 
       if (response.status === 201 || response.status === 200) {
-        setSuccessMessage("Signup successful! Awaiting Super Admin approval.");
+        toast.success("Signup successful!", {
+          description: "Awaiting Super Admin approval.",
+        });
         setFormData({
           name: "",
           email: "",
@@ -127,8 +133,11 @@ export const useApplyAdmin = () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       const message =
-        err?.response?.data?.message || "Network error. Please try again.";
-      setError({ general: message });
+        err.response.data.detail || "Network error. Please try again.";
+
+      toast.error("Error", {
+        description: message,
+      });
     } finally {
       setLoading(false);
     }
@@ -167,8 +176,8 @@ export const useApplyAdmin = () => {
     setShowPassword,
     showConfirmPassword,
     setShowConfirmPassword,
-    successMessage,
-    setSuccessMessage,
+    // successMessage,
+    // setSuccessMessage,
     showCookiePopup,
     setShowCookiePopup,
     formData,
