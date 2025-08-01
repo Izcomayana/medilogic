@@ -3,8 +3,8 @@ import { Driver } from ".";
 
 export default function Page() {
   return (
-        <RoleGuard allowedRoles={["driver"]}>
+    <RoleGuard allowedRoles={["driver"]}>
       <Driver />
     </RoleGuard>
-  )
+  );
 }

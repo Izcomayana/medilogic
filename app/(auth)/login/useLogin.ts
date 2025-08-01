@@ -140,7 +140,7 @@ export function useLogin() {
 
         localStorage.setItem("authToken", access_token);
         localStorage.setItem("userRole", role);
-        
+
         toast.success("Congrats!", {
           description: "Login successful! Redirecting...",
         });

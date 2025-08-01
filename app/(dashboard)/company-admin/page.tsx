@@ -3,8 +3,8 @@ import { CompanyAdmin } from ".";
 
 export default function Page() {
   return (
-        <RoleGuard allowedRoles={["admin"]}>
+    <RoleGuard allowedRoles={["admin"]}>
       <CompanyAdmin />
     </RoleGuard>
-  )
+  );
 }

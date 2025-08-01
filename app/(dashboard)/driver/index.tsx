@@ -1,7 +1,5 @@
-import React from 'react'
+import React from "react";
 
 export const Driver = () => {
-  return (
-    <div>Driver</div>
-  )
-}
+  return <div>Driver</div>;
+};

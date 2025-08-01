@@ -1,7 +1,5 @@
-import React from 'react'
+import React from "react";
 
 export const CompanyAdmin = () => {
-  return (
-    <div>companyAdmin</div>
-  )
-}
+  return <div>companyAdmin</div>;
+};

@@ -3,7 +3,7 @@ import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import Providers from "../components/Providers";
-import { AuthProvider } from "@/components/auth"; 
+import { AuthProvider } from "@/components/auth";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -24,7 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${montserrat.variable} montserrat antialiased`}>
-                <AuthProvider>
+        <AuthProvider>
           <Providers>{children}</Providers>
           <Toaster position="top-center" richColors />
         </AuthProvider>
@@ -32,4 +32,3 @@ export default function RootLayout({
     </html>
   );
 }
-
