@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import axios from "axios";
 import qs from "qs";
+import { toast } from "sonner";
 
 export function useLogin() {
   const router = useRouter();
@@ -93,18 +94,28 @@ export function useLogin() {
       if (response.data.session_id) {
         setSessionId(response.data.session_id);
         setStep(2);
-        setSuccessMessage("OTP sent to your email.");
+
+        toast.success("Sent!", {
+          description: "OTP sent to your email.",
+        });
+
+        setLoading(false);
+        return;
       } else {
         setErrors({ general: "Session ID not received. Please try again." });
       }
     } catch (error: any) {
-      // Safe fallback parsing
       const msg =
         error?.response?.data?.message ??
         error?.response?.data?.detail ??
         "An unexpected error occurred. Please try again.";
-      setErrors({
-        general: typeof msg === "string" ? msg : JSON.stringify(msg),
+
+      const errorMessage = typeof msg === "string" ? msg : JSON.stringify(msg);
+
+      setErrors({ general: errorMessage });
+
+      toast.error("Login failed", {
+        description: errorMessage,
       });
     } finally {
       setLoading(false);
@@ -116,21 +127,62 @@ export function useLogin() {
     setSuccessMessage(null);
     if (!validateOtp() || !sessionId) return;
     setLoading(true);
+
     try {
       const response = await axios.post(
         "https://medilogic-backend.onrender.com/access/login-step-2",
         { email, session_id: sessionId, code: otpCode },
         { headers: { "Content-Type": "application/json" } },
       );
-      if (response.data.access_token) {
-        localStorage.setItem("authToken", response.data.access_token);
-        setSuccessMessage("Login successful! Redirecting...");
-        setTimeout(() => router.push("/dashboard"), 1500);
-      } else {
-        setErrors({ general: "Login step 2 failed: token not received." });
+
+      if (response.data.access_token && response.data.role) {
+        const { access_token, role } = response.data;
+
+        localStorage.setItem("authToken", access_token);
+        localStorage.setItem("userRole", role);
+        
+        toast.success("Congrats!", {
+          description: "Login successful! Redirecting...",
+        });
+
+        // Dynamic redirect
+        let destination = "/";
+        switch (role) {
+          case "super_admin":
+            destination = "/super-admin";
+            break;
+          case "admin":
+            destination = "/company-admin";
+            break;
+          case "regulator":
+            destination = "/regulator";
+            break;
+          case "driver":
+            destination = "/driver";
+            break;
+          case "client":
+            destination = "/client";
+            break;
+          default:
+            destination = "/";
+        }
+
+        setTimeout(() => router.push(destination), 1000);
+      } else if (!response.data.access_token) {
+        const fallback = "Login step 2 failed: token not received.";
+        setErrors({ general: fallback });
+
+        toast.error("Error", {
+          description: fallback,
+        });
       }
     } catch (error: any) {
-      setErrors({ general: error.response?.data?.message || "Invalid OTP." });
+      const msg = error?.response?.data?.message || "Invalid OTP.";
+      setErrors({ general: msg });
+
+      toast.error("OTP Failed", {
+        description: msg,
+      });
     } finally {
       setLoading(false);
     }
