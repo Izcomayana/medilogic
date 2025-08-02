@@ -47,7 +47,7 @@ const menuItems = [
   },
   {
     title: "Regulators",
-    url: "/regulators",
+    url: "/super-admin/regulators",
     icon: Shield,
   },
   {
