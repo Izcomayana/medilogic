@@ -52,7 +52,7 @@ const menuItems = [
   },
   {
     title: "Create User",
-    url: "/create-user",
+    url: "/super-admin/createuser",
     icon: UserPlus,
   },
 ];

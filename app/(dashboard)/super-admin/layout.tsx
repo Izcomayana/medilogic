@@ -4,7 +4,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/ui/app-sidebar";
-import { Toaster } from "@/components/ui/sonner";
+// import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,7 +26,7 @@ export default function RootLayout({
           <AppSidebar />
           <main className="flex-1 bg-gray-900 min-h-screen">{children}</main>
         </SidebarProvider>
-        <Toaster />
+        {/* <Toaster /> */}
       </body>
     </html>
   );
