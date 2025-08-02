@@ -42,7 +42,7 @@ const menuItems = [
   },
   {
     title: "Invite Codes",
-    url: "/invite-codes",
+    url: "/super-admin/invitecodes",
     icon: RotateCcw,
   },
   {

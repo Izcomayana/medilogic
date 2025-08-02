@@ -207,7 +207,7 @@ export default function InviteCodes() {
                           onClick={() =>
                             handleRegenerateCode(code.organization)
                           }
-                          className="border-gray-600 text-gray-300 hover:bg-gray-700"
+                          className="cursor-pointer border-gray-600 text-gray-600 hover:bg-gray-700"
                         >
                           <RotateCcw className="h-3 w-3 mr-1" />
                           Regenerate
