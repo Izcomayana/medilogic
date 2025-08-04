@@ -83,7 +83,7 @@ export const AdminDashboard = () => {
         </div>
       </header>
 
-      <main className="flex-1 p-6">
+      <div className="flex-1 p-6">
         {/* Stats Cards */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
           {stats.map((stat, index) => (
@@ -247,7 +247,7 @@ export const AdminDashboard = () => {
             </div>
           </CardContent>
         </Card>
-      </main>
+      </div>
     </div>
   );
 };

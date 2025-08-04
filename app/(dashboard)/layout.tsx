@@ -18,7 +18,7 @@ export default function RootLayout({
         <AuthProvider>
           <SidebarProvider>
             <AppSidebar />
-            <main className="flex-1 bg-gray-900 min-h-screen">{children}</main>
+            <main className="flex-1 bg-gray-900 min-h-screen max-w-dvw">{children}</main>
           </SidebarProvider>
         </AuthProvider>
       </body>

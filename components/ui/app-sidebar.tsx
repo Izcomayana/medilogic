@@ -47,7 +47,11 @@ const sidebarLinksByRole: Record<
   admin: [
     { title: "Dashboard", url: "/company-admin", icon: Home },
     { title: "Charts", url: "/company-admin/charts", icon: Truck },
-    { title: "Assignments", url: "/company-admin/assignments", icon: ClipboardList },
+    {
+      title: "Assignments",
+      url: "/company-admin/assignments",
+      icon: ClipboardList,
+    },
     { title: "Exports", url: "/company-admin/exports", icon: FileText },
   ],
   regulator: [
