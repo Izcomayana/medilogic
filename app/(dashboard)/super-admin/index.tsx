@@ -157,11 +157,3 @@ export default function Dashboard() {
     </div>
   );
 }
-
-// export const SuperAdmin = () => {
-//   return (
-//     <main>
-//       <div>super admin</div>
-//     </main>
-//   );
-// };

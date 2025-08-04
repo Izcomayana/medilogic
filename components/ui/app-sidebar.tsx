@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import {
@@ -7,8 +8,11 @@ import {
   Users,
   UserPlus,
   RotateCcw,
+  Truck,
+  ClipboardList,
+  FileText,
 } from "lucide-react";
-
+import { useAuth } from "@/components/auth";
 import {
   Sidebar,
   SidebarContent,
@@ -24,47 +28,60 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-const menuItems = [
-  {
-    title: "Dashboard",
-    url: "/super-admin",
-    icon: Home,
-  },
-  {
-    title: "Organizations",
-    url: "/super-admin/organizations",
-    icon: Building2,
-  },
-  {
-    title: "Org Users",
-    url: "/super-admin/orgusers",
-    icon: Users,
-  },
-  {
-    title: "Invite Codes",
-    url: "/super-admin/invitecodes",
-    icon: RotateCcw,
-  },
-  {
-    title: "Regulators",
-    url: "/super-admin/regulators",
-    icon: Shield,
-  },
-  {
-    title: "Create User",
-    url: "/super-admin/createuser",
-    icon: UserPlus,
-  },
-];
+const sidebarLinksByRole: Record<
+  string,
+  { title: string; url: string; icon: any }[]
+> = {
+  super_admin: [
+    { title: "Dashboard", url: "/super-admin", icon: Home },
+    {
+      title: "Organizations",
+      url: "/super-admin/organizations",
+      icon: Building2,
+    },
+    { title: "Org Users", url: "/super-admin/orgusers", icon: Users },
+    { title: "Invite Codes", url: "/super-admin/invitecodes", icon: RotateCcw },
+    { title: "Regulators", url: "/super-admin/regulators", icon: Shield },
+    { title: "Create User", url: "/super-admin/createuser", icon: UserPlus },
+  ],
+  admin: [
+    { title: "Dashboard", url: "/company-admin", icon: Home },
+    { title: "Charts", url: "/company-admin/charts", icon: Truck },
+    { title: "Assignments", url: "/company-admin/assignments", icon: ClipboardList },
+    { title: "Exports", url: "/company-admin/exports", icon: FileText },
+  ],
+  regulator: [
+    { title: "Dashboard", url: "/regulator", icon: Home },
+    {
+      title: "Organizations",
+      url: "/regulator/organizations",
+      icon: Building2,
+    },
+    { title: "Compliance", url: "/regulator/compliance", icon: Shield },
+  ],
+  client: [
+    { title: "Dashboard", url: "/client", icon: Home },
+    { title: "My Trips", url: "/client/trips", icon: ClipboardList },
+    { title: "Waste Reports", url: "/client/reports", icon: FileText },
+  ],
+  driver: [
+    { title: "Dashboard", url: "/driver", icon: Home },
+    { title: "My Trips", url: "/driver/trips", icon: ClipboardList },
+  ],
+};
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const { role } = useAuth();
+
+  console.log("Sidebar role:", role); // Add this in AppSidebar
+
+  const menuItems = sidebarLinksByRole[role ?? ""] || [];
 
   return (
-    <Sidebar className="border-r border-gray-700 ">
+    <Sidebar className="border-r border-gray-700">
       <SidebarHeader className="border-b border-gray-700 p-4">
         <div className="flex items-center gap-2">
-          {/* Logo */}
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center space-x-2 group">
               <div className="rounded transition-transform duration-200 group-hover:scale-110">
@@ -90,6 +107,7 @@ export function AppSidebar() {
           </div>
         </div>
       </SidebarHeader>
+
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className="text-gray-400 text-xs uppercase tracking-wider">
@@ -115,6 +133,7 @@ export function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
       <SidebarFooter className="border-t border-gray-700 p-4">
         <div className="flex items-center gap-2 text-sm text-gray-400">
           <div className="h-2 w-2 rounded-full bg-[#15941f]"></div>

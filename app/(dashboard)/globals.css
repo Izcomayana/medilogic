@@ -143,3 +143,7 @@
 .primary-button {
   @apply bg-[#15941f] hover:bg-[#15941f]/90 text-white;
 }
+
+*::-webkit-scrollbar-track {
+  background: #101828;
+}
