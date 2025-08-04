@@ -113,17 +113,17 @@ export const ApplicationForm = ({
               <Label htmlFor="terms">
                 I accept the{" "}
                 <Link
-                  href="/terms-of-service"
+                  href="/termsofuse"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[#15941f] hover:underline"
                 >
-                  Terms of Service
+                  Terms of Use
                 </Link>{" "}
                 <br className="md:hidden" />
                 and{" "}
                 <Link
-                  href="/privacy-policy"
+                  href="/privacypolicy"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[#15941f] hover:underline"
