@@ -1,55 +1,104 @@
 /* eslint-disable react/no-unescaped-entities */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
+
+import { useEffect, useState } from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Building2,
-  Users,
+  // Users,
   Shield,
   AlertTriangle,
   RotateCcw,
-  TrendingUp,
+  // TrendingUp,
   UserPlus,
+  // Loader2,
 } from "lucide-react";
-
-const stats = [
-  {
-    title: "Total Organizations",
-    value: "24",
-    change: "+2 this month",
-    icon: Building2,
-    trend: "up",
-  },
-  {
-    title: "Total Org Users",
-    value: "1,247",
-    change: "+18% from last month",
-    icon: Users,
-    trend: "up",
-  },
-  {
-    title: "Total Regulators",
-    value: "8",
-    change: "No change",
-    icon: Shield,
-    trend: "neutral",
-  },
-  {
-    title: "Pending Deactivations",
-    value: "3",
-    change: "Requires attention",
-    icon: AlertTriangle,
-    trend: "warning",
-  },
-  {
-    title: "Invite Codes Regenerated",
-    value: "12",
-    change: "This month",
-    icon: RotateCcw,
-    trend: "neutral",
-  },
-];
+import axios from "axios";
+import { useAuth } from "@/components/auth";
+import { isTokenExpired } from "@/hooks/token";
 
 export default function Dashboard() {
+  const { token, refreshAccessToken, setToken } = useAuth();
+  const [orgCount, setOrgCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    const fetchOrganizations = async () => {
+      let validToken = token;
+
+      if (!validToken || isTokenExpired(validToken)) {
+        console.log("Token expired → refreshing...");
+        try {
+          const refreshed = await refreshAccessToken();
+          if (!refreshed) return; // still failed
+          validToken = refreshed; // ✅ use freshly returned token
+        } catch (err: any) {
+          console.error("Failed to refresh token:", err);
+          return;
+        }
+      }
+
+      try {
+        const res = await axios.get(
+          "https://medilogic-backend.onrender.com/super/organizations",
+          {
+            headers: {
+              Authorization: `Bearer ${validToken}`,
+            },
+          },
+        );
+
+        setOrgCount(res.data.length);
+      } catch (error: any) {
+        console.error(
+          "Failed to fetch organizations:",
+          error?.response?.data?.detail || error.message,
+        );
+      }
+    };
+
+    fetchOrganizations();
+  }, [token, refreshAccessToken, setToken]);
+
+  const stats = [
+    {
+      title: "Total Organizations",
+      value: orgCount !== null ? String(orgCount) : ".",
+      change: "+2 this month",
+      icon: Building2,
+      trend: "up",
+    },
+    // {
+    //   title: "Total Org Users",
+    //   value: "1,247",
+    //   change: "+18% from last month",
+    //   icon: Users,
+    //   trend: "up",
+    // },
+    {
+      title: "Total Regulators",
+      value: "3",
+      change: "No change",
+      icon: Shield,
+      trend: "neutral",
+    },
+    {
+      title: "Pending Deactivations",
+      value: "3",
+      change: "Requires attention",
+      icon: AlertTriangle,
+      trend: "warning",
+    },
+    {
+      title: "Invite Codes Regenerated",
+      value: "12",
+      change: "This month",
+      icon: RotateCcw,
+      trend: "neutral",
+    },
+  ];
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
       <header className="flex h-16 items-center gap-4 border-b border-gray-700 bg-gray-900 px-6">
@@ -76,7 +125,7 @@ export default function Dashboard() {
                 <div className="text-2xl font-bold text-white">
                   {stat.value}
                 </div>
-                <div
+                {/* <div
                   className={`text-xs flex items-center gap-1 mt-1 ${
                     stat.trend === "up"
                       ? "text-[#15941f]"
@@ -87,7 +136,7 @@ export default function Dashboard() {
                 >
                   {stat.trend === "up" && <TrendingUp className="h-3 w-3" />}
                   {stat.change}
-                </div>
+                </div> */}
               </CardContent>
             </Card>
           ))}

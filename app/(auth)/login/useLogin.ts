@@ -135,11 +135,16 @@ export function useLogin() {
         { headers: { "Content-Type": "application/json" } },
       );
 
-      if (response.data.access_token && response.data.role) {
-        const { access_token, role } = response.data;
+      if (
+        response.data.access_token &&
+        response.data.role &&
+        response.data.refresh_token
+      ) {
+        const { access_token, role, refresh_token } = response.data;
 
         localStorage.setItem("authToken", access_token);
         localStorage.setItem("userRole", role);
+        localStorage.setItem("refreshToken", refresh_token);
 
         toast.success("Congrats!", {
           description: "Login successful! Redirecting...",
