@@ -22,6 +22,7 @@ import { isTokenExpired } from "@/hooks/token";
 export default function Dashboard() {
   const { token, refreshAccessToken, setToken } = useAuth();
   const [orgCount, setOrgCount] = useState<number | null>(null);
+  const [regulatorCount, setRegulatorCount] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchOrganizations = async () => {
@@ -58,7 +59,42 @@ export default function Dashboard() {
       }
     };
 
+    const fetchRegulators = async () => {
+      let validToken = token;
+
+      if (!validToken || isTokenExpired(validToken)) {
+        console.log("Token expired → refreshing...");
+        try {
+          const refreshed = await refreshAccessToken();
+          if (!refreshed) return; // still failed
+          validToken = refreshed; // ✅ use freshly returned token
+        } catch (err: any) {
+          console.error("Failed to refresh token:", err);
+          return;
+        }
+      }
+
+      try {
+        const res = await axios.get(
+          "https://medilogic-backend.onrender.com/super/super/regulators",
+          {
+            headers: {
+              Authorization: `Bearer ${validToken}`,
+            },
+          },
+        );
+
+        setRegulatorCount(res.data.length);
+      } catch (error: any) {
+        console.error(
+          "Failed to fetch regulators:",
+          error?.response?.data?.detail || error.message,
+        );
+      }
+    };
+
     fetchOrganizations();
+    fetchRegulators();
   }, [token, refreshAccessToken, setToken]);
 
   const stats = [
@@ -78,7 +114,7 @@ export default function Dashboard() {
     // },
     {
       title: "Total Regulators",
-      value: "3",
+      value: regulatorCount !== null ? String(regulatorCount) : ".",
       change: "No change",
       icon: Shield,
       trend: "neutral",
