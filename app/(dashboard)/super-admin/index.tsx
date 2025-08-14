@@ -119,20 +119,20 @@ export default function Dashboard() {
       icon: Shield,
       trend: "neutral",
     },
-    {
-      title: "Pending Deactivations",
-      value: "3",
-      change: "Requires attention",
-      icon: AlertTriangle,
-      trend: "warning",
-    },
-    {
-      title: "Invite Codes Regenerated",
-      value: "12",
-      change: "This month",
-      icon: RotateCcw,
-      trend: "neutral",
-    },
+    // {
+    //   title: "Pending Deactivations",
+    //   value: "3",
+    //   change: "Requires attention",
+    //   icon: AlertTriangle,
+    //   trend: "warning",
+    // },
+    // {
+    //   title: "Invite Codes Regenerated",
+    //   value: "12",
+    //   change: "This month",
+    //   icon: RotateCcw,
+    //   trend: "neutral",
+    // },
   ];
 
   return (

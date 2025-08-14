@@ -22,25 +22,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Building2, Plus, Search } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { organizations } from "./org";
+// import { organizations } from "./org";
+import { Organization } from "./org";
 import OrganizationTable from "./components/OrgTable";
-
-export interface Organization {
-  id: number;
-  name: string;
-  type: string;
-  status: string;
-  createdDate: string;
-  userCount: number;
-  description: string;
-  address: string;
-  phone: string;
-  email: string;
-}
+import { useAuth } from "@/components/auth";
+import { isTokenExpired } from "@/hooks/token";
+import axios from "axios";
 
 export default function Organizations() {
+  const [orgs, setOrgs] = useState<Organization[]>([]);
+  const { token, refreshAccessToken } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
@@ -48,7 +41,7 @@ export default function Organizations() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedOrg, setSelectedOrg] = useState<Organization | null>(null);
   const [editFormData, setEditFormData] = useState<Organization>({
-    id: 0,
+    id: "",
     name: "",
     type: "",
     status: "",
@@ -60,15 +53,70 @@ export default function Organizations() {
     email: "",
   });
 
-  const filteredOrganizations = organizations.filter((org) => {
-    const matchesSearch =
-      org.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      org.type.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus =
-      statusFilter === "all" ||
-      org.status.toLowerCase() === statusFilter.toLowerCase();
-    return matchesSearch && matchesStatus;
-  });
+  useEffect(() => {
+    const fetchOrgs = async () => {
+      let validToken = token;
+
+      if (!validToken || isTokenExpired(validToken)) {
+        const refreshed = await refreshAccessToken();
+        if (!refreshed) return;
+        validToken = refreshed;
+      }
+
+      try {
+        const res = await axios.get(
+          "https://medilogic-backend.onrender.com/super/organizations",
+          { headers: { Authorization: `Bearer ${validToken}` } },
+        );
+
+        // API item shape
+        type ApiOrg = {
+          id: string;
+          name: string;
+          invite_code: string;
+          ico_registered: boolean;
+          data_retention_years: number;
+          type: string;
+          is_active: boolean;
+          created_at: string;
+          user_count: number;
+        };
+
+        const mapped: Organization[] = (res.data as ApiOrg[]).map((o) => ({
+          id: o.id,
+          name: o.name,
+          type: o.type,
+          status: o.is_active ? "Active" : "Inactive",
+          userCount: o.user_count ?? 0,
+          createdDate: new Date(o.created_at).toLocaleDateString(),
+          invite_code: o.invite_code,
+          ico_registered: o.ico_registered,
+          data_retention_years: o.data_retention_years,
+        }));
+
+        setOrgs(mapped);
+      } catch (e: any) {
+        console.error(
+          "Failed to load organizations:",
+          e?.response?.data?.detail || e.message,
+        );
+      }
+    };
+
+    fetchOrgs();
+  }, [token, refreshAccessToken]);
+
+  const filteredOrganizations = useMemo(() => {
+    return orgs.filter((org) => {
+      const matchesSearch =
+        org.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        org.type.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesStatus =
+        statusFilter === "all" ||
+        org.status.toLowerCase() === statusFilter.toLowerCase();
+      return matchesSearch && matchesStatus;
+    });
+  }, [orgs, searchTerm, statusFilter]);
 
   const handleRegenerateCode = (orgName: string) => {
     toast.success(`Invite code regenerated for ${orgName}`);
@@ -117,7 +165,7 @@ export default function Organizations() {
       <main className="flex-1 p-6">
         <Card className="dashboard-card">
           <CardHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row gap-8 md:gap-0 items-center justify-between">
               <CardTitle className="text-white flex items-center gap-2">
                 <Building2 className="h-5 w-5" />
                 Organizations ({filteredOrganizations.length})

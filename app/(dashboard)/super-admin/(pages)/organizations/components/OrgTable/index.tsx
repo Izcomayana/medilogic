@@ -1,18 +1,5 @@
 "use client";
 
-export interface Organization {
-  id: number;
-  name: string;
-  type: string;
-  status: string;
-  createdDate: string;
-  userCount: number;
-  description: string;
-  address: string;
-  phone: string;
-  email: string;
-}
-
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -37,6 +24,27 @@ import {
   MoreHorizontal,
 } from "lucide-react";
 import { ViewOrganizationDialog, EditOrganizationDialog } from "../OrgDialogs";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useAuth } from "@/components/auth";
+import { isTokenExpired } from "@/hooks/token";
+import { Organization } from "../../org";
+
+// export interface Organization {
+//   id: number;
+//   name: string;
+//   type: string;
+//   status: string;
+//   createdDate: string;
+//   userCount: number;
+//   description: string;
+//   address: string;
+//   phone: string;
+//   email: string;
+//   invite_code: string;
+//   ico_registered: boolean;
+//   data_retention_years: number;
+// }
 
 interface Props {
   organizations: Organization[];
