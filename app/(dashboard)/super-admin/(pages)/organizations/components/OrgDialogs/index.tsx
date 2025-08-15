@@ -19,7 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Building2, Edit, Calendar, Hash, Users } from "lucide-react";
-import type { Organization } from "../OrgTable";
+import type { Organization } from "../../org";
 
 interface ViewDialogProps {
   open: boolean;

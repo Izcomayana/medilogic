@@ -1,18 +1,5 @@
 "use client";
 
-export interface Organization {
-  id: number;
-  name: string;
-  type: string;
-  status: string;
-  createdDate: string;
-  userCount: number;
-  description: string;
-  address: string;
-  phone: string;
-  email: string;
-}
-
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -37,6 +24,7 @@ import {
   MoreHorizontal,
 } from "lucide-react";
 import { ViewOrganizationDialog, EditOrganizationDialog } from "../OrgDialogs";
+import { Organization } from "../../org";
 
 interface Props {
   organizations: Organization[];
@@ -54,7 +42,15 @@ interface Props {
   onEditSave: () => void;
 }
 
-const getStatusBadge = (status: string) => {
+const getStatusBadge = (status?: string) => {
+  if (!status) {
+    return (
+      <span className="border px-2 py-1 rounded text-xs text-gray-400">
+        Unknown
+      </span>
+    );
+  }
+
   switch (status.toLowerCase()) {
     case "active":
       return (
