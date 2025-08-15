@@ -164,9 +164,60 @@ export default function Organizations() {
               </CardTitle>
 
               <CreateOrganizationDialog
-                onCreate={(orgData) => {
-                  // Here you can POST to backend or update state
-                  console.log("New org created:", orgData);
+                onCreate={async (orgData) => {
+                  try {
+                    let validToken = token;
+                    if (!validToken || isTokenExpired(validToken)) {
+                      const refreshed = await refreshAccessToken();
+                      if (!refreshed) {
+                        toast.error(
+                          "Authentication expired. Please log in again.",
+                        );
+                        return;
+                      }
+                      validToken = refreshed;
+                    }
+
+                    const res = await axios.post(
+                      "https://medilogic-backend.onrender.com/super/organizations",
+                      orgData,
+                      {
+                        headers: {
+                          Authorization: `Bearer ${validToken}`,
+                          "Content-Type": "application/json",
+                        },
+                      },
+                    );
+
+                    // optimistic update
+                    setOrgs((prev) => [
+                      ...prev,
+                      {
+                        id: res.data.id,
+                        name: res.data.name,
+                        type: res.data.type,
+                        status: res.data.is_active ? "Active" : "Inactive",
+                        userCount: res.data.user_count ?? 0,
+                        createdDate: new Date(
+                          res.data.created_at,
+                        ).toLocaleDateString(),
+                        invite_code: res.data.invite_code,
+                        ico_registered: res.data.ico_registered,
+                        data_retention_years: res.data.data_retention_years,
+                      },
+                    ]);
+
+                    toast.success("Organization created successfully");
+                  } catch (err: any) {
+                    const detail = err?.response?.data?.detail;
+                    const msg = Array.isArray(detail)
+                      ? detail.map((d: any) => d.msg).join(" • ")
+                      : detail ||
+                        err.message ||
+                        "Failed to create organization";
+                    toast.error(msg);
+                    throw err; // so dialog keeps open (since we await it)
+                  }
                 }}
               />
             </div>
