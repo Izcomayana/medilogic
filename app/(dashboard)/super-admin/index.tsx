@@ -18,11 +18,15 @@ import {
 import axios from "axios";
 import { useAuth } from "@/components/auth";
 import { isTokenExpired } from "@/hooks/token";
+import CreateOrganizationDialog from "./(pages)/organizations/components/creatOrg";
+import { toast } from "sonner";
+import { Organization } from "./(pages)/organizations/org";
 
 export default function Dashboard() {
   const { token, refreshAccessToken, setToken } = useAuth();
   const [orgCount, setOrgCount] = useState<number | null>(null);
   const [regulatorCount, setRegulatorCount] = useState<number | null>(null);
+  const [orgs, setOrgs] = useState<Organization[]>([]);
 
   useEffect(() => {
     const fetchOrganizations = async () => {
@@ -222,10 +226,63 @@ export default function Dashboard() {
             </CardHeader>
             <CardContent>
               <div className="grid gap-3">
-                <button className="primary-button flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium">
-                  <Building2 className="h-4 w-4" />
-                  Create Organization
-                </button>
+                <CreateOrganizationDialog
+                  onCreate={async (orgData) => {
+                    try {
+                      let validToken = token;
+                      if (!validToken || isTokenExpired(validToken)) {
+                        const refreshed = await refreshAccessToken();
+                        if (!refreshed) {
+                          toast.error(
+                            "Authentication expired. Please log in again.",
+                          );
+                          return;
+                        }
+                        validToken = refreshed;
+                      }
+
+                      const res = await axios.post(
+                        "https://medilogic-backend.onrender.com/super/organizations",
+                        orgData,
+                        {
+                          headers: {
+                            Authorization: `Bearer ${validToken}`,
+                            "Content-Type": "application/json",
+                          },
+                        },
+                      );
+
+                      // optimistic update
+                      setOrgs((prev) => [
+                        ...prev,
+                        {
+                          id: res.data.id,
+                          name: res.data.name,
+                          type: res.data.type,
+                          status: res.data.is_active ? "Active" : "Inactive",
+                          userCount: res.data.user_count ?? 0,
+                          createdDate: new Date(
+                            res.data.created_at,
+                          ).toLocaleDateString(),
+                          invite_code: res.data.invite_code,
+                          ico_registered: res.data.ico_registered,
+                          data_retention_years: res.data.data_retention_years,
+                        },
+                      ]);
+
+                      toast.success("Organization created successfully");
+                    } catch (err: any) {
+                      const detail = err?.response?.data?.detail;
+                      const msg = Array.isArray(detail)
+                        ? detail.map((d: any) => d.msg).join(" • ")
+                        : detail ||
+                          err.message ||
+                          "Failed to create organization";
+                      toast.error(msg);
+                      throw err; // so dialog keeps open (since we await it)
+                    }
+                  }}
+                />
                 <button className="primary-button flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium">
                   <Shield className="h-4 w-4" />
                   Add Regulator
