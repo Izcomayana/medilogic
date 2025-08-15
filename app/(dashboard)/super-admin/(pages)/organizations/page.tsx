@@ -2,18 +2,7 @@
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -21,11 +10,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Building2, Plus, Search } from "lucide-react";
+import { Building2, Loader2, Plus, Search } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-// import { organizations } from "./org";
 import { Organization } from "./org";
+import CreateOrganizationDialog from "./components/creatOrg";
 import OrganizationTable from "./components/OrgTable";
 import { useAuth } from "@/components/auth";
 import { isTokenExpired } from "@/hooks/token";
@@ -33,10 +22,10 @@ import axios from "axios";
 
 export default function Organizations() {
   const [orgs, setOrgs] = useState<Organization[]>([]);
+  const [loading, setLoading] = useState(true);
   const { token, refreshAccessToken } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedOrg, setSelectedOrg] = useState<Organization | null>(null);
@@ -55,6 +44,7 @@ export default function Organizations() {
 
   useEffect(() => {
     const fetchOrgs = async () => {
+      setLoading(true);
       let validToken = token;
 
       if (!validToken || isTokenExpired(validToken)) {
@@ -100,6 +90,8 @@ export default function Organizations() {
           "Failed to load organizations:",
           e?.response?.data?.detail || e.message,
         );
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -170,67 +162,13 @@ export default function Organizations() {
                 <Building2 className="h-5 w-5" />
                 Organizations ({filteredOrganizations.length})
               </CardTitle>
-              <Dialog
-                open={isCreateDialogOpen}
-                onOpenChange={setIsCreateDialogOpen}
-              >
-                <DialogTrigger asChild>
-                  <Button className="primary-button cursor-pointer">
-                    <Plus className="h-4 w-4 mr-2" />
-                    Create Organization
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="bg-gray-800 border-gray-700 text-white">
-                  <DialogHeader>
-                    <DialogTitle>Create New Organization</DialogTitle>
-                    <DialogDescription className="text-gray-400">
-                      Add a new organization to the system.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="grid gap-4 py-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="name" className="text-right">
-                        Name
-                      </Label>
-                      <Input
-                        id="name"
-                        placeholder="Organization name"
-                        className="col-span-3 bg-gray-700 border-gray-600 text-white"
-                      />
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="type" className="text-right">
-                        Type
-                      </Label>
-                      <Select>
-                        <SelectTrigger className="col-span-3 bg-gray-700 border-gray-600 text-white">
-                          <SelectValue placeholder="Select type" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-gray-700 border-gray-600">
-                          <SelectItem value="technology">Technology</SelectItem>
-                          <SelectItem value="finance">
-                            Financial Services
-                          </SelectItem>
-                          <SelectItem value="healthcare">Healthcare</SelectItem>
-                          <SelectItem value="education">Education</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  <DialogFooter>
-                    <Button
-                      type="submit"
-                      className="primary-button"
-                      onClick={() => {
-                        toast.success("Organization created successfully");
-                        setIsCreateDialogOpen(false);
-                      }}
-                    >
-                      Create Organization
-                    </Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
+
+              <CreateOrganizationDialog
+                onCreate={(orgData) => {
+                  // Here you can POST to backend or update state
+                  console.log("New org created:", orgData);
+                }}
+              />
             </div>
           </CardHeader>
           <CardContent>
@@ -256,7 +194,12 @@ export default function Organizations() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="rounded-md border border-gray-700">
+
+            {loading ? (
+              <div className="flex items-center justify-center w-full">
+                <Loader2 className="h-8 w-8 text-gray-400 animate-spin" />
+              </div>
+            ) : (
               <OrganizationTable
                 organizations={filteredOrganizations}
                 onRegenerate={handleRegenerateCode}
@@ -272,7 +215,7 @@ export default function Organizations() {
                 onEditChange={handleEditChange}
                 onEditSave={handleSaveEdit}
               />
-            </div>
+            )}
           </CardContent>
         </Card>
       </main>
