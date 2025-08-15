@@ -42,7 +42,15 @@ interface Props {
   onEditSave: () => void;
 }
 
-const getStatusBadge = (status: string) => {
+const getStatusBadge = (status?: string) => {
+  if (!status) {
+    return (
+      <span className="border px-2 py-1 rounded text-xs text-gray-400">
+        Unknown
+      </span>
+    );
+  }
+
   switch (status.toLowerCase()) {
     case "active":
       return (
