@@ -21,7 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, XIcon } from "lucide-react";
+import { Building2, XIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Switch } from "@/components/ui/switch";
 
@@ -93,7 +93,7 @@ export default function CreateOrganizationDialog({ onCreate }: Props) {
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
         <Button className="primary-button cursor-pointer">
-          <Plus className="h-4 w-4 mr-2" />
+          <Building2 className="h-4 w-4" />
           Create Organization
         </Button>
       </AlertDialogTrigger>
