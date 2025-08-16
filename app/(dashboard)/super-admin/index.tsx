@@ -260,7 +260,7 @@ export default function Dashboard() {
                           id: res.data.id,
                           name: res.data.name,
                           type: res.data.type,
-                          status: res.data.is_active ? "Active" : "Inactive",
+                          status: res.data.is_active,
                           userCount: res.data.user_count ?? 0,
                           createdDate: new Date(
                             res.data.created_at,
