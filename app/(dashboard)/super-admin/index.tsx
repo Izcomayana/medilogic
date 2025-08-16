@@ -29,6 +29,7 @@ export default function Dashboard() {
   const [orgs, setOrgs] = useState<Organization[]>([]);
 
   useEffect(() => {
+    console.log("Organizations:", orgs);
     const fetchOrganizations = async () => {
       let validToken = token;
 
