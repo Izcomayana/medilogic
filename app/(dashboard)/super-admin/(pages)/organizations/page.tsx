@@ -22,7 +22,6 @@ import {
 
 export default function OrganizationsPage() {
   const {
-    orgs,
     filteredOrgs,
     loading,
     searchTerm,
