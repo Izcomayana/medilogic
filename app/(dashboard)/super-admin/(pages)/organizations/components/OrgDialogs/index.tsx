@@ -60,7 +60,7 @@ export function ViewOrganizationDialog({
           <div className="grid grid-cols-3 gap-4">
             <div>
               <Label>Status</Label>
-              <div>{badgeRenderer(org.status)}</div>
+              {/* <div>{badgeRenderer(org.status)}</div> */}
             </div>
             <div>
               <Label>User Count</Label>
@@ -114,11 +114,11 @@ export function ViewOrganizationDialog({
   );
 }
 
-interface EditDialogProps {
+interface EditOrganizationDialogProps {
   open: boolean;
   onClose: () => void;
-  formData: Organization;
-  onChange: (data: Partial<Organization>) => void;
+  formData: Organization; // controlled data
+  onChange: (changes: Partial<Organization>) => void; // update parent state
   onSave: () => void;
 }
 
@@ -128,7 +128,7 @@ export function EditOrganizationDialog({
   formData,
   onChange,
   onSave,
-}: EditDialogProps) {
+}: EditOrganizationDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="bg-gray-800 border-gray-700 text-white max-w-2xl">
@@ -140,61 +140,69 @@ export function EditOrganizationDialog({
             Update the organization information below.
           </DialogDescription>
         </DialogHeader>
+
         <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="edit-name">Organization Name</Label>
-              <Input
-                id="edit-name"
-                value={formData.name}
-                onChange={(e) => onChange({ name: e.target.value })}
-                className="bg-gray-700 border-gray-600 text-white"
-              />
-            </div>
-            <div>
-              <Label htmlFor="edit-type">Type</Label>
-              <Select
-                value={formData.type}
-                onValueChange={(value) => onChange({ type: value })}
-              >
-                <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-700 border-gray-600">
-                  <SelectItem value="Technology">Technology</SelectItem>
-                  <SelectItem value="Financial Services">
-                    Financial Services
-                  </SelectItem>
-                  <SelectItem value="Healthcare">Healthcare</SelectItem>
-                  <SelectItem value="Education">Education</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+          {/* Name */}
+          <div>
+            <Label htmlFor="edit-name">Organization Name</Label>
+            <Input
+              id="edit-name"
+              value={formData.name || ""}
+              onChange={(e) => onChange({ name: e.target.value })}
+              className="bg-gray-700 border-gray-600 text-white"
+            />
           </div>
+
+          {/* Type */}
+          <div>
+            <Label htmlFor="edit-type">Type</Label>
+            <Select
+              value={formData.type || ""}
+              onValueChange={(value) => onChange({ type: value })}
+            >
+              <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-gray-700 border-gray-600">
+                <SelectItem value="Technology">Technology</SelectItem>
+                <SelectItem value="Financial Services">
+                  Financial Services
+                </SelectItem>
+                <SelectItem value="Healthcare">Healthcare</SelectItem>
+                <SelectItem value="Education">Education</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Description */}
           <div>
             <Label htmlFor="edit-description">Description</Label>
             <Input
               id="edit-description"
-              value={formData.description}
+              value={formData.description || ""}
               onChange={(e) => onChange({ description: e.target.value })}
               className="bg-gray-700 border-gray-600 text-white"
             />
           </div>
+
+          {/* Address */}
           <div>
             <Label htmlFor="edit-address">Address</Label>
             <Input
               id="edit-address"
-              value={formData.address}
+              value={formData.address || ""}
               onChange={(e) => onChange({ address: e.target.value })}
               className="bg-gray-700 border-gray-600 text-white"
             />
           </div>
+
+          {/* Phone + Email */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="edit-phone">Phone</Label>
               <Input
                 id="edit-phone"
-                value={formData.phone}
+                value={formData.phone || ""}
                 onChange={(e) => onChange({ phone: e.target.value })}
                 className="bg-gray-700 border-gray-600 text-white"
               />
@@ -204,13 +212,14 @@ export function EditOrganizationDialog({
               <Input
                 id="edit-email"
                 type="email"
-                value={formData.email}
+                value={formData.email || ""}
                 onChange={(e) => onChange({ email: e.target.value })}
                 className="bg-gray-700 border-gray-600 text-white"
               />
             </div>
           </div>
         </div>
+
         <DialogFooter>
           <Button
             variant="outline"
