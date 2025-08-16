@@ -31,7 +31,6 @@ export default function Organizations() {
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedOrg, setSelectedOrg] = useState<Organization | null>(null);
-  const [viewOpen, setViewOpen] = useState(false);
   const [editFormData, setEditFormData] = useState<Organization>({
     id: "",
     name: "",
@@ -130,9 +129,8 @@ export default function Organizations() {
     toast.success(`Invite code regenerated for ${orgName}`);
   }, []);
 
-
   const handleViewOrg = async (orgId: string) => {
-    const existingOrg = orgs.find(o => o.id === orgId);
+    const existingOrg = orgs.find((o) => o.id === orgId);
 
     if (existingOrg && existingOrg.description) {
       setSelectedOrg(existingOrg);
@@ -279,8 +277,8 @@ export default function Organizations() {
                     const msg = Array.isArray(detail)
                       ? detail.map((d: any) => d.msg).join(" • ")
                       : detail ||
-                      err.message ||
-                      "Failed to create organization";
+                        err.message ||
+                        "Failed to create organization";
                     toast.error(msg);
                     throw err; // so dialog keeps open (since we await it)
                   }
