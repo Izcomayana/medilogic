@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   Users,
-  RotateCcw,
+  // RotateCcw,
   Eye,
   Edit,
   Trash2,
@@ -32,7 +32,7 @@ interface Props {
   onEdit: (org: Organization) => void;
   onDeactivate: (name: string) => void;
   viewOpen: boolean;
-  editOpen: boolean;
+  // editOpen: boolean;
   selectedOrg: Organization | null;
   editFormData: Organization;
   onEditChange: (data: Partial<Organization>) => void;
@@ -41,7 +41,7 @@ interface Props {
 
 export default function OrganizationTable({
   organizations,
-  onRegenerate,
+  // onRegenerate,
   onView,
   onEdit,
   onDeactivate,

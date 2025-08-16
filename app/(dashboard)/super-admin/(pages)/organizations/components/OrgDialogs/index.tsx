@@ -32,7 +32,7 @@ export function ViewOrganizationDialog({
   open,
   onClose,
   org,
-  badgeRenderer,
+  // badgeRenderer,
 }: ViewDialogProps) {
   if (!org) return null;
   return (

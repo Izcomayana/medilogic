@@ -66,7 +66,7 @@ export default function Organizations() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  // const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedOrg, setSelectedOrg] = useState<Organization | null>(null);
   const [viewOpen, setViewOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
@@ -260,6 +260,7 @@ export default function Organizations() {
       setEditOpen(true);
     } catch (err) {
       toast.error("Failed to load organization details for editing");
+      console.log(err);
     }
   };
 
@@ -464,7 +465,7 @@ export default function Organizations() {
                 onEdit={handleEditOrg}
                 onDeactivate={handleDeactivate}
                 viewOpen={isViewDialogOpen}
-                editOpen={isEditDialogOpen}
+                // editOpen={isEditDialogOpen}
                 selectedOrg={selectedOrg}
                 editFormData={editFormData}
                 onEditChange={handleEditChange}
