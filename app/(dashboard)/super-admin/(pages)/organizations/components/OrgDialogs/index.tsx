@@ -25,7 +25,7 @@ interface ViewDialogProps {
   open: boolean;
   onClose: () => void;
   org: Organization | null;
-  badgeRenderer: (status: string) => React.ReactNode;
+  // badgeRenderer: (status: string) => React.ReactNode;
 }
 
 export function ViewOrganizationDialog({
