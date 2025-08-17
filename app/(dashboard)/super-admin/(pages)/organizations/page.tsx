@@ -114,7 +114,6 @@ export default function OrganizationsPage() {
                 open={viewOpen}
                 onClose={closeView}
                 org={selectedOrg}
-                // badgeRenderer={getStatusBadge}
               />
             )}
 

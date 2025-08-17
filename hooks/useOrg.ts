@@ -131,7 +131,7 @@ export function useOrganizations() {
           id: res.data.id,
           name: res.data.name,
           type: res.data.type,
-          status: res.data.is_active,
+          status: res.data.is_active ? "active" : "inactive",
           userCount: res.data.user_count ?? 0,
           createdDate: new Date(res.data.created_at).toLocaleDateString(),
           invite_code: res.data.invite_code,
@@ -182,8 +182,8 @@ export function useOrganizations() {
       const mappedOrg: Organization = {
         id: data.organization.id,
         name: data.organization.name,
-        type: data.organization.type ?? "",
-        status: data.organization.is_active,
+        type: data.organization.type ?? data.organization.org_type ?? "Unknown",
+        status: data.is_active ? "active" : "inactive",
         createdDate: new Date(
           data.organization.created_at,
         ).toLocaleDateString(),

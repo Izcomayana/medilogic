@@ -61,7 +61,7 @@ export function ViewOrganizationDialog({
             <div>
               <Label>Status</Label>
               <div>
-                <StatusBadge status={org.status} />
+                <StatusBadge status={org.status?.toLowerCase()} />
               </div>
             </div>
             <div>
