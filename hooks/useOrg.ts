@@ -61,7 +61,7 @@ export function useOrganizations() {
           id: o.id,
           name: o.name,
           type: o.type,
-          status: o.is_active,
+          status: o.is_active ? "active" : "inactive",
           userCount: o.user_count ?? 0,
           createdDate: new Date(o.created_at).toLocaleDateString(),
           invite_code: o.invite_code,
@@ -96,7 +96,7 @@ export function useOrganizations() {
       if (statusFilter === "all") return matchesSearch;
       return (
         matchesSearch &&
-        org.status?.toString().toLowerCase() === statusFilter.toLowerCase()
+        org.status?.toLowerCase() === statusFilter.toLowerCase()
       );
     });
   }, [orgs, searchTerm, statusFilter]);
@@ -204,117 +204,121 @@ export function useOrganizations() {
     }
   };
 
-  // Edit org
-  const editOrg = async (org: Organization) => {
-    setSelectedOrg(org);
-    try {
-      let validToken = token;
-      if (!validToken || isTokenExpired(validToken)) {
-        const refreshed = await refreshAccessToken();
-        if (!refreshed) return;
-        validToken = refreshed;
-      }
+  //   // Edit org
+  //   const editOrg = async (org: Organization) => {
+  //     setSelectedOrg(org);
+  //     try {
+  //       let validToken = token;
+  //       if (!validToken || isTokenExpired(validToken)) {
+  //         const refreshed = await refreshAccessToken();
+  //         if (!refreshed) return;
+  //         validToken = refreshed;
+  //       }
 
-      const res = await axios.get(
-        `https://medilogic-backend.onrender.com/super/${org.id}`,
-        { headers: { Authorization: `Bearer ${validToken}` } },
-      );
+  //       const res = await axios.get(
+  //         `https://medilogic-backend.onrender.com/super/${org.id}`,
+  //         { headers: { Authorization: `Bearer ${validToken}` } },
+  //       );
 
-      const data = res.data;
-      setEditFormData({
-        id: data.organization.id,
-        name: data.organization.name,
-        type: data.organization.type,
-        description: data.organization.description ?? "",
-        address: data.organization.address_line ?? "",
-        phone: data.organization.phone_number ?? "",
-        email: data.organization.email ?? "",
-        postal_code: data.organization.postal_code ?? "",
-        license_number: data.organization.license_number ?? "",
-        waste_processing_capability:
-          data.organization.waste_processing_capability ?? "",
-        delivery_capacity: data.organization.delivery_capacity ?? 0,
-        contact_person_name: data.organization.contact_person_name ?? "",
-        contact_person_role: data.organization.contact_person_role ?? "",
-        latitude: data.organization.latitude ?? 0,
-        longitude: data.organization.longitude ?? 0,
-        status: data.organization.is_active,
-        createdDate: data.organization.createDate,
-        userCount: data.organization.user_count,
-      });
-      setEditOpen(true);
-    } catch {
-      toast.error("Failed to load organization details for editing");
-    }
-  };
+  //       const data = res.data;
+  //       setEditFormData({
+  //         id: data.organization.id,
+  //         name: data.organization.name,
+  //         type: data.organization.type,
+  //         description: data.organization.description ?? "",
+  //         address: data.organization.address_line ?? "",
+  //         phone: data.organization.phone_number ?? "",
+  //         email: data.organization.email ?? "",
+  //         postal_code: data.organization.postal_code ?? "",
+  //         license_number: data.organization.license_number ?? "",
+  //         waste_processing_capability:
+  //           data.organization.waste_processing_capability ?? "",
+  //         delivery_capacity: data.organization.delivery_capacity ?? 0,
+  //         contact_person_name: data.organization.contact_person_name ?? "",
+  //         contact_person_role: data.organization.contact_person_role ?? "",
+  //         latitude: data.organization.latitude ?? 0,
+  //         longitude: data.organization.longitude ?? 0,
+  //         status: data.organization.is_active,
+  //         createdDate: data.organization.createDate,
+  //         userCount: data.organization.user_count,
+  //       });
+  //       setEditOpen(true);
+  //     } catch {
+  //       toast.error("Failed to load organization details for editing");
+  //     }
+  //   };
 
-  const handleEditChange = (changes: Partial<Organization>) => {
-    setEditFormData((prev: any) => ({ ...prev, ...changes }));
-  };
+  //   const handleEditChange = (changes: Partial<Organization>) => {
+  //     setEditFormData((prev: any) => ({ ...prev, ...changes }));
+  //   };
 
-  const handleSaveEdit = async () => {
-    if (!selectedOrg || !editFormData) return;
+  //   const handleSaveEdit = async () => {
+  //     if (!selectedOrg || !editFormData) return;
 
-    try {
-      let validToken = token;
-      if (!validToken || isTokenExpired(validToken)) {
-        const refreshed = await refreshAccessToken();
-        if (!refreshed) {
-          toast.error("Authentication expired. Please log in again.");
-          return;
-        }
-        validToken = refreshed;
-      }
+  //     try {
+  //       let validToken = token;
+  //       if (!validToken || isTokenExpired(validToken)) {
+  //         const refreshed = await refreshAccessToken();
+  //         if (!refreshed) {
+  //           toast.error("Authentication expired. Please log in again.");
+  //           return;
+  //         }
+  //         validToken = refreshed;
+  //       }
 
-      const payload = {
-        id: selectedOrg.id,
-        name: editFormData.name,
-        type: editFormData.type,
-        description: editFormData.description,
-        address_line: editFormData.address,
-        phone_number: editFormData.phone,
-        email: editFormData.email,
-        postal_code: editFormData.postal_code ?? "",
-        license_number: editFormData.license_number ?? "",
-        waste_processing_capability:
-          editFormData.waste_processing_capability ?? "",
-        delivery_capacity: editFormData.delivery_capacity ?? "",
-        contact_person_name: editFormData.contact_person_name ?? "",
-        contact_person_role: editFormData.contact_person_role ?? "",
-        latitude: editFormData.latitude ?? 0,
-        longitude: editFormData.longitude ?? 0,
-        is_active: editFormData.status ?? true,
-      };
+  //       const payload = {
+  //         id: selectedOrg.id,
+  //         name: editFormData.name,
+  //         type: editFormData.type,
+  //         description: editFormData.description,
+  //         address_line: editFormData.address,
+  //         phone_number: editFormData.phone,
+  //         email: editFormData.email,
+  //         postal_code: editFormData.postal_code ?? "",
+  //         license_number: editFormData.license_number ?? "",
+  //         waste_processing_capability:
+  //           editFormData.waste_processing_capability ?? "",
+  //         delivery_capacity: editFormData.delivery_capacity ?? "",
+  //         contact_person_name: editFormData.contact_person_name ?? "",
+  //         contact_person_role: editFormData.contact_person_role ?? "",
+  //         latitude: editFormData.latitude ?? 0,
+  //         longitude: editFormData.longitude ?? 0,
+  //         is_active: editFormData.status ?? true,
+  //       };
 
-      const res = await axios.patch(
-        `https://medilogic-backend.onrender.com/super/${selectedOrg.id}`,
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${validToken}`,
-            "Content-Type": "application/json",
-          },
-        },
-      );
+  //       const res = await axios.patch(
+  //         `https://medilogic-backend.onrender.com/super/${selectedOrg.id}`,
+  //         payload,
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${validToken}`,
+  //             "Content-Type": "application/json",
+  //           },
+  //         },
+  //       );
 
-      setOrgs((prev) =>
-        prev.map((org) =>
-          org.id === selectedOrg.id ? { ...org, ...res.data } : org,
-        ),
-      );
+  //       setOrgs((prev) =>
+  //         prev.map((org) =>
+  //           org.id === selectedOrg.id ? { ...org, ...res.data } : org,
+  //         ),
+  //       );
 
-      toast.success(`${payload.name} has been updated successfully`);
-      setEditOpen(false);
-      setSelectedOrg(null);
-    } catch (err: any) {
-      const msg = err?.response?.data
-        ? JSON.stringify(err.response.data)
-        : err.message || "Failed to update organization";
-      toast.error(msg);
-    }
-  };
+  //       toast.success(`${payload.name} has been updated successfully`);
+  //       setEditOpen(false);
+  //       setSelectedOrg(null);
+  //     } catch (err: any) {
+  //       const msg = err?.response?.data
+  //         ? JSON.stringify(err.response.data)
+  //         : err.message || "Failed to update organization";
+  //       toast.error(msg);
+  //     }
+  //   };
 
   // Misc actions
+  const activateOrg = useCallback((orgName: string) => {
+    toast.success(`${orgName} has been activated`);
+  }, []);
+
   const deactivateOrg = useCallback((orgName: string) => {
     toast.success(`${orgName} has been deactivated`);
   }, []);
@@ -348,9 +352,10 @@ export function useOrganizations() {
     editFormData,
     createOrg,
     viewOrg,
-    editOrg,
-    handleEditChange,
-    handleSaveEdit,
+    // editOrg,
+    // handleEditChange,
+    // handleSaveEdit,
+    activateOrg,
     deactivateOrg,
     regenerateInviteCode,
     closeView,

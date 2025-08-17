@@ -1,31 +1,31 @@
 "use client";
 
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Building2, Edit, Calendar, Hash, Users } from "lucide-react";
+  Building2,
+  Calendar,
+  Hash,
+  Power,
+  PowerOff,
+  RefreshCcw,
+  Users,
+} from "lucide-react";
 import type { Organization } from "../../org";
+import { StatusBadge } from "../StatusBadge";
 
 interface ViewDialogProps {
   open: boolean;
   onClose: () => void;
   org: Organization | null;
-  // badgeRenderer: (status: string) => React.ReactNode;
 }
 
 export function ViewOrganizationDialog({
@@ -36,16 +36,16 @@ export function ViewOrganizationDialog({
 }: ViewDialogProps) {
   if (!org) return null;
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="bg-gray-800 border-gray-700 text-white max-w-2xl">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
+    <AlertDialog open={open} onOpenChange={onClose}>
+      <AlertDialogContent className="bg-gray-800 border-gray-700 text-white max-w-2xl">
+        <AlertDialogHeader>
+          <AlertDialogTitle className="flex items-center gap-2">
             <Building2 className="h-5 w-5" /> Organization Details
-          </DialogTitle>
-          <DialogDescription className="text-gray-400">
+          </AlertDialogTitle>
+          <AlertDialogDescription className="text-gray-400">
             View detailed information about this organization.
-          </DialogDescription>
-        </DialogHeader>
+          </AlertDialogDescription>
+        </AlertDialogHeader>
         <div className="grid gap-6 py-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -60,7 +60,9 @@ export function ViewOrganizationDialog({
           <div className="grid grid-cols-3 gap-4">
             <div>
               <Label>Status</Label>
-              {/* <div>{badgeRenderer(org.status)}</div> */}
+              <div>
+                <StatusBadge status={org.status} />
+              </div>
             </div>
             <div>
               <Label>User Count</Label>
@@ -100,7 +102,7 @@ export function ViewOrganizationDialog({
             </div>
           </div>
         </div>
-        <DialogFooter>
+        <AlertDialogFooter>
           <Button
             variant="outline"
             onClick={onClose}
@@ -108,131 +110,83 @@ export function ViewOrganizationDialog({
           >
             Close
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
 
-interface EditOrganizationDialogProps {
+interface ActionsDialogProps {
   open: boolean;
   onClose: () => void;
-  formData: Organization; // controlled data
-  onChange: (changes: Partial<Organization>) => void; // update parent state
-  onSave: () => void;
+  org: Organization | null;
+  onRegenerate: (id: string) => void;
+  onDeactivate: (id: string) => void;
+  onActivate: (id: string) => void;
 }
 
-export function EditOrganizationDialog({
+export function OrgActionsDialog({
   open,
   onClose,
-  formData,
-  onChange,
-  onSave,
-}: EditOrganizationDialogProps) {
+  org,
+  onRegenerate,
+  onDeactivate,
+  onActivate,
+}: ActionsDialogProps) {
+  if (!org) return null;
+
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="bg-gray-800 border-gray-700 text-white max-w-2xl">
-        <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <Edit className="h-5 w-5" /> Edit Organization
-          </DialogTitle>
-          <DialogDescription className="text-gray-400">
-            Update the organization information below.
-          </DialogDescription>
-        </DialogHeader>
+    <AlertDialog open={open} onOpenChange={onClose}>
+      <AlertDialogContent className="bg-gray-800 border-gray-700 text-white max-w-md">
+        <AlertDialogHeader>
+          <AlertDialogTitle className="flex items-center gap-2">
+            Edits {org.name}
+          </AlertDialogTitle>
+          <AlertDialogDescription className="text-gray-400">
+            Perform quick actions for this organization.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
 
-        <div className="grid gap-4 py-4">
-          {/* Name */}
-          <div>
-            <Label htmlFor="edit-name">Organization Name</Label>
-            <Input
-              id="edit-name"
-              value={formData.name || ""}
-              onChange={(e) => onChange({ name: e.target.value })}
-              className="bg-gray-700 border-gray-600 text-white"
-            />
-          </div>
+        <div className="flex flex-col gap-3 py-4">
+          <Button
+            variant="outline"
+            onClick={() => onRegenerate(org.id)}
+            className="flex items-center gap-2 border-gray-600 text-white bg-gray-700 hover:text-gray-700 hover:bg-gray-100"
+          >
+            <RefreshCcw className="h-4 w-4" />
+            Regenerate Invite Code
+          </Button>
 
-          {/* Type */}
-          <div>
-            <Label htmlFor="edit-type">Type</Label>
-            <Select
-              value={formData.type || ""}
-              onValueChange={(value) => onChange({ type: value })}
+          {org.status === "active" ? (
+            <Button
+              variant="destructive"
+              onClick={() => onDeactivate(org.id)}
+              className="flex items-center gap-2"
             >
-              <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-gray-700 border-gray-600">
-                <SelectItem value="Technology">Technology</SelectItem>
-                <SelectItem value="Financial Services">
-                  Financial Services
-                </SelectItem>
-                <SelectItem value="Healthcare">Healthcare</SelectItem>
-                <SelectItem value="Education">Education</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Description */}
-          <div>
-            <Label htmlFor="edit-description">Description</Label>
-            <Input
-              id="edit-description"
-              value={formData.description || ""}
-              onChange={(e) => onChange({ description: e.target.value })}
-              className="bg-gray-700 border-gray-600 text-white"
-            />
-          </div>
-
-          {/* Address */}
-          <div>
-            <Label htmlFor="edit-address">Address</Label>
-            <Input
-              id="edit-address"
-              value={formData.address || ""}
-              onChange={(e) => onChange({ address: e.target.value })}
-              className="bg-gray-700 border-gray-600 text-white"
-            />
-          </div>
-
-          {/* Phone + Email */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="edit-phone">Phone</Label>
-              <Input
-                id="edit-phone"
-                value={formData.phone || ""}
-                onChange={(e) => onChange({ phone: e.target.value })}
-                className="bg-gray-700 border-gray-600 text-white"
-              />
-            </div>
-            <div>
-              <Label htmlFor="edit-email">Email</Label>
-              <Input
-                id="edit-email"
-                type="email"
-                value={formData.email || ""}
-                onChange={(e) => onChange({ email: e.target.value })}
-                className="bg-gray-700 border-gray-600 text-white"
-              />
-            </div>
-          </div>
+              <PowerOff className="h-4 w-4" />
+              Deactivate
+            </Button>
+          ) : (
+            <Button
+              onClick={() => onActivate(org.id)}
+              className="flex items-center gap-2 bg-green-600 hover:bg-green-700"
+            >
+              <Power className="h-4 w-4" />
+              Activate
+            </Button>
+          )}
         </div>
 
-        <DialogFooter>
+        <AlertDialogFooter>
           <Button
             variant="outline"
             onClick={onClose}
-            className="border-gray-600 text-gray-700 hover:bg-gray-700"
+            className="border-gray-600 text-gray-800 hover:bg-gray-700"
           >
-            Cancel
+            Close
           </Button>
-          <Button onClick={onSave} className="primary-button">
-            Save Changes
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }

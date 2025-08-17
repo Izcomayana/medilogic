@@ -6,7 +6,7 @@ import { Building2, Loader2, Search } from "lucide-react";
 import OrganizationTable from "./components/OrgTable";
 import { useOrganizations } from "@/hooks/useOrg";
 import {
-  EditOrganizationDialog,
+  OrgActionsDialog,
   ViewOrganizationDialog,
 } from "./components/OrgDialogs";
 import React from "react";
@@ -31,6 +31,7 @@ export default function OrganizationsPage() {
     createOrg,
     viewOrg,
     editOrg,
+    activateOrg,
     deactivateOrg,
     regenerateInviteCode,
     viewOpen,
@@ -89,7 +90,6 @@ export default function OrganizationsPage() {
                 <SelectContent className="bg-gray-600 border-gray-500">
                   <SelectItem value="all">All Status</SelectItem>
                   <SelectItem value="active">Active</SelectItem>
-                  <SelectItem value="pending">Pending</SelectItem>
                   <SelectItem value="inactive">Inactive</SelectItem>
                 </SelectContent>
               </Select>
@@ -102,7 +102,6 @@ export default function OrganizationsPage() {
             ) : (
               <MemoizedOrgTable
                 organizations={filteredOrgs}
-                onRegenerate={regenerateInviteCode}
                 onView={viewOrg}
                 onEdit={editOrg}
                 onDeactivate={deactivateOrg}
@@ -124,12 +123,13 @@ export default function OrganizationsPage() {
             )}
 
             {editOpen && (
-              <EditOrganizationDialog
+              <OrgActionsDialog
                 open={editOpen}
                 onClose={closeEdit}
-                formData={editFormData}
-                onChange={handleEditChange}
-                onSave={handleSaveEdit}
+                org={selectedOrg}
+                onRegenerate={regenerateInviteCode}
+                onDeactivate={deactivateOrg}
+                onActivate={activateOrg}
               />
             )}
           </CardContent>

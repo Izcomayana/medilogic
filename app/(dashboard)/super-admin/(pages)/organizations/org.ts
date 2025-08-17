@@ -2,7 +2,7 @@ export interface Organization {
   id: string;
   name: string;
   type: string;
-  status: boolean;
+  status: "active" | "inactive";
   createdDate: string;
   userCount: number;
   description?: string;
