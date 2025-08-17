@@ -15,80 +15,28 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Users,
-  RotateCcw,
-  Eye,
-  Edit,
-  Trash2,
-  MoreHorizontal,
-} from "lucide-react";
-import { ViewOrganizationDialog, EditOrganizationDialog } from "../OrgDialogs";
+import { Users, Eye, Edit, Trash2, MoreHorizontal } from "lucide-react";
 import { Organization } from "../../org";
+import { StatusBadge } from "../StatusBadge";
 
 interface Props {
   organizations: Organization[];
-  onRegenerate: (name: string) => void;
   onView: (org: Organization) => void;
   onEdit: (org: Organization) => void;
   onDeactivate: (name: string) => void;
   viewOpen: boolean;
-  editOpen: boolean;
+  // editOpen: boolean;
   selectedOrg: Organization | null;
   editFormData: Organization;
-  closeView: () => void;
-  closeEdit: () => void;
-  onEditChange: (data: Partial<Organization>) => void;
-  onEditSave: () => void;
+  // onEditChange: (data: Partial<Organization>) => void;
+  // onEditSave: () => void;
 }
-
-const getStatusBadge = (status?: string) => {
-  if (!status) {
-    return (
-      <span className="border px-2 py-1 rounded text-xs text-gray-400">
-        Unknown
-      </span>
-    );
-  }
-
-  switch (status.toLowerCase()) {
-    case "active":
-      return (
-        <span className="bg-[#15941f] text-white px-2 py-1 rounded text-xs">
-          Active
-        </span>
-      );
-    case "pending":
-      return (
-        <span className="bg-yellow-500 text-white px-2 py-1 rounded text-xs">
-          Pending
-        </span>
-      );
-    case "inactive":
-      return (
-        <span className="bg-red-600 text-white px-2 py-1 rounded text-xs">
-          Inactive
-        </span>
-      );
-    default:
-      return <span className="border px-2 py-1 rounded text-xs">{status}</span>;
-  }
-};
 
 export default function OrganizationTable({
   organizations,
-  onRegenerate,
   onView,
   onEdit,
   onDeactivate,
-  viewOpen,
-  editOpen,
-  selectedOrg,
-  editFormData,
-  closeView,
-  closeEdit,
-  onEditChange,
-  onEditSave,
 }: Props) {
   return (
     <div className="rounded-md border border-gray-700">
@@ -113,7 +61,9 @@ export default function OrganizationTable({
                 {org.name}
               </TableCell>
               <TableCell className="text-gray-300">{org.type}</TableCell>
-              <TableCell>{getStatusBadge(org.status)}</TableCell>
+              <TableCell>
+                <StatusBadge status={org.status} />
+              </TableCell>
               <TableCell className="text-gray-300">
                 <div className="flex items-center gap-1">
                   <Users className="h-4 w-4" />
@@ -123,15 +73,6 @@ export default function OrganizationTable({
               <TableCell className="text-gray-300">{org.createdDate}</TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => onRegenerate(org.name)}
-                    className="cursor-pointer border-gray-600 text-gray-600 hover:bg-gray-700"
-                  >
-                    <RotateCcw className="h-3 w-3" />
-                    Regenerate
-                  </Button>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button
@@ -164,7 +105,7 @@ export default function OrganizationTable({
                         onClick={() => onDeactivate(org.name)}
                       >
                         <Trash2 className="mr-2 h-4 w-4" />
-                        Deactivate
+                        Delete
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -174,21 +115,6 @@ export default function OrganizationTable({
           ))}
         </TableBody>
       </Table>
-
-      <ViewOrganizationDialog
-        open={viewOpen}
-        onClose={closeView}
-        org={selectedOrg}
-        badgeRenderer={getStatusBadge}
-      />
-
-      <EditOrganizationDialog
-        open={editOpen}
-        onClose={closeEdit}
-        formData={editFormData}
-        onChange={onEditChange}
-        onSave={onEditSave}
-      />
     </div>
   );
 }
