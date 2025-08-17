@@ -15,14 +15,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Users,
-  RotateCcw,
-  Eye,
-  Edit,
-  Trash2,
-  MoreHorizontal,
-} from "lucide-react";
+import { Users, Eye, Edit, Trash2, MoreHorizontal } from "lucide-react";
 import { Organization } from "../../org";
 import { StatusBadge } from "../StatusBadge";
 
@@ -35,8 +28,8 @@ interface Props {
   // editOpen: boolean;
   selectedOrg: Organization | null;
   editFormData: Organization;
-  onEditChange: (data: Partial<Organization>) => void;
-  onEditSave: () => void;
+  // onEditChange: (data: Partial<Organization>) => void;
+  // onEditSave: () => void;
 }
 
 export default function OrganizationTable({

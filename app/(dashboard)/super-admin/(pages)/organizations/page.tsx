@@ -38,8 +38,6 @@ export default function OrganizationsPage() {
     editOpen,
     selectedOrg,
     editFormData,
-    handleEditChange,
-    handleSaveEdit,
     closeView,
     closeEdit,
   } = useOrganizations();
@@ -105,11 +103,9 @@ export default function OrganizationsPage() {
                 onView={viewOrg}
                 onEdit={editOrg}
                 onDeactivate={deactivateOrg}
-                onEditSave={handleSaveEdit}
                 viewOpen={false}
                 selectedOrg={selectedOrg}
                 editFormData={editFormData}
-                onEditChange={handleEditChange}
               />
             )}
 
