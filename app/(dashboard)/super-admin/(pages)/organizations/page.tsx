@@ -1,58 +1,3 @@
-// OrganizationsPage.tsx
-// "use client";
-
-// import { useState } from "react";
-// import OrganizationTable from './components/OrgTable';
-// import { useOrganizations } from '@/hooks/useOrg';
-// import {
-//   OrgActionsDialog,
-//   ViewOrganizationDialog,
-// } from './components/OrgDialogs';
-// import { Organization } from "./org";
-
-// export default function OrganizationsPage() {
-//   const { filteredOrgs, loading, deactivateOrg } = useOrganizations();
-
-//   const [viewOpen, setViewOpen] = useState(false);
-//   const [editOpen, setEditOpen] = useState(false);
-//   const [selectedOrg, setSelectedOrg] = useState<Organization | null>(null);
-
-//   return (
-//     <>
-//       <OrganizationTable
-//         organizations={filteredOrgs}
-//         onView={(org) => {
-//           setSelectedOrg(org);
-//           setViewOpen(true);
-//         }}
-//         onEdit={(org) => {git
-//           setSelectedOrg(org);
-//           setEditOpen(true);
-//         }}
-//       />
-
-//       {selectedOrg && (
-//         <ViewOrganizationDialog
-//           open={viewOpen}
-//           onClose={() => setViewOpen(false)}
-//           org={selectedOrg}
-//         />
-//       )}
-
-//       {selectedOrg && (
-//         <OrgActionsDialog
-//           open={editOpen}
-//           onClose={() => setEditOpen(false)}
-//           org={selectedOrg}
-//           onRegenerate={regenerateInviteCode}
-//           onDeactivate={deactivateOrg}
-//           onActivate={activateOrg}
-//         />
-//       )}
-//     </>
-//   );
-// }
-
 'use client';
 
 import { SidebarTrigger } from '@/components/ui/sidebar';
@@ -74,6 +19,16 @@ import {
   SelectContent,
   SelectItem,
 } from '@/components/ui/select';
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from '@/components/ui/alert-dialog';
 
 export default function OrganizationsPage() {
   const {
@@ -94,8 +49,9 @@ export default function OrganizationsPage() {
     selectedOrg,
     closeView,
     closeEdit,
+    deleteOrg,
+    setSelectedOrg,
   } = useOrganizations();
-
   const MemoizedOrgTable = React.memo(OrganizationTable);
 
   return (
@@ -156,8 +112,44 @@ export default function OrganizationsPage() {
                 organizations={filteredOrgs}
                 onView={viewOrg}
                 onEdit={editOrg}
+                onDelete={(orgId) =>
+                  setSelectedOrg(
+                    filteredOrgs.find((o) => o.id === orgId) || null
+                  )
+                }
               />
             )}
+
+            <AlertDialog
+              open={!!selectedOrg}
+              onOpenChange={() => setSelectedOrg(null)}
+            >
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Delete {selectedOrg?.name}?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete
+                    the organization and remove all related data.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel onClick={() => setSelectedOrg(null)}>
+                    Cancel
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    className="bg-red-600 hover:bg-red-700"
+                    onClick={() => {
+                      if (selectedOrg) deleteOrg(selectedOrg.id);
+                      setSelectedOrg(null);
+                    }}
+                  >
+                    Yes, Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
 
             {viewOpen && selectedOrg && (
               <ViewOrganizationDialog
