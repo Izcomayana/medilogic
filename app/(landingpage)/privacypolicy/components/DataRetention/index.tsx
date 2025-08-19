@@ -1,26 +1,26 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import { Database, Clock, Download, Trash2 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { motion } from 'framer-motion';
+import { Database, Clock, Download, Trash2 } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function DataRetention() {
   const retentionPolicies = [
     {
       icon: Database,
-      title: "Active Organizations",
-      description: "We retain user data as long as your organization is active",
+      title: 'Active Organizations',
+      description: 'We retain user data as long as your organization is active',
     },
     {
       icon: Clock,
-      title: "Data Purging",
+      title: 'Data Purging',
       description:
-        "After termination or deletion requests, data is securely purged within 30 days",
+        'After termination or deletion requests, data is securely purged within 30 days',
     },
     {
       icon: Download,
-      title: "Data Export",
-      description: "You can download your data anytime via the platform",
+      title: 'Data Export',
+      description: 'You can download your data anytime via the platform',
     },
   ];
 

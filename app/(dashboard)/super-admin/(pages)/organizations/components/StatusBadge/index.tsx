@@ -7,14 +7,14 @@ export function StatusBadge({ status }: { status?: string }) {
     );
 
   const colorMap: Record<string, string> = {
-    active: "bg-[#15941f] text-white",
-    pending: "bg-yellow-500 text-white",
-    inactive: "bg-red-600 text-white",
+    active: 'bg-[#15941f] text-white',
+    pending: 'bg-yellow-500 text-white',
+    inactive: 'bg-red-600 text-white',
   };
 
   return (
     <span
-      className={`${colorMap[status.toLowerCase()] || "border"} px-2 py-1 rounded text-xs`}
+      className={`${colorMap[status.toLowerCase()] || 'border'} px-2 py-1 rounded text-xs`}
     >
       {status}
     </span>

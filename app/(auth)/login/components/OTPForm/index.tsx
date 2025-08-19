@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { AlertCircle, ArrowRight } from "lucide-react";
-import Link from "next/link";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { AlertCircle, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 export default function OTPForm({
   otpCode,
@@ -32,8 +32,8 @@ export default function OTPForm({
               placeholder="Enter 4-digit code"
               className={`h-12 text-center text-lg font-mono tracking-widest transition-all duration-200 focus:outline-none focus:ring-1 ${
                 errors.otp
-                  ? "border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-200"
-                  : "border-gray-300 focus:border-[#15941f] focus:ring-[#15941f]/20"
+                  ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-200'
+                  : 'border-gray-300 focus:border-[#15941f] focus:ring-[#15941f]/20'
               }`}
               required
               disabled={loading}
@@ -103,7 +103,7 @@ export default function OTPForm({
             variant="outline"
             className="w-full h-12 border-gray-300 text-gray-700 hover:bg-gray-50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed bg-transparent"
           >
-            {loading ? "Requesting..." : "Resend Code"}
+            {loading ? 'Requesting...' : 'Resend Code'}
           </Button>
 
           <div className="text-center space-y-2">

@@ -1,24 +1,24 @@
-"use client";
+'use client';
 
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Building2, Loader2, Search } from "lucide-react";
-import OrganizationTable from "./components/OrgTable";
-import { useOrganizations } from "@/hooks/useOrg";
+import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Building2, Loader2, Search } from 'lucide-react';
+import OrganizationTable from './components/OrgTable';
+import { useOrganizations } from '@/hooks/useOrg';
 import {
   OrgActionsDialog,
   ViewOrganizationDialog,
-} from "./components/OrgDialogs";
-import React from "react";
-import CreateOrganizationDialog from "./components/creatOrg";
-import { Input } from "@/components/ui/input";
+} from './components/OrgDialogs';
+import React from 'react';
+import CreateOrganizationDialog from './components/creatOrg';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 
 export default function OrganizationsPage() {
   const {
@@ -37,7 +37,6 @@ export default function OrganizationsPage() {
     viewOpen,
     editOpen,
     selectedOrg,
-    editFormData,
     closeView,
     closeEdit,
   } = useOrganizations();
@@ -102,10 +101,6 @@ export default function OrganizationsPage() {
                 organizations={filteredOrgs}
                 onView={viewOrg}
                 onEdit={editOrg}
-                onDeactivate={deactivateOrg}
-                viewOpen={false}
-                selectedOrg={selectedOrg}
-                editFormData={editFormData}
               />
             )}
 

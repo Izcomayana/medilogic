@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { fadeInUp, staggerDelay } from "@/app/(landingpage)/hooks/annimation";
-import { useInView } from "@/app/(landingpage)/hooks/useInView";
-import { Card, CardContent } from "@/components/ui/card";
+import { fadeInUp, staggerDelay } from '@/app/(landingpage)/hooks/annimation';
+import { useInView } from '@/app/(landingpage)/hooks/useInView';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Truck,
   CheckCircle,
@@ -11,7 +11,7 @@ import {
   Clock,
   BarChart3,
   FileText,
-} from "lucide-react";
+} from 'lucide-react';
 
 export default function CourierSection() {
   const [courierRef, courierInView] = useInView(0.1);
@@ -19,23 +19,23 @@ export default function CourierSection() {
   const features = [
     {
       icon: Shield,
-      text: "Maintain a digital chain of custody with time-stamped records",
+      text: 'Maintain a digital chain of custody with time-stamped records',
     },
     {
       icon: MapPin,
-      text: "Give drivers access to routes, instructions, and delivery notes",
+      text: 'Give drivers access to routes, instructions, and delivery notes',
     },
     {
       icon: BarChart3,
-      text: "Optimize routes with trip prediction and performance analytics",
+      text: 'Optimize routes with trip prediction and performance analytics',
     },
     {
       icon: Clock,
-      text: "Track deliveries, delays, and completion status in real time",
+      text: 'Track deliveries, delays, and completion status in real time',
     },
     {
       icon: CheckCircle,
-      text: "Provide clients with a transparent and secure delivery experience",
+      text: 'Provide clients with a transparent and secure delivery experience',
     },
   ];
 
@@ -46,7 +46,7 @@ export default function CourierSection() {
     >
       <div className="container mx-auto max-w-7xl">
         <div
-          className={`text-center mb-16 ${fadeInUp} ${courierInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+          className={`text-center mb-16 ${fadeInUp} ${courierInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
         >
           <div className="inline-flex items-center gap-2 bg-orange-50 text-orange-600 px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300">
             <Truck className="w-4 h-4" />
@@ -63,16 +63,16 @@ export default function CourierSection() {
 
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div
-            className={`space-y-4 ${fadeInUp} ${courierInView ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-12"}`}
-            style={{ transitionDelay: "200ms" }}
+            className={`space-y-4 ${fadeInUp} ${courierInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'}`}
+            style={{ transitionDelay: '200ms' }}
           >
             {features.map((feature, index) => (
               <div
                 key={index}
                 className={`flex items-start gap-4 group hover:translate-x-2 transition-all duration-300 ${fadeInUp} ${
                   courierInView
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-8"
+                    ? 'opacity-100 translate-y-0'
+                    : 'opacity-0 translate-y-8'
                 }`}
                 style={staggerDelay(index)}
               >
@@ -87,8 +87,8 @@ export default function CourierSection() {
           </div>
 
           <div
-            className={`${fadeInUp} ${courierInView ? "opacity-100 translate-x-0" : "opacity-0 translate-x-12"}`}
-            style={{ transitionDelay: "400ms" }}
+            className={`${fadeInUp} ${courierInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'}`}
+            style={{ transitionDelay: '400ms' }}
           >
             <Card className="bg-gradient-to-br from-orange-50 to-red-50 border-0 shadow-lg hover:shadow-xl transition-all duration-500">
               <CardContent className="p-8">

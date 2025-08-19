@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import { fadeInUp, staggerDelay } from "@/app/(landingpage)/hooks/annimation";
-import { useInView } from "@/app/(landingpage)/hooks/useInView";
-import { BarChart3, TrendingUp, CheckCircle } from "lucide-react";
+import { fadeInUp, staggerDelay } from '@/app/(landingpage)/hooks/annimation';
+import { useInView } from '@/app/(landingpage)/hooks/useInView';
+import { BarChart3, TrendingUp, CheckCircle } from 'lucide-react';
 
 export default function AIAnalytics() {
   const [analyticsRef, analyticsInView] = useInView(0.1);
 
   const features = [
-    "Predict trip duration using distance, cost, and waste type",
-    "Visual dashboards for tracking trends and performance",
-    "Filter data by driver, date range, trip status, organization",
-    "Generate exportable reports for internal or regulatory use",
-    "Spot bottlenecks or inefficiencies before they cause delays",
+    'Predict trip duration using distance, cost, and waste type',
+    'Visual dashboards for tracking trends and performance',
+    'Filter data by driver, date range, trip status, organization',
+    'Generate exportable reports for internal or regulatory use',
+    'Spot bottlenecks or inefficiencies before they cause delays',
   ];
 
   return (
     <section ref={analyticsRef} className="py-20 px-4 bg-white">
       <div className="container mx-auto max-w-7xl">
         <div
-          className={`text-center mb-16 ${fadeInUp} ${analyticsInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+          className={`text-center mb-16 ${fadeInUp} ${analyticsInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
         >
           <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-600 px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300">
             <BarChart3 className="w-4 h-4" />
@@ -36,16 +36,16 @@ export default function AIAnalytics() {
 
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div
-            className={`${fadeInUp} ${analyticsInView ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-12"}`}
-            style={{ transitionDelay: "200ms" }}
+            className={`${fadeInUp} ${analyticsInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'}`}
+            style={{ transitionDelay: '200ms' }}
           >
             <div className="bg-gradient-to-br from-emerald-50 to-teal-50 rounded-3xl p-8 relative overflow-hidden">
               <div className="absolute top-4 right-4 w-32 h-32 bg-emerald-200/30 rounded-full animate-pulse"></div>
               <div className="absolute bottom-4 left-4 w-24 h-24 bg-teal-200/30 rounded-full animate-pulse delay-1000"></div>
               <div className="relative z-10">
                 <div
-                  className={`bg-white rounded-2xl p-6 shadow-lg mb-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 ${fadeInUp} ${analyticsInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
-                  style={{ transitionDelay: "400ms" }}
+                  className={`bg-white rounded-2xl p-6 shadow-lg mb-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 ${fadeInUp} ${analyticsInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                  style={{ transitionDelay: '400ms' }}
                 >
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-sm text-gray-500">
@@ -59,8 +59,8 @@ export default function AIAnalytics() {
                   </div>
                 </div>
                 <div
-                  className={`bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 ${fadeInUp} ${analyticsInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
-                  style={{ transitionDelay: "600ms" }}
+                  className={`bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 ${fadeInUp} ${analyticsInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                  style={{ transitionDelay: '600ms' }}
                 >
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-sm text-gray-500">
@@ -78,16 +78,16 @@ export default function AIAnalytics() {
           </div>
 
           <div
-            className={`space-y-4 ${fadeInUp} ${analyticsInView ? "opacity-100 translate-x-0" : "opacity-0 translate-x-12"}`}
-            style={{ transitionDelay: "400ms" }}
+            className={`space-y-4 ${fadeInUp} ${analyticsInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'}`}
+            style={{ transitionDelay: '400ms' }}
           >
             {features.map((feature, index) => (
               <div
                 key={index}
                 className={`flex items-start gap-4 group hover:translate-x-2 transition-all duration-300 ${fadeInUp} ${
                   analyticsInView
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-8"
+                    ? 'opacity-100 translate-y-0'
+                    : 'opacity-0 translate-y-8'
                 }`}
                 style={staggerDelay(index)}
               >

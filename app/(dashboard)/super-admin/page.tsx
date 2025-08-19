@@ -1,5 +1,5 @@
-import React from "react";
-import SuperAdmin from ".";
+import React from 'react';
+import SuperAdmin from '.';
 // import { RoleGuard } from "@/components/RoleGuard";
 
 export default function Page() {

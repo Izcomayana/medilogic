@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import {
   Table,
   TableBody,
@@ -12,61 +12,61 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { RotateCcw, Search, Copy, Calendar } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
+} from '@/components/ui/table';
+import { RotateCcw, Search, Copy, Calendar } from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 const inviteCodes = [
   {
     id: 1,
-    organization: "TechCorp Solutions",
-    code: "TECH-2024-ABC123",
-    status: "Active",
-    createdDate: "2024-01-15",
-    expiryDate: "2024-07-15",
+    organization: 'TechCorp Solutions',
+    code: 'TECH-2024-ABC123',
+    status: 'Active',
+    createdDate: '2024-01-15',
+    expiryDate: '2024-07-15',
     usedCount: 12,
     maxUses: 50,
   },
   {
     id: 2,
-    organization: "FinanceInc",
-    code: "FIN-2024-XYZ789",
-    status: "Active",
-    createdDate: "2024-02-01",
-    expiryDate: "2024-08-01",
+    organization: 'FinanceInc',
+    code: 'FIN-2024-XYZ789',
+    status: 'Active',
+    createdDate: '2024-02-01',
+    expiryDate: '2024-08-01',
     usedCount: 8,
     maxUses: 25,
   },
   {
     id: 3,
-    organization: "HealthCare Plus",
-    code: "HEALTH-2024-DEF456",
-    status: "Expired",
-    createdDate: "2023-12-01",
-    expiryDate: "2024-01-01",
+    organization: 'HealthCare Plus',
+    code: 'HEALTH-2024-DEF456',
+    status: 'Expired',
+    createdDate: '2023-12-01',
+    expiryDate: '2024-01-01',
     usedCount: 15,
     maxUses: 30,
   },
   {
     id: 4,
-    organization: "EduTech Academy",
-    code: "EDU-2024-GHI789",
-    status: "Inactive",
-    createdDate: "2024-01-20",
-    expiryDate: "2024-07-20",
+    organization: 'EduTech Academy',
+    code: 'EDU-2024-GHI789',
+    status: 'Inactive',
+    createdDate: '2024-01-20',
+    expiryDate: '2024-07-20',
     usedCount: 0,
     maxUses: 20,
   },
 ];
 
 export default function InviteCodes() {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
 
   const filteredCodes = inviteCodes.filter(
     (code) =>
       code.organization.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      code.code.toLowerCase().includes(searchTerm.toLowerCase()),
+      code.code.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleRegenerateCode = (orgName: string) => {
@@ -75,16 +75,16 @@ export default function InviteCodes() {
 
   const handleCopyCode = (code: string) => {
     navigator.clipboard.writeText(code);
-    toast.success("Invite code copied to clipboard");
+    toast.success('Invite code copied to clipboard');
   };
 
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
-      case "active":
+      case 'active':
         return <Badge className="bg-[#15941f] text-white">Active</Badge>;
-      case "expired":
+      case 'expired':
         return <Badge variant="destructive">Expired</Badge>;
-      case "inactive":
+      case 'inactive':
         return (
           <Badge variant="secondary" className="bg-gray-600 text-white">
             Inactive

@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { ChevronRight } from "lucide-react";
-import Link from "next/link";
-import React from "react";
+import { ChevronRight } from 'lucide-react';
+import Link from 'next/link';
+import React from 'react';
 
 export const Footer = () => {
   const LegalLinks = [
-    { name: "Help center", href: "/helpcenter" },
-    { name: "Compliance", href: "/compliance" },
-    { name: "Terms Of Use", href: "/termsofuse" },
-    { name: "Privacy Policy", href: "/privacypolicy" },
+    { name: 'Help center', href: '/helpcenter' },
+    { name: 'Compliance', href: '/compliance' },
+    { name: 'Terms Of Use', href: '/termsofuse' },
+    { name: 'Privacy Policy', href: '/privacypolicy' },
   ];
 
   return (
@@ -50,7 +50,7 @@ export const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-3">
-              {["Features", "Solutions", "Testimonials", "Contact"].map(
+              {['Features', 'Solutions', 'Testimonials', 'Contact'].map(
                 (link) => (
                   <li key={link}>
                     <Link
@@ -61,7 +61,7 @@ export const Footer = () => {
                       {link}
                     </Link>
                   </li>
-                ),
+                )
               )}
             </ul>
           </div>

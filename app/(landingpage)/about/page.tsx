@@ -1,4 +1,4 @@
-import { About } from ".";
+import { About } from '.';
 
 export default function AboutPage() {
   return <About />;

@@ -1,27 +1,27 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import { Building2, Users, UserCog, CheckSquare } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { motion } from 'framer-motion';
+import { Building2, Users, UserCog, CheckSquare } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function OrganizationAccounts() {
   const responsibilities = [
     {
       icon: Users,
-      title: "User Activity Responsibility",
+      title: 'User Activity Responsibility',
       description:
-        "Accept responsibility for all user activity under your organization",
+        'Accept responsibility for all user activity under your organization',
     },
     {
       icon: UserCog,
-      title: "User Management",
+      title: 'User Management',
       description:
         "Responsible for managing your organization's roles, permissions, and user onboarding",
     },
     {
       icon: CheckSquare,
-      title: "Team Compliance",
-      description: "Must ensure your team complies with these Terms",
+      title: 'Team Compliance',
+      description: 'Must ensure your team complies with these Terms',
     },
   ];
 

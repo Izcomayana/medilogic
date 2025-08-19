@@ -1,26 +1,26 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import { CheckCircle, Shield, FileCheck } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { motion } from 'framer-motion';
+import { CheckCircle, Shield, FileCheck } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function UseOfService() {
   const requirements = [
     {
       icon: Shield,
-      title: "Applicable Laws and Regulations",
-      description: "Comply with all local, national, and international laws",
+      title: 'Applicable Laws and Regulations',
+      description: 'Comply with all local, national, and international laws',
     },
     {
       icon: FileCheck,
-      title: "These Terms",
+      title: 'These Terms',
       description:
-        "Follow all guidelines and restrictions outlined in this document",
+        'Follow all guidelines and restrictions outlined in this document',
     },
     {
       icon: CheckCircle,
-      title: "Organizational Policies",
-      description: "Adhere to relevant organizational policies (if applicable)",
+      title: 'Organizational Policies',
+      description: 'Adhere to relevant organizational policies (if applicable)',
     },
   ];
 

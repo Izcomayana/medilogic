@@ -1,38 +1,38 @@
-"use client";
+'use client';
 
-import type React from "react";
+import type React from 'react';
 
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { UserPlus } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
+} from '@/components/ui/select';
+import { UserPlus } from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 export default function CreateUser() {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    role: "",
+    name: '',
+    email: '',
+    role: '',
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.role) {
-      toast.error("Please fill in all fields");
+      toast.error('Please fill in all fields');
       return;
     }
-    toast.success("User created successfully");
-    setFormData({ name: "", email: "", role: "" });
+    toast.success('User created successfully');
+    setFormData({ name: '', email: '', role: '' });
   };
 
   return (
@@ -118,7 +118,7 @@ export default function CreateUser() {
                     Role Permissions
                   </h3>
                   <div className="text-sm text-gray-400">
-                    {formData.role === "super-admin" && (
+                    {formData.role === 'super-admin' && (
                       <ul className="list-disc list-inside space-y-1">
                         <li>Full system access</li>
                         <li>Manage all organizations and users</li>
@@ -126,14 +126,14 @@ export default function CreateUser() {
                         <li>System configuration access</li>
                       </ul>
                     )}
-                    {formData.role === "admin" && (
+                    {formData.role === 'admin' && (
                       <ul className="list-disc list-inside space-y-1">
                         <li>Manage organizations and users</li>
                         <li>View regulator information</li>
                         <li>Limited system configuration</li>
                       </ul>
                     )}
-                    {formData.role === "manager" && (
+                    {formData.role === 'manager' && (
                       <ul className="list-disc list-inside space-y-1">
                         <li>View organizations and users</li>
                         <li>Basic reporting access</li>
@@ -153,7 +153,7 @@ export default function CreateUser() {
                     variant="outline"
                     className="border-gray-600 text-gray-300 hover:bg-gray-700 bg-transparent"
                     onClick={() =>
-                      setFormData({ name: "", email: "", role: "" })
+                      setFormData({ name: '', email: '', role: '' })
                     }
                   >
                     Reset Form

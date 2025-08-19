@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import {
   Table,
   TableBody,
@@ -11,86 +11,86 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Users, Search, Building2 } from "lucide-react";
-import { useState } from "react";
+} from '@/components/ui/select';
+import { Users, Search, Building2 } from 'lucide-react';
+import { useState } from 'react';
 
 const orgUsers = [
   {
     id: 1,
-    name: "Alice Johnson",
-    email: "alice@techcorp.com",
-    role: "Admin",
-    organization: "TechCorp Solutions",
-    status: "Active",
-    lastLogin: "2024-01-15",
+    name: 'Alice Johnson',
+    email: 'alice@techcorp.com',
+    role: 'Admin',
+    organization: 'TechCorp Solutions',
+    status: 'Active',
+    lastLogin: '2024-01-15',
   },
   {
     id: 2,
-    name: "Bob Smith",
-    email: "bob@techcorp.com",
-    role: "User",
-    organization: "TechCorp Solutions",
-    status: "Active",
-    lastLogin: "2024-01-14",
+    name: 'Bob Smith',
+    email: 'bob@techcorp.com',
+    role: 'User',
+    organization: 'TechCorp Solutions',
+    status: 'Active',
+    lastLogin: '2024-01-14',
   },
   {
     id: 3,
-    name: "Carol Davis",
-    email: "carol@financeinc.com",
-    role: "Manager",
-    organization: "FinanceInc",
-    status: "Inactive",
-    lastLogin: "2024-01-10",
+    name: 'Carol Davis',
+    email: 'carol@financeinc.com',
+    role: 'Manager',
+    organization: 'FinanceInc',
+    status: 'Inactive',
+    lastLogin: '2024-01-10',
   },
   {
     id: 4,
-    name: "David Wilson",
-    email: "david@healthcare.com",
-    role: "User",
-    organization: "HealthCare Plus",
-    status: "Active",
-    lastLogin: "2024-01-16",
+    name: 'David Wilson',
+    email: 'david@healthcare.com',
+    role: 'User',
+    organization: 'HealthCare Plus',
+    status: 'Active',
+    lastLogin: '2024-01-16',
   },
 ];
 
 const organizations = [
-  "All Organizations",
-  "TechCorp Solutions",
-  "FinanceInc",
-  "HealthCare Plus",
-  "EduTech Academy",
+  'All Organizations',
+  'TechCorp Solutions',
+  'FinanceInc',
+  'HealthCare Plus',
+  'EduTech Academy',
 ];
 
 export default function OrgUsers() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedOrg, setSelectedOrg] = useState("All Organizations");
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedOrg, setSelectedOrg] = useState('All Organizations');
+  const [statusFilter, setStatusFilter] = useState('all');
 
   const filteredUsers = orgUsers.filter((user) => {
     const matchesSearch =
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesOrg =
-      selectedOrg === "All Organizations" || user.organization === selectedOrg;
+      selectedOrg === 'All Organizations' || user.organization === selectedOrg;
     const matchesStatus =
-      statusFilter === "all" ||
+      statusFilter === 'all' ||
       user.status.toLowerCase() === statusFilter.toLowerCase();
     return matchesSearch && matchesOrg && matchesStatus;
   });
 
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
-      case "active":
+      case 'active':
         return <Badge className="bg-[#15941f] text-white">Active</Badge>;
-      case "inactive":
+      case 'inactive':
         return <Badge variant="destructive">Inactive</Badge>;
       default:
         return <Badge variant="outline">{status}</Badge>;
@@ -99,19 +99,19 @@ export default function OrgUsers() {
 
   const getRoleBadge = (role: string) => {
     switch (role.toLowerCase()) {
-      case "admin":
+      case 'admin':
         return (
           <Badge variant="secondary" className="bg-blue-600 text-white">
             Admin
           </Badge>
         );
-      case "manager":
+      case 'manager':
         return (
           <Badge variant="secondary" className="bg-purple-600 text-white">
             Manager
           </Badge>
         );
-      case "user":
+      case 'user':
         return (
           <Badge variant="outline" className="border-gray-600 text-gray-300">
             User

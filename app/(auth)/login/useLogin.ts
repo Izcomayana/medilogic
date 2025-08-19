@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState, type FormEvent } from "react";
-import axios from "axios";
-import qs from "qs";
-import { toast } from "sonner";
+import { useRouter } from 'next/navigation';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
+import axios from 'axios';
+import qs from 'qs';
+import { toast } from 'sonner';
 
 export function useLogin() {
   const router = useRouter();
   const [step, setStep] = useState<1 | 2>(1);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [otpCode, setOtpCode] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [otpCode, setOtpCode] = useState('');
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -35,23 +35,23 @@ export function useLogin() {
   };
 
   const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/\D/g, "").slice(0, 4);
+    const value = e.target.value.replace(/\D/g, '').slice(0, 4);
     setOtpCode(value);
     if (errors.otp) setErrors((prev) => ({ ...prev, otp: undefined }));
   };
 
   const validateForm = () => {
     const newErrors: { email?: string; password?: string } = {};
-    if (!email.trim()) newErrors.email = "Email address is required";
-    if (!password.trim()) newErrors.password = "Password is required";
+    if (!email.trim()) newErrors.email = 'Email address is required';
+    if (!password.trim()) newErrors.password = 'Password is required';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const validateOtp = () => {
     const newErrors: { otp?: string } = {};
-    if (!otpCode.trim()) newErrors.otp = "OTP code is required";
-    else if (otpCode.length !== 4) newErrors.otp = "OTP must be 4 digits";
+    if (!otpCode.trim()) newErrors.otp = 'OTP code is required';
+    else if (otpCode.length !== 4) newErrors.otp = 'OTP must be 4 digits';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -82,39 +82,39 @@ export function useLogin() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "https://medilogic-backend.onrender.com/access/login-step-1",
+        'https://medilogic-backend.onrender.com/access/login-step-1',
         qs.stringify({ username: email, password }),
         {
           headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
+            'Content-Type': 'application/x-www-form-urlencoded',
           },
-        },
+        }
       );
 
       if (response.data.session_id) {
         setSessionId(response.data.session_id);
         setStep(2);
 
-        toast.success("Sent!", {
-          description: "OTP sent to your email.",
+        toast.success('Sent!', {
+          description: 'OTP sent to your email.',
         });
 
         setLoading(false);
         return;
       } else {
-        setErrors({ general: "Session ID not received. Please try again." });
+        setErrors({ general: 'Session ID not received. Please try again.' });
       }
     } catch (error: any) {
       const msg =
         error?.response?.data?.message ??
         error?.response?.data?.detail ??
-        "An unexpected error occurred. Please try again.";
+        'An unexpected error occurred. Please try again.';
 
-      const errorMessage = typeof msg === "string" ? msg : JSON.stringify(msg);
+      const errorMessage = typeof msg === 'string' ? msg : JSON.stringify(msg);
 
       setErrors({ general: errorMessage });
 
-      toast.error("Login failed", {
+      toast.error('Login failed', {
         description: errorMessage,
       });
     } finally {
@@ -130,9 +130,9 @@ export function useLogin() {
 
     try {
       const response = await axios.post(
-        "https://medilogic-backend.onrender.com/access/login-step-2",
+        'https://medilogic-backend.onrender.com/access/login-step-2',
         { email, session_id: sessionId, code: otpCode },
-        { headers: { "Content-Type": "application/json" } },
+        { headers: { 'Content-Type': 'application/json' } }
       );
 
       if (
@@ -142,50 +142,50 @@ export function useLogin() {
       ) {
         const { access_token, role, refresh_token } = response.data;
 
-        localStorage.setItem("authToken", access_token);
-        localStorage.setItem("userRole", role);
-        localStorage.setItem("refreshToken", refresh_token);
+        localStorage.setItem('authToken', access_token);
+        localStorage.setItem('userRole', role);
+        localStorage.setItem('refreshToken', refresh_token);
 
-        toast.success("Congrats!", {
-          description: "Login successful! Redirecting...",
+        toast.success('Congrats!', {
+          description: 'Login successful! Redirecting...',
         });
 
         // Dynamic redirect
-        let destination = "/";
+        let destination = '/';
         switch (role) {
-          case "super_admin":
-            destination = "/super-admin";
+          case 'super_admin':
+            destination = '/super-admin';
             break;
-          case "admin":
-            destination = "/company-admin";
+          case 'admin':
+            destination = '/company-admin';
             break;
-          case "regulator":
-            destination = "/regulator";
+          case 'regulator':
+            destination = '/regulator';
             break;
-          case "driver":
-            destination = "/driver";
+          case 'driver':
+            destination = '/driver';
             break;
-          case "client":
-            destination = "/client";
+          case 'client':
+            destination = '/client';
             break;
           default:
-            destination = "/";
+            destination = '/';
         }
 
         setTimeout(() => router.push(destination), 1000);
       } else if (!response.data.access_token) {
-        const fallback = "Login step 2 failed: token not received.";
+        const fallback = 'Login step 2 failed: token not received.';
         setErrors({ general: fallback });
 
-        toast.error("Error", {
+        toast.error('Error', {
           description: fallback,
         });
       }
     } catch (error: any) {
-      const msg = error?.response?.data?.message || "Invalid OTP.";
+      const msg = error?.response?.data?.message || 'Invalid OTP.';
       setErrors({ general: msg });
 
-      toast.error("OTP Failed", {
+      toast.error('OTP Failed', {
         description: msg,
       });
     } finally {
@@ -195,29 +195,29 @@ export function useLogin() {
 
   const handleRequestOtpAgain = async () => {
     if (!email || !password) {
-      setErrors({ general: "Email and password are required." });
+      setErrors({ general: 'Email and password are required.' });
       return;
     }
     setLoading(true);
     try {
       const response = await axios.post(
-        "https://medilogic-backend.onrender.com/access/login-step-1",
+        'https://medilogic-backend.onrender.com/access/login-step-1',
         qs.stringify({ username: email, password }),
-        { headers: { "Content-Type": "application/x-www-form-urlencoded" } },
+        { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
       );
       if (response.data.session_id) {
         setSessionId(response.data.session_id);
-        setSuccessMessage("OTP resent to your email.");
+        setSuccessMessage('OTP resent to your email.');
       } else {
-        setErrors({ general: "Failed to resend OTP." });
+        setErrors({ general: 'Failed to resend OTP.' });
       }
     } catch (error: any) {
       const res = error.response?.data;
-      let message = "Login failed.";
+      let message = 'Login failed.';
 
       if (Array.isArray(res?.detail)) {
-        message = res.detail.map((err: { msg: string }) => err.msg).join(" | ");
-      } else if (typeof res?.detail === "string") {
+        message = res.detail.map((err: { msg: string }) => err.msg).join(' | ');
+      } else if (typeof res?.detail === 'string') {
         message = res.detail;
       } else if (res?.message) {
         message = res.message;

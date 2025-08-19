@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import React from "react";
+import React from 'react';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import Link from "next/link";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/select';
+import Link from 'next/link';
+import { Label } from '@/components/ui/label';
 import {
   AlertCircle,
   Mail,
@@ -19,14 +19,14 @@ import {
   Code,
   ArrowRight,
   CircleUserRound,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 // import TermsModal from "./components/TermsModal";
-import CookiePopup from "../components/CookiePopup";
-import { RegisterFormHeader } from "./components/Header";
-import { InputField } from "../components/InputField";
-import { useRegister } from "./useRegister";
+import CookiePopup from '../components/CookiePopup';
+import { RegisterFormHeader } from './components/Header';
+import { InputField } from '../components/InputField';
+import { useRegister } from './useRegister';
 
 const Register: React.FC = () => {
   const {
@@ -128,8 +128,8 @@ const Register: React.FC = () => {
                   <SelectTrigger
                     className={`w-full relative cursor-pointer pl-9 transition-all duration-200 focus:outline-none focus:ring-1 ${
                       errors.role
-                        ? "border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-200"
-                        : "border-gray-300 focus:border-[#15941f] focus:ring-[#15941f]/20"
+                        ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-200'
+                        : 'border-gray-300 focus:border-[#15941f] focus:ring-[#15941f]/20'
                     }`}
                   >
                     <SelectValue className="" placeholder="Select Role" />
@@ -214,13 +214,13 @@ const Register: React.FC = () => {
                   name="acceptTerms"
                   checked={formData.acceptTerms}
                   onCheckedChange={(checked) =>
-                    handleCheckboxChange("acceptTerms", checked)
+                    handleCheckboxChange('acceptTerms', checked)
                   }
                   disabled={loading}
                   required
                 />
                 <Label htmlFor="terms">
-                  I accept the{" "}
+                  I accept the{' '}
                   <Link
                     href="/terms-of-service"
                     target="_blank"
@@ -228,9 +228,9 @@ const Register: React.FC = () => {
                     className="text-[#15941f] hover:underline"
                   >
                     Terms of Service
-                  </Link>{" "}
+                  </Link>{' '}
                   <br className="md:hidden" />
-                  and{" "}
+                  and{' '}
                   <Link
                     href="/privacy-policy"
                     target="_blank"

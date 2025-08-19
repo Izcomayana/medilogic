@@ -4,14 +4,14 @@ on:
   pull_request:
     # run only when source files change (optional filter)
     paths:
-      - "**/*.js"
-      - "**/*.ts"
-      - "**/*.tsx"
-      - "**/*.jsx"
-      - "**/*.json"
-      - "**/*.md"
-      - "**/*.yml"
-      - "**/*.yaml"
+      - '**/*.js'
+      - '**/*.ts'
+      - '**/*.tsx'
+      - '**/*.jsx'
+      - '**/*.json'
+      - '**/*.md'
+      - '**/*.yml'
+      - '**/*.yaml'
 
 jobs:
   prettier:
@@ -25,7 +25,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "npm"
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm ci

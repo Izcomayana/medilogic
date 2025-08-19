@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { fadeInUp, staggerDelay } from "@/app/(landingpage)/hooks/annimation";
-import { useInView } from "@/app/(landingpage)/hooks/useInView";
-import { Card, CardContent } from "@/components/ui/card";
-import { Lock, Users, UserCheck, Database, Eye } from "lucide-react";
+import { fadeInUp, staggerDelay } from '@/app/(landingpage)/hooks/annimation';
+import { useInView } from '@/app/(landingpage)/hooks/useInView';
+import { Card, CardContent } from '@/components/ui/card';
+import { Lock, Users, UserCheck, Database, Eye } from 'lucide-react';
 
 export default function DataProtection() {
   const [dataRef, dataInView] = useInView(0.1);
@@ -11,22 +11,22 @@ export default function DataProtection() {
   const protectionFeatures = [
     {
       icon: Lock,
-      title: "Field-Level Encryption (Optional)",
-      desc: "Protect sensitive data down to the form field level",
+      title: 'Field-Level Encryption (Optional)',
+      desc: 'Protect sensitive data down to the form field level',
     },
     {
       icon: Users,
-      title: "Role-Based Access Control",
-      desc: "Only the right people see the right data",
+      title: 'Role-Based Access Control',
+      desc: 'Only the right people see the right data',
     },
     {
       icon: UserCheck,
-      title: "Secure Invite-Only Onboarding",
-      desc: "No public registration loopholes",
+      title: 'Secure Invite-Only Onboarding',
+      desc: 'No public registration loopholes',
     },
     {
       icon: Database,
-      title: "Data Minimization",
+      title: 'Data Minimization',
       desc: "We store only what's needed, for only as long as needed",
     },
   ];
@@ -38,7 +38,7 @@ export default function DataProtection() {
     >
       <div className="container mx-auto max-w-7xl">
         <div
-          className={`text-center mb-16 ${fadeInUp} ${dataInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+          className={`text-center mb-16 ${fadeInUp} ${dataInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
         >
           <div className="inline-flex items-center gap-2 bg-[#15941f]/10 text-[#15941f] px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300">
             <Eye className="w-4 h-4" />
@@ -56,8 +56,8 @@ export default function DataProtection() {
               key={index}
               className={`group hover:shadow-xl transition-all duration-500 border-0 shadow-lg hover:-translate-y-2 ${fadeInUp} ${
                 dataInView
-                  ? "opacity-100 translate-y-0 scale-100"
-                  : `opacity-0 ${index % 2 === 0 ? "-translate-x-12" : "translate-x-12"} scale-95`
+                  ? 'opacity-100 translate-y-0 scale-100'
+                  : `opacity-0 ${index % 2 === 0 ? '-translate-x-12' : 'translate-x-12'} scale-95`
               }`}
               style={staggerDelay(index)}
             >

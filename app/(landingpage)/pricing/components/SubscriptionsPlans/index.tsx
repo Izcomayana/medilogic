@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
   Building2,
   Stethoscope,
@@ -10,9 +10,9 @@ import {
   Shield,
   CheckCircle,
   ArrowRight,
-} from "lucide-react";
-import { useInView } from "@/app/(landingpage)/hooks/useInView";
-import { fadeInUp, staggerDelay } from "@/app/(landingpage)/hooks/annimation";
+} from 'lucide-react';
+import { useInView } from '@/app/(landingpage)/hooks/useInView';
+import { fadeInUp, staggerDelay } from '@/app/(landingpage)/hooks/annimation';
 
 export default function SubscriptionPlans() {
   const [plansRef, plansInView] = useInView(0.1);
@@ -20,65 +20,65 @@ export default function SubscriptionPlans() {
   const plans = [
     {
       icon: Stethoscope,
-      segment: "Small Clinics",
-      plan: "Starter",
-      price: "£59",
+      segment: 'Small Clinics',
+      plan: 'Starter',
+      price: '£59',
       features: [
-        "Digital trip logs",
-        "Basic compliance reports",
-        "Email support",
-        "Up to 5 users",
+        'Digital trip logs',
+        'Basic compliance reports',
+        'Email support',
+        'Up to 5 users',
       ],
-      color: "from-blue-500 to-blue-600",
-      bgColor: "from-blue-50 to-indigo-50",
+      color: 'from-blue-500 to-blue-600',
+      bgColor: 'from-blue-50 to-indigo-50',
       popular: false,
     },
     {
       icon: Building2,
-      segment: "Mid-tier Firms",
-      plan: "Pro",
-      price: "£179",
+      segment: 'Mid-tier Firms',
+      plan: 'Pro',
+      price: '£179',
       features: [
-        "AI route optimization",
-        "Automated reporting",
-        "Multi-user access",
-        "Priority support",
-        "Advanced analytics",
+        'AI route optimization',
+        'Automated reporting',
+        'Multi-user access',
+        'Priority support',
+        'Advanced analytics',
       ],
-      color: "from-[#15941f] to-green-500",
-      bgColor: "from-[#15941f]/5 to-green-50",
+      color: 'from-[#15941f] to-green-500',
+      bgColor: 'from-[#15941f]/5 to-green-50',
       popular: true,
     },
     {
       icon: Building,
-      segment: "Enterprise Orgs",
-      plan: "Enterprise",
-      price: "£449",
+      segment: 'Enterprise Orgs',
+      plan: 'Enterprise',
+      price: '£449',
       features: [
-        "Full automation",
-        "Advanced AI analytics",
-        "Real-time monitoring",
-        "Priority support",
-        "Custom integrations",
+        'Full automation',
+        'Advanced AI analytics',
+        'Real-time monitoring',
+        'Priority support',
+        'Custom integrations',
       ],
-      color: "from-purple-500 to-pink-500",
-      bgColor: "from-purple-50 to-pink-50",
+      color: 'from-purple-500 to-pink-500',
+      bgColor: 'from-purple-50 to-pink-50',
       popular: false,
     },
     {
       icon: Shield,
-      segment: "Regulators",
-      plan: "Regulator",
-      price: "£299",
+      segment: 'Regulators',
+      plan: 'Regulator',
+      price: '£299',
       features: [
-        "Compliance dashboards",
-        "Audit trails",
-        "Real-time alerts",
-        "Oversight tools",
-        "Regulatory reporting",
+        'Compliance dashboards',
+        'Audit trails',
+        'Real-time alerts',
+        'Oversight tools',
+        'Regulatory reporting',
       ],
-      color: "from-orange-500 to-red-500",
-      bgColor: "from-orange-50 to-red-50",
+      color: 'from-orange-500 to-red-500',
+      bgColor: 'from-orange-50 to-red-50',
       popular: false,
     },
   ];
@@ -90,7 +90,7 @@ export default function SubscriptionPlans() {
     >
       <div className="container mx-auto max-w-7xl">
         <div
-          className={`text-center mb-16 ${fadeInUp} ${plansInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+          className={`text-center mb-16 ${fadeInUp} ${plansInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
         >
           <div className="inline-flex items-center gap-2 bg-[#15941f]/10 text-[#15941f] px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300">
             <Building2 className="w-4 h-4" />
@@ -109,11 +109,11 @@ export default function SubscriptionPlans() {
             <Card
               key={index}
               className={`group hover:shadow-2xl transition-all duration-700 border-0 shadow-lg overflow-hidden hover:-translate-y-2 relative ${
-                plan.popular ? "ring-2 ring-[#15941f] ring-opacity-50" : ""
+                plan.popular ? 'ring-2 ring-[#15941f] ring-opacity-50' : ''
               } ${fadeInUp} ${
                 plansInView
-                  ? "opacity-100 translate-y-0 scale-100"
-                  : "opacity-0 translate-y-12 scale-95"
+                  ? 'opacity-100 translate-y-0 scale-100'
+                  : 'opacity-0 translate-y-12 scale-95'
               }`}
               style={staggerDelay(index)}
             >
@@ -153,8 +153,8 @@ export default function SubscriptionPlans() {
                 <Button
                   className={`w-full ${
                     plan.popular
-                      ? "bg-[#15941f] hover:bg-[#15941f]/90 text-white"
-                      : "bg-white border border-gray-300 text-gray-900 hover:bg-gray-50"
+                      ? 'bg-[#15941f] hover:bg-[#15941f]/90 text-white'
+                      : 'bg-white border border-gray-300 text-gray-900 hover:bg-gray-50'
                   } transition-all duration-300 group-hover:scale-105`}
                 >
                   Get Started
@@ -166,8 +166,8 @@ export default function SubscriptionPlans() {
         </div>
 
         <div
-          className={`text-center ${fadeInUp} ${plansInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
-          style={{ transitionDelay: "600ms" }}
+          className={`text-center ${fadeInUp} ${plansInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+          style={{ transitionDelay: '600ms' }}
         >
           <div className="bg-white rounded-2xl p-8 shadow-lg max-w-2xl mx-auto">
             <h3 className="text-xl font-bold text-gray-900 mb-4">

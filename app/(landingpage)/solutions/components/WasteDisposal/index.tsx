@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { fadeInUp, staggerDelay } from "@/app/(landingpage)/hooks/annimation";
-import { useInView } from "@/app/(landingpage)/hooks/useInView";
-import { Card, CardContent } from "@/components/ui/card";
+import { fadeInUp, staggerDelay } from '@/app/(landingpage)/hooks/annimation';
+import { useInView } from '@/app/(landingpage)/hooks/useInView';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Recycle,
   CheckCircle,
@@ -11,7 +11,7 @@ import {
   Users,
   FileText,
   TrendingUp,
-} from "lucide-react";
+} from 'lucide-react';
 
 export default function WasteDisposal() {
   const [wasteRef, wasteInView] = useInView(0.1);
@@ -19,23 +19,23 @@ export default function WasteDisposal() {
   const features = [
     {
       icon: Truck,
-      text: "Assign and manage trips for multiple clinics or hospitals",
+      text: 'Assign and manage trips for multiple clinics or hospitals',
     },
     {
       icon: CheckCircle,
-      text: "Enable drivers to update collection status from the field",
+      text: 'Enable drivers to update collection status from the field',
     },
     {
       icon: BarChart3,
-      text: "Track cost per route and per client with built-in analytics",
+      text: 'Track cost per route and per client with built-in analytics',
     },
     {
       icon: Users,
-      text: "Offer clients a branded, seamless experience via the Medilogic interface",
+      text: 'Offer clients a branded, seamless experience via the Medilogic interface',
     },
     {
       icon: FileText,
-      text: "Export reports and maintain compliance with regulatory partners",
+      text: 'Export reports and maintain compliance with regulatory partners',
     },
   ];
 
@@ -43,7 +43,7 @@ export default function WasteDisposal() {
     <section ref={wasteRef} className="py-20 px-4 bg-white">
       <div className="container mx-auto max-w-7xl">
         <div
-          className={`text-center mb-16 ${fadeInUp} ${wasteInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+          className={`text-center mb-16 ${fadeInUp} ${wasteInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
         >
           <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-600 px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300">
             <Recycle className="w-4 h-4" />
@@ -60,8 +60,8 @@ export default function WasteDisposal() {
 
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div
-            className={`${fadeInUp} ${wasteInView ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-12"}`}
-            style={{ transitionDelay: "200ms" }}
+            className={`${fadeInUp} ${wasteInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'}`}
+            style={{ transitionDelay: '200ms' }}
           >
             <Card className="bg-gradient-to-br from-emerald-50 to-teal-50 border-0 shadow-lg hover:shadow-xl transition-all duration-500">
               <CardContent className="p-8">
@@ -91,16 +91,16 @@ export default function WasteDisposal() {
           </div>
 
           <div
-            className={`space-y-4 ${fadeInUp} ${wasteInView ? "opacity-100 translate-x-0" : "opacity-0 translate-x-12"}`}
-            style={{ transitionDelay: "400ms" }}
+            className={`space-y-4 ${fadeInUp} ${wasteInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'}`}
+            style={{ transitionDelay: '400ms' }}
           >
             {features.map((feature, index) => (
               <div
                 key={index}
                 className={`flex items-start gap-4 group hover:translate-x-2 transition-all duration-300 ${fadeInUp} ${
                   wasteInView
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-8"
+                    ? 'opacity-100 translate-y-0'
+                    : 'opacity-0 translate-y-8'
                 }`}
                 style={staggerDelay(index)}
               >

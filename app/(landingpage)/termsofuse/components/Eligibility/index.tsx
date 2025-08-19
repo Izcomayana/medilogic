@@ -1,28 +1,28 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import { User, UserCheck, Lock } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { motion } from 'framer-motion';
+import { User, UserCheck, Lock } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function Eligibility() {
   const requirements = [
     {
       icon: UserCheck,
-      title: "Age Requirement",
+      title: 'Age Requirement',
       description:
-        "You must be at least 18 years old or have legal authorization from your organization",
+        'You must be at least 18 years old or have legal authorization from your organization',
     },
     {
       icon: User,
-      title: "Accurate Information",
+      title: 'Accurate Information',
       description:
-        "You must provide accurate and current registration information",
+        'You must provide accurate and current registration information',
     },
     {
       icon: Lock,
-      title: "Account Security",
+      title: 'Account Security',
       description:
-        "You are responsible for maintaining the confidentiality of your account credentials",
+        'You are responsible for maintaining the confidentiality of your account credentials',
     },
   ];
 

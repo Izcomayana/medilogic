@@ -1,5 +1,5 @@
 // components/CookiePopup.tsx
-import React from "react";
+import React from 'react';
 
 interface CookiePopupProps {
   onAccept: () => void;

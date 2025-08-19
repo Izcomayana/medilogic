@@ -1,5 +1,5 @@
 // import { RoleGuard } from "@/components/RoleGuard";
-import { AdminDashboard } from ".";
+import { AdminDashboard } from '.';
 
 export default function Page() {
   return (

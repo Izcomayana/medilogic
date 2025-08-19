@@ -1,40 +1,40 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import { Search, User, Activity, Monitor } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { motion } from 'framer-motion';
+import { Search, User, Activity, Monitor } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function InformationCollection() {
   const dataTypes = [
     {
       icon: User,
-      title: "Personal Information",
+      title: 'Personal Information',
       items: [
-        "Name, email address, phone number",
-        "Job title, organization details",
-        "User login credentials",
+        'Name, email address, phone number',
+        'Job title, organization details',
+        'User login credentials',
       ],
-      color: "bg-blue-100 text-blue-600",
+      color: 'bg-blue-100 text-blue-600',
     },
     {
       icon: Activity,
-      title: "Operational Data",
+      title: 'Operational Data',
       items: [
-        "Trip logs and delivery records",
-        "Waste collection schedules",
-        "User activity and timestamps (audit trail)",
+        'Trip logs and delivery records',
+        'Waste collection schedules',
+        'User activity and timestamps (audit trail)',
       ],
-      color: "bg-green-100 text-green-600",
+      color: 'bg-green-100 text-green-600',
     },
     {
       icon: Monitor,
-      title: "Technical Data",
+      title: 'Technical Data',
       items: [
-        "IP address, browser type, device info",
-        "Access times and session logs",
-        "Cookie identifiers (if applicable)",
+        'IP address, browser type, device info',
+        'Access times and session logs',
+        'Cookie identifiers (if applicable)',
       ],
-      color: "bg-purple-100 text-purple-600",
+      color: 'bg-purple-100 text-purple-600',
     },
   ];
 

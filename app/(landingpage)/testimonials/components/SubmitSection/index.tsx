@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { MessageSquare, ArrowRight } from "lucide-react";
-import { useInView } from "@/app/(landingpage)/hooks/useInView";
-import { fadeInUp } from "@/app/(landingpage)/hooks/annimation";
+import { Button } from '@/components/ui/button';
+import { MessageSquare, ArrowRight } from 'lucide-react';
+import { useInView } from '@/app/(landingpage)/hooks/useInView';
+import { fadeInUp } from '@/app/(landingpage)/hooks/annimation';
 
 export default function SubmitTestimonialSection() {
   const [submitRef, submitInView] = useInView(0.1);
@@ -15,7 +15,7 @@ export default function SubmitTestimonialSection() {
     >
       <div className="container mx-auto max-w-4xl text-center">
         <div
-          className={`${fadeInUp} ${submitInView ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-12 scale-95"}`}
+          className={`${fadeInUp} ${submitInView ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'}`}
         >
           <div className="inline-flex items-center gap-2 bg-[#15941f]/10 text-[#15941f] px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300">
             <MessageSquare className="w-4 h-4" />
@@ -28,8 +28,8 @@ export default function SubmitTestimonialSection() {
             Have a Medilogic success story? We&apos;d love to hear from you.
           </p>
           <div
-            className={`${fadeInUp} ${submitInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
-            style={{ transitionDelay: "300ms" }}
+            className={`${fadeInUp} ${submitInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+            style={{ transitionDelay: '300ms' }}
           >
             <Button
               size="lg"

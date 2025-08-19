@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
+'use client';
 
 import {
   Building2,
@@ -11,8 +11,8 @@ import {
   Truck,
   ClipboardList,
   FileText,
-} from "lucide-react";
-import { useAuth } from "@/components/auth";
+} from 'lucide-react';
+import { useAuth } from '@/components/auth';
 import {
   Sidebar,
   SidebarContent,
@@ -24,53 +24,53 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+} from '@/components/ui/sidebar';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const sidebarLinksByRole: Record<
   string,
   { title: string; url: string; icon: any }[]
 > = {
   super_admin: [
-    { title: "Dashboard", url: "/super-admin", icon: Home },
+    { title: 'Dashboard', url: '/super-admin', icon: Home },
     {
-      title: "Organizations",
-      url: "/super-admin/organizations",
+      title: 'Organizations',
+      url: '/super-admin/organizations',
       icon: Building2,
     },
-    { title: "Org Users", url: "/super-admin/orgusers", icon: Users },
-    { title: "Invite Codes", url: "/super-admin/invitecodes", icon: RotateCcw },
-    { title: "Regulators", url: "/super-admin/regulators", icon: Shield },
-    { title: "Create User", url: "/super-admin/createuser", icon: UserPlus },
+    { title: 'Org Users', url: '/super-admin/orgusers', icon: Users },
+    { title: 'Invite Codes', url: '/super-admin/invitecodes', icon: RotateCcw },
+    { title: 'Regulators', url: '/super-admin/regulators', icon: Shield },
+    { title: 'Create User', url: '/super-admin/createuser', icon: UserPlus },
   ],
   admin: [
-    { title: "Dashboard", url: "/company-admin", icon: Home },
-    { title: "Charts", url: "/company-admin/charts", icon: Truck },
+    { title: 'Dashboard', url: '/company-admin', icon: Home },
+    { title: 'Charts', url: '/company-admin/charts', icon: Truck },
     {
-      title: "Assignments",
-      url: "/company-admin/assignments",
+      title: 'Assignments',
+      url: '/company-admin/assignments',
       icon: ClipboardList,
     },
-    { title: "Exports", url: "/company-admin/exports", icon: FileText },
+    { title: 'Exports', url: '/company-admin/exports', icon: FileText },
   ],
   regulator: [
-    { title: "Dashboard", url: "/regulator", icon: Home },
+    { title: 'Dashboard', url: '/regulator', icon: Home },
     {
-      title: "Organizations",
-      url: "/regulator/organizations",
+      title: 'Organizations',
+      url: '/regulator/organizations',
       icon: Building2,
     },
-    { title: "Compliance", url: "/regulator/compliance", icon: Shield },
+    { title: 'Compliance', url: '/regulator/compliance', icon: Shield },
   ],
   client: [
-    { title: "Dashboard", url: "/client", icon: Home },
-    { title: "My Trips", url: "/client/trips", icon: ClipboardList },
-    { title: "Waste Reports", url: "/client/reports", icon: FileText },
+    { title: 'Dashboard', url: '/client', icon: Home },
+    { title: 'My Trips', url: '/client/trips', icon: ClipboardList },
+    { title: 'Waste Reports', url: '/client/reports', icon: FileText },
   ],
   driver: [
-    { title: "Dashboard", url: "/driver", icon: Home },
-    { title: "My Trips", url: "/driver/trips", icon: ClipboardList },
+    { title: 'Dashboard', url: '/driver', icon: Home },
+    { title: 'My Trips', url: '/driver/trips', icon: ClipboardList },
   ],
 };
 
@@ -78,9 +78,9 @@ export function AppSidebar() {
   const pathname = usePathname();
   const { role } = useAuth();
 
-  console.log("Sidebar role:", role); // Add this in AppSidebar
+  console.log('Sidebar role:', role); // Add this in AppSidebar
 
-  const menuItems = sidebarLinksByRole[role ?? ""] || [];
+  const menuItems = sidebarLinksByRole[role ?? ''] || [];
 
   return (
     <Sidebar className="border-r border-gray-700">

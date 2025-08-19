@@ -1,6 +1,7 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Table,
   TableBody,
@@ -8,36 +9,63 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Users, Eye, Edit, Trash2, MoreHorizontal } from "lucide-react";
-import { Organization } from "../../org";
-import { StatusBadge } from "../StatusBadge";
+} from '@/components/ui/dropdown-menu';
+import {
+  Users,
+  Eye,
+  Edit,
+  MoreHorizontal,
+  Power,
+  PowerOff,
+} from 'lucide-react';
+import {
+  Organization,
+  activateOrganization,
+  deactivateOrganization,
+} from '../../org';
+import { StatusBadge } from '../StatusBadge';
 
 interface Props {
   organizations: Organization[];
   onView: (org: Organization) => void;
   onEdit: (org: Organization) => void;
-  onDeactivate: (name: string) => void;
-  viewOpen: boolean;
-  // editOpen: boolean;
-  selectedOrg: Organization | null;
-  editFormData: Organization;
-  // onEditChange: (data: Partial<Organization>) => void;
-  // onEditSave: () => void;
+  onRefresh?: () => void;
 }
 
 export default function OrganizationTable({
   organizations,
   onView,
   onEdit,
-  onDeactivate,
+  onRefresh,
 }: Props) {
+  const [loadingId, setLoadingId] = useState<string | null>(null);
+
+  const handleToggleStatus = async (org: Organization) => {
+    setLoadingId(org.id);
+    try {
+      if (org.status === 'active') {
+        await deactivateOrganization(org.id);
+      } else {
+        await activateOrganization(org.id);
+      }
+
+      // Update local state so status changes immediately
+      if (onRefresh) {
+        onRefresh();
+      }
+    } catch (err) {
+      console.error('Failed to toggle organization status:', err);
+    } finally {
+      setLoadingId(null);
+    }
+  };
+
   return (
     <div className="rounded-md border border-gray-700">
       <Table>
@@ -78,6 +106,7 @@ export default function OrganizationTable({
                       <Button
                         variant="ghost"
                         className="h-8 w-8 p-0 text-gray-400 hover:bg-gray-700"
+                        disabled={loadingId === org.id}
                       >
                         <MoreHorizontal className="h-4 w-4" />
                       </Button>
@@ -101,11 +130,29 @@ export default function OrganizationTable({
                         Edit
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        className="text-red-400 hover:bg-gray-600 cursor-pointer"
-                        onClick={() => onDeactivate(org.name)}
+                        className={`cursor-pointer ${
+                          org.status === 'active'
+                            ? 'text-orange-400 hover:bg-gray-600'
+                            : 'text-green-400 hover:bg-gray-600'
+                        }`}
+                        onClick={() => handleToggleStatus(org)}
+                        disabled={loadingId === org.id}
                       >
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        Delete
+                        {org.status === 'active' ? (
+                          <>
+                            <PowerOff className="mr-2 h-4 w-4" />
+                            {loadingId === org.id
+                              ? 'Processing...'
+                              : 'Deactivate'}
+                          </>
+                        ) : (
+                          <>
+                            <Power className="mr-2 h-4 w-4" />
+                            {loadingId === org.id
+                              ? 'Processing...'
+                              : 'Activate'}
+                          </>
+                        )}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>

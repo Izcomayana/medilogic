@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import { fadeInUp, staggerDelay } from "@/app/(landingpage)/hooks/annimation";
-import { useInView } from "@/app/(landingpage)/hooks/useInView";
-import { Card, CardContent } from "@/components/ui/card";
-import { Building2, CheckCircle } from "lucide-react";
+import { fadeInUp, staggerDelay } from '@/app/(landingpage)/hooks/annimation';
+import { useInView } from '@/app/(landingpage)/hooks/useInView';
+import { Card, CardContent } from '@/components/ui/card';
+import { Building2, CheckCircle } from 'lucide-react';
 
 export default function ClinicAdminSection() {
   const [clinicRef, clinicInView] = useInView(0.1);
 
   const features = [
-    "Invite staff via unique organization-based invite codes",
-    "View and manage logistics trips (waste pickups, deliveries)",
-    "Assign and reassign trips to available drivers",
-    "Track trip status, cost, and time in real time",
-    "Generate invoices for completed services",
-    "Export compliance and audit-ready reports (CSV, PDF)",
-    "View organization-specific analytics and performance metrics",
+    'Invite staff via unique organization-based invite codes',
+    'View and manage logistics trips (waste pickups, deliveries)',
+    'Assign and reassign trips to available drivers',
+    'Track trip status, cost, and time in real time',
+    'Generate invoices for completed services',
+    'Export compliance and audit-ready reports (CSV, PDF)',
+    'View organization-specific analytics and performance metrics',
   ];
 
   return (
@@ -25,7 +25,7 @@ export default function ClinicAdminSection() {
     >
       <div className="container mx-auto max-w-7xl">
         <div
-          className={`text-center mb-16 ${fadeInUp} ${clinicInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+          className={`text-center mb-16 ${fadeInUp} ${clinicInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
         >
           <div className="inline-flex items-center gap-2 bg-[#15941f]/10 text-[#15941f] px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300">
             <Building2 className="w-4 h-4" />
@@ -42,16 +42,16 @@ export default function ClinicAdminSection() {
 
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div
-            className={`space-y-4 ${fadeInUp} ${clinicInView ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-12"}`}
-            style={{ transitionDelay: "200ms" }}
+            className={`space-y-4 ${fadeInUp} ${clinicInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'}`}
+            style={{ transitionDelay: '200ms' }}
           >
             {features.map((feature, index) => (
               <div
                 key={index}
                 className={`flex items-start gap-4 group hover:translate-x-2 transition-all duration-300 ${fadeInUp} ${
                   clinicInView
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-8"
+                    ? 'opacity-100 translate-y-0'
+                    : 'opacity-0 translate-y-8'
                 }`}
                 style={staggerDelay(index)}
               >
@@ -66,8 +66,8 @@ export default function ClinicAdminSection() {
           </div>
 
           <div
-            className={`${fadeInUp} ${clinicInView ? "opacity-100 translate-x-0" : "opacity-0 translate-x-12"}`}
-            style={{ transitionDelay: "400ms" }}
+            className={`${fadeInUp} ${clinicInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'}`}
+            style={{ transitionDelay: '400ms' }}
           >
             <Card className="bg-gradient-to-br from-[#15941f]/5 to-green-50 border-0 shadow-lg hover:shadow-xl transition-all duration-500">
               <CardContent className="p-8">
