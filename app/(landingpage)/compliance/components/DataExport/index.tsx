@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { fadeInUp, staggerDelay } from "@/app/(landingpage)/hooks/annimation";
-import { useInView } from "@/app/(landingpage)/hooks/useInView";
-import { Card, CardContent } from "@/components/ui/card";
-import { Download, FileText, Trash2, CheckCircle } from "lucide-react";
+import { fadeInUp, staggerDelay } from '@/app/(landingpage)/hooks/annimation';
+import { useInView } from '@/app/(landingpage)/hooks/useInView';
+import { Card, CardContent } from '@/components/ui/card';
+import { Download, FileText, Trash2, CheckCircle } from 'lucide-react';
 
 export default function DataExport() {
   const [exportRef, exportInView] = useInView(0.1);
@@ -11,21 +11,21 @@ export default function DataExport() {
   const exportFeatures = [
     {
       icon: Download,
-      title: "One-click exports for users and admins",
-      desc: "Quick and easy data export functionality",
-      color: "from-blue-500 to-blue-600",
+      title: 'One-click exports for users and admins',
+      desc: 'Quick and easy data export functionality',
+      color: 'from-blue-500 to-blue-600',
     },
     {
       icon: FileText,
-      title: "Downloadable CSV or PDF reports for compliance use",
-      desc: "Multiple formats to meet your reporting needs",
-      color: "from-[#15941f] to-green-500",
+      title: 'Downloadable CSV or PDF reports for compliance use',
+      desc: 'Multiple formats to meet your reporting needs',
+      color: 'from-[#15941f] to-green-500',
     },
     {
       icon: Trash2,
-      title: "Support for data deletion requests (GDPR-compliant)",
-      desc: "Full compliance with right to erasure requirements",
-      color: "from-red-500 to-pink-500",
+      title: 'Support for data deletion requests (GDPR-compliant)',
+      desc: 'Full compliance with right to erasure requirements',
+      color: 'from-red-500 to-pink-500',
     },
   ];
 
@@ -36,7 +36,7 @@ export default function DataExport() {
     >
       <div className="container mx-auto max-w-7xl">
         <div
-          className={`text-center mb-16 ${fadeInUp} ${exportInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+          className={`text-center mb-16 ${fadeInUp} ${exportInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
         >
           <div className="inline-flex items-center gap-2 bg-[#15941f]/10 text-[#15941f] px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300">
             <Download className="w-4 h-4" />
@@ -57,8 +57,8 @@ export default function DataExport() {
               key={index}
               className={`group hover:shadow-xl transition-all duration-500 border-0 shadow-lg hover:-translate-y-2 ${fadeInUp} ${
                 exportInView
-                  ? "opacity-100 translate-y-0 scale-100"
-                  : "opacity-0 translate-y-12 scale-95"
+                  ? 'opacity-100 translate-y-0 scale-100'
+                  : 'opacity-0 translate-y-12 scale-95'
               }`}
               style={staggerDelay(index)}
             >

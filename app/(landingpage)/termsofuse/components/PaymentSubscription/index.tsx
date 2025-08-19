@@ -1,33 +1,33 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import { CreditCard, RefreshCw, Globe, Gift } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { motion } from 'framer-motion';
+import { CreditCard, RefreshCw, Globe, Gift } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function PaymentSubscription() {
   const paymentTerms = [
     {
       icon: CreditCard,
-      title: "Paid Features",
-      description: "Certain features require a paid subscription",
+      title: 'Paid Features',
+      description: 'Certain features require a paid subscription',
     },
     {
       icon: RefreshCw,
-      title: "Recurring Billing",
+      title: 'Recurring Billing',
       description:
-        "By subscribing, you authorize Medilogic to charge your selected payment method on a recurring basis",
+        'By subscribing, you authorize Medilogic to charge your selected payment method on a recurring basis',
     },
     {
       icon: Globe,
-      title: "Regional Pricing",
+      title: 'Regional Pricing',
       description:
-        "Pricing may differ based on geographic region (e.g., UK vs. Nigeria) or user segment (e.g., clinics, regulators)",
+        'Pricing may differ based on geographic region (e.g., UK vs. Nigeria) or user segment (e.g., clinics, regulators)',
     },
     {
       icon: Gift,
-      title: "Free Trials",
+      title: 'Free Trials',
       description:
-        "Free trials are offered for 30 days where applicable, with no billing during the trial period",
+        'Free trials are offered for 30 days where applicable, with no billing during the trial period',
     },
   ];
 

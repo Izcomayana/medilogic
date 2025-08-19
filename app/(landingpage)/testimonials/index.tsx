@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { Hero } from "@/components/Hero";
-import { Star, Users } from "lucide-react";
-import React from "react";
-import GridSection from "./components/GridSection";
-import SubmitSection from "./components/SubmitSection";
-import Verification from "./components/Verification";
+import { Hero } from '@/components/Hero';
+import { Star, Users } from 'lucide-react';
+import React from 'react';
+import GridSection from './components/GridSection';
+import SubmitSection from './components/SubmitSection';
+import Verification from './components/Verification';
 // import { CTA } from '@/components/CTA';
 
 export const Testimonials = () => {
@@ -14,15 +14,15 @@ export const Testimonials = () => {
       <Hero
         badgeIcon={<Star className="w-4 h-4" />}
         badgeText="Client Testimonials"
-        heading={"This is what the"}
-        heading2={"Clients Are Saying"}
+        heading={'This is what the'}
+        heading2={'Clients Are Saying'}
         subText={
-          "Trusted by healthcare professionals, logistics firms, and waste management providers across the UK. Hear how Medilogic is transforming clinical logistics for real teams like yours."
+          'Trusted by healthcare professionals, logistics firms, and waste management providers across the UK. Hear how Medilogic is transforming clinical logistics for real teams like yours.'
         }
         descBadgeIcon={<Users className="w-4 h-4 mr-2" />}
-        descBadgeText={"Real Healthcare Teams"}
+        descBadgeText={'Real Healthcare Teams'}
         descBadgeIcon2={<Star className="w-4 h-4 mr-2" />}
-        descBadgeText2={"Verified Reviews"}
+        descBadgeText2={'Verified Reviews'}
         descSubText="Trusted by 200+ healthcare organizations"
       />
       <GridSection />

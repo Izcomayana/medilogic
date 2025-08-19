@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from 'react';
 
 export function useInView(threshold = 0.1) {
   const [isInView, setIsInView] = useState(false);
@@ -13,7 +13,7 @@ export function useInView(threshold = 0.1) {
           setIsInView(true);
         }
       },
-      { threshold },
+      { threshold }
     );
 
     if (ref.current) {

@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { HomeLogo } from "@/components/HomeLogo";
-import React from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AdminTab } from "./components/AdminTab";
-import { RegulatorTab } from "./components/RegulatorTab";
+import { HomeLogo } from '@/components/HomeLogo';
+import React from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { AdminTab } from './components/AdminTab';
+import { RegulatorTab } from './components/RegulatorTab';
 
 const Apply = () => {
   return (

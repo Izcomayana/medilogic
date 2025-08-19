@@ -1,48 +1,48 @@
-"use client";
+'use client';
 
-import { fadeInUp, staggerDelay } from "@/app/(landingpage)/hooks/annimation";
-import { useInView } from "@/app/(landingpage)/hooks/useInView";
-import { Card, CardContent } from "@/components/ui/card";
-import { BarChart3, TrendingUp } from "lucide-react";
+import { fadeInUp, staggerDelay } from '@/app/(landingpage)/hooks/annimation';
+import { useInView } from '@/app/(landingpage)/hooks/useInView';
+import { Card, CardContent } from '@/components/ui/card';
+import { BarChart3, TrendingUp } from 'lucide-react';
 
 export default function RevenueTransparency() {
   const [revenueRef, revenueInView] = useInView(0.1);
 
   const revenueData = [
     {
-      channel: "Starter Clinics",
-      accounts: "2,000",
-      monthlyRevenue: "£118,000",
-      annualRevenue: "£1.42M",
-      color: "from-blue-500 to-blue-600",
+      channel: 'Starter Clinics',
+      accounts: '2,000',
+      monthlyRevenue: '£118,000',
+      annualRevenue: '£1.42M',
+      color: 'from-blue-500 to-blue-600',
     },
     {
-      channel: "Pro Clinics/Firms",
-      accounts: "500",
-      monthlyRevenue: "£89,500",
-      annualRevenue: "£1.07M",
-      color: "from-[#15941f] to-green-500",
+      channel: 'Pro Clinics/Firms',
+      accounts: '500',
+      monthlyRevenue: '£89,500',
+      annualRevenue: '£1.07M',
+      color: 'from-[#15941f] to-green-500',
     },
     {
-      channel: "Enterprise Hospitals",
-      accounts: "200",
-      monthlyRevenue: "£89,800",
-      annualRevenue: "£1.07M",
-      color: "from-purple-500 to-pink-500",
+      channel: 'Enterprise Hospitals',
+      accounts: '200',
+      monthlyRevenue: '£89,800',
+      annualRevenue: '£1.07M',
+      color: 'from-purple-500 to-pink-500',
     },
     {
-      channel: "Regulators",
-      accounts: "150",
-      monthlyRevenue: "£44,850",
-      annualRevenue: "£538K",
-      color: "from-orange-500 to-red-500",
+      channel: 'Regulators',
+      accounts: '150',
+      monthlyRevenue: '£44,850',
+      annualRevenue: '£538K',
+      color: 'from-orange-500 to-red-500',
     },
     {
-      channel: "Add-ons (30% Estimate)",
-      accounts: "–",
-      monthlyRevenue: "~£20K",
-      annualRevenue: "~£240K",
-      color: "from-gray-500 to-gray-600",
+      channel: 'Add-ons (30% Estimate)',
+      accounts: '–',
+      monthlyRevenue: '~£20K',
+      annualRevenue: '~£240K',
+      color: 'from-gray-500 to-gray-600',
     },
   ];
 
@@ -53,7 +53,7 @@ export default function RevenueTransparency() {
     >
       <div className="container mx-auto max-w-7xl relative">
         <div
-          className={`text-center mb-16 ${fadeInUp} ${revenueInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+          className={`text-center mb-16 ${fadeInUp} ${revenueInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
         >
           <div className="inline-flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300 backdrop-blur-sm">
             <BarChart3 className="w-4 h-4" />
@@ -81,8 +81,8 @@ export default function RevenueTransparency() {
                 key={index}
                 className={`bg-white/10 border-white/20 backdrop-blur-sm hover:bg-white/20 transition-all duration-500 mb-3 ${fadeInUp} ${
                   revenueInView
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-8"
+                    ? 'opacity-100 translate-y-0'
+                    : 'opacity-0 translate-y-8'
                 }`}
                 style={staggerDelay(index)}
               >
@@ -109,8 +109,8 @@ export default function RevenueTransparency() {
         </div>
 
         <div
-          className={`text-center ${fadeInUp} ${revenueInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
-          style={{ transitionDelay: "600ms" }}
+          className={`text-center ${fadeInUp} ${revenueInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+          style={{ transitionDelay: '600ms' }}
         >
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 max-w-md mx-auto">
             <div className="flex items-center justify-center gap-3 mb-4">

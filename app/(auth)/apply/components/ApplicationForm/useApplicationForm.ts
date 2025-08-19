@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { toast } from "sonner";
-import axios from "axios";
+import { useState, useEffect } from 'react';
+import { toast } from 'sonner';
+import axios from 'axios';
 
 export interface FormDataBase {
   name: string;
@@ -18,7 +18,7 @@ export interface FormDataBase {
 
 export type UseApplicationFormOptions<T extends FormDataBase> = {
   initialState: T;
-  validate: (data: T) => Partial<Record<keyof T | "general", string>>;
+  validate: (data: T) => Partial<Record<keyof T | 'general', string>>;
   transformSubmit: (data: T) => any;
   role: string;
 };
@@ -60,34 +60,34 @@ export const useApplicationForm = <T extends FormDataBase>({
       const payload = {
         ...transformSubmit(formData),
         role,
-        status: "pending",
+        status: 'pending',
         submitted_at: new Date().toISOString(),
       };
 
       const response = await axios.post(
-        "https://medilogic-backend.onrender.com/apply",
+        'https://medilogic-backend.onrender.com/apply',
         payload,
         {
-          headers: { "Content-Type": "application/json" },
-        },
+          headers: { 'Content-Type': 'application/json' },
+        }
       );
 
       if (response.status === 200 || response.status === 201) {
-        toast.success("Signup successful!", {
-          description: "Awaiting Super Admin approval.",
+        toast.success('Signup successful!', {
+          description: 'Awaiting Super Admin approval.',
         });
         setFormData({ ...initialState, acceptCookies: formData.acceptCookies });
         setShowSuccessModal(true);
       } else {
         setError((prev) => ({
           ...prev,
-          general: "Something went wrong. Please try again later.",
+          general: 'Something went wrong. Please try again later.',
         }));
       }
     } catch (err: any) {
-      toast.error("Error", {
+      toast.error('Error', {
         description:
-          err?.response?.data?.detail || "Network error. Please try again.",
+          err?.response?.data?.detail || 'Network error. Please try again.',
       });
     } finally {
       setLoading(false);
@@ -97,19 +97,19 @@ export const useApplicationForm = <T extends FormDataBase>({
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >,
+    >
   ) => {
     const { name, value, type } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
     setFormData((prev) => ({
       ...prev,
-      [name]: type === "checkbox" ? checked : value,
+      [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
   const handleCheckboxChange = (
     name: string,
-    checked: boolean | "indeterminate",
+    checked: boolean | 'indeterminate'
   ) => {
     setFormData((prev) => ({
       ...prev,

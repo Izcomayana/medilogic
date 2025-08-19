@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -13,22 +13,22 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
   AlertDialogCancel,
-} from "@/components/ui/alert-dialog";
+} from '@/components/ui/alert-dialog';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Building2, XIcon } from "lucide-react";
-import { toast } from "sonner";
-import { Switch } from "@/components/ui/switch";
+} from '@/components/ui/select';
+import { Building2, XIcon } from 'lucide-react';
+import { toast } from 'sonner';
+import { Switch } from '@/components/ui/switch';
 
 interface Props {
   onCreate: (orgData: {
     name: string;
-    type: "clinic" | "waste_company";
+    type: 'clinic' | 'waste_company';
     country: string;
     state: string;
     region: string;
@@ -39,24 +39,24 @@ interface Props {
 
 export default function CreateOrganizationDialog({ onCreate }: Props) {
   const [open, setOpen] = useState(false);
-  const [name, setName] = useState("");
+  const [name, setName] = useState('');
   // ✅ default to a valid enum
-  const [type, setType] = useState<"clinic" | "waste_company">("clinic");
-  const [country, setCountry] = useState("");
-  const [stateVal, setStateVal] = useState("");
-  const [region, setRegion] = useState("");
+  const [type, setType] = useState<'clinic' | 'waste_company'>('clinic');
+  const [country, setCountry] = useState('');
+  const [stateVal, setStateVal] = useState('');
+  const [region, setRegion] = useState('');
   const [icoRegistered, setIcoRegistered] = useState(false);
   const [dataRetentionYears, setDataRetentionYears] = useState<number>(3);
   const [submitting, setSubmitting] = useState(false);
 
   const handleCreate = async () => {
     if (!name || !type || !country || !stateVal || !region) {
-      toast.error("Please fill in all required fields");
+      toast.error('Please fill in all required fields');
       return;
     }
 
     // guard: only the two enum values
-    if (!["clinic", "waste_company"].includes(type)) {
+    if (!['clinic', 'waste_company'].includes(type)) {
       toast.error("Type must be 'clinic' or 'waste_company'");
       return;
     }
@@ -75,11 +75,11 @@ export default function CreateOrganizationDialog({ onCreate }: Props) {
       // close only on success
       setOpen(false);
       // reset
-      setName("");
-      setType("clinic");
-      setCountry("");
-      setStateVal("");
-      setRegion("");
+      setName('');
+      setType('clinic');
+      setCountry('');
+      setStateVal('');
+      setRegion('');
       setIcoRegistered(false);
       setDataRetentionYears(3);
     } catch {
@@ -133,7 +133,7 @@ export default function CreateOrganizationDialog({ onCreate }: Props) {
             </Label>
             <Select
               value={type}
-              onValueChange={(v) => setType(v as "clinic" | "waste_company")}
+              onValueChange={(v) => setType(v as 'clinic' | 'waste_company')}
             >
               <SelectTrigger className="col-span-3 bg-gray-700 border-gray-600 text-white">
                 <SelectValue placeholder="Select type" />
@@ -199,7 +199,7 @@ export default function CreateOrganizationDialog({ onCreate }: Props) {
                 onCheckedChange={setIcoRegistered}
               />
               <span className="text-gray-300 text-sm">
-                {icoRegistered ? "Yes" : "No"}
+                {icoRegistered ? 'Yes' : 'No'}
               </span>
             </div>
           </div>
@@ -229,7 +229,7 @@ export default function CreateOrganizationDialog({ onCreate }: Props) {
             onClick={handleCreate}
             disabled={submitting}
           >
-            {submitting ? "Creating..." : "Create Organization"}
+            {submitting ? 'Creating...' : 'Create Organization'}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

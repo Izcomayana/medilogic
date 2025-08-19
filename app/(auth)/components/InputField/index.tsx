@@ -1,7 +1,7 @@
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { AlertCircle, Eye, EyeOff } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export const InputField = ({
   label,
@@ -29,7 +29,7 @@ export const InputField = ({
         <Input
           id={name}
           name={name}
-          type={password && show ? "text" : type}
+          type={password && show ? 'text' : type}
           placeholder={placeholder}
           value={value}
           onChange={onChange}
@@ -37,8 +37,8 @@ export const InputField = ({
           autoComplete={name}
           className={`pl-10 transition-all duration-200 focus:outline-none focus:ring-1 ${
             error
-              ? "border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-200"
-              : "border-gray-300 focus:border-[#15941f] focus:ring-[#15941f]/20"
+              ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-200'
+              : 'border-gray-300 focus:border-[#15941f] focus:ring-[#15941f]/20'
           }`}
         />
 

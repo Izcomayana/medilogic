@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { fadeInUp } from "@/app/(landingpage)/hooks/annimation";
-import { useInView } from "@/app/(landingpage)/hooks/useInView";
-import { Button } from "@/components/ui/button";
-import { Rocket, ArrowRight, Phone } from "lucide-react";
+import { fadeInUp } from '@/app/(landingpage)/hooks/annimation';
+import { useInView } from '@/app/(landingpage)/hooks/useInView';
+import { Button } from '@/components/ui/button';
+import { Rocket, ArrowRight, Phone } from 'lucide-react';
 
 export default function PricingCTA() {
   const [ctaRef, ctaInView] = useInView(0.1);
@@ -15,7 +15,7 @@ export default function PricingCTA() {
     >
       <div className="container mx-auto max-w-4xl text-center relative">
         <div
-          className={`${fadeInUp} ${ctaInView ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-12 scale-95"}`}
+          className={`${fadeInUp} ${ctaInView ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'}`}
         >
           <div className="inline-flex items-center gap-2 bg-white/20 text-white px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300 backdrop-blur-sm">
             <Rocket className="w-4 h-4 animate-pulse" />
@@ -29,8 +29,8 @@ export default function PricingCTA() {
             surprises.
           </p>
           <div
-            className={`flex flex-col sm:flex-row gap-6 justify-center items-center ${fadeInUp} ${ctaInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
-            style={{ transitionDelay: "300ms" }}
+            className={`flex flex-col sm:flex-row gap-6 justify-center items-center ${fadeInUp} ${ctaInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+            style={{ transitionDelay: '300ms' }}
           >
             <Button
               size="lg"
@@ -49,8 +49,8 @@ export default function PricingCTA() {
             </Button>
           </div>
           <div
-            className={`mt-8 text-center ${fadeInUp} ${ctaInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
-            style={{ transitionDelay: "500ms" }}
+            className={`mt-8 text-center ${fadeInUp} ${ctaInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+            style={{ transitionDelay: '500ms' }}
           >
             <p className="text-white/80 text-sm">
               Or talk to us about custom pricing, grants, or multi-location

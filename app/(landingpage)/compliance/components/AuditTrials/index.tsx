@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { fadeInUp, staggerDelay } from "@/app/(landingpage)/hooks/annimation";
-import { useInView } from "@/app/(landingpage)/hooks/useInView";
-import { FileText, Clock, Download, Shield, CheckCircle } from "lucide-react";
+import { fadeInUp, staggerDelay } from '@/app/(landingpage)/hooks/annimation';
+import { useInView } from '@/app/(landingpage)/hooks/useInView';
+import { FileText, Clock, Download, Shield, CheckCircle } from 'lucide-react';
 
 export default function AuditTrails() {
   const [auditRef, auditInView] = useInView(0.1);
@@ -10,15 +10,15 @@ export default function AuditTrails() {
   const auditFeatures = [
     {
       icon: FileText,
-      text: "View activity logs per organization or across the entire platform",
+      text: 'View activity logs per organization or across the entire platform',
     },
     {
       icon: Download,
-      text: "Export logs for audits or compliance reviews",
+      text: 'Export logs for audits or compliance reviews',
     },
     {
       icon: Shield,
-      text: "Monitor user behavior to detect anomalies",
+      text: 'Monitor user behavior to detect anomalies',
     },
   ];
 
@@ -27,8 +27,8 @@ export default function AuditTrails() {
       <div className="container mx-auto max-w-7xl">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div
-            className={`${fadeInUp} ${auditInView ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-12"}`}
-            style={{ transitionDelay: "200ms" }}
+            className={`${fadeInUp} ${auditInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'}`}
+            style={{ transitionDelay: '200ms' }}
           >
             <div className="inline-flex items-center gap-2 bg-[#15941f]/10 text-[#15941f] px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300">
               <FileText className="w-4 h-4" />
@@ -60,8 +60,8 @@ export default function AuditTrails() {
                   key={index}
                   className={`flex items-start gap-4 group hover:translate-x-2 transition-all duration-300 ${fadeInUp} ${
                     auditInView
-                      ? "opacity-100 translate-y-0"
-                      : "opacity-0 translate-y-8"
+                      ? 'opacity-100 translate-y-0'
+                      : 'opacity-0 translate-y-8'
                   }`}
                   style={staggerDelay(index)}
                 >
@@ -77,8 +77,8 @@ export default function AuditTrails() {
           </div>
 
           <div
-            className={`relative ${fadeInUp} ${auditInView ? "opacity-100 translate-x-0 scale-100" : "opacity-0 translate-x-12 scale-95"}`}
-            style={{ transitionDelay: "400ms" }}
+            className={`relative ${fadeInUp} ${auditInView ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-12 scale-95'}`}
+            style={{ transitionDelay: '400ms' }}
           >
             <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl p-8 text-white relative overflow-hidden">
               <div className="absolute top-4 right-4 w-32 h-32 bg-[#15941f]/10 rounded-full animate-pulse"></div>

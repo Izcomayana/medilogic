@@ -1,20 +1,20 @@
-"use client";
+'use client';
 
-import type React from "react";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
+import type React from 'react';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { MessageSquareText, MessageCircle } from "lucide-react";
-import { useInView } from "@/app/(landingpage)/hooks/useInView";
-import { fadeInUp } from "@/app/(landingpage)/hooks/annimation";
+} from '@/components/ui/select';
+import { MessageSquareText, MessageCircle } from 'lucide-react';
+import { useInView } from '@/app/(landingpage)/hooks/useInView';
+import { fadeInUp } from '@/app/(landingpage)/hooks/annimation';
 
 export default function ContactForm() {
   const [formRef, formInView] = useInView(0.1);
@@ -30,7 +30,7 @@ export default function ContactForm() {
     // });
     // const result = await response.json();
     // console.log(result);
-    alert("Message sent! (This is a demo, no actual email was sent.)");
+    alert('Message sent! (This is a demo, no actual email was sent.)');
   };
 
   return (
@@ -40,7 +40,7 @@ export default function ContactForm() {
     >
       <div className="container mx-auto max-w-3xl">
         <div
-          className={`text-center mb-12 ${fadeInUp} ${formInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+          className={`text-center mb-12 ${fadeInUp} ${formInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
         >
           <div className="inline-flex items-center gap-2 bg-[#15941f]/10 text-[#15941f] px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300">
             <MessageSquareText className="w-4 h-4" />
@@ -53,8 +53,8 @@ export default function ContactForm() {
 
         <form
           onSubmit={handleSubmit}
-          className={`grid grid-cols-1 md:grid-cols-2 gap-6 bg-white p-8 rounded-xl shadow-lg ${fadeInUp} ${formInView ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-12 scale-95"}`}
-          style={{ transitionDelay: "200ms" }}
+          className={`grid grid-cols-1 md:grid-cols-2 gap-6 bg-white p-8 rounded-xl shadow-lg ${fadeInUp} ${formInView ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'}`}
+          style={{ transitionDelay: '200ms' }}
         >
           <div className="md:col-span-1">
             <Label htmlFor="fullName" className="sr-only">

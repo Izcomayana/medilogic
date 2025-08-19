@@ -1,31 +1,31 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import { Scale, MapPin, Globe } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { motion } from 'framer-motion';
+import { Scale, MapPin, Globe } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function GoverningLaw() {
   const jurisdictions = [
     {
       icon: MapPin,
-      title: "United Kingdom",
+      title: 'United Kingdom',
       description:
-        "UK law applies if you are accessing the service from the United Kingdom",
-      flag: "🇬🇧",
+        'UK law applies if you are accessing the service from the United Kingdom',
+      flag: '🇬🇧',
     },
     {
       icon: MapPin,
-      title: "Nigeria",
+      title: 'Nigeria',
       description:
-        "Nigerian law applies if you are accessing the service from Nigeria",
-      flag: "🇳🇬",
+        'Nigerian law applies if you are accessing the service from Nigeria',
+      flag: '🇳🇬',
     },
     {
       icon: Globe,
-      title: "Other Regions",
+      title: 'Other Regions',
       description:
-        "For users outside these regions, the applicable jurisdiction will depend on your location",
-      flag: "🌍",
+        'For users outside these regions, the applicable jurisdiction will depend on your location',
+      flag: '🌍',
     },
   ];
 

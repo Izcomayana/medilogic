@@ -1,19 +1,19 @@
-"use client";
+'use client';
 
-import { fadeInUp, staggerDelay } from "@/app/(landingpage)/hooks/annimation";
-import { useInView } from "@/app/(landingpage)/hooks/useInView";
-import { Button } from "@/components/ui/button";
-import { Gift, ArrowRight, CheckCircle } from "lucide-react";
+import { fadeInUp, staggerDelay } from '@/app/(landingpage)/hooks/annimation';
+import { useInView } from '@/app/(landingpage)/hooks/useInView';
+import { Button } from '@/components/ui/button';
+import { Gift, ArrowRight, CheckCircle } from 'lucide-react';
 
 export default function FreeTrial() {
   const [trialRef, trialInView] = useInView(0.1);
 
   const trialFeatures = [
-    "No credit card required",
-    "No commitment",
-    "Explore all features",
-    "Test AI trip optimization",
-    "See how Medilogic transforms your workflow",
+    'No credit card required',
+    'No commitment',
+    'Explore all features',
+    'Test AI trip optimization',
+    'See how Medilogic transforms your workflow',
   ];
 
   return (
@@ -23,7 +23,7 @@ export default function FreeTrial() {
     >
       <div className="container mx-auto max-w-4xl text-center relative">
         <div
-          className={`${fadeInUp} ${trialInView ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-12 scale-95"}`}
+          className={`${fadeInUp} ${trialInView ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'}`}
         >
           <div className="inline-flex items-center gap-2 bg-white/20 text-white px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300 backdrop-blur-sm">
             <Gift className="w-4 h-4 animate-pulse" />
@@ -38,16 +38,16 @@ export default function FreeTrial() {
           </p>
 
           <div
-            className={`grid md:grid-cols-5 gap-4 mb-10 ${fadeInUp} ${trialInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
-            style={{ transitionDelay: "300ms" }}
+            className={`grid md:grid-cols-5 gap-4 mb-10 ${fadeInUp} ${trialInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+            style={{ transitionDelay: '300ms' }}
           >
             {trialFeatures.map((feature, index) => (
               <div
                 key={index}
                 className={`flex items-center gap-2 justify-center md:justify-start ${fadeInUp} ${
                   trialInView
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-8"
+                    ? 'opacity-100 translate-y-0'
+                    : 'opacity-0 translate-y-8'
                 }`}
                 style={staggerDelay(index)}
               >
@@ -58,8 +58,8 @@ export default function FreeTrial() {
           </div>
 
           <div
-            className={`${fadeInUp} ${trialInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
-            style={{ transitionDelay: "600ms" }}
+            className={`${fadeInUp} ${trialInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+            style={{ transitionDelay: '600ms' }}
           >
             <Button
               size="lg"

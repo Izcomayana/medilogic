@@ -1,207 +1,57 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
+'use client';
 
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Building2, Loader2, Search } from 'lucide-react';
+import OrganizationTable from './components/OrgTable';
+import { useOrganizations } from '@/hooks/useOrg';
+import {
+  OrgActionsDialog,
+  ViewOrganizationDialog,
+} from './components/OrgDialogs';
+import React from 'react';
+import CreateOrganizationDialog from './components/creatOrg';
+import { Input } from '@/components/ui/input';
 import {
   Select,
-  SelectContent,
-  SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Building2, Loader2, Search } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { toast } from "sonner";
-import { Organization } from "./org";
-import CreateOrganizationDialog from "./components/creatOrg";
-import OrganizationTable from "./components/OrgTable";
-import { useAuth } from "@/components/auth";
-import { isTokenExpired } from "@/hooks/token";
-import axios from "axios";
-import React from "react";
+  SelectContent,
+  SelectItem,
+} from '@/components/ui/select';
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from '@/components/ui/alert-dialog';
 
-export default function Organizations() {
-  const [orgs, setOrgs] = useState<Organization[]>([]);
-  const [loading, setLoading] = useState(true);
-  const { token, refreshAccessToken } = useAuth();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [selectedOrg, setSelectedOrg] = useState<Organization | null>(null);
-  const [editFormData, setEditFormData] = useState<Organization>({
-    id: "",
-    name: "",
-    type: "",
-    status: "",
-    createdDate: "",
-    userCount: 0,
-    description: "",
-    address: "",
-    phone: "",
-    email: "",
-  });
-
-  useEffect(() => {
-    if (!token) return;
-
-    let isMounted = true;
-
-    const fetchOrgs = async () => {
-      setLoading(true);
-      let validToken = token;
-
-      if (isTokenExpired(validToken)) {
-        const refreshed = await refreshAccessToken();
-        if (!refreshed) return;
-        validToken = refreshed;
-      }
-
-      try {
-        const res = await axios.get(
-          "https://medilogic-backend.onrender.com/super/organizations",
-          { headers: { Authorization: `Bearer ${validToken}` } },
-        );
-
-        if (!isMounted) return;
-
-        type ApiOrg = {
-          id: string;
-          name: string;
-          invite_code: string;
-          ico_registered: boolean;
-          data_retention_years: number;
-          type: string;
-          is_active: boolean;
-          created_at: string;
-          user_count: number;
-        };
-
-        const mapped: Organization[] = (res.data as ApiOrg[]).map((o) => ({
-          id: o.id,
-          name: o.name,
-          type: o.type,
-          status: o.is_active ? "Active" : "Inactive",
-          userCount: o.user_count ?? 0,
-          createdDate: new Date(o.created_at).toLocaleDateString(),
-          invite_code: o.invite_code,
-          ico_registered: o.ico_registered,
-          data_retention_years: o.data_retention_years,
-        }));
-
-        setOrgs(mapped);
-      } catch (e: any) {
-        console.error(
-          "Failed to load organizations:",
-          e?.response?.data?.detail || e.message,
-        );
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    };
-
-    fetchOrgs();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [token]);
-
-  const filteredOrganizations = useMemo(() => {
-    return orgs.filter((org) => {
-      const matchesSearch =
-        org.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        org.type.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesStatus =
-        statusFilter === "all" ||
-        org.status.toLowerCase() === statusFilter.toLowerCase();
-      return matchesSearch && matchesStatus;
-    });
-  }, [orgs, searchTerm, statusFilter]);
-
-  const handleDeactivate = useCallback((orgName: string) => {
-    toast.success(`${orgName} has been deactivated`);
-  }, []);
-
-  const handleRegenerateCode = useCallback((orgName: string) => {
-    toast.success(`Invite code regenerated for ${orgName}`);
-  }, []);
-
-  const handleViewOrg = async (orgId: string) => {
-    const existingOrg = orgs.find((o) => o.id === orgId);
-
-    if (existingOrg && existingOrg.description) {
-      setSelectedOrg(existingOrg);
-      setIsViewDialogOpen(true);
-      return;
-    }
-
-    try {
-      let validToken = token;
-      if (!validToken || isTokenExpired(validToken)) {
-        const refreshed = await refreshAccessToken();
-        if (!refreshed) {
-          toast.error("Authentication expired. Please log in again.");
-          return;
-        }
-        validToken = refreshed;
-      }
-
-      const res = await axios.get(
-        `https://medilogic-backend.onrender.com/super/${orgId}`,
-        {
-          headers: { Authorization: `Bearer ${validToken}` },
-        },
-      );
-
-      const data = res.data;
-
-      // Adapt API response into your Organization shape
-      const mappedOrg: Organization = {
-        id: data.organization.id,
-        name: data.organization.name,
-        type: data.organization.type ?? "", // backend might need to send type
-        status: data.organization.is_active ? "Active" : "Inactive",
-        createdDate: new Date(
-          data.organization.created_at,
-        ).toLocaleDateString(),
-        userCount: data.user_count ?? 0,
-        description: data.organization.description ?? "",
-        address: data.organization.address ?? "",
-        phone: data.organization.phone ?? "",
-        email: data.organization.email ?? "",
-        invite_code: data.organization.invite_code,
-        ico_registered: data.organization.ico_registered,
-        data_retention_years: data.organization.data_retention_years,
-      };
-
-      setSelectedOrg(mappedOrg);
-      setIsViewDialogOpen(true);
-    } catch (err) {
-      console.error("Failed to fetch organization details", err);
-      toast.error("Failed to load organization details");
-    }
-  };
-
-  const handleEditOrg = useCallback((org: Organization) => {
-    setSelectedOrg(org);
-    setEditFormData(org);
-    setIsEditDialogOpen(true);
-  }, []);
-
-  const handleEditChange = (changes: Partial<Organization>) => {
-    setEditFormData((prev) => ({ ...prev, ...changes }));
-  };
-
-  const handleSaveEdit = () => {
-    if (!selectedOrg || !editFormData) return;
-    toast.success(`${editFormData.name} has been updated successfully`);
-    setIsEditDialogOpen(false);
-    setSelectedOrg(null);
-  };
-
+export default function OrganizationsPage() {
+  const {
+    filteredOrgs,
+    loading,
+    searchTerm,
+    setSearchTerm,
+    statusFilter,
+    setStatusFilter,
+    createOrg,
+    viewOrg,
+    editOrg,
+    activateOrg,
+    deactivateOrg,
+    regenerateInviteCode,
+    viewOpen,
+    editOpen,
+    selectedOrg,
+    closeView,
+    closeEdit,
+    deleteOrg,
+    setSelectedOrg,
+  } = useOrganizations();
   const MemoizedOrgTable = React.memo(OrganizationTable);
 
   return (
@@ -223,69 +73,13 @@ export default function Organizations() {
           <CardHeader>
             <div className="flex flex-col md:flex-row gap-8 md:gap-0 items-center justify-between">
               <CardTitle className="text-white flex items-center gap-2">
-                <Building2 className="h-5 w-5" />
-                Organizations ({filteredOrganizations.length})
+                <Building2 className="h-5 w-5" /> Organizations (
+                {filteredOrgs.length})
               </CardTitle>
-
-              <CreateOrganizationDialog
-                onCreate={async (orgData) => {
-                  try {
-                    let validToken = token;
-                    if (!validToken || isTokenExpired(validToken)) {
-                      const refreshed = await refreshAccessToken();
-                      if (!refreshed) {
-                        toast.error(
-                          "Authentication expired. Please log in again.",
-                        );
-                        return;
-                      }
-                      validToken = refreshed;
-                    }
-
-                    const res = await axios.post(
-                      "https://medilogic-backend.onrender.com/super/organizations",
-                      orgData,
-                      {
-                        headers: {
-                          Authorization: `Bearer ${validToken}`,
-                          "Content-Type": "application/json",
-                        },
-                      },
-                    );
-
-                    // optimistic update
-                    setOrgs((prev) => [
-                      ...prev,
-                      {
-                        id: res.data.id,
-                        name: res.data.name,
-                        type: res.data.type,
-                        status: res.data.is_active ? "Active" : "Inactive",
-                        userCount: res.data.user_count ?? 0,
-                        createdDate: new Date(
-                          res.data.created_at,
-                        ).toLocaleDateString(),
-                        invite_code: res.data.invite_code,
-                        ico_registered: res.data.ico_registered,
-                        data_retention_years: res.data.data_retention_years,
-                      },
-                    ]);
-
-                    toast.success("Organization created successfully");
-                  } catch (err: any) {
-                    const detail = err?.response?.data?.detail;
-                    const msg = Array.isArray(detail)
-                      ? detail.map((d: any) => d.msg).join(" • ")
-                      : detail ||
-                        err.message ||
-                        "Failed to create organization";
-                    toast.error(msg);
-                    throw err; // so dialog keeps open (since we await it)
-                  }
-                }}
-              />
+              <CreateOrganizationDialog onCreate={createOrg} />
             </div>
           </CardHeader>
+
           <CardContent>
             <div className="flex items-center gap-4 mb-6">
               <div className="relative flex-1">
@@ -304,7 +98,6 @@ export default function Organizations() {
                 <SelectContent className="bg-gray-600 border-gray-500">
                   <SelectItem value="all">All Status</SelectItem>
                   <SelectItem value="active">Active</SelectItem>
-                  <SelectItem value="pending">Pending</SelectItem>
                   <SelectItem value="inactive">Inactive</SelectItem>
                 </SelectContent>
               </Select>
@@ -316,36 +109,65 @@ export default function Organizations() {
               </div>
             ) : (
               <MemoizedOrgTable
-                organizations={filteredOrganizations}
-                onRegenerate={handleRegenerateCode}
-                onView={(org) => handleViewOrg(org.id)}
-                onEdit={handleEditOrg}
-                onDeactivate={handleDeactivate}
-                viewOpen={isViewDialogOpen}
-                editOpen={isEditDialogOpen}
-                selectedOrg={selectedOrg}
-                editFormData={editFormData}
-                closeView={() => setIsViewDialogOpen(false)}
-                closeEdit={() => setIsEditDialogOpen(false)}
-                onEditChange={handleEditChange}
-                onEditSave={handleSaveEdit}
+                organizations={filteredOrgs}
+                onView={viewOrg}
+                onEdit={editOrg}
+                onDelete={(orgId) =>
+                  setSelectedOrg(
+                    filteredOrgs.find((o) => o.id === orgId) || null
+                  )
+                }
               />
+            )}
 
-              // <OrganizationTable
-              //   organizations={filteredOrganizations}
-              //   onRegenerate={handleRegenerateCode}
-              //   onView={(org) => handleViewOrg(org.id)}
-              //   onEdit={handleEditOrg}
-              //   onDeactivate={handleDeactivate}
-              //   viewOpen={isViewDialogOpen}
-              //   editOpen={isEditDialogOpen}
-              //   selectedOrg={selectedOrg}
-              //   editFormData={editFormData}
-              //   closeView={() => setIsViewDialogOpen(false)}
-              //   closeEdit={() => setIsEditDialogOpen(false)}
-              //   onEditChange={handleEditChange}
-              //   onEditSave={handleSaveEdit}
-              // />
+            <AlertDialog
+              open={!!selectedOrg}
+              onOpenChange={() => setSelectedOrg(null)}
+            >
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Delete {selectedOrg?.name}?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete
+                    the organization and remove all related data.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel onClick={() => setSelectedOrg(null)}>
+                    Cancel
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    className="bg-red-600 hover:bg-red-700"
+                    onClick={() => {
+                      if (selectedOrg) deleteOrg(selectedOrg.id);
+                      setSelectedOrg(null);
+                    }}
+                  >
+                    Yes, Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+
+            {viewOpen && selectedOrg && (
+              <ViewOrganizationDialog
+                open={viewOpen}
+                onClose={closeView}
+                org={selectedOrg}
+              />
+            )}
+
+            {editOpen && (
+              <OrgActionsDialog
+                open={editOpen}
+                onClose={closeEdit}
+                org={selectedOrg}
+                onRegenerate={regenerateInviteCode}
+                onDeactivate={deactivateOrg}
+                onActivate={activateOrg}
+              />
             )}
           </CardContent>
         </Card>

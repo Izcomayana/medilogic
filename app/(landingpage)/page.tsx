@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { PlatformFeatures } from "./components/PlatformFeatures";
-import AIAnalytics from "@/components/AIAnalytics";
-import { Hero } from "@/components/Hero";
-import { BFHP } from "./components/BFHP";
-import { Security } from "@/components/Security";
-import { QuickStart } from "./components/QuickStart";
-import { CTA } from "@/components/CTA";
-import { KeyFeatures } from "./components/KeyFeatures";
-import { ArrowRight, Award, Phone, Play, Shield } from "lucide-react";
+import { PlatformFeatures } from './components/PlatformFeatures';
+import AIAnalytics from '@/components/AIAnalytics';
+import { Hero } from '@/components/Hero';
+import { BFHP } from './components/BFHP';
+import { Security } from '@/components/Security';
+import { QuickStart } from './components/QuickStart';
+import { CTA } from '@/components/CTA';
+import { KeyFeatures } from './components/KeyFeatures';
+import { ArrowRight, Award, Phone, Play, Shield } from 'lucide-react';
 
 export default function HomePage() {
   return (
@@ -36,7 +36,7 @@ export default function HomePage() {
       <PlatformFeatures />
       <AIAnalytics />
       <Security
-        badgeText={"Serious About Security & Compliance"}
+        badgeText={'Serious About Security & Compliance'}
         heading={"We're compliant and audit-ready so you don't have to worry"}
         // featuresIcon={<Award />}
         featuresTitle="ISO 27001-Aligned"
@@ -46,9 +46,9 @@ export default function HomePage() {
       />
       <QuickStart />
       <CTA
-        badgeText={"Ready to Modernize Your Logistics?"}
+        badgeText={'Ready to Modernize Your Logistics?'}
         badgeIcon={<Phone className="w-4 h-4 animate-pulse" />}
-        heading={"Take the first step toward secure, AI-enhanced logistics."}
+        heading={'Take the first step toward secure, AI-enhanced logistics.'}
       />
     </div>
   );

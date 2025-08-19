@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useInView } from "../../../hooks/useInView";
-import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle, Target, Shield, Brain, Settings } from "lucide-react";
+import { useInView } from '../../../hooks/useInView';
+import { Card, CardContent } from '@/components/ui/card';
+import { CheckCircle, Target, Shield, Brain, Settings } from 'lucide-react';
 
 export default function WhatMakesDifferentSection() {
   const [differentRef, differentInView] = useInView(0.1);
-  const fadeInUp = "transition-all duration-700 ease-out";
+  const fadeInUp = 'transition-all duration-700 ease-out';
   const staggerDelay = (index: number) => ({
     transitionDelay: `${index * 150}ms`,
   });
@@ -14,27 +14,27 @@ export default function WhatMakesDifferentSection() {
   const differentiators = [
     {
       icon: Target,
-      title: "Industry-Focused",
-      desc: "Tailored for healthcare — not retail, not food, not general logistics.",
-      color: "from-blue-500 to-blue-600",
+      title: 'Industry-Focused',
+      desc: 'Tailored for healthcare — not retail, not food, not general logistics.',
+      color: 'from-blue-500 to-blue-600',
     },
     {
       icon: Shield,
-      title: "Security-First",
-      desc: "From field-level encryption to audit trails, everything is built with compliance and patient data protection in mind.",
-      color: "from-[#15941f] to-green-500",
+      title: 'Security-First',
+      desc: 'From field-level encryption to audit trails, everything is built with compliance and patient data protection in mind.',
+      color: 'from-[#15941f] to-green-500',
     },
     {
       icon: Brain,
-      title: "AI Intelligence",
-      desc: "Medilogic predicts trip durations, flags inefficiencies, and helps you plan smarter with real-time analytics.",
-      color: "from-purple-500 to-pink-500",
+      title: 'AI Intelligence',
+      desc: 'Medilogic predicts trip durations, flags inefficiencies, and helps you plan smarter with real-time analytics.',
+      color: 'from-purple-500 to-pink-500',
     },
     {
       icon: Settings,
-      title: "Role-Based Access",
-      desc: "Drivers, admins, and clients only see what they need — keeping your organization secure and streamlined.",
-      color: "from-orange-500 to-red-500",
+      title: 'Role-Based Access',
+      desc: 'Drivers, admins, and clients only see what they need — keeping your organization secure and streamlined.',
+      color: 'from-orange-500 to-red-500',
     },
   ];
 
@@ -45,7 +45,7 @@ export default function WhatMakesDifferentSection() {
     >
       <div className="container mx-auto max-w-7xl">
         <div
-          className={`text-center mb-16 ${fadeInUp} ${differentInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+          className={`text-center mb-16 ${fadeInUp} ${differentInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
         >
           <div className="inline-flex items-center gap-2 bg-[#15941f]/10 text-[#15941f] px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300">
             <CheckCircle className="w-4 h-4" />
@@ -62,8 +62,8 @@ export default function WhatMakesDifferentSection() {
               key={index}
               className={`group hover:shadow-2xl transition-all duration-700 border-0 shadow-lg overflow-hidden hover:-translate-y-2 ${fadeInUp} ${
                 differentInView
-                  ? "opacity-100 translate-y-0 scale-100"
-                  : `opacity-0 ${index % 2 === 0 ? "-translate-x-12" : "translate-x-12"} scale-95`
+                  ? 'opacity-100 translate-y-0 scale-100'
+                  : `opacity-0 ${index % 2 === 0 ? '-translate-x-12' : 'translate-x-12'} scale-95`
               }`}
               style={staggerDelay(index)}
             >

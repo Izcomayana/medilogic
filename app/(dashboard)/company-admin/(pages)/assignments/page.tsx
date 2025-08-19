@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import {
   Table,
   TableBody,
@@ -12,14 +12,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 import {
   Dialog,
   DialogContent,
@@ -27,7 +27,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 import {
   ClipboardList,
   Search,
@@ -36,71 +36,71 @@ import {
   Clock,
   User,
   Calendar,
-} from "lucide-react";
-import { useState } from "react";
+} from 'lucide-react';
+import { useState } from 'react';
 
 const assignments = [
   {
-    id: "A001",
-    driverName: "John Smith",
-    assignedTrip: "Downtown Waste Collection",
-    location: "Downtown District A",
-    date: "2024-01-20",
-    time: "08:00 AM",
-    status: "Completed",
-    duration: "3.5 hours",
-    notes: "All pickups completed successfully",
+    id: 'A001',
+    driverName: 'John Smith',
+    assignedTrip: 'Downtown Waste Collection',
+    location: 'Downtown District A',
+    date: '2024-01-20',
+    time: '08:00 AM',
+    status: 'Completed',
+    duration: '3.5 hours',
+    notes: 'All pickups completed successfully',
   },
   {
-    id: "A002",
-    driverName: "Sarah Johnson",
-    assignedTrip: "Industrial Zone Delivery",
-    location: "Industrial Park B",
-    date: "2024-01-20",
-    time: "09:30 AM",
-    status: "In Progress",
-    duration: "2.0 hours (ongoing)",
-    notes: "Currently at location 3 of 5",
+    id: 'A002',
+    driverName: 'Sarah Johnson',
+    assignedTrip: 'Industrial Zone Delivery',
+    location: 'Industrial Park B',
+    date: '2024-01-20',
+    time: '09:30 AM',
+    status: 'In Progress',
+    duration: '2.0 hours (ongoing)',
+    notes: 'Currently at location 3 of 5',
   },
   {
-    id: "A003",
-    driverName: "Mike Davis",
-    assignedTrip: "Residential Pickup Route",
-    location: "Residential Area C",
-    date: "2024-01-20",
-    time: "07:00 AM",
-    status: "Pending",
-    duration: "4.0 hours (estimated)",
-    notes: "Scheduled for morning shift",
+    id: 'A003',
+    driverName: 'Mike Davis',
+    assignedTrip: 'Residential Pickup Route',
+    location: 'Residential Area C',
+    date: '2024-01-20',
+    time: '07:00 AM',
+    status: 'Pending',
+    duration: '4.0 hours (estimated)',
+    notes: 'Scheduled for morning shift',
   },
   {
-    id: "A004",
-    driverName: "Lisa Wilson",
-    assignedTrip: "Commercial District Sweep",
-    location: "Commercial Zone D",
-    date: "2024-01-19",
-    time: "10:00 AM",
-    status: "Completed",
-    duration: "2.8 hours",
-    notes: "Route completed ahead of schedule",
+    id: 'A004',
+    driverName: 'Lisa Wilson',
+    assignedTrip: 'Commercial District Sweep',
+    location: 'Commercial Zone D',
+    date: '2024-01-19',
+    time: '10:00 AM',
+    status: 'Completed',
+    duration: '2.8 hours',
+    notes: 'Route completed ahead of schedule',
   },
   {
-    id: "A005",
-    driverName: "Tom Brown",
-    assignedTrip: "Hospital Waste Collection",
-    location: "Medical District",
-    date: "2024-01-20",
-    time: "06:00 AM",
-    status: "In Progress",
-    duration: "1.5 hours (ongoing)",
-    notes: "Special handling required",
+    id: 'A005',
+    driverName: 'Tom Brown',
+    assignedTrip: 'Hospital Waste Collection',
+    location: 'Medical District',
+    date: '2024-01-20',
+    time: '06:00 AM',
+    status: 'In Progress',
+    duration: '1.5 hours (ongoing)',
+    notes: 'Special handling required',
   },
 ];
 
 export default function AssignmentsPage() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [dateFilter, setDateFilter] = useState("all");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [dateFilter, setDateFilter] = useState('all');
   const [selectedAssignment, setSelectedAssignment] = useState<
     (typeof assignments)[0] | null
   >(null);
@@ -113,23 +113,23 @@ export default function AssignmentsPage() {
         .includes(searchTerm.toLowerCase()) ||
       assignment.location.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus =
-      statusFilter === "all" ||
+      statusFilter === 'all' ||
       assignment.status.toLowerCase() === statusFilter.toLowerCase();
-    const matchesDate = dateFilter === "all" || assignment.date === dateFilter;
+    const matchesDate = dateFilter === 'all' || assignment.date === dateFilter;
     return matchesSearch && matchesStatus && matchesDate;
   });
 
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
-      case "completed":
+      case 'completed':
         return <Badge className="bg-[#15941f] text-white">Completed</Badge>;
-      case "in progress":
+      case 'in progress':
         return (
           <Badge variant="secondary" className="bg-blue-600 text-white">
             In Progress
           </Badge>
         );
-      case "pending":
+      case 'pending':
         return (
           <Badge variant="secondary" className="bg-yellow-600 text-white">
             Pending
@@ -259,7 +259,7 @@ export default function AssignmentsPage() {
                             <DialogHeader>
                               <DialogTitle>Assignment Details</DialogTitle>
                               <DialogDescription className="text-gray-400">
-                                Full details for assignment{" "}
+                                Full details for assignment{' '}
                                 {selectedAssignment?.id}
                               </DialogDescription>
                             </DialogHeader>
@@ -280,7 +280,7 @@ export default function AssignmentsPage() {
                                     </label>
                                     <div className="mt-1">
                                       {getStatusBadge(
-                                        selectedAssignment.status,
+                                        selectedAssignment.status
                                       )}
                                     </div>
                                   </div>

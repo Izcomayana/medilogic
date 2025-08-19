@@ -1,5 +1,5 @@
-import React, { Suspense } from "react";
-import VerifyEmail from ".";
+import React, { Suspense } from 'react';
+import VerifyEmail from '.';
 
 const Page = () => {
   return (

@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import React from "react";
-import { fadeInUp, staggerDelay } from "@/app/(landingpage)/hooks/annimation";
-import { useInView } from "@/app/(landingpage)/hooks/useInView";
-import { Card, CardContent } from "@/components/ui/card";
-import { Shield, Lock, Eye, UserCheck, Award } from "lucide-react";
+import React from 'react';
+import { fadeInUp, staggerDelay } from '@/app/(landingpage)/hooks/annimation';
+import { useInView } from '@/app/(landingpage)/hooks/useInView';
+import { Card, CardContent } from '@/components/ui/card';
+import { Shield, Lock, Eye, UserCheck, Award } from 'lucide-react';
 
 type SecurityProps = {
   badgeText: string;
@@ -31,13 +31,13 @@ export const Security: React.FC<SecurityProps> = ({
   const securityFeatures = [
     {
       icon: UserCheck,
-      title: "GDPR-compliant access flows",
-      desc: "Every user interaction follows strict data protection regulations",
+      title: 'GDPR-compliant access flows',
+      desc: 'Every user interaction follows strict data protection regulations',
     },
     {
       icon: Lock,
-      title: "Optional field-level encryption",
-      desc: "Advanced encryption for sensitive healthcare data protection",
+      title: 'Optional field-level encryption',
+      desc: 'Advanced encryption for sensitive healthcare data protection',
     },
     {
       icon: Award,
@@ -58,7 +58,7 @@ export const Security: React.FC<SecurityProps> = ({
     >
       <div className="container mx-auto max-w-7xl relative">
         <div
-          className={`text-center mb-16 ${fadeInUp} ${securityInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+          className={`text-center mb-16 ${fadeInUp} ${securityInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
         >
           <div className="inline-flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300 backdrop-blur-sm">
             <Shield className="w-4 h-4" />
@@ -74,8 +74,8 @@ export const Security: React.FC<SecurityProps> = ({
               key={index}
               className={`bg-white/10 border-white/20 backdrop-blur-sm hover:bg-white/20 transition-all duration-500 group hover:-translate-y-2 hover:scale-105 ${fadeInUp} ${
                 securityInView
-                  ? "opacity-100 translate-y-0 rotate-0"
-                  : "opacity-0 translate-y-12 rotate-3"
+                  ? 'opacity-100 translate-y-0 rotate-0'
+                  : 'opacity-0 translate-y-12 rotate-3'
               }`}
               style={staggerDelay(index)}
             >
