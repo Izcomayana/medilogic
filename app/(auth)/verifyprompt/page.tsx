@@ -1,5 +1,5 @@
-import React, { Suspense } from "react";
-import VerifyPrompt from ".";
+import React, { Suspense } from 'react';
+import VerifyPrompt from '.';
 
 const Page = () => {
   return (

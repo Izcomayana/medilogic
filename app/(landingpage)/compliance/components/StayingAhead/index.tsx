@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { fadeInUp, staggerDelay } from "@/app/(landingpage)/hooks/annimation";
-import { useInView } from "@/app/(landingpage)/hooks/useInView";
-import { TrendingUp, RefreshCw, FileText, CheckCircle } from "lucide-react";
+import { fadeInUp, staggerDelay } from '@/app/(landingpage)/hooks/annimation';
+import { useInView } from '@/app/(landingpage)/hooks/useInView';
+import { TrendingUp, RefreshCw, FileText, CheckCircle } from 'lucide-react';
 
 export default function StayingAhead() {
   const [aheadRef, aheadInView] = useInView(0.1);
@@ -10,15 +10,15 @@ export default function StayingAhead() {
   const updateFeatures = [
     {
       icon: RefreshCw,
-      text: "Ongoing alignment with NHS DSP Toolkit updates",
+      text: 'Ongoing alignment with NHS DSP Toolkit updates',
     },
     {
       icon: FileText,
-      text: "Internal security reviews and policy updates",
+      text: 'Internal security reviews and policy updates',
     },
     {
       icon: TrendingUp,
-      text: "Transparent change logs when features impact compliance",
+      text: 'Transparent change logs when features impact compliance',
     },
   ];
 
@@ -27,8 +27,8 @@ export default function StayingAhead() {
       <div className="container mx-auto max-w-7xl">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div
-            className={`${fadeInUp} ${aheadInView ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-12"}`}
-            style={{ transitionDelay: "200ms" }}
+            className={`${fadeInUp} ${aheadInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'}`}
+            style={{ transitionDelay: '200ms' }}
           >
             <div className="inline-flex items-center gap-2 bg-[#15941f]/10 text-[#15941f] px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300">
               <TrendingUp className="w-4 h-4" />
@@ -48,8 +48,8 @@ export default function StayingAhead() {
                   key={index}
                   className={`flex items-start gap-4 group hover:translate-x-2 transition-all duration-300 ${fadeInUp} ${
                     aheadInView
-                      ? "opacity-100 translate-y-0"
-                      : "opacity-0 translate-y-8"
+                      ? 'opacity-100 translate-y-0'
+                      : 'opacity-0 translate-y-8'
                   }`}
                   style={staggerDelay(index)}
                 >
@@ -65,8 +65,8 @@ export default function StayingAhead() {
           </div>
 
           <div
-            className={`relative ${fadeInUp} ${aheadInView ? "opacity-100 translate-x-0 scale-100" : "opacity-0 translate-x-12 scale-95"}`}
-            style={{ transitionDelay: "400ms" }}
+            className={`relative ${fadeInUp} ${aheadInView ? 'opacity-100 translate-x-0 scale-100' : 'opacity-0 translate-x-12 scale-95'}`}
+            style={{ transitionDelay: '400ms' }}
           >
             <div className="bg-gradient-to-br from-[#15941f]/5 to-green-50 rounded-3xl p-8 relative overflow-hidden">
               <div className="absolute top-4 right-4 w-32 h-32 bg-[#15941f]/10 rounded-full animate-pulse"></div>

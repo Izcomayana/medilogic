@@ -1,28 +1,28 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import axios from "axios";
-import Link from "next/link";
-import { Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import { HomeLogo } from "@/components/HomeLogo";
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import axios from 'axios';
+import Link from 'next/link';
+import { Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
+import { HomeLogo } from '@/components/HomeLogo';
 
 const COOLDOWN_DURATION = 60;
-const STORAGE_KEY = "medilogic_verify_cooldown";
+const STORAGE_KEY = 'medilogic_verify_cooldown';
 
 const VerifyPrompt = () => {
   const searchParams = useSearchParams();
-  const email = searchParams.get("email");
+  const email = searchParams.get('email');
 
   const [loading, setLoading] = useState(false);
   const [cooldown, setCooldown] = useState(0);
 
   const handleResend = async () => {
     if (!email) {
-      toast.error("Missing email", {
-        description: "Please try registering again.",
+      toast.error('Missing email', {
+        description: 'Please try registering again.',
       });
       return;
     }
@@ -33,10 +33,10 @@ const VerifyPrompt = () => {
         `https://medilogic-backend.onrender.com/auth/resend-verification-email?email=${email}`,
         {
           email,
-        },
+        }
       );
-      toast.success("Verification Sent", {
-        description: "Check your inbox for the verification link.",
+      toast.success('Verification Sent', {
+        description: 'Check your inbox for the verification link.',
       });
 
       startCooldown();
@@ -44,9 +44,9 @@ const VerifyPrompt = () => {
       const err = error as { response?: { data?: { detail?: string } } };
       const errorMsg =
         err.response?.data?.detail ||
-        "An error occurred while resending verification link.";
+        'An error occurred while resending verification link.';
 
-      toast.error("Error", {
+      toast.error('Error', {
         description: errorMsg,
       });
     } finally {
@@ -120,12 +120,12 @@ const VerifyPrompt = () => {
           ) : cooldown > 0 ? (
             `Resend in ${cooldown}s`
           ) : (
-            "Resend Verification Email"
+            'Resend Verification Email'
           )}
         </Button>
 
         <p className="text-sm text-gray-100 mt-4">
-          Already verified?{" "}
+          Already verified?{' '}
           <Link
             href="/login"
             className="text-[#15941f] underline hover:text-[#117a1a]"

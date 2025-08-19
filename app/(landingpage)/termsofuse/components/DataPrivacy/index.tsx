@@ -1,26 +1,26 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import { Shield, Database, Users, Lock } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import Link from "next/link";
+import { motion } from 'framer-motion';
+import { Shield, Database, Users, Lock } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import Link from 'next/link';
 
 export default function DataPrivacy() {
   const privacyPractices = [
     {
       icon: Database,
-      title: "Data Collection",
-      description: "Data collection for platform functionality and analytics",
+      title: 'Data Collection',
+      description: 'Data collection for platform functionality and analytics',
     },
     {
       icon: Users,
-      title: "Role-Based Access",
-      description: "Role-based access to protect organizational data",
+      title: 'Role-Based Access',
+      description: 'Role-based access to protect organizational data',
     },
     {
       icon: Lock,
-      title: "Secure Storage",
-      description: "Secure storage and encryption for sensitive information",
+      title: 'Secure Storage',
+      description: 'Secure storage and encryption for sensitive information',
     },
   ];
 
@@ -46,7 +46,7 @@ export default function DataPrivacy() {
           <div className="mb-8">
             <p className="text-lg text-gray-700 leading-relaxed mb-4">
               Your privacy matters to us. By using Medilogic, you agree to the
-              practices outlined in our{" "}
+              practices outlined in our{' '}
               <Link
                 href="/privacy"
                 className="text-[#15941f] hover:underline font-semibold"

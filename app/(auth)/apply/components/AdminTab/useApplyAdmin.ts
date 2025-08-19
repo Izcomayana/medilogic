@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useApplicationForm } from "../ApplicationForm/useApplicationForm";
+import { useApplicationForm } from '../ApplicationForm/useApplicationForm';
 
 const initialAdminState = {
-  name: "",
-  email: "",
-  password: "",
-  confirmPassword: "",
-  orgType: "",
-  orgName: "",
-  adminMessage: "",
+  name: '',
+  email: '',
+  password: '',
+  confirmPassword: '',
+  orgType: '',
+  orgName: '',
+  adminMessage: '',
   acceptTerms: false,
   acceptCookies: false,
 };
@@ -21,27 +21,27 @@ const validateAdmin = (formData: AdminForm) => {
     general?: string;
   } = {};
 
-  if (!formData.name.trim()) errors.name = "Full name is required";
-  if (!formData.email.trim()) errors.email = "Email is required";
+  if (!formData.name.trim()) errors.name = 'Full name is required';
+  if (!formData.email.trim()) errors.email = 'Email is required';
   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
-    errors.email = "Enter a valid email";
+    errors.email = 'Enter a valid email';
 
-  if (!formData.password) errors.password = "Password is required";
+  if (!formData.password) errors.password = 'Password is required';
   else if (formData.password.length < 6)
-    errors.password = "Password must be at least 6 characters";
+    errors.password = 'Password must be at least 6 characters';
 
   if (!formData.confirmPassword)
-    errors.confirmPassword = "Please confirm your password";
+    errors.confirmPassword = 'Please confirm your password';
   else if (formData.password !== formData.confirmPassword)
-    errors.confirmPassword = "Passwords do not match";
+    errors.confirmPassword = 'Passwords do not match';
 
   if (!formData.orgType.trim())
-    errors.orgType = "Organization type is required";
+    errors.orgType = 'Organization type is required';
   if (!formData.orgName.trim())
-    errors.orgName = "Organization name is required";
+    errors.orgName = 'Organization name is required';
 
   if (!formData.acceptTerms)
-    errors.acceptTerms = "You must accept the terms and conditions";
+    errors.acceptTerms = 'You must accept the terms and conditions';
 
   return errors;
 };
@@ -60,5 +60,5 @@ export const useApplyAdmin = () =>
     initialState: initialAdminState,
     validate: validateAdmin,
     transformSubmit: transformAdminData,
-    role: "admin",
+    role: 'admin',
   });

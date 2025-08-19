@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Building2, CheckCircle, Shield, Truck, Users } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { useInView } from "../../hooks/useInView";
-import { fadeInUp, staggerDelay } from "../../hooks/annimation";
+import { Building2, CheckCircle, Shield, Truck, Users } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { useInView } from '../../hooks/useInView';
+import { fadeInUp, staggerDelay } from '../../hooks/annimation';
 
 export const PlatformFeatures = () => {
   const [featuresRef, featuresInView] = useInView(0.1);
@@ -15,7 +15,7 @@ export const PlatformFeatures = () => {
     >
       <div className="container mx-auto max-w-7xl">
         <div
-          className={`text-center mb-16 ${fadeInUp} ${featuresInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+          className={`text-center mb-16 ${fadeInUp} ${featuresInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
         >
           <div className="inline-flex items-center gap-2 bg-[#15941f]/10 text-[#15941f] px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300">
             <Truck className="w-4 h-4" />
@@ -30,51 +30,51 @@ export const PlatformFeatures = () => {
           {[
             {
               icon: Shield,
-              title: "Super Admin Dashboard",
+              title: 'Super Admin Dashboard',
               features: [
-                "Manage organizations & users",
-                "Full platform audit logs",
-                "Global settings & access control",
+                'Manage organizations & users',
+                'Full platform audit logs',
+                'Global settings & access control',
               ],
-              color: "from-blue-500 to-blue-600",
+              color: 'from-blue-500 to-blue-600',
             },
             {
               icon: Building2,
-              title: "Clinic & Waste Company Tools",
+              title: 'Clinic & Waste Company Tools',
               features: [
-                "Assign trips to drivers",
-                "Monitor costs and compliance",
-                "Export invoices and reports",
+                'Assign trips to drivers',
+                'Monitor costs and compliance',
+                'Export invoices and reports',
               ],
-              color: "from-[#15941f] to-green-500",
+              color: 'from-[#15941f] to-green-500',
             },
             {
               icon: Truck,
-              title: "Driver Tools",
+              title: 'Driver Tools',
               features: [
-                "Access routes and trip info",
-                "Update delivery status in real time",
-                "View personal trip history",
+                'Access routes and trip info',
+                'Update delivery status in real time',
+                'View personal trip history',
               ],
-              color: "from-orange-500 to-red-500",
+              color: 'from-orange-500 to-red-500',
             },
             {
               icon: Users,
-              title: "Client Access",
+              title: 'Client Access',
               features: [
-                "Track collections",
-                "View trip history",
-                "Request support",
+                'Track collections',
+                'View trip history',
+                'Request support',
               ],
-              color: "from-purple-500 to-pink-500",
+              color: 'from-purple-500 to-pink-500',
             },
           ].map((section, index) => (
             <Card
               key={index}
               className={`group hover:shadow-2xl transition-all duration-700 border-0 shadow-lg overflow-hidden hover:-translate-y-1 ${fadeInUp} ${
                 featuresInView
-                  ? "opacity-100 translate-x-0 scale-100"
-                  : `opacity-0 ${index % 2 === 0 ? "-translate-x-12" : "translate-x-12"} scale-95`
+                  ? 'opacity-100 translate-x-0 scale-100'
+                  : `opacity-0 ${index % 2 === 0 ? '-translate-x-12' : 'translate-x-12'} scale-95`
               }`}
               style={staggerDelay(index)}
             >

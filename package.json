@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.14",
@@ -69,14 +70,8 @@
   "bugs": {
     "url": "https://github.com/Izcomayana/medilogic/issues"
   },
-  "homepage": "https://github.com/Izcomayana/medilogic#readme"
-{
-  "scripts": {
-    "prepare": "husky install"
-  },
+  "homepage": "https://github.com/Izcomayana/medilogic#readme",
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,css,md}": "prettier --write"
   }
-}
-
 }

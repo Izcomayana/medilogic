@@ -1,18 +1,18 @@
-"use client";
+'use client';
 
-import { Hero } from "@/components/Hero";
-import { FileText } from "lucide-react";
-import React from "react";
-import UseOfService from "./components/UseOfService";
-import Eligibility from "./components/Eligibility";
-import UserResponsibilities from "./components/UserResponsibilty";
-import OrganizationAccounts from "./components/OrganizationAccounts";
-import PaymentSubscription from "./components/PaymentSubscription";
-import DataPrivacy from "./components/DataPrivacy";
-import SuspensionTermination from "./components/SuspensionTermination";
-import ChangesToTerms from "./components/ChangesToTerms";
-import GoverningLaw from "./components/GoverningLaw";
-import ContactSection from "./components/Contact";
+import { Hero } from '@/components/Hero';
+import { FileText } from 'lucide-react';
+import React from 'react';
+import UseOfService from './components/UseOfService';
+import Eligibility from './components/Eligibility';
+import UserResponsibilities from './components/UserResponsibilty';
+import OrganizationAccounts from './components/OrganizationAccounts';
+import PaymentSubscription from './components/PaymentSubscription';
+import DataPrivacy from './components/DataPrivacy';
+import SuspensionTermination from './components/SuspensionTermination';
+import ChangesToTerms from './components/ChangesToTerms';
+import GoverningLaw from './components/GoverningLaw';
+import ContactSection from './components/Contact';
 
 export const TermsOfUse = () => {
   return (
@@ -20,16 +20,16 @@ export const TermsOfUse = () => {
       <Hero
         badgeIcon={<FileText className="h-8 w-8 text-white" />}
         badgeText="Effective Date: July 10, 2025"
-        heading={"Your Use of"}
-        heading2={"Our Services,"}
+        heading={'Your Use of'}
+        heading2={'Our Services,'}
         heading3="Explained"
         subText={
-          "Welcome to Medilogic! These Terms of Service govern your access to and use of the Medilogic platform,  website, and services. By accessing or using our Service, you agree to these Terms."
+          'Welcome to Medilogic! These Terms of Service govern your access to and use of the Medilogic platform,  website, and services. By accessing or using our Service, you agree to these Terms.'
         }
         descBadgeIcon={undefined}
-        descBadgeText={""}
+        descBadgeText={''}
         descBadgeIcon2={undefined}
-        descBadgeText2={""}
+        descBadgeText2={''}
         descSubText="Important: If you do not agree to these Terms, please do not use Medilogic."
       />
       <UseOfService />

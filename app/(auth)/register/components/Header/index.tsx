@@ -1,4 +1,4 @@
-import { HomeLogo } from "@/components/HomeLogo";
+import { HomeLogo } from '@/components/HomeLogo';
 
 export const RegisterFormHeader = () => (
   <div className="text-center mb-8">

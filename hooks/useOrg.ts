@@ -1,25 +1,25 @@
 // /organizations/hooks/useOrganizations.ts
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
+'use client';
 
-import { useState, useEffect, useMemo, useCallback } from "react";
-import { toast } from "sonner";
-import axios from "axios";
-import { Organization } from "../app/(dashboard)/super-admin/(pages)/organizations/org";
-import { useAuth } from "@/components/auth";
-import { isTokenExpired } from "@/hooks/token";
+import { useState, useEffect, useMemo, useCallback } from 'react';
+import { toast } from 'sonner';
+import axios from 'axios';
+import { Organization } from '../app/(dashboard)/super-admin/(pages)/organizations/org';
+import { useAuth } from '@/components/auth';
+import { isTokenExpired } from '@/hooks/token';
 
 export function useOrganizations() {
   const [orgs, setOrgs] = useState<Organization[]>([]);
   const [loading, setLoading] = useState(true);
   const { token, refreshAccessToken } = useAuth();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [viewOpen, setViewOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [selectedOrg, setSelectedOrg] = useState<Organization | null>(null);
   const [editFormData, setEditFormData] = useState<Organization>(
-    {} as Organization,
+    {} as Organization
   );
 
   // Fetch organizations
@@ -39,8 +39,8 @@ export function useOrganizations() {
 
       try {
         const res = await axios.get(
-          "https://medilogic-backend.onrender.com/super/organizations",
-          { headers: { Authorization: `Bearer ${validToken}` } },
+          'https://medilogic-backend.onrender.com/super/organizations',
+          { headers: { Authorization: `Bearer ${validToken}` } }
         );
 
         if (!isMounted) return;
@@ -61,7 +61,7 @@ export function useOrganizations() {
           id: o.id,
           name: o.name,
           type: o.type,
-          status: o.is_active ? "active" : "inactive",
+          status: o.is_active ? 'active' : 'inactive',
           userCount: o.user_count ?? 0,
           createdDate: new Date(o.created_at).toLocaleDateString(),
           invite_code: o.invite_code,
@@ -72,8 +72,8 @@ export function useOrganizations() {
         setOrgs(mapped);
       } catch (e: any) {
         console.error(
-          "Failed to load organizations:",
-          e?.response?.data?.detail || e.message,
+          'Failed to load organizations:',
+          e?.response?.data?.detail || e.message
         );
       } finally {
         if (isMounted) setLoading(false);
@@ -93,7 +93,7 @@ export function useOrganizations() {
         org.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         org.type.toLowerCase().includes(searchTerm.toLowerCase());
 
-      if (statusFilter === "all") return matchesSearch;
+      if (statusFilter === 'all') return matchesSearch;
       return (
         matchesSearch &&
         org.status?.toLowerCase() === statusFilter.toLowerCase()
@@ -108,21 +108,21 @@ export function useOrganizations() {
       if (!validToken || isTokenExpired(validToken)) {
         const refreshed = await refreshAccessToken();
         if (!refreshed) {
-          toast.error("Authentication expired. Please log in again.");
+          toast.error('Authentication expired. Please log in again.');
           return;
         }
         validToken = refreshed;
       }
 
       const res = await axios.post(
-        "https://medilogic-backend.onrender.com/super/organizations",
+        'https://medilogic-backend.onrender.com/super/organizations',
         orgData,
         {
           headers: {
             Authorization: `Bearer ${validToken}`,
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
-        },
+        }
       );
 
       setOrgs((prev) => [
@@ -131,7 +131,7 @@ export function useOrganizations() {
           id: res.data.id,
           name: res.data.name,
           type: res.data.type,
-          status: res.data.is_active ? "active" : "inactive",
+          status: res.data.is_active ? 'active' : 'inactive',
           userCount: res.data.user_count ?? 0,
           createdDate: new Date(res.data.created_at).toLocaleDateString(),
           invite_code: res.data.invite_code,
@@ -140,12 +140,12 @@ export function useOrganizations() {
         },
       ]);
 
-      toast.success("Organization created successfully");
+      toast.success('Organization created successfully');
     } catch (err: any) {
       const detail = err?.response?.data?.detail;
       const msg = Array.isArray(detail)
-        ? detail.map((d: any) => d.msg).join(" • ")
-        : detail || err.message || "Failed to create organization";
+        ? detail.map((d: any) => d.msg).join(' • ')
+        : detail || err.message || 'Failed to create organization';
       toast.error(msg);
       throw err;
     }
@@ -167,7 +167,7 @@ export function useOrganizations() {
       if (!validToken || isTokenExpired(validToken)) {
         const refreshed = await refreshAccessToken();
         if (!refreshed) {
-          toast.error("Authentication expired. Please log in again.");
+          toast.error('Authentication expired. Please log in again.');
           return;
         }
         validToken = refreshed;
@@ -175,23 +175,23 @@ export function useOrganizations() {
 
       const res = await axios.get(
         `https://medilogic-backend.onrender.com/super/${orgId}`,
-        { headers: { Authorization: `Bearer ${validToken}` } },
+        { headers: { Authorization: `Bearer ${validToken}` } }
       );
 
       const data = res.data;
       const mappedOrg: Organization = {
         id: data.organization.id,
         name: data.organization.name,
-        type: data.organization.type ?? data.organization.org_type ?? "Unknown",
-        status: data.is_active ? "active" : "inactive",
+        type: data.organization.type ?? data.organization.org_type ?? 'Unknown',
+        status: data.is_active ? 'active' : 'inactive',
         createdDate: new Date(
-          data.organization.created_at,
+          data.organization.created_at
         ).toLocaleDateString(),
         userCount: data.user_count ?? 0,
-        description: data.organization.description ?? "",
-        address: data.organization.address ?? "",
-        phone: data.organization.phone ?? "",
-        email: data.organization.email ?? "",
+        description: data.organization.description ?? '',
+        address: data.organization.address ?? '',
+        phone: data.organization.phone ?? '',
+        email: data.organization.email ?? '',
         invite_code: data.organization.invite_code,
         ico_registered: data.organization.ico_registered,
         data_retention_years: data.organization.data_retention_years,
@@ -200,7 +200,7 @@ export function useOrganizations() {
       setSelectedOrg(mappedOrg);
       setViewOpen(true);
     } catch {
-      toast.error("Failed to load organization details");
+      toast.error('Failed to load organization details');
     }
   };
 
@@ -217,7 +217,7 @@ export function useOrganizations() {
 
       const res = await axios.get(
         `https://medilogic-backend.onrender.com/super/${org.id}`,
-        { headers: { Authorization: `Bearer ${validToken}` } },
+        { headers: { Authorization: `Bearer ${validToken}` } }
       );
 
       const data = res.data;
@@ -225,17 +225,17 @@ export function useOrganizations() {
         id: data.organization.id,
         name: data.organization.name,
         type: data.organization.type,
-        description: data.organization.description ?? "",
-        address: data.organization.address_line ?? "",
-        phone: data.organization.phone_number ?? "",
-        email: data.organization.email ?? "",
-        postal_code: data.organization.postal_code ?? "",
-        license_number: data.organization.license_number ?? "",
+        description: data.organization.description ?? '',
+        address: data.organization.address_line ?? '',
+        phone: data.organization.phone_number ?? '',
+        email: data.organization.email ?? '',
+        postal_code: data.organization.postal_code ?? '',
+        license_number: data.organization.license_number ?? '',
         waste_processing_capability:
-          data.organization.waste_processing_capability ?? "",
+          data.organization.waste_processing_capability ?? '',
         delivery_capacity: data.organization.delivery_capacity ?? 0,
-        contact_person_name: data.organization.contact_person_name ?? "",
-        contact_person_role: data.organization.contact_person_role ?? "",
+        contact_person_name: data.organization.contact_person_name ?? '',
+        contact_person_role: data.organization.contact_person_role ?? '',
         latitude: data.organization.latitude ?? 0,
         longitude: data.organization.longitude ?? 0,
         status: data.organization.is_active,
@@ -244,7 +244,7 @@ export function useOrganizations() {
       });
       setEditOpen(true);
     } catch {
-      toast.error("Failed to load organization details for editing");
+      toast.error('Failed to load organization details for editing');
     }
   };
 

@@ -1,5 +1,5 @@
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Truck,
   Package,
@@ -9,64 +9,64 @@ import {
   Users,
   MapPin,
   Clock,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const stats = [
   {
-    title: "Trips Today",
-    value: "47",
-    change: "+12% from yesterday",
+    title: 'Trips Today',
+    value: '47',
+    change: '+12% from yesterday',
     icon: Truck,
-    trend: "up",
+    trend: 'up',
   },
   {
-    title: "Waste Pickups Completed",
-    value: "134",
-    change: "+8% this week",
+    title: 'Waste Pickups Completed',
+    value: '134',
+    change: '+8% this week',
     icon: Package,
-    trend: "up",
+    trend: 'up',
   },
   {
-    title: "Pending Reports",
-    value: "23",
-    change: "Requires attention",
+    title: 'Pending Reports',
+    value: '23',
+    change: 'Requires attention',
     icon: FileText,
-    trend: "warning",
+    trend: 'warning',
   },
   {
-    title: "Assignments Today",
-    value: "89",
-    change: "All scheduled",
+    title: 'Assignments Today',
+    value: '89',
+    change: 'All scheduled',
     icon: Calendar,
-    trend: "neutral",
+    trend: 'neutral',
   },
 ];
 
 const recentTrips = [
   {
-    id: "T001",
-    driver: "John Smith",
-    route: "Downtown Route A",
-    status: "In Progress",
-    startTime: "08:30 AM",
-    estimatedCompletion: "11:45 AM",
+    id: 'T001',
+    driver: 'John Smith',
+    route: 'Downtown Route A',
+    status: 'In Progress',
+    startTime: '08:30 AM',
+    estimatedCompletion: '11:45 AM',
   },
   {
-    id: "T002",
-    driver: "Sarah Johnson",
-    route: "Industrial Zone B",
-    status: "Completed",
-    startTime: "07:00 AM",
-    completedTime: "10:15 AM",
+    id: 'T002',
+    driver: 'Sarah Johnson',
+    route: 'Industrial Zone B',
+    status: 'Completed',
+    startTime: '07:00 AM',
+    completedTime: '10:15 AM',
   },
   {
-    id: "T003",
-    driver: "Mike Davis",
-    route: "Residential Area C",
-    status: "Pending",
-    startTime: "09:00 AM",
-    estimatedCompletion: "12:30 PM",
+    id: 'T003',
+    driver: 'Mike Davis',
+    route: 'Residential Area C',
+    status: 'Pending',
+    startTime: '09:00 AM',
+    estimatedCompletion: '12:30 PM',
   },
 ];
 
@@ -100,14 +100,14 @@ export const AdminDashboard = () => {
                 </div>
                 <div
                   className={`text-xs flex items-center gap-1 mt-1 ${
-                    stat.trend === "up"
-                      ? "text-[#15941f]"
-                      : stat.trend === "warning"
-                        ? "text-yellow-500"
-                        : "text-gray-400"
+                    stat.trend === 'up'
+                      ? 'text-[#15941f]'
+                      : stat.trend === 'warning'
+                        ? 'text-yellow-500'
+                        : 'text-gray-400'
                   }`}
                 >
-                  {stat.trend === "up" && <TrendingUp className="h-3 w-3" />}
+                  {stat.trend === 'up' && <TrendingUp className="h-3 w-3" />}
                   {stat.change}
                 </div>
               </CardContent>
@@ -145,18 +145,18 @@ export const AdminDashboard = () => {
                     <div className="flex flex-col items-end">
                       <span
                         className={`text-xs px-2 py-1 rounded-full ${
-                          trip.status === "Completed"
-                            ? "bg-[#15941f] text-white"
-                            : trip.status === "In Progress"
-                              ? "bg-blue-600 text-white"
-                              : "bg-yellow-600 text-white"
+                          trip.status === 'Completed'
+                            ? 'bg-[#15941f] text-white'
+                            : trip.status === 'In Progress'
+                              ? 'bg-blue-600 text-white'
+                              : 'bg-yellow-600 text-white'
                         }`}
                       >
                         {trip.status}
                       </span>
                       <span className="text-xs text-gray-400 mt-1 flex items-center gap-1">
                         <Clock className="h-3 w-3" />
-                        {trip.status === "Completed"
+                        {trip.status === 'Completed'
                           ? trip.completedTime
                           : trip.estimatedCompletion}
                       </span>
@@ -185,7 +185,7 @@ export const AdminDashboard = () => {
                 <div className="w-full bg-gray-700 rounded-full h-2">
                   <div
                     className="bg-[#15941f] h-2 rounded-full"
-                    style={{ width: "94%" }}
+                    style={{ width: '94%' }}
                   ></div>
                 </div>
 
@@ -200,7 +200,7 @@ export const AdminDashboard = () => {
                 <div className="w-full bg-gray-700 rounded-full h-2">
                   <div
                     className="bg-[#15941f] h-2 rounded-full"
-                    style={{ width: "87%" }}
+                    style={{ width: '87%' }}
                   ></div>
                 </div>
 
@@ -213,7 +213,7 @@ export const AdminDashboard = () => {
                 <div className="w-full bg-gray-700 rounded-full h-2">
                   <div
                     className="bg-blue-500 h-2 rounded-full"
-                    style={{ width: "76%" }}
+                    style={{ width: '76%' }}
                   ></div>
                 </div>
               </div>

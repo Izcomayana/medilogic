@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import { Share2, X, Cloud, Scale, Users } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { motion } from 'framer-motion';
+import { Share2, X, Cloud, Scale, Users } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function DataSharing() {
   const sharingScenarios = [
     {
       icon: Cloud,
-      title: "Trusted Third-Party Processors",
+      title: 'Trusted Third-Party Processors',
       description:
-        "With trusted third-party processors (e.g. cloud hosting) under strict agreements",
+        'With trusted third-party processors (e.g. cloud hosting) under strict agreements',
     },
     {
       icon: Scale,
-      title: "Legal Requirements",
-      description: "When required by law or regulatory compliance",
+      title: 'Legal Requirements',
+      description: 'When required by law or regulatory compliance',
     },
     {
       icon: Users,
-      title: "Organization Admins",
+      title: 'Organization Admins',
       description:
         "With your organization's admins (if you are part of a clinic, hospital, or logistics firm)",
     },

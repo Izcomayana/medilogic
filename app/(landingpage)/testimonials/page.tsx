@@ -1,4 +1,4 @@
-import { Testimonials } from ".";
+import { Testimonials } from '.';
 
 export default function TestimonialsPage() {
   return <Testimonials />;

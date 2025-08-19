@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import React from "react";
-import LoginForm from "./components/LoginForm";
-import OTPForm from "./components/OTPForm";
-import { useLogin } from "./useLogin";
-import Link from "next/link";
-import { HomeLogo } from "@/components/HomeLogo";
+import React from 'react';
+import LoginForm from './components/LoginForm';
+import OTPForm from './components/OTPForm';
+import { useLogin } from './useLogin';
+import Link from 'next/link';
+import { HomeLogo } from '@/components/HomeLogo';
 
 export default function Login() {
   const login = useLogin();
@@ -19,8 +19,8 @@ export default function Login() {
           <h1 className="text-3xl font-bold text-gray-50 mb-2">Welcome Back</h1>
           <p className="text-gray-300">
             {login.step === 1
-              ? "Sign in to your Medilogic account"
-              : "Enter the verification code sent to your email"}
+              ? 'Sign in to your Medilogic account'
+              : 'Enter the verification code sent to your email'}
           </p>
         </div>
 

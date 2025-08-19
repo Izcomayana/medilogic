@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { fadeInUp, staggerDelay } from "@/app/(landingpage)/hooks/annimation";
-import { useInView } from "@/app/(landingpage)/hooks/useInView";
-import { Card, CardContent } from "@/components/ui/card";
+import { fadeInUp, staggerDelay } from '@/app/(landingpage)/hooks/annimation';
+import { useInView } from '@/app/(landingpage)/hooks/useInView';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Stethoscope,
   CheckCircle,
@@ -11,7 +11,7 @@ import {
   Users,
   Brain,
   Heart,
-} from "lucide-react";
+} from 'lucide-react';
 
 export default function PrivatePractice() {
   const [practiceRef, practiceInView] = useInView(0.1);
@@ -19,23 +19,23 @@ export default function PrivatePractice() {
   const features = [
     {
       icon: Clock,
-      text: "Get automated reminders and scheduling for clinical waste collections",
+      text: 'Get automated reminders and scheduling for clinical waste collections',
     },
     {
       icon: FileText,
-      text: "Track every trip and expense in real time",
+      text: 'Track every trip and expense in real time',
     },
     {
       icon: CheckCircle,
-      text: "Download reports for inspections or internal review",
+      text: 'Download reports for inspections or internal review',
     },
     {
       icon: Users,
-      text: "Offer staff role-specific access to manage tasks without overlap",
+      text: 'Offer staff role-specific access to manage tasks without overlap',
     },
     {
       icon: Brain,
-      text: "Use AI-powered insights to keep deliveries on time and under budget",
+      text: 'Use AI-powered insights to keep deliveries on time and under budget',
     },
   ];
 
@@ -46,7 +46,7 @@ export default function PrivatePractice() {
     >
       <div className="container mx-auto max-w-7xl">
         <div
-          className={`text-center mb-16 ${fadeInUp} ${practiceInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+          className={`text-center mb-16 ${fadeInUp} ${practiceInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
         >
           <div className="inline-flex items-center gap-2 bg-[#15941f]/10 text-[#15941f] px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300">
             <Stethoscope className="w-4 h-4" />
@@ -63,16 +63,16 @@ export default function PrivatePractice() {
 
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div
-            className={`space-y-4 ${fadeInUp} ${practiceInView ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-12"}`}
-            style={{ transitionDelay: "200ms" }}
+            className={`space-y-4 ${fadeInUp} ${practiceInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'}`}
+            style={{ transitionDelay: '200ms' }}
           >
             {features.map((feature, index) => (
               <div
                 key={index}
                 className={`flex items-start gap-4 group hover:translate-x-2 transition-all duration-300 ${fadeInUp} ${
                   practiceInView
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-8"
+                    ? 'opacity-100 translate-y-0'
+                    : 'opacity-0 translate-y-8'
                 }`}
                 style={staggerDelay(index)}
               >
@@ -87,8 +87,8 @@ export default function PrivatePractice() {
           </div>
 
           <div
-            className={`${fadeInUp} ${practiceInView ? "opacity-100 translate-x-0" : "opacity-0 translate-x-12"}`}
-            style={{ transitionDelay: "400ms" }}
+            className={`${fadeInUp} ${practiceInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'}`}
+            style={{ transitionDelay: '400ms' }}
           >
             <Card className="bg-gradient-to-br from-[#15941f]/5 to-green-50 border-0 shadow-lg hover:shadow-xl transition-all duration-500">
               <CardContent className="p-8">

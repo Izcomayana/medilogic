@@ -1,30 +1,30 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import { Shield, Lock, Users, Database } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { motion } from 'framer-motion';
+import { Shield, Lock, Users, Database } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function DataSecurity() {
   const securityMeasures = [
     {
       icon: Lock,
-      title: "SSL Encryption",
-      description: "SSL encryption for all platform communications",
+      title: 'SSL Encryption',
+      description: 'SSL encryption for all platform communications',
     },
     {
       icon: Users,
-      title: "Role-Based Access",
-      description: "Role-based access to organizational data",
+      title: 'Role-Based Access',
+      description: 'Role-based access to organizational data',
     },
     {
       icon: Shield,
-      title: "Field-Level Encryption",
-      description: "Optional field-level encryption for sensitive fields",
+      title: 'Field-Level Encryption',
+      description: 'Optional field-level encryption for sensitive fields',
     },
     {
       icon: Database,
-      title: "Regular Backups",
-      description: "Regular backups and infrastructure monitoring",
+      title: 'Regular Backups',
+      description: 'Regular backups and infrastructure monitoring',
     },
   ];
 

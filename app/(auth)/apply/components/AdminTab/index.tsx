@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import React from "react";
-import { ApplicationForm, Field } from "../ApplicationForm";
-import { CircleUserRound, Mail, Lock } from "lucide-react";
-import { useApplyAdmin } from "./useApplyAdmin";
+import React from 'react';
+import { ApplicationForm, Field } from '../ApplicationForm';
+import { CircleUserRound, Mail, Lock } from 'lucide-react';
+import { useApplyAdmin } from './useApplyAdmin';
 
 export const AdminTab = () => {
   const {
@@ -25,27 +25,27 @@ export const AdminTab = () => {
 
   const fields: Field[] = [
     {
-      label: "Full Name",
-      name: "name",
-      placeholder: "John Doe",
+      label: 'Full Name',
+      name: 'name',
+      placeholder: 'John Doe',
       icon: (
         <CircleUserRound className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
       ),
     },
     {
-      label: "Email",
-      name: "email",
-      type: "email",
-      placeholder: "admin@email.com",
+      label: 'Email',
+      name: 'email',
+      type: 'email',
+      placeholder: 'admin@email.com',
       icon: (
         <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
       ),
     },
     {
-      label: "Password",
-      name: "password",
-      type: "password",
-      placeholder: "Create your password",
+      label: 'Password',
+      name: 'password',
+      type: 'password',
+      placeholder: 'Create your password',
       icon: (
         <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
       ),
@@ -54,10 +54,10 @@ export const AdminTab = () => {
       setShow: setShowPassword,
     },
     {
-      label: "Confirm Password",
-      name: "confirmPassword",
-      type: "password",
-      placeholder: "Re-enter your password",
+      label: 'Confirm Password',
+      name: 'confirmPassword',
+      type: 'password',
+      placeholder: 'Re-enter your password',
       icon: (
         <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
       ),
@@ -66,28 +66,28 @@ export const AdminTab = () => {
       setShow: setShowConfirmPassword,
     },
     {
-      label: "Organization Type",
-      name: "orgType",
-      type: "text",
-      placeholder: "Clinic, Waste Company, etc.",
+      label: 'Organization Type',
+      name: 'orgType',
+      type: 'text',
+      placeholder: 'Clinic, Waste Company, etc.',
       icon: (
         <CircleUserRound className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
       ),
     },
     {
-      label: "Organization Name",
-      name: "orgName",
-      type: "text",
-      placeholder: "HealthCare Plus",
+      label: 'Organization Name',
+      name: 'orgName',
+      type: 'text',
+      placeholder: 'HealthCare Plus',
       icon: (
         <CircleUserRound className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
       ),
     },
     {
-      label: "Additional Message",
-      name: "adminMessage",
-      type: "textarea",
-      placeholder: "Message to Super Admin...",
+      label: 'Additional Message',
+      name: 'adminMessage',
+      type: 'textarea',
+      placeholder: 'Message to Super Admin...',
       icon: (
         <CircleUserRound className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
       ),

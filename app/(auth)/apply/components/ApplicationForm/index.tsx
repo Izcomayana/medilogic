@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -9,12 +9,12 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import Link from "next/link";
-import { InputField } from "@/app/(auth)/components/InputField";
-import CookiePopup from "@/app/(auth)/components/CookiePopup";
+} from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
+import Link from 'next/link';
+import { InputField } from '@/app/(auth)/components/InputField';
+import CookiePopup from '@/app/(auth)/components/CookiePopup';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,9 +23,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { AlertCircle } from "lucide-react";
-import React from "react";
+} from '@/components/ui/alert-dialog';
+import { AlertCircle } from 'lucide-react';
+import React from 'react';
 
 export type Field = {
   label: string;
@@ -105,13 +105,13 @@ export const ApplicationForm = ({
                 name="acceptTerms"
                 checked={acceptTerms}
                 onCheckedChange={(checked) =>
-                  handleCheckboxChange("acceptTerms", checked === true)
+                  handleCheckboxChange('acceptTerms', checked === true)
                 }
                 disabled={loading}
                 required
               />
               <Label htmlFor="terms">
-                I accept the{" "}
+                I accept the{' '}
                 <Link
                   href="/termsofuse"
                   target="_blank"
@@ -119,9 +119,9 @@ export const ApplicationForm = ({
                   className="text-[#15941f] hover:underline"
                 >
                   Terms of Use
-                </Link>{" "}
+                </Link>{' '}
                 <br className="md:hidden" />
-                and{" "}
+                and{' '}
                 <Link
                   href="/privacypolicy"
                   target="_blank"
@@ -172,7 +172,7 @@ export const ApplicationForm = ({
               The Super Admin will get back to you with the next 3 days via the
               email you provided.
               <br />
-              If you don&#39;t hear from us, then{" "}
+              If you don&#39;t hear from us, then{' '}
               <Link href="/contacts" className="underline text-[#15941f]">
                 contact support
               </Link>

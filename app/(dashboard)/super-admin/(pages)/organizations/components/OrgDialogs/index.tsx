@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   AlertDialog,
@@ -7,9 +7,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 import {
   Building2,
   Calendar,
@@ -18,9 +18,9 @@ import {
   PowerOff,
   RefreshCcw,
   Users,
-} from "lucide-react";
-import type { Organization } from "../../org";
-import { StatusBadge } from "../StatusBadge";
+} from 'lucide-react';
+import type { Organization } from '../../org';
+import { StatusBadge } from '../StatusBadge';
 
 interface ViewDialogProps {
   open: boolean;
@@ -157,7 +157,7 @@ export function OrgActionsDialog({
             Regenerate Invite Code
           </Button>
 
-          {org.status === "active" ? (
+          {org.status === 'active' ? (
             <Button
               variant="destructive"
               onClick={() => onDeactivate(org.id)}

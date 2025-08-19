@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
-import { AuthProvider } from "../auth";
+import { AppProgressBar as ProgressBar } from 'next-nprogress-bar';
+import { AuthProvider } from '../auth';
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
   return (

@@ -1,12 +1,12 @@
 // super-admin/(pages)/organizations/org.ts
 
-import axios from "axios";
+import axios from 'axios';
 
 export interface Organization {
   id: string;
   name: string;
   type: string;
-  status: "active" | "inactive";
+  status: 'active' | 'inactive';
   createdDate: string;
   userCount: number;
   description?: string;
@@ -20,23 +20,27 @@ export interface Organization {
   license_number?: string;
   waste_processing_capability?: string;
   delivery_capacity?: 0;
-  contact_person_name?: "string";
-  contact_person_role?: "string";
+  contact_person_name?: 'string';
+  contact_person_role?: 'string';
   latitude?: number;
   longitude?: number;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL; 
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 // 👆 make sure you set NEXT_PUBLIC_API_BASE_URL in your .env
 
 // ✅ Activate Organization
-export async function activateOrganization(orgId: string): Promise<Organization> {
+export async function activateOrganization(
+  orgId: string
+): Promise<Organization> {
   const res = await axios.patch(`${API_BASE}/super/${orgId}/activate`);
   return res.data;
 }
 
 // ✅ Deactivate Organization
-export async function deactivateOrganization(orgId: string): Promise<Organization> {
+export async function deactivateOrganization(
+  orgId: string
+): Promise<Organization> {
   const res = await axios.delete(`${API_BASE}/super/${orgId}`);
   return res.data;
 }
@@ -54,13 +58,21 @@ export async function fetchOrganization(orgId: string): Promise<Organization> {
 }
 
 // ✅ Create new organization
-export async function createOrganization(data: Partial<Organization>): Promise<Organization> {
+export async function createOrganization(
+  data: Partial<Organization>
+): Promise<Organization> {
   const res = await axios.post(`${API_BASE}/super/organizations`, data);
   return res.data;
 }
 
 // ✅ Update organization
-export async function updateOrganization(orgId: string, data: Partial<Organization>): Promise<Organization> {
-  const res = await axios.patch(`${API_BASE}/super/organizations/${orgId}`, data);
+export async function updateOrganization(
+  orgId: string,
+  data: Partial<Organization>
+): Promise<Organization> {
+  const res = await axios.patch(
+    `${API_BASE}/super/organizations/${orgId}`,
+    data
+  );
   return res.data;
 }

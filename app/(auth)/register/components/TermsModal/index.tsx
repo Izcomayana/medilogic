@@ -1,5 +1,5 @@
 // components/TermsModal.tsx
-import React from "react";
+import React from 'react';
 
 interface TermsModalProps {
   isOpen: boolean;

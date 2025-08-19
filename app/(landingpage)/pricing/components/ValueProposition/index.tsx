@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { fadeInUp, staggerDelay } from "@/app/(landingpage)/hooks/annimation";
-import { useInView } from "@/app/(landingpage)/hooks/useInView";
-import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle, Shield, Brain, FileText, Zap, Users } from "lucide-react";
+import { fadeInUp, staggerDelay } from '@/app/(landingpage)/hooks/annimation';
+import { useInView } from '@/app/(landingpage)/hooks/useInView';
+import { Card, CardContent } from '@/components/ui/card';
+import { CheckCircle, Shield, Brain, FileText, Zap, Users } from 'lucide-react';
 
 export default function ValueProposition() {
   const [valueRef, valueInView] = useInView(0.1);
@@ -11,28 +11,28 @@ export default function ValueProposition() {
   const valuePoints = [
     {
       icon: Shield,
-      title: "NHS-aligned & GDPR-compliant",
-      desc: "Built from the ground up for healthcare compliance",
+      title: 'NHS-aligned & GDPR-compliant',
+      desc: 'Built from the ground up for healthcare compliance',
     },
     {
       icon: Brain,
-      title: "AI-driven savings and smart scheduling",
-      desc: "Intelligent optimization reduces costs and improves efficiency",
+      title: 'AI-driven savings and smart scheduling',
+      desc: 'Intelligent optimization reduces costs and improves efficiency',
     },
     {
       icon: FileText,
-      title: "Automated reporting and full audit trails",
-      desc: "Complete transparency and compliance documentation",
+      title: 'Automated reporting and full audit trails',
+      desc: 'Complete transparency and compliance documentation',
     },
     {
       icon: Zap,
-      title: "Fast onboarding and dedicated support",
-      desc: "Get up and running quickly with expert guidance",
+      title: 'Fast onboarding and dedicated support',
+      desc: 'Get up and running quickly with expert guidance',
     },
     {
       icon: Users,
-      title: "Designed specifically for healthcare logistics",
-      desc: "Purpose-built for medical waste, deliveries, and compliance",
+      title: 'Designed specifically for healthcare logistics',
+      desc: 'Purpose-built for medical waste, deliveries, and compliance',
     },
   ];
 
@@ -43,7 +43,7 @@ export default function ValueProposition() {
     >
       <div className="container mx-auto max-w-7xl">
         <div
-          className={`text-center mb-16 ${fadeInUp} ${valueInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+          className={`text-center mb-16 ${fadeInUp} ${valueInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
         >
           <div className="inline-flex items-center gap-2 bg-[#15941f]/10 text-[#15941f] px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300">
             <CheckCircle className="w-4 h-4" />
@@ -64,8 +64,8 @@ export default function ValueProposition() {
               key={index}
               className={`group hover:shadow-xl transition-all duration-500 border-0 shadow-lg hover:-translate-y-2 ${fadeInUp} ${
                 valueInView
-                  ? "opacity-100 translate-y-0 scale-100"
-                  : "opacity-0 translate-y-12 scale-95"
+                  ? 'opacity-100 translate-y-0 scale-100'
+                  : 'opacity-0 translate-y-12 scale-95'
               }`}
               style={staggerDelay(index)}
             >
@@ -91,8 +91,8 @@ export default function ValueProposition() {
               key={index + 3}
               className={`group hover:shadow-xl transition-all duration-500 border-0 shadow-lg hover:-translate-y-2 ${fadeInUp} ${
                 valueInView
-                  ? "opacity-100 translate-y-0 scale-100"
-                  : "opacity-0 translate-y-12 scale-95"
+                  ? 'opacity-100 translate-y-0 scale-100'
+                  : 'opacity-0 translate-y-12 scale-95'
               }`}
               style={staggerDelay(index + 3)}
             >

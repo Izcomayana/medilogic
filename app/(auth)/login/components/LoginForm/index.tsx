@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Mail, Lock, Eye, EyeOff, AlertCircle, ArrowRight } from "lucide-react";
-import Link from "next/link";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Mail, Lock, Eye, EyeOff, AlertCircle, ArrowRight } from 'lucide-react';
+import Link from 'next/link';
 
 export default function LoginForm({
   email,
@@ -40,8 +40,8 @@ export default function LoginForm({
               placeholder="Enter your email"
               className={`pl-10 h-12 transition-all duration-200 focus:outline-none focus:ring-1 ${
                 errors.email
-                  ? "border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-200"
-                  : "border-gray-300 focus:border-[#15941f] focus:ring-[#15941f]/20"
+                  ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-200'
+                  : 'border-gray-300 focus:border-[#15941f] focus:ring-[#15941f]/20'
               }`}
               required
               autoComplete="email"
@@ -70,15 +70,15 @@ export default function LoginForm({
             <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
             <Input
               id="password"
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               value={password}
               ref={passwordRef}
               onChange={handlePasswordChange}
               placeholder="Enter your password"
               className={`pl-10 pr-10 h-12 transition-all duration-200 focus:outline-none focus:ring-1 ${
                 errors.password
-                  ? "border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-200"
-                  : "border-gray-300 focus:border-[#15941f] focus:ring-[#15941f]/20"
+                  ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-200'
+                  : 'border-gray-300 focus:border-[#15941f] focus:ring-[#15941f]/20'
               }`}
               required
               autoComplete="current-password"
@@ -102,7 +102,7 @@ export default function LoginForm({
         </div>
 
         {/* General Error Message */}
-        {errors.general && typeof errors.general === "string" && (
+        {errors.general && typeof errors.general === 'string' && (
           <div className="bg-red-50 border border-red-200 rounded-lg p-3">
             <div className="flex items-center space-x-2 text-red-700">
               <AlertCircle className="h-5 w-5" />
@@ -171,7 +171,7 @@ export default function LoginForm({
         {/* Divider */}
         <div className="pt-3 border-t border-gray-200">
           <p className="text-center text-sm text-gray-600">
-            Don&apos;t have an account?{" "}
+            Don&apos;t have an account?{' '}
             <Link
               href="/register"
               className="text-[#15941f] hover:text-[#117a1a] font-semibold transition-colors"
@@ -184,15 +184,15 @@ export default function LoginForm({
         {/* Additional Links */}
         <div className="text-center space-y-2">
           <p className="text-xs text-gray-500">
-            By signing in, you agree to our{" "}
+            By signing in, you agree to our{' '}
             <Link
               target="_blank"
               href="/terms"
               className="text-[#15941f] hover:underline"
             >
               Terms of Service
-            </Link>{" "}
-            and{" "}
+            </Link>{' '}
+            and{' '}
             <Link
               target="_blank"
               href="/privacy"

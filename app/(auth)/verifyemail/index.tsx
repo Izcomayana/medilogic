@@ -1,29 +1,29 @@
-"use client";
+'use client';
 
-import React, { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
-import axios from "axios";
-import Link from "next/link";
-import { AlertCircle, CheckCircle, Loader2 } from "lucide-react";
-import { HomeLogo } from "@/components/HomeLogo";
+import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import axios from 'axios';
+import Link from 'next/link';
+import { AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
+import { HomeLogo } from '@/components/HomeLogo';
 
 const VerifyEmail: React.FC = () => {
   const searchParams = useSearchParams();
-  const token = searchParams.get("token");
-  const [status, setStatus] = useState<"verifying" | "success" | "error">(
-    "verifying",
+  const token = searchParams.get('token');
+  const [status, setStatus] = useState<'verifying' | 'success' | 'error'>(
+    'verifying'
   );
 
   useEffect(() => {
     if (token) {
       axios
         .get(
-          `https://medilogic-backend.onrender.com/auth/verify-email?token=${token}`,
+          `https://medilogic-backend.onrender.com/auth/verify-email?token=${token}`
         )
-        .then(() => setStatus("success"))
-        .catch(() => setStatus("error"));
+        .then(() => setStatus('success'))
+        .catch(() => setStatus('error'));
     } else {
-      setStatus("error");
+      setStatus('error');
     }
   }, [token]);
 
@@ -35,14 +35,14 @@ const VerifyEmail: React.FC = () => {
         </div>
 
         <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100 text-center space-y-4">
-          {status === "verifying" && (
+          {status === 'verifying' && (
             <>
               <Loader2 className="mx-auto h-6 w-6 animate-spin text-gray-600" />
               <p className="text-sm text-gray-700">Verifying your email...</p>
             </>
           )}
 
-          {status === "success" && (
+          {status === 'success' && (
             <>
               <CheckCircle className="mx-auto h-6 w-6 text-green-600" />
               <p className="text-sm font-medium text-green-700">
@@ -57,7 +57,7 @@ const VerifyEmail: React.FC = () => {
             </>
           )}
 
-          {status === "error" && (
+          {status === 'error' && (
             <>
               <AlertCircle className="mx-auto h-6 w-6 text-red-600" />
               <p className="text-sm font-medium text-red-700">

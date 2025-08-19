@@ -1,27 +1,27 @@
-"use client";
+'use client';
 
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Download, FileText, BarChart3, Calendar, Filter } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
+} from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Download, FileText, BarChart3, Calendar, Filter } from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 export default function ExportPage() {
   // const [exportType, setExportType] = useState("csv")
-  const [dateRange, setDateRange] = useState("30days");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [dateRange, setDateRange] = useState('30days');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const [selectedData, setSelectedData] = useState({
     tripLogs: true,
     assignments: true,
@@ -30,46 +30,46 @@ export default function ExportPage() {
     fuelConsumption: false,
   });
 
-  const handleExport = (type: "csv" | "pdf") => {
+  const handleExport = (type: 'csv' | 'pdf') => {
     const selectedItems = Object.entries(selectedData)
       .filter(([selected]) => selected)
       .map(([key]) => key);
 
     if (selectedItems.length === 0) {
-      toast.error("Please select at least one data type to export");
+      toast.error('Please select at least one data type to export');
       return;
     }
 
     toast.success(
-      `${type.toUpperCase()} export started for ${selectedItems.length} data types`,
+      `${type.toUpperCase()} export started for ${selectedItems.length} data types`
     );
   };
 
   const exportOptions = [
     {
-      key: "tripLogs",
-      label: "Trip Logs",
-      description: "Complete trip history with routes, times, and status",
+      key: 'tripLogs',
+      label: 'Trip Logs',
+      description: 'Complete trip history with routes, times, and status',
     },
     {
-      key: "assignments",
-      label: "Driver Assignments",
-      description: "Shift assignments and driver schedules",
+      key: 'assignments',
+      label: 'Driver Assignments',
+      description: 'Shift assignments and driver schedules',
     },
     {
-      key: "complianceReports",
-      label: "Compliance Reports",
-      description: "Regulatory compliance and safety reports",
+      key: 'complianceReports',
+      label: 'Compliance Reports',
+      description: 'Regulatory compliance and safety reports',
     },
     {
-      key: "driverPerformance",
-      label: "Driver Performance",
-      description: "Performance metrics and KPIs for drivers",
+      key: 'driverPerformance',
+      label: 'Driver Performance',
+      description: 'Performance metrics and KPIs for drivers',
     },
     {
-      key: "fuelConsumption",
-      label: "Fuel Consumption",
-      description: "Fuel usage and efficiency data",
+      key: 'fuelConsumption',
+      label: 'Fuel Consumption',
+      description: 'Fuel usage and efficiency data',
     },
   ];
 
@@ -116,7 +116,7 @@ export default function ExportPage() {
               </div>
 
               {/* Custom Date Range */}
-              {dateRange === "custom" && (
+              {dateRange === 'custom' && (
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <Label className="text-gray-300">Start Date</Label>
@@ -200,7 +200,7 @@ export default function ExportPage() {
                   </div>
                 </div>
                 <Button
-                  onClick={() => handleExport("csv")}
+                  onClick={() => handleExport('csv')}
                   className="primary-button w-full"
                 >
                   <Download className="h-4 w-4 mr-2" />
@@ -220,7 +220,7 @@ export default function ExportPage() {
                   </div>
                 </div>
                 <Button
-                  onClick={() => handleExport("pdf")}
+                  onClick={() => handleExport('pdf')}
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white"
                 >
                   <Download className="h-4 w-4 mr-2" />

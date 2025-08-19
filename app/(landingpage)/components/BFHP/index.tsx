@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
 // import { useInView } from "../../hooks/useInView";
 // import { staggerDelay } from "../../hooks/annimation";
-import { Building2, Truck, Stethoscope, Recycle } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { motion } from "framer-motion";
+import { Building2, Truck, Stethoscope, Recycle } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { motion } from 'framer-motion';
 
 export const BFHP = () => {
   // const [audienceRef, audienceInView] = useInView(0.1);
@@ -12,23 +12,23 @@ export const BFHP = () => {
   const Professionals = [
     {
       icon: Building2,
-      title: "NHS clinics & hospitals",
-      desc: "Streamlined operations for public healthcare",
+      title: 'NHS clinics & hospitals',
+      desc: 'Streamlined operations for public healthcare',
     },
     {
       icon: Stethoscope,
-      title: "Private medical practices",
-      desc: "Efficient logistics for private care",
+      title: 'Private medical practices',
+      desc: 'Efficient logistics for private care',
     },
     {
       icon: Recycle,
-      title: "Medical waste disposal companies",
-      desc: "Compliant waste management solutions",
+      title: 'Medical waste disposal companies',
+      desc: 'Compliant waste management solutions',
     },
     {
       icon: Truck,
-      title: "Healthcare logistics firms",
-      desc: "Optimized delivery and transport",
+      title: 'Healthcare logistics firms',
+      desc: 'Optimized delivery and transport',
     },
   ];
   return (

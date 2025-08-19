@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Shield, Plus, Minus } from "lucide-react";
-import { fadeInUp, staggerDelay } from "@/app/(landingpage)/hooks/annimation";
-import { useInView } from "@/app/(landingpage)/hooks/useInView";
+import { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Shield, Plus, Minus } from 'lucide-react';
+import { fadeInUp, staggerDelay } from '@/app/(landingpage)/hooks/annimation';
+import { useInView } from '@/app/(landingpage)/hooks/useInView';
 
 export default function ComplianceSecuritySection() {
   const [complianceRef, complianceInView] = useInView(0.1);
@@ -12,30 +12,30 @@ export default function ComplianceSecuritySection() {
 
   const toggleExpanded = (index: number) => {
     setExpandedItems((prev) =>
-      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index],
+      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
     );
   };
 
   const faqs = [
     {
-      question: "Is Medilogic GDPR compliant?",
+      question: 'Is Medilogic GDPR compliant?',
       answer:
-        "Yes. We follow strict GDPR guidelines including user consent, data minimization, data export, and deletion features.",
+        'Yes. We follow strict GDPR guidelines including user consent, data minimization, data export, and deletion features.',
     },
     {
-      question: "Can I download my data?",
+      question: 'Can I download my data?',
       answer:
-        "Yes. Every user has the ability to download their personal or organization-specific data in PDF or CSV format.",
+        'Yes. Every user has the ability to download their personal or organization-specific data in PDF or CSV format.',
     },
     {
-      question: "What audit trails are available?",
+      question: 'What audit trails are available?',
       answer:
-        "Admins and Super Admins have full access to platform activity logs, which track all critical actions with timestamps.",
+        'Admins and Super Admins have full access to platform activity logs, which track all critical actions with timestamps.',
     },
     {
-      question: "Is data encrypted?",
+      question: 'Is data encrypted?',
       answer:
-        "Yes. All data is encrypted in transit (TLS/SSL) and optionally at the field level for sensitive records.",
+        'Yes. All data is encrypted in transit (TLS/SSL) and optionally at the field level for sensitive records.',
     },
   ];
 
@@ -46,7 +46,7 @@ export default function ComplianceSecuritySection() {
     >
       <div className="container mx-auto max-w-4xl">
         <div
-          className={`text-center mb-16 ${fadeInUp} ${complianceInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+          className={`text-center mb-16 ${fadeInUp} ${complianceInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
         >
           <div className="inline-flex items-center gap-2 bg-green-50 text-green-600 px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300">
             <Shield className="w-4 h-4" />
@@ -63,8 +63,8 @@ export default function ComplianceSecuritySection() {
               key={index}
               className={`group hover:shadow-lg transition-all duration-500 border border-gray-200 hover:border-green-300 ${fadeInUp} ${
                 complianceInView
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-8"
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-8'
               }`}
               style={staggerDelay(index)}
             >
@@ -87,8 +87,8 @@ export default function ComplianceSecuritySection() {
                 <div
                   className={`overflow-hidden transition-all duration-300 ${
                     expandedItems.includes(index)
-                      ? "max-h-96 opacity-100"
-                      : "max-h-0 opacity-0"
+                      ? 'max-h-96 opacity-100'
+                      : 'max-h-0 opacity-0'
                   }`}
                 >
                   <div className="px-6 pb-6">

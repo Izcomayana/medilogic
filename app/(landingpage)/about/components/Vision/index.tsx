@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useInView } from "../../../hooks/useInView";
-import { Card, CardContent } from "@/components/ui/card";
-import { Target, Heart, Zap } from "lucide-react";
+import { useInView } from '../../../hooks/useInView';
+import { Card, CardContent } from '@/components/ui/card';
+import { Target, Heart, Zap } from 'lucide-react';
 
 export default function VisionSection() {
   const [visionRef, visionInView] = useInView(0.1);
-  const fadeInUp = "transition-all duration-700 ease-out";
+  const fadeInUp = 'transition-all duration-700 ease-out';
 
   return (
     <section
@@ -15,7 +15,7 @@ export default function VisionSection() {
     >
       <div className="container mx-auto max-w-7xl relative">
         <div
-          className={`text-center mb-16 ${fadeInUp} ${visionInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+          className={`text-center mb-16 ${fadeInUp} ${visionInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
         >
           <div className="inline-flex items-center gap-2 bg-white/20 text-white px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300 backdrop-blur-sm">
             <Target className="w-4 h-4" />
@@ -28,8 +28,8 @@ export default function VisionSection() {
 
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div
-            className={`${fadeInUp} ${visionInView ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-12"}`}
-            style={{ transitionDelay: "200ms" }}
+            className={`${fadeInUp} ${visionInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'}`}
+            style={{ transitionDelay: '200ms' }}
           >
             <Card className="bg-white/10 border-white/20 backdrop-blur-sm hover:bg-white/20 transition-all duration-500">
               <CardContent className="p-8">
@@ -47,8 +47,8 @@ export default function VisionSection() {
           </div>
 
           <div
-            className={`space-y-6 ${fadeInUp} ${visionInView ? "opacity-100 translate-x-0" : "opacity-0 translate-x-12"}`}
-            style={{ transitionDelay: "400ms" }}
+            className={`space-y-6 ${fadeInUp} ${visionInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'}`}
+            style={{ transitionDelay: '400ms' }}
           >
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 hover:bg-white/20 transition-all duration-300">
               <div className="flex items-start gap-4">

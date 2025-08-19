@@ -1,16 +1,16 @@
 // RoleSelector.tsx
-"use client";
+'use client';
 
-import { useRegister } from "../../useRegister";
+import { useRegister } from '../../useRegister';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { ShieldUser, CarTaxiFront, AlertCircle } from "lucide-react";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/select';
+import { ShieldUser, CarTaxiFront, AlertCircle } from 'lucide-react';
+import { Label } from '@/components/ui/label';
 
 export const RoleSelector = () => {
   const { formData, handleRoleChange, loading, errors } = useRegister();
@@ -28,8 +28,8 @@ export const RoleSelector = () => {
         <SelectTrigger
           className={`w-full relative cursor-pointer pl-9 transition-all duration-200 focus:outline-none focus:ring-1 ${
             errors.role
-              ? "border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-200"
-              : "border-gray-300 focus:border-[#15941f] focus:ring-[#15941f]/20"
+              ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-200'
+              : 'border-gray-300 focus:border-[#15941f] focus:ring-[#15941f]/20'
           }`}
         >
           <SelectValue placeholder="Select Role" />

@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Table,
   TableBody,
@@ -9,16 +9,27 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Users, Eye, Edit, MoreHorizontal, Power, PowerOff } from "lucide-react";
-import { Organization, activateOrganization, deactivateOrganization } from "../../org";
-import { StatusBadge } from "../StatusBadge";
+} from '@/components/ui/dropdown-menu';
+import {
+  Users,
+  Eye,
+  Edit,
+  MoreHorizontal,
+  Power,
+  PowerOff,
+} from 'lucide-react';
+import {
+  Organization,
+  activateOrganization,
+  deactivateOrganization,
+} from '../../org';
+import { StatusBadge } from '../StatusBadge';
 
 interface Props {
   organizations: Organization[];
@@ -38,7 +49,7 @@ export default function OrganizationTable({
   const handleToggleStatus = async (org: Organization) => {
     setLoadingId(org.id);
     try {
-      if (org.status === "active") {
+      if (org.status === 'active') {
         await deactivateOrganization(org.id);
       } else {
         await activateOrganization(org.id);
@@ -49,7 +60,7 @@ export default function OrganizationTable({
         onRefresh();
       }
     } catch (err) {
-      console.error("Failed to toggle organization status:", err);
+      console.error('Failed to toggle organization status:', err);
     } finally {
       setLoadingId(null);
     }
@@ -120,22 +131,26 @@ export default function OrganizationTable({
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         className={`cursor-pointer ${
-                          org.status === "active"
-                            ? "text-orange-400 hover:bg-gray-600"
-                            : "text-green-400 hover:bg-gray-600"
+                          org.status === 'active'
+                            ? 'text-orange-400 hover:bg-gray-600'
+                            : 'text-green-400 hover:bg-gray-600'
                         }`}
                         onClick={() => handleToggleStatus(org)}
                         disabled={loadingId === org.id}
                       >
-                        {org.status === "active" ? (
+                        {org.status === 'active' ? (
                           <>
                             <PowerOff className="mr-2 h-4 w-4" />
-                            {loadingId === org.id ? "Processing..." : "Deactivate"}
+                            {loadingId === org.id
+                              ? 'Processing...'
+                              : 'Deactivate'}
                           </>
                         ) : (
                           <>
                             <Power className="mr-2 h-4 w-4" />
-                            {loadingId === org.id ? "Processing..." : "Activate"}
+                            {loadingId === org.id
+                              ? 'Processing...'
+                              : 'Activate'}
                           </>
                         )}
                       </DropdownMenuItem>
