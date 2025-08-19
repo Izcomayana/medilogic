@@ -100,7 +100,7 @@ export default function Dashboard() {
 
     fetchOrganizations();
     fetchRegulators();
-  }, [token, refreshAccessToken, setToken]);
+  }, [token, refreshAccessToken, setToken, orgs]);
 
   const stats = [
     {
