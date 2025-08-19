@@ -70,4 +70,13 @@
     "url": "https://github.com/Izcomayana/medilogic/issues"
   },
   "homepage": "https://github.com/Izcomayana/medilogic#readme"
+{
+  "scripts": {
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,css,md}": "prettier --write"
+  }
+}
+
 }
