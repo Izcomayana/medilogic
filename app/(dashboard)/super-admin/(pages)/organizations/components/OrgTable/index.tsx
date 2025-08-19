@@ -54,11 +54,7 @@ export default function OrganizationTable({
       } else {
         await activateOrganization(org.id);
       }
-
-      // Update local state so status changes immediately
-      if (onRefresh) {
-        onRefresh();
-      }
+      if (onRefresh) onRefresh();
     } catch (err) {
       console.error('Failed to toggle organization status:', err);
     } finally {
