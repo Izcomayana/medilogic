@@ -25,7 +25,7 @@
 //           setSelectedOrg(org);
 //           setViewOpen(true);
 //         }}
-//         onEdit={(org) => {git 
+//         onEdit={(org) => {git
 //           setSelectedOrg(org);
 //           setEditOpen(true);
 //         }}
