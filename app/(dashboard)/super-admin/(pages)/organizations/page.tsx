@@ -19,6 +19,17 @@ import {
   SelectContent,
   SelectItem,
 } from '@/components/ui/select';
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from '@/components/ui/alert-dialog';
 
 export default function OrganizationsPage() {
   const {
@@ -39,8 +50,9 @@ export default function OrganizationsPage() {
     selectedOrg,
     closeView,
     closeEdit,
+    deleteOrg,
+    setSelectedOrg,
   } = useOrganizations();
-
   const MemoizedOrgTable = React.memo(OrganizationTable);
 
   return (
@@ -101,8 +113,44 @@ export default function OrganizationsPage() {
                 organizations={filteredOrgs}
                 onView={viewOrg}
                 onEdit={editOrg}
+                onDelete={(orgId) =>
+                  setSelectedOrg(
+                    filteredOrgs.find((o) => o.id === orgId) || null
+                  )
+                }
               />
             )}
+
+            <AlertDialog
+              open={!!selectedOrg}
+              onOpenChange={() => setSelectedOrg(null)}
+            >
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Delete {selectedOrg?.name}?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete
+                    the organization and remove all related data.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel onClick={() => setSelectedOrg(null)}>
+                    Cancel
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    className="bg-red-600 hover:bg-red-700"
+                    onClick={() => {
+                      if (selectedOrg) deleteOrg(selectedOrg.id);
+                      setSelectedOrg(null);
+                    }}
+                  >
+                    Yes, Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
 
             {viewOpen && selectedOrg && (
               <ViewOrganizationDialog

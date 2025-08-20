@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -19,18 +18,19 @@ import {
 import { Users, Eye, Edit, MoreHorizontal, Trash2 } from 'lucide-react';
 import { Organization } from '../../org';
 import { StatusBadge } from '../StatusBadge';
-import { useOrganizations } from '@/hooks/useOrg';
 
 interface Props {
   organizations: Organization[];
   onView: (org: Organization) => void;
   onEdit: (org: Organization) => void;
+  onDelete: (orgId: string) => void; // <-- add this
 }
 
 export default function OrganizationTable({
   organizations,
   onView,
   onEdit,
+  onDelete,
 }: Props) {
   return (
     <div className="rounded-md border border-gray-700">
@@ -95,8 +95,8 @@ export default function OrganizationTable({
                         Edit
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        className="cursor-pointer text-orange-700 hover:bg-gray-600"
-                        // onClick={() => deleteOrg(org.id)}
+                        className="cursor-pointer text-red-600 hover:bg-gray-600"
+                        onClick={() => onDelete(org.id)}
                       >
                         <Trash2 className="mr-2 h-4 w-4" />
                         Delete

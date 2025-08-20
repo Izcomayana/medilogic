@@ -325,48 +325,82 @@ export function useOrganizations() {
     [token, refreshAccessToken]
   );
 
-const regenerateInviteCode = useCallback(
-  async (orgId: string) => {
-    try {
-      let validToken = token;
-      if (!validToken || isTokenExpired(validToken)) {
-        const refreshed = await refreshAccessToken();
-        if (!refreshed) {
-          toast.error("Authentication expired. Please log in again.");
-          return;
+  const regenerateInviteCode = useCallback(
+    async (orgId: string) => {
+      try {
+        let validToken = token;
+        if (!validToken || isTokenExpired(validToken)) {
+          const refreshed = await refreshAccessToken();
+          if (!refreshed) {
+            toast.error('Authentication expired. Please log in again.');
+            return;
+          }
+          validToken = refreshed;
         }
-        validToken = refreshed;
+
+        const res = await axios.post(
+          `https://medilogic-backend.onrender.com/super/${orgId}/regenerate-code`,
+          {},
+          {
+            headers: { Authorization: `Bearer ${validToken}` },
+          }
+        );
+
+        const newCode = res.data?.new_invite_code;
+
+        // Update the org in local state
+        setOrgs((prev) =>
+          prev.map((o) => (o.id === orgId ? { ...o, invite_code: newCode } : o))
+        );
+        closeEdit();
+        toast.success(
+          `Invite code regenerated successfully 🎉\nNew code: ${newCode}`
+        );
+      } catch (err: any) {
+        console.error('Failed to regenerate invite code:', err);
+        const msg =
+          err?.response?.data?.detail ||
+          err.message ||
+          'Failed to regenerate invite code';
+        toast.error(msg);
       }
+    },
+    [token, refreshAccessToken]
+  );
 
-      const res = await axios.post(
-        `https://medilogic-backend.onrender.com/super/${orgId}/regenerate-code`,
-        {},
-        {
-          headers: { Authorization: `Bearer ${validToken}` },
+  const deleteOrg = useCallback(
+    async (orgId: string) => {
+      try {
+        let validToken = token;
+        if (!validToken || isTokenExpired(validToken)) {
+          const refreshed = await refreshAccessToken();
+          if (!refreshed) {
+            toast.error('Authentication expired. Please log in again.');
+            return;
+          }
+          validToken = refreshed;
         }
-      );
 
-      const newCode = res.data?.new_invite_code;
+        await axios.delete(
+          `https://medilogic-backend.onrender.com/super/organizations/${orgId}/permanent`,
+          { headers: { Authorization: `Bearer ${validToken}` } }
+        );
 
-      // Update the org in local state
-      setOrgs((prev) =>
-        prev.map((o) =>
-          o.id === orgId ? { ...o, invite_code: newCode } : o
-        )
-      );
-      closeEdit();
-     toast.success(`Invite code regenerated successfully 🎉\nNew code: ${newCode}`);
-    } catch (err: any) {
-      console.error("Failed to regenerate invite code:", err);
-      const msg =
-        err?.response?.data?.detail ||
-        err.message ||
-        "Failed to regenerate invite code";
-      toast.error(msg);
-    }
-  },
-  [token, refreshAccessToken]
-);
+        // ✅ Just remove locally, don’t refetch whole list
+        setOrgs((prev) => prev.filter((o) => o.id !== orgId));
+
+        toast.success('Organization permanently deleted 🗑️');
+      } catch (err: any) {
+        console.error('Failed to delete org:', err);
+        const msg =
+          err?.response?.data?.detail ||
+          err.message ||
+          'Failed to delete organization';
+        toast.error(msg);
+      }
+    },
+    [token, refreshAccessToken]
+  );
 
   // Close dialogs
   const closeView = () => {
@@ -390,12 +424,14 @@ const regenerateInviteCode = useCallback(
     viewOpen,
     editOpen,
     selectedOrg,
+    setSelectedOrg,
     editFormData,
     createOrg,
     viewOrg,
     editOrg,
     activateOrg,
     deactivateOrg,
+    deleteOrg,
     regenerateInviteCode,
     closeView,
     closeEdit,
