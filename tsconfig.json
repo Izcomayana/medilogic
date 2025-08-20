@@ -19,7 +19,6 @@
       "@/*": ["./*"]
     }
   },
-<<<<<<< HEAD
   "include": [
     "next-env.d.ts",
     "**/*.ts",
@@ -27,9 +26,6 @@
     ".next/types/**/*.ts",
     "components/Providers"
   ],
-=======
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
->>>>>>> 014fe597c8eecf9ee0a0a245df45b4e2d58f882c
   "exclude": ["node_modules"]
 }
 
