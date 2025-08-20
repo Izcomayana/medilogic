@@ -102,10 +102,6 @@ export default function OrganizationsPage() {
                 organizations={filteredOrgs}
                 onView={viewOrg}
                 onEdit={editOrg}
-                onDeactivate={deactivateOrg}
-                viewOpen={false}
-                selectedOrg={selectedOrg}
-                editFormData={editFormData}
               />
             )}
 
