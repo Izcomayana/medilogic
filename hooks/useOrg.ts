@@ -325,9 +325,48 @@ export function useOrganizations() {
     [token, refreshAccessToken]
   );
 
-  const regenerateInviteCode = useCallback((orgName: string) => {
-    toast.success(`Invite code regenerated for ${orgName}`);
-  }, []);
+const regenerateInviteCode = useCallback(
+  async (orgId: string) => {
+    try {
+      let validToken = token;
+      if (!validToken || isTokenExpired(validToken)) {
+        const refreshed = await refreshAccessToken();
+        if (!refreshed) {
+          toast.error("Authentication expired. Please log in again.");
+          return;
+        }
+        validToken = refreshed;
+      }
+
+      const res = await axios.post(
+        `https://medilogic-backend.onrender.com/super/${orgId}/regenerate-code`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${validToken}` },
+        }
+      );
+
+      const newCode = res.data?.new_invite_code;
+
+      // Update the org in local state
+      setOrgs((prev) =>
+        prev.map((o) =>
+          o.id === orgId ? { ...o, invite_code: newCode } : o
+        )
+      );
+      closeEdit();
+     toast.success(`Invite code regenerated successfully 🎉\nNew code: ${newCode}`);
+    } catch (err: any) {
+      console.error("Failed to regenerate invite code:", err);
+      const msg =
+        err?.response?.data?.detail ||
+        err.message ||
+        "Failed to regenerate invite code";
+      toast.error(msg);
+    }
+  },
+  [token, refreshAccessToken]
+);
 
   // Close dialogs
   const closeView = () => {
