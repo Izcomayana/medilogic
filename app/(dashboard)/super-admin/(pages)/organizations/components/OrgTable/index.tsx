@@ -37,6 +37,7 @@ import {
   MoreHorizontal,
 } from "lucide-react";
 import { ViewOrganizationDialog, EditOrganizationDialog } from "../OrgDialogs";
+import { FC } from "react";
 
 interface Props {
   organizations: Organization[];
@@ -79,7 +80,7 @@ const getStatusBadge = (status: string) => {
   }
 };
 
-export default function OrganizationTable({
+const OrganizationTable: FC<Props> = ({
   organizations,
   onRegenerate,
   onView,
@@ -93,7 +94,7 @@ export default function OrganizationTable({
   closeEdit,
   onEditChange,
   onEditSave,
-}: Props) {
+}) => {
   return (
     <div className="rounded-md border border-gray-700">
       <Table>
@@ -195,4 +196,6 @@ export default function OrganizationTable({
       />
     </div>
   );
-}
+};
+
+export default OrganizationTable;
