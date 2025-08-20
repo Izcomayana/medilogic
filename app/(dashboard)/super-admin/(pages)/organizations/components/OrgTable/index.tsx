@@ -131,7 +131,7 @@ export default function OrganizationTable({
                             ? 'text-orange-400 hover:bg-gray-600'
                             : 'text-green-400 hover:bg-gray-600'
                         }`}
-                        // onClick={() => handleToggleStatus(org)}
+                        onClick={() => handleToggleStatus(org)}
                         disabled={loadingId === org.id}
                       >
                         {org.status === 'active' ? (
