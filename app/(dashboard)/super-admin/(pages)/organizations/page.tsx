@@ -31,6 +31,8 @@ import {
 } from '@/components/ui/alert-dialog';
 
 export default function OrganizationsPage() {
+  const [deleteOpen, setDeleteOpen] = React.useState(false);
+
   const {
     filteredOrgs,
     loading,
@@ -52,6 +54,7 @@ export default function OrganizationsPage() {
     deleteOrg,
     setSelectedOrg,
   } = useOrganizations();
+
   const MemoizedOrgTable = React.memo(OrganizationTable);
 
   return (
@@ -112,18 +115,16 @@ export default function OrganizationsPage() {
                 organizations={filteredOrgs}
                 onView={viewOrg}
                 onEdit={editOrg}
-                onDelete={(orgId) =>
+                onDelete={(orgId) => {
                   setSelectedOrg(
                     filteredOrgs.find((o) => o.id === orgId) || null
-                  )
-                }
+                  );
+                  setDeleteOpen(true);
+                }}
               />
             )}
 
-            <AlertDialog
-              open={!!selectedOrg}
-              onOpenChange={() => setSelectedOrg(null)}
-            >
+            <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>
@@ -135,13 +136,14 @@ export default function OrganizationsPage() {
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel onClick={() => setSelectedOrg(null)}>
+                  <AlertDialogCancel onClick={() => setDeleteOpen(false)}>
                     Cancel
                   </AlertDialogCancel>
                   <AlertDialogAction
                     className="bg-red-600 hover:bg-red-700"
                     onClick={() => {
                       if (selectedOrg) deleteOrg(selectedOrg.id);
+                      setDeleteOpen(false);
                       setSelectedOrg(null);
                     }}
                   >
