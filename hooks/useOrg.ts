@@ -1,161 +1,3 @@
-// // /organizations/hooks/useOrganizations.ts
-// "use client";
-
-// import { useState, useEffect, useMemo, useCallback } from "react";
-// import { toast } from "sonner";
-// import axios from "axios";
-// import { Organization } from "../app/(dashboard)/super-admin/(pages)/organizations/org";
-// import { useAuth } from "@/components/auth";
-// import { isTokenExpired } from "@/hooks/token";
-
-// export function useOrganizations() {
-//   const [orgs, setOrgs] = useState<Organization[]>([]);
-//   const [loading, setLoading] = useState(true);
-//   const { token, refreshAccessToken } = useAuth();
-//   const [searchTerm, setSearchTerm] = useState("");
-//   const [statusFilter, setStatusFilter] = useState("all");
-
-//   // Fetch organizations
-//   useEffect(() => {
-//     if (!token) return;
-//     let isMounted = true;
-
-//     const fetchOrgs = async () => {
-//       setLoading(true);
-//       let validToken = token;
-
-//       if (isTokenExpired(validToken)) {
-//         const refreshed = await refreshAccessToken();
-//         if (!refreshed) return;
-//         validToken = refreshed;
-//       }
-
-//       try {
-//         const res = await axios.get(
-//           "https://medilogic-backend.onrender.com/super/organizations",
-//           { headers: { Authorization: `Bearer ${validToken}` } }
-//         );
-
-//         if (!isMounted) return;
-
-//         type ApiOrg = {
-//           id: string;
-//           name: string;
-//           invite_code: string;
-//           ico_registered: boolean;
-//           data_retention_years: number;
-//           type: string;
-//           is_active: boolean;
-//           created_at: string;
-//           user_count: number;
-//         };
-
-//         const mapped: Organization[] = (res.data as ApiOrg[]).map((o) => ({
-//           id: o.id,
-//           name: o.name,
-//           type: o.type,
-//           status: o.is_active ? "active" : "inactive",
-//           userCount: o.user_count ?? 0,
-//           createdDate: new Date(o.created_at).toLocaleDateString(),
-//           invite_code: o.invite_code,
-//           ico_registered: o.ico_registered,
-//           data_retention_years: o.data_retention_years,
-//         }));
-
-//         setOrgs(mapped);
-//       } catch (e: any) {
-//         console.error("Failed to load organizations:", e?.response?.data?.detail || e.message);
-//       } finally {
-//         if (isMounted) setLoading(false);
-//       }
-//     };
-
-//     fetchOrgs();
-//     return () => {
-//       isMounted = false;
-//     };
-//   }, [token, refreshAccessToken]);
-
-//   // Filtered orgs
-//   const filteredOrgs = useMemo(() => {
-//     return orgs.filter((org) => {
-//       const matchesSearch =
-//         org.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-//         org.type.toLowerCase().includes(searchTerm.toLowerCase());
-
-//       if (statusFilter === "all") return matchesSearch;
-//       return matchesSearch && org.status?.toLowerCase() === statusFilter.toLowerCase();
-//     });
-//   }, [orgs, searchTerm, statusFilter]);
-
-//   // Create org
-//   const createOrg = async (orgData: any) => {
-//     try {
-//       let validToken = token;
-//       if (!validToken || isTokenExpired(validToken)) {
-//         const refreshed = await refreshAccessToken();
-//         if (!refreshed) {
-//           toast.error("Authentication expired. Please log in again.");
-//           return;
-//         }
-//         validToken = refreshed;
-//       }
-
-//       const res = await axios.post(
-//         "https://medilogic-backend.onrender.com/super/organizations",
-//         orgData,
-//         {
-//           headers: {
-//             Authorization: `Bearer ${validToken}`,
-//             "Content-Type": "application/json",
-//           },
-//         }
-//       );
-
-//       setOrgs((prev) => [
-//         ...prev,
-//         {
-//           id: res.data.id,
-//           name: res.data.name,
-//           type: res.data.type,
-//           status: res.data.is_active ? "active" : "inactive",
-//           userCount: res.data.user_count ?? 0,
-//           createdDate: new Date(res.data.created_at).toLocaleDateString(),
-//           invite_code: res.data.invite_code,
-//           ico_registered: res.data.ico_registered,
-//           data_retention_years: res.data.data_retention_years,
-//         },
-//       ]);
-
-//       toast.success("Organization created successfully");
-//     } catch (err: any) {
-//       const detail = err?.response?.data?.detail;
-//       const msg = Array.isArray(detail)
-//         ? detail.map((d: any) => d.msg).join(" • ")
-//         : detail || err.message || "Failed to create organization";
-//       toast.error(msg);
-//       throw err;
-//     }
-//   };
-
-//   // Deactivate org (UI only here)
-//   const deactivateOrg = useCallback((orgName: string) => {
-//     toast.success(`${orgName} has been deactivated`);
-//   }, []);
-
-//   return {
-//     orgs,
-//     filteredOrgs,
-//     loading,
-//     searchTerm,
-//     setSearchTerm,
-//     statusFilter,
-//     setStatusFilter,
-//     createOrg,
-//     deactivateOrg,
-//   };
-// }
-
 // /organizations/hooks/useOrganizations.ts
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
@@ -407,16 +249,84 @@ export function useOrganizations() {
   };
 
   // Misc actions
-  const activateOrg = useCallback((orgName: string) => {
-    toast.success(`${orgName} has been activated useOrg`);
-  }, []);
+  const activateOrg = useCallback(
+    async (orgId: string) => {
+      try {
+        let validToken = token;
+        if (!validToken || isTokenExpired(validToken)) {
+          const refreshed = await refreshAccessToken();
+          if (!refreshed) {
+            toast.error('Authentication expired. Please log in again.');
+            return;
+          }
+          validToken = refreshed;
+        }
 
-  const deactivateOrg = useCallback((orgName: string) => {
-    toast.success(`${orgName} has been deactivated useOrg`);
-  }, []);
+        const res = await axios.patch(
+          `https://medilogic-backend.onrender.com/super/${orgId}/activate`,
+          {},
+          {
+            headers: { Authorization: `Bearer ${validToken}` },
+          }
+        );
+
+        // Update local state (mark org as active)
+        setOrgs((prev) =>
+          prev.map((o) => (o.id === orgId ? { ...o, status: 'active' } : o))
+        );
+
+        closeEdit();
+        toast.success('Organization activated successfully');
+      } catch (err: any) {
+        console.error('Failed to activate organization:', err);
+        const msg =
+          err?.response?.data?.detail ||
+          err.message ||
+          'Failed to activate organization';
+        toast.error(msg);
+      }
+    },
+    [token, refreshAccessToken]
+  );
+
+  const deactivateOrg = useCallback(
+    async (orgId: string) => {
+      try {
+        let validToken = token;
+        if (!validToken || isTokenExpired(validToken)) {
+          const refreshed = await refreshAccessToken();
+          if (!refreshed) {
+            toast.error('Authentication expired. Please log in again.');
+            return;
+          }
+          validToken = refreshed;
+        }
+
+        await axios.delete(
+          `https://medilogic-backend.onrender.com/super/${orgId}`,
+          {
+            headers: { Authorization: `Bearer ${validToken}` },
+          }
+        );
+
+        // update local state after successful deletion
+        setOrgs((prev) => prev.filter((o) => o.id !== orgId));
+        closeEdit();
+        toast.success('Organization deactivated successfully');
+      } catch (err: any) {
+        console.error('Failed to deactivate organization:', err);
+        const msg =
+          err?.response?.data?.detail ||
+          err.message ||
+          'Failed to deactivate organization';
+        toast.error(msg);
+      }
+    },
+    [token, refreshAccessToken]
+  );
 
   const regenerateInviteCode = useCallback((orgName: string) => {
-    toast.success(`Invite code regenerated for ${orgName} useOrg`);
+    toast.success(`Invite code regenerated for ${orgName}`);
   }, []);
 
   // Close dialogs
