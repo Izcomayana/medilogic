@@ -54,11 +54,7 @@ export default function OrganizationTable({
       } else {
         await activateOrganization(org.id);
       }
-
-      // Update local state so status changes immediately
-      if (onRefresh) {
-        onRefresh();
-      }
+      if (onRefresh) onRefresh();
     } catch (err) {
       console.error('Failed to toggle organization status:', err);
     } finally {
@@ -135,7 +131,7 @@ export default function OrganizationTable({
                             ? 'text-orange-400 hover:bg-gray-600'
                             : 'text-green-400 hover:bg-gray-600'
                         }`}
-                        onClick={() => handleToggleStatus(org)}
+                        // onClick={() => handleToggleStatus(org)}
                         disabled={loadingId === org.id}
                       >
                         {org.status === 'active' ? (
