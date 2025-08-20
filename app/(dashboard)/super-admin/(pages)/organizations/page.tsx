@@ -37,7 +37,6 @@ export default function OrganizationsPage() {
     viewOpen,
     editOpen,
     selectedOrg,
-    editFormData,
     closeView,
     closeEdit,
   } = useOrganizations();
