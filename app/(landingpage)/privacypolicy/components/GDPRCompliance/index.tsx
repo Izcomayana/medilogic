@@ -1,35 +1,35 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import { CheckCircle, Eye, Edit, Trash2, Ban, Download } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { motion } from 'framer-motion';
+import { CheckCircle, Eye, Edit, Trash2, Ban, Download } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function GDPRCompliance() {
   const gdprRights = [
     {
       icon: Eye,
-      title: "Access Your Data",
-      description: "Access your personal data",
+      title: 'Access Your Data',
+      description: 'Access your personal data',
     },
     {
       icon: Edit,
-      title: "Correct Data",
-      description: "Correct inaccurate or incomplete data",
+      title: 'Correct Data',
+      description: 'Correct inaccurate or incomplete data',
     },
     {
       icon: Trash2,
-      title: "Request Deletion",
+      title: 'Request Deletion',
       description: 'Request deletion ("right to be forgotten")',
     },
     {
       icon: Ban,
-      title: "Object to Processing",
-      description: "Object to processing in certain circumstances",
+      title: 'Object to Processing',
+      description: 'Object to processing in certain circumstances',
     },
     {
       icon: Download,
-      title: "Data Portability",
-      description: "Request data portability",
+      title: 'Data Portability',
+      description: 'Request data portability',
     },
   ];
 
@@ -96,7 +96,7 @@ export default function GDPRCompliance() {
                   Exercise Your Rights
                 </h3>
                 <p className="text-gray-700 leading-relaxed">
-                  You can exercise these rights by contacting us at{" "}
+                  You can exercise these rights by contacting us at{' '}
                   <a
                     href="mailto:support@medilogicapp.com"
                     className="text-[#15941f] hover:text-[#117a1a] font-medium transition-colors"

@@ -1,8 +1,8 @@
-import React from "react";
-import { useInView } from "../../app/(landingpage)/hooks/useInView";
-import { fadeInUp } from "../../app/(landingpage)/hooks/annimation";
-import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import React from 'react';
+import { useInView } from '../../app/(landingpage)/hooks/useInView';
+import { fadeInUp } from '../../app/(landingpage)/hooks/annimation';
+import { ArrowRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 type CTAProps = {
   badgeText: string;
@@ -30,7 +30,7 @@ export const CTA: React.FC<CTAProps> = ({
 
       <div className="container mx-auto max-w-4xl text-center relative">
         <div
-          className={`${fadeInUp} ${ctaInView ? "opacity-100 translate-y-0 scale-100" : "opacity-0 translate-y-12 scale-95"}`}
+          className={`${fadeInUp} ${ctaInView ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'}`}
         >
           <div className="inline-flex items-center gap-2 bg-white/20 text-white px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300 backdrop-blur-sm">
             {badgeIcon}
@@ -41,8 +41,8 @@ export const CTA: React.FC<CTAProps> = ({
             <p className="">{subText}</p>
           </div>
           <div
-            className={`flex flex-col sm:flex-row gap-6 justify-center items-center mt-12 ${fadeInUp} ${ctaInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
-            style={{ transitionDelay: "300ms" }}
+            className={`flex flex-col sm:flex-row gap-6 justify-center items-center mt-12 ${fadeInUp} ${ctaInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+            style={{ transitionDelay: '300ms' }}
           >
             <Button
               size="lg"

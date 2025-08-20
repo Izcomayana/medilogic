@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { AlertCircle, ArrowRight, Eye, EyeOff, Lock } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
-import { HomeLogo } from "@/components/HomeLogo";
+import React, { useState } from 'react';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { AlertCircle, ArrowRight, Eye, EyeOff, Lock } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { HomeLogo } from '@/components/HomeLogo';
 
 const Resetpassword: React.FC = () => {
   const router = useRouter();
@@ -17,8 +17,8 @@ const Resetpassword: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
-    password: "",
-    confirmPassword: "",
+    password: '',
+    confirmPassword: '',
   });
 
   const [errors, setErrors] = useState<{
@@ -31,15 +31,15 @@ const Resetpassword: React.FC = () => {
     const newErrors: typeof errors = {};
 
     if (!formData.password.trim()) {
-      newErrors.password = "Password is required";
+      newErrors.password = 'Password is required';
     } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
+      newErrors.password = 'Password must be at least 6 characters';
     }
 
     if (!formData.confirmPassword.trim()) {
-      newErrors.confirmPassword = "Please confirm your password";
+      newErrors.confirmPassword = 'Please confirm your password';
     } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
+      newErrors.confirmPassword = 'Passwords do not match';
     }
 
     setErrors(newErrors);
@@ -47,7 +47,7 @@ const Resetpassword: React.FC = () => {
   };
 
   const searchParams = useSearchParams();
-  const token = searchParams.get("token");
+  const token = searchParams.get('token');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,37 +57,37 @@ const Resetpassword: React.FC = () => {
 
     try {
       const res = await fetch(
-        "https://medilogic-backend.onrender.com/access/reset-password",
+        'https://medilogic-backend.onrender.com/access/reset-password',
         {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             new_password: formData.password,
             token,
           }),
-        },
+        }
       );
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.message || "Failed to reset password");
+        throw new Error(data.message || 'Failed to reset password');
       }
 
       setSuccessMessage(
-        "✅ Password has been successfully reset. You may now log in.",
+        '✅ Password has been successfully reset. You may now log in.'
       );
-      setFormData({ password: "", confirmPassword: "" });
-      setTimeout(() => router.push("/login"), 1500);
+      setFormData({ password: '', confirmPassword: '' });
+      setTimeout(() => router.push('/login'), 1500);
     } catch (error: unknown) {
       const err = error as { response?: { data?: { detail?: string } } };
       if (err.response?.data?.detail) {
-        setErrors({ general: err.response.data.detail || "Login failed." });
+        setErrors({ general: err.response.data.detail || 'Login failed.' });
       } else {
         setErrors({
-          general: "An error occurred while requesting password reset.",
+          general: 'An error occurred while requesting password reset.',
         });
       }
     } finally {
@@ -123,7 +123,7 @@ const Resetpassword: React.FC = () => {
                 <Input
                   id="password"
                   name="password"
-                  type={showPassword ? "text" : "password"}
+                  type={showPassword ? 'text' : 'password'}
                   placeholder="New password"
                   value={formData.password}
                   onChange={(e) =>
@@ -133,8 +133,8 @@ const Resetpassword: React.FC = () => {
                   autoComplete="password"
                   className={`pl-10 h-12 transition-all duration-200 focus:outline-none focus:ring-1 ${
                     errors.password
-                      ? "border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-200"
-                      : "border-gray-300 focus:border-[#15941f] focus:ring-[#15941f]/20"
+                      ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-200'
+                      : 'border-gray-300 focus:border-[#15941f] focus:ring-[#15941f]/20'
                   }`}
                 />
                 <Button
@@ -171,7 +171,7 @@ const Resetpassword: React.FC = () => {
                 <Input
                   id="confirmpassword"
                   name="confirmpassword"
-                  type={showConfirmPassword ? "text" : "password"}
+                  type={showConfirmPassword ? 'text' : 'password'}
                   placeholder="Confirm new password"
                   value={formData.confirmPassword}
                   onChange={(e) =>
@@ -184,8 +184,8 @@ const Resetpassword: React.FC = () => {
                   autoComplete="confirm password"
                   className={`pl-10 h-12 transition-all duration-200 focus:outline-none focus:ring-1 ${
                     errors.confirmPassword
-                      ? "border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-200"
-                      : "border-gray-300 focus:border-[#15941f] focus:ring-[#15941f]/20"
+                      ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-200'
+                      : 'border-gray-300 focus:border-[#15941f] focus:ring-[#15941f]/20'
                   }`}
                 />
                 <Button

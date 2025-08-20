@@ -1,19 +1,7 @@
-"use client";
+'use client';
 
-export interface Organization {
-  id: number;
-  name: string;
-  type: string;
-  status: string;
-  createdDate: string;
-  userCount: number;
-  description: string;
-  address: string;
-  phone: string;
-  email: string;
-}
-
-import { Button } from "@/components/ui/button";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Table,
   TableBody,
@@ -21,80 +9,63 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 import {
   Users,
-  RotateCcw,
   Eye,
   Edit,
-  Trash2,
   MoreHorizontal,
-} from "lucide-react";
-import { ViewOrganizationDialog, EditOrganizationDialog } from "../OrgDialogs";
-import { FC } from "react";
+  Power,
+  PowerOff,
+} from 'lucide-react';
+import {
+  Organization,
+  activateOrganization,
+  deactivateOrganization,
+} from '../../org';
+import { StatusBadge } from '../StatusBadge';
 
 interface Props {
   organizations: Organization[];
-  onRegenerate: (name: string) => void;
   onView: (org: Organization) => void;
   onEdit: (org: Organization) => void;
-  onDeactivate: (name: string) => void;
-  viewOpen: boolean;
-  editOpen: boolean;
-  selectedOrg: Organization | null;
-  editFormData: Organization;
-  closeView: () => void;
-  closeEdit: () => void;
-  onEditChange: (data: Partial<Organization>) => void;
-  onEditSave: () => void;
+  onRefresh?: () => void;
 }
 
-const getStatusBadge = (status: string) => {
-  switch (status.toLowerCase()) {
-    case "active":
-      return (
-        <span className="bg-[#15941f] text-white px-2 py-1 rounded text-xs">
-          Active
-        </span>
-      );
-    case "pending":
-      return (
-        <span className="bg-yellow-500 text-white px-2 py-1 rounded text-xs">
-          Pending
-        </span>
-      );
-    case "inactive":
-      return (
-        <span className="bg-red-600 text-white px-2 py-1 rounded text-xs">
-          Inactive
-        </span>
-      );
-    default:
-      return <span className="border px-2 py-1 rounded text-xs">{status}</span>;
-  }
-};
-
-const OrganizationTable: FC<Props> = ({
+export default function OrganizationTable({
   organizations,
-  onRegenerate,
   onView,
   onEdit,
-  onDeactivate,
-  viewOpen,
-  editOpen,
-  selectedOrg,
-  editFormData,
-  closeView,
-  closeEdit,
-  onEditChange,
-  onEditSave,
-}) => {
+  onRefresh,
+}: Props) {
+  const [loadingId, setLoadingId] = useState<string | null>(null);
+
+  const handleToggleStatus = async (org: Organization) => {
+    setLoadingId(org.id);
+    try {
+      if (org.status === 'active') {
+        await deactivateOrganization(org.id);
+      } else {
+        await activateOrganization(org.id);
+      }
+
+      // Update local state so status changes immediately
+      if (onRefresh) {
+        onRefresh();
+      }
+    } catch (err) {
+      console.error('Failed to toggle organization status:', err);
+    } finally {
+      setLoadingId(null);
+    }
+  };
+
   return (
     <div className="rounded-md border border-gray-700">
       <Table>
@@ -118,7 +89,9 @@ const OrganizationTable: FC<Props> = ({
                 {org.name}
               </TableCell>
               <TableCell className="text-gray-300">{org.type}</TableCell>
-              <TableCell>{getStatusBadge(org.status)}</TableCell>
+              <TableCell>
+                <StatusBadge status={org.status} />
+              </TableCell>
               <TableCell className="text-gray-300">
                 <div className="flex items-center gap-1">
                   <Users className="h-4 w-4" />
@@ -128,20 +101,12 @@ const OrganizationTable: FC<Props> = ({
               <TableCell className="text-gray-300">{org.createdDate}</TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => onRegenerate(org.name)}
-                    className="cursor-pointer border-gray-600 text-gray-600 hover:bg-gray-700"
-                  >
-                    <RotateCcw className="h-3 w-3" />
-                    Regenerate
-                  </Button>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button
                         variant="ghost"
                         className="h-8 w-8 p-0 text-gray-400 hover:bg-gray-700"
+                        disabled={loadingId === org.id}
                       >
                         <MoreHorizontal className="h-4 w-4" />
                       </Button>
@@ -165,11 +130,29 @@ const OrganizationTable: FC<Props> = ({
                         Edit
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        className="text-red-400 hover:bg-gray-600 cursor-pointer"
-                        onClick={() => onDeactivate(org.name)}
+                        className={`cursor-pointer ${
+                          org.status === 'active'
+                            ? 'text-orange-400 hover:bg-gray-600'
+                            : 'text-green-400 hover:bg-gray-600'
+                        }`}
+                        onClick={() => handleToggleStatus(org)}
+                        disabled={loadingId === org.id}
                       >
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        Deactivate
+                        {org.status === 'active' ? (
+                          <>
+                            <PowerOff className="mr-2 h-4 w-4" />
+                            {loadingId === org.id
+                              ? 'Processing...'
+                              : 'Deactivate'}
+                          </>
+                        ) : (
+                          <>
+                            <Power className="mr-2 h-4 w-4" />
+                            {loadingId === org.id
+                              ? 'Processing...'
+                              : 'Activate'}
+                          </>
+                        )}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -179,23 +162,6 @@ const OrganizationTable: FC<Props> = ({
           ))}
         </TableBody>
       </Table>
-
-      <ViewOrganizationDialog
-        open={viewOpen}
-        onClose={closeView}
-        org={selectedOrg}
-        badgeRenderer={getStatusBadge}
-      />
-
-      <EditOrganizationDialog
-        open={editOpen}
-        onClose={closeEdit}
-        formData={editFormData}
-        onChange={onEditChange}
-        onSave={onEditSave}
-      />
     </div>
   );
 };
-
-export default OrganizationTable;

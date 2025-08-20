@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import { Edit, Scale, Shield, Bell } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { motion } from 'framer-motion';
+import { Edit, Scale, Shield, Bell } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function ChangesToTerms() {
   const changeReasons = [
     {
       icon: Scale,
-      title: "Legal Changes",
-      description: "Updates to comply with new laws and regulations",
+      title: 'Legal Changes',
+      description: 'Updates to comply with new laws and regulations',
     },
     {
       icon: Edit,
-      title: "Platform Updates",
-      description: "Modifications to reflect new features and functionality",
+      title: 'Platform Updates',
+      description: 'Modifications to reflect new features and functionality',
     },
     {
       icon: Shield,
-      title: "Security Improvements",
-      description: "Enhancements to security or policy improvements",
+      title: 'Security Improvements',
+      description: 'Enhancements to security or policy improvements',
     },
   ];
 

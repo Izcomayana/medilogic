@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { fadeInUp, staggerDelay } from "@/app/(landingpage)/hooks/annimation";
-import { useInView } from "@/app/(landingpage)/hooks/useInView";
-import { Card, CardContent } from "@/components/ui/card";
+import { fadeInUp, staggerDelay } from '@/app/(landingpage)/hooks/annimation';
+import { useInView } from '@/app/(landingpage)/hooks/useInView';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Puzzle,
   CheckCircle,
@@ -10,7 +10,7 @@ import {
   Users,
   TrendingUp,
   Settings,
-} from "lucide-react";
+} from 'lucide-react';
 
 export default function UnifiedPlatformSection() {
   const [unifiedRef, unifiedInView] = useInView(0.1);
@@ -18,23 +18,23 @@ export default function UnifiedPlatformSection() {
   const platformFeatures = [
     {
       icon: Lock,
-      title: "Centralized Access",
-      desc: "Single secure platform for all your logistics operations",
+      title: 'Centralized Access',
+      desc: 'Single secure platform for all your logistics operations',
     },
     {
       icon: Users,
-      title: "Role-Based Permissions",
+      title: 'Role-Based Permissions',
       desc: "Granular access control tailored to each user's responsibilities",
     },
     {
       icon: TrendingUp,
-      title: "Scalable Infrastructure",
-      desc: "Grows with your organization from startup to enterprise",
+      title: 'Scalable Infrastructure',
+      desc: 'Grows with your organization from startup to enterprise',
     },
     {
       icon: Settings,
-      title: "Customizable Trip Data",
-      desc: "Flexible data fields to match your specific workflow needs",
+      title: 'Customizable Trip Data',
+      desc: 'Flexible data fields to match your specific workflow needs',
     },
   ];
 
@@ -45,7 +45,7 @@ export default function UnifiedPlatformSection() {
     >
       <div className="container mx-auto max-w-7xl relative">
         <div
-          className={`text-center mb-16 ${fadeInUp} ${unifiedInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+          className={`text-center mb-16 ${fadeInUp} ${unifiedInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
         >
           <div className="inline-flex items-center gap-2 bg-white/20 text-white px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300 backdrop-blur-sm">
             <Puzzle className="w-4 h-4" />
@@ -66,8 +66,8 @@ export default function UnifiedPlatformSection() {
               key={index}
               className={`bg-white/10 border-white/20 backdrop-blur-sm hover:bg-white/20 transition-all duration-500 group hover:-translate-y-2 hover:scale-105 ${fadeInUp} ${
                 unifiedInView
-                  ? "opacity-100 translate-y-0 rotate-0"
-                  : "opacity-0 translate-y-12 rotate-3"
+                  ? 'opacity-100 translate-y-0 rotate-0'
+                  : 'opacity-0 translate-y-12 rotate-3'
               }`}
               style={staggerDelay(index)}
             >
@@ -85,8 +85,8 @@ export default function UnifiedPlatformSection() {
         </div>
 
         <div
-          className={`text-center mt-16 ${fadeInUp} ${unifiedInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
-          style={{ transitionDelay: "600ms" }}
+          className={`text-center mt-16 ${fadeInUp} ${unifiedInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+          style={{ transitionDelay: '600ms' }}
         >
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 max-w-4xl mx-auto">
             <div className="flex flex-wrap justify-center gap-8 items-center">

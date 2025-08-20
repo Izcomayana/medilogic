@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { fadeInUp, staggerDelay } from "@/app/(landingpage)/hooks/annimation";
-import { useInView } from "@/app/(landingpage)/hooks/useInView";
-import { Card, CardContent } from "@/components/ui/card";
+import { fadeInUp, staggerDelay } from '@/app/(landingpage)/hooks/annimation';
+import { useInView } from '@/app/(landingpage)/hooks/useInView';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Quote,
   Building2,
@@ -10,7 +10,7 @@ import {
   Recycle,
   Truck,
   BarChart3,
-} from "lucide-react";
+} from 'lucide-react';
 
 export default function GridSection() {
   const [gridRef, gridInView] = useInView(0.1);
@@ -18,58 +18,58 @@ export default function GridSection() {
   const testimonials = [
     {
       icon: Building2,
-      title: "Seamless integration with our NHS clinic workflows.",
+      title: 'Seamless integration with our NHS clinic workflows.',
       quote:
         "Before Medilogic, managing our clinical waste collections was manual and prone to delays. Now, everything is scheduled automatically, and we can export reports directly for inspections. It's made our compliance process 10x easier.",
-      author: "Rachel M.",
-      role: "Compliance Manager",
-      company: "NHS Trust London",
-      color: "from-blue-500 to-blue-600",
-      bgColor: "from-blue-50 to-indigo-50",
+      author: 'Rachel M.',
+      role: 'Compliance Manager',
+      company: 'NHS Trust London',
+      color: 'from-blue-500 to-blue-600',
+      bgColor: 'from-blue-50 to-indigo-50',
     },
     {
       icon: Stethoscope,
-      title: "Finally, a system made for healthcare — not adapted to it.",
+      title: 'Finally, a system made for healthcare — not adapted to it.',
       quote:
         "We tried generic courier platforms before, but Medilogic is on another level. It's built specifically for medical practices like ours. The driver coordination tools and real-time tracking are spot-on.",
-      author: "Dr. Sanjay A.",
-      role: "Private Clinic Owner",
-      company: "Birmingham",
-      color: "from-[#15941f] to-green-500",
-      bgColor: "from-[#15941f]/5 to-green-50",
+      author: 'Dr. Sanjay A.',
+      role: 'Private Clinic Owner',
+      company: 'Birmingham',
+      color: 'from-[#15941f] to-green-500',
+      bgColor: 'from-[#15941f]/5 to-green-50',
     },
     {
       icon: Recycle,
-      title: "Huge win for our waste disposal operations.",
+      title: 'Huge win for our waste disposal operations.',
       quote:
         "Medilogic gives us complete visibility into our pickups, drivers, and client history. We're able to manage dozens of clinics more efficiently than ever — and the invoicing system is a game-changer.",
-      author: "James O.",
-      role: "Operations Director",
-      company: "MedWaste Solutions UK",
-      color: "from-emerald-500 to-teal-600",
-      bgColor: "from-emerald-50 to-teal-50",
+      author: 'James O.',
+      role: 'Operations Director',
+      company: 'MedWaste Solutions UK',
+      color: 'from-emerald-500 to-teal-600',
+      bgColor: 'from-emerald-50 to-teal-50',
     },
     {
       icon: Truck,
-      title: "My drivers finally have something that just works.",
+      title: 'My drivers finally have something that just works.',
       quote:
         "Our team isn't techy, but they picked it up in minutes. Drivers can view routes, update trip status, and check their logs easily. Support has also been top-notch.",
-      author: "Laura B.",
-      role: "Logistics Coordinator",
-      company: "SafeMed Couriers",
-      color: "from-orange-500 to-red-500",
-      bgColor: "from-orange-50 to-red-50",
+      author: 'Laura B.',
+      role: 'Logistics Coordinator',
+      company: 'SafeMed Couriers',
+      color: 'from-orange-500 to-red-500',
+      bgColor: 'from-orange-50 to-red-50',
     },
     {
       icon: BarChart3,
-      title: "The analytics dashboard gives us clarity we never had.",
+      title: 'The analytics dashboard gives us clarity we never had.',
       quote:
         "We love the reporting tools. I can filter by trip status, cost, waste type — and immediately see how we're performing. Medilogic helps us make smarter decisions every week.",
-      author: "Ben H.",
-      role: "Admin Manager",
-      company: "HealthPath Waste Services",
-      color: "from-purple-500 to-pink-500",
-      bgColor: "from-purple-50 to-pink-50",
+      author: 'Ben H.',
+      role: 'Admin Manager',
+      company: 'HealthPath Waste Services',
+      color: 'from-purple-500 to-pink-500',
+      bgColor: 'from-purple-50 to-pink-50',
     },
   ];
 
@@ -82,8 +82,8 @@ export default function GridSection() {
               key={index}
               className={`group hover:shadow-2xl transition-all duration-700 border-0 shadow-lg overflow-hidden hover:-translate-y-2 ${fadeInUp} ${
                 gridInView
-                  ? "opacity-100 translate-y-0 scale-100"
-                  : `opacity-0 ${index % 2 === 0 ? "-translate-x-12" : "translate-x-12"} scale-95`
+                  ? 'opacity-100 translate-y-0 scale-100'
+                  : `opacity-0 ${index % 2 === 0 ? '-translate-x-12' : 'translate-x-12'} scale-95`
               }`}
               style={staggerDelay(index)}
             >
@@ -108,9 +108,9 @@ export default function GridSection() {
                   <div className="w-12 h-12 bg-white/60 rounded-full flex items-center justify-center backdrop-blur-sm">
                     <span className="text-lg font-bold text-gray-700">
                       {testimonial.author
-                        .split(" ")
+                        .split(' ')
                         .map((n) => n[0])
-                        .join("")}
+                        .join('')}
                     </span>
                   </div>
                   <div>

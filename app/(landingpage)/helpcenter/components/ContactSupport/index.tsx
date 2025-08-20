@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import {
   Phone,
   Mail,
@@ -9,9 +9,9 @@ import {
   Clock,
   ArrowRight,
   Play,
-} from "lucide-react";
-import { useInView } from "@/app/(landingpage)/hooks/useInView";
-import { fadeInUp, staggerDelay } from "@/app/(landingpage)/hooks/annimation";
+} from 'lucide-react';
+import { useInView } from '@/app/(landingpage)/hooks/useInView';
+import { fadeInUp, staggerDelay } from '@/app/(landingpage)/hooks/annimation';
 
 export default function ContactSupportSection() {
   const [contactRef, contactInView] = useInView(0.1);
@@ -19,27 +19,27 @@ export default function ContactSupportSection() {
   const contactMethods = [
     {
       icon: Mail,
-      title: "General Support",
-      detail: "support@medilogic.uk",
-      desc: "Email us for general questions and support",
-      color: "from-blue-500 to-blue-600",
-      bgColor: "from-blue-50 to-indigo-50",
+      title: 'General Support',
+      detail: 'support@medilogic.uk',
+      desc: 'Email us for general questions and support',
+      color: 'from-blue-500 to-blue-600',
+      bgColor: 'from-blue-50 to-indigo-50',
     },
     {
       icon: Phone,
-      title: "Call Us",
-      detail: "+44 20 1234 5678",
-      desc: "Monday–Friday, 9AM–5PM (UK time)",
-      color: "from-[#15941f] to-green-500",
-      bgColor: "from-[#15941f]/5 to-green-50",
+      title: 'Call Us',
+      detail: '+44 20 1234 5678',
+      desc: 'Monday–Friday, 9AM–5PM (UK time)',
+      color: 'from-[#15941f] to-green-500',
+      bgColor: 'from-[#15941f]/5 to-green-50',
     },
     {
       icon: MessageCircle,
-      title: "Live Chat",
-      detail: "Bottom right corner",
-      desc: "Instant support during business hours",
-      color: "from-purple-500 to-pink-500",
-      bgColor: "from-purple-50 to-pink-50",
+      title: 'Live Chat',
+      detail: 'Bottom right corner',
+      desc: 'Instant support during business hours',
+      color: 'from-purple-500 to-pink-500',
+      bgColor: 'from-purple-50 to-pink-50',
     },
   ];
 
@@ -47,7 +47,7 @@ export default function ContactSupportSection() {
     <section ref={contactRef} className="py-20 px-4 bg-white">
       <div className="container mx-auto max-w-7xl">
         <div
-          className={`text-center mb-16 ${fadeInUp} ${contactInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+          className={`text-center mb-16 ${fadeInUp} ${contactInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
         >
           <div className="inline-flex items-center gap-2 bg-[#15941f]/10 text-[#15941f] px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300">
             <Phone className="w-4 h-4" />
@@ -68,8 +68,8 @@ export default function ContactSupportSection() {
               key={index}
               className={`group hover:shadow-2xl transition-all duration-700 border-0 shadow-lg overflow-hidden hover:-translate-y-2 ${fadeInUp} ${
                 contactInView
-                  ? "opacity-100 translate-y-0 scale-100"
-                  : "opacity-0 translate-y-12 scale-95"
+                  ? 'opacity-100 translate-y-0 scale-100'
+                  : 'opacity-0 translate-y-12 scale-95'
               }`}
               style={staggerDelay(index)}
             >
@@ -94,8 +94,8 @@ export default function ContactSupportSection() {
         </div>
 
         <div
-          className={`text-center ${fadeInUp} ${contactInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
-          style={{ transitionDelay: "450ms" }}
+          className={`text-center ${fadeInUp} ${contactInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+          style={{ transitionDelay: '450ms' }}
         >
           <div className="bg-gradient-to-br from-gray-50 to-white rounded-2xl p-8 max-w-2xl mx-auto border border-gray-200">
             <h3 className="text-2xl font-bold text-gray-900 mb-4">

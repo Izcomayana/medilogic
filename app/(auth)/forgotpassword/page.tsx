@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import React, { useState, useRef, useEffect, FormEvent } from "react";
-import axios from "axios";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { AlertCircle, ArrowRight, Mail } from "lucide-react";
-import { HomeLogo } from "@/components/HomeLogo";
+import React, { useState, useRef, useEffect, FormEvent } from 'react';
+import axios from 'axios';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { AlertCircle, ArrowRight, Mail } from 'lucide-react';
+import { HomeLogo } from '@/components/HomeLogo';
 
 const Forgotpassword: React.FC = () => {
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errors, setErrors] = useState<{
@@ -20,7 +20,7 @@ const Forgotpassword: React.FC = () => {
 
   const validateForm = () => {
     const newErrors: { email?: string; password?: string } = {};
-    if (!email.trim()) newErrors.email = "Email address is required";
+    if (!email.trim()) newErrors.email = 'Email address is required';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -47,19 +47,19 @@ const Forgotpassword: React.FC = () => {
 
     try {
       await axios.post(
-        "https://medilogic-backend.onrender.com/access/request-password-reset",
-        { email },
+        'https://medilogic-backend.onrender.com/access/request-password-reset',
+        { email }
       );
       setSuccessMessage(
-        "If the email exists, a password reset link has been sent.",
+        'If the email exists, a password reset link has been sent.'
       );
     } catch (error: unknown) {
       const err = error as { response?: { data?: { detail?: string } } };
       if (err.response?.data?.detail) {
-        setErrors({ general: err.response.data.detail || "Login failed." });
+        setErrors({ general: err.response.data.detail || 'Login failed.' });
       } else {
         setErrors({
-          general: "An error occurred while requesting password reset.",
+          general: 'An error occurred while requesting password reset.',
         });
       }
     } finally {
@@ -95,8 +95,8 @@ const Forgotpassword: React.FC = () => {
                   autoComplete="email"
                   className={`pl-10 h-12 transition-all duration-200 focus:outline-none focus:ring-1 ${
                     errors.email
-                      ? "border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-200"
-                      : "border-gray-300 focus:border-[#15941f] focus:ring-[#15941f]/20"
+                      ? 'border-red-500 bg-red-50 focus:border-red-500 focus:ring-red-200'
+                      : 'border-gray-300 focus:border-[#15941f] focus:ring-[#15941f]/20'
                   }`}
                 />
                 {errors.email && (
@@ -159,8 +159,8 @@ const Forgotpassword: React.FC = () => {
           <nav
             style={{
               marginTop: 20,
-              display: "flex",
-              justifyContent: "space-between",
+              display: 'flex',
+              justifyContent: 'space-between',
               fontSize: 14,
             }}
           >

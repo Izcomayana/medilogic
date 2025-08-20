@@ -1,33 +1,33 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import { Users, Shield, AlertTriangle, Eye } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { motion } from 'framer-motion';
+import { Users, Shield, AlertTriangle, Eye } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function UserResponsibilities() {
   const responsibilities = [
     {
       icon: Shield,
-      title: "Ethical Use",
-      description: "Use the platform ethically, responsibly, and in good faith",
+      title: 'Ethical Use',
+      description: 'Use the platform ethically, responsibly, and in good faith',
     },
     {
       icon: Eye,
-      title: "Protect Credentials",
+      title: 'Protect Credentials',
       description:
-        "Protect your login credentials and never share them with unauthorized persons",
+        'Protect your login credentials and never share them with unauthorized persons',
     },
     {
       icon: AlertTriangle,
-      title: "Report Issues",
+      title: 'Report Issues',
       description:
-        "Notify Medilogic immediately of any unauthorized account access or suspicious activity",
+        'Notify Medilogic immediately of any unauthorized account access or suspicious activity',
     },
     {
       icon: Users,
-      title: "Respect Others",
+      title: 'Respect Others',
       description:
-        "Ensure your activities do not disrupt or damage the platform or other users",
+        'Ensure your activities do not disrupt or damage the platform or other users',
     },
   ];
 

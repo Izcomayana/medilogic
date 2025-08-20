@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import { Building2, MapPin, Mail } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { motion } from 'framer-motion';
+import { Building2, MapPin, Mail } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function WhoWeAre() {
   return (

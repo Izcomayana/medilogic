@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { fadeInUp, staggerDelay } from "@/app/(landingpage)/hooks/annimation";
-import { useInView } from "@/app/(landingpage)/hooks/useInView";
-import { Card, CardContent } from "@/components/ui/card";
-import { Server, Shield, RefreshCw, Key, CheckCircle } from "lucide-react";
+import { fadeInUp, staggerDelay } from '@/app/(landingpage)/hooks/annimation';
+import { useInView } from '@/app/(landingpage)/hooks/useInView';
+import { Card, CardContent } from '@/components/ui/card';
+import { Server, Shield, RefreshCw, Key, CheckCircle } from 'lucide-react';
 
 export default function InfrastructureSecurity() {
   const [infraRef, infraInView] = useInView(0.1);
@@ -11,23 +11,23 @@ export default function InfrastructureSecurity() {
   const securityFeatures = [
     {
       icon: Shield,
-      title: "Encrypted storage and transit (SSL/TLS)",
-      desc: "End-to-end encryption for all data",
+      title: 'Encrypted storage and transit (SSL/TLS)',
+      desc: 'End-to-end encryption for all data',
     },
     {
       icon: Server,
-      title: "Frequent vulnerability scanning and penetration testing",
-      desc: "Regular security assessments and testing",
+      title: 'Frequent vulnerability scanning and penetration testing',
+      desc: 'Regular security assessments and testing',
     },
     {
       icon: RefreshCw,
-      title: "Regular backups and version control",
-      desc: "Automated backup systems and data recovery",
+      title: 'Regular backups and version control',
+      desc: 'Automated backup systems and data recovery',
     },
     {
       icon: Key,
-      title: "Strict API authentication and rate limiting",
-      desc: "Secure API access with comprehensive controls",
+      title: 'Strict API authentication and rate limiting',
+      desc: 'Secure API access with comprehensive controls',
     },
   ];
 
@@ -38,7 +38,7 @@ export default function InfrastructureSecurity() {
     >
       <div className="container mx-auto max-w-7xl relative">
         <div
-          className={`text-center mb-16 ${fadeInUp} ${infraInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+          className={`text-center mb-16 ${fadeInUp} ${infraInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
         >
           <div className="inline-flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300 backdrop-blur-sm">
             <Server className="w-4 h-4" />
@@ -59,8 +59,8 @@ export default function InfrastructureSecurity() {
               key={index}
               className={`bg-white/10 border-white/20 backdrop-blur-sm hover:bg-white/20 transition-all duration-500 group hover:-translate-y-2 hover:scale-105 ${fadeInUp} ${
                 infraInView
-                  ? "opacity-100 translate-y-0 rotate-0"
-                  : "opacity-0 translate-y-12 rotate-3"
+                  ? 'opacity-100 translate-y-0 rotate-0'
+                  : 'opacity-0 translate-y-12 rotate-3'
               }`}
               style={staggerDelay(index)}
             >

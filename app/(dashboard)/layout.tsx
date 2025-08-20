@@ -1,8 +1,8 @@
-import type React from "react";
-import "./globals.css";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/ui/app-sidebar";
-import { AuthProvider } from "@/components/auth";
+import type React from 'react';
+import './globals.css';
+import { SidebarProvider } from '@/components/ui/sidebar';
+import { AppSidebar } from '@/components/ui/app-sidebar';
+import { AuthProvider } from '@/components/auth';
 
 export default function RootLayout({
   children,

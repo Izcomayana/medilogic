@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Wrench, Plus, Minus } from "lucide-react";
-import { useInView } from "@/app/(landingpage)/hooks/useInView";
-import { fadeInUp, staggerDelay } from "@/app/(landingpage)/hooks/annimation";
+import { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Wrench, Plus, Minus } from 'lucide-react';
+import { useInView } from '@/app/(landingpage)/hooks/useInView';
+import { fadeInUp, staggerDelay } from '@/app/(landingpage)/hooks/annimation';
 
 export default function Troubleshooting() {
   const [troubleRef, troubleInView] = useInView(0.1);
@@ -12,7 +12,7 @@ export default function Troubleshooting() {
 
   const toggleExpanded = (index: number) => {
     setExpandedItems((prev) =>
-      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index],
+      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
     );
   };
 
@@ -28,9 +28,9 @@ export default function Troubleshooting() {
         "Ensure your invite code hasn't expired and you're using the correct email. Try resetting your password or contact support.",
     },
     {
-      question: "My dashboard is not loading properly.",
+      question: 'My dashboard is not loading properly.',
       answer:
-        "Try clearing your browser cache or using an updated browser. If the issue persists, reach out to support@medilogic.uk.",
+        'Try clearing your browser cache or using an updated browser. If the issue persists, reach out to support@medilogic.uk.',
     },
   ];
 
@@ -38,7 +38,7 @@ export default function Troubleshooting() {
     <section ref={troubleRef} className="py-20 px-4 bg-white">
       <div className="container mx-auto max-w-4xl">
         <div
-          className={`text-center mb-16 ${fadeInUp} ${troubleInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+          className={`text-center mb-16 ${fadeInUp} ${troubleInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
         >
           <div className="inline-flex items-center gap-2 bg-orange-50 text-orange-600 px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300">
             <Wrench className="w-4 h-4" />
@@ -55,8 +55,8 @@ export default function Troubleshooting() {
               key={index}
               className={`group hover:shadow-lg transition-all duration-500 border border-gray-200 hover:border-orange-300 ${fadeInUp} ${
                 troubleInView
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-8"
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-8'
               }`}
               style={staggerDelay(index)}
             >
@@ -79,8 +79,8 @@ export default function Troubleshooting() {
                 <div
                   className={`overflow-hidden transition-all duration-300 ${
                     expandedItems.includes(index)
-                      ? "max-h-96 opacity-100"
-                      : "max-h-0 opacity-0"
+                      ? 'max-h-96 opacity-100'
+                      : 'max-h-0 opacity-0'
                   }`}
                 >
                   <div className="px-6 pb-6">

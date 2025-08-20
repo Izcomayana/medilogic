@@ -1,45 +1,45 @@
-"use client";
+'use client';
 
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { BarChart3, LineChart, PieChart, Calendar, Filter } from "lucide-react";
-import { useState } from "react";
+} from '@/components/ui/select';
+import { BarChart3, LineChart, PieChart, Calendar, Filter } from 'lucide-react';
+import { useState } from 'react';
 
 export default function ChartsPage() {
-  const [dateRange, setDateRange] = useState("7days");
-  const [orgUnit, setOrgUnit] = useState("all");
+  const [dateRange, setDateRange] = useState('7days');
+  const [orgUnit, setOrgUnit] = useState('all');
 
   // Mock data for charts
   const dailyTrips = [
-    { day: "Mon", trips: 45 },
-    { day: "Tue", trips: 52 },
-    { day: "Wed", trips: 48 },
-    { day: "Thu", trips: 61 },
-    { day: "Fri", trips: 55 },
-    { day: "Sat", trips: 38 },
-    { day: "Sun", trips: 42 },
+    { day: 'Mon', trips: 45 },
+    { day: 'Tue', trips: 52 },
+    { day: 'Wed', trips: 48 },
+    { day: 'Thu', trips: 61 },
+    { day: 'Fri', trips: 55 },
+    { day: 'Sat', trips: 38 },
+    { day: 'Sun', trips: 42 },
   ];
 
   const topDrivers = [
-    { name: "John Smith", trips: 28 },
-    { name: "Sarah Johnson", trips: 25 },
-    { name: "Mike Davis", trips: 22 },
-    { name: "Lisa Wilson", trips: 19 },
-    { name: "Tom Brown", trips: 17 },
+    { name: 'John Smith', trips: 28 },
+    { name: 'Sarah Johnson', trips: 25 },
+    { name: 'Mike Davis', trips: 22 },
+    { name: 'Lisa Wilson', trips: 19 },
+    { name: 'Tom Brown', trips: 17 },
   ];
 
   const tripStatus = [
-    { status: "Completed", count: 234, percentage: 78 },
-    { status: "In Progress", count: 45, percentage: 15 },
-    { status: "Pending", count: 21, percentage: 7 },
+    { status: 'Completed', count: 234, percentage: 78 },
+    { status: 'In Progress', count: 45, percentage: 15 },
+    { status: 'Pending', count: 21, percentage: 7 },
   ];
 
   return (
@@ -204,10 +204,10 @@ export default function ChartsPage() {
                       <div
                         className={`w-3 h-3 rounded-full ${
                           index === 0
-                            ? "bg-[#15941f]"
+                            ? 'bg-[#15941f]'
                             : index === 1
-                              ? "bg-blue-500"
-                              : "bg-yellow-500"
+                              ? 'bg-blue-500'
+                              : 'bg-yellow-500'
                         }`}
                       ></div>
                       <span className="text-sm text-gray-300">
@@ -249,7 +249,7 @@ export default function ChartsPage() {
                   <div className="w-full bg-gray-700 rounded-full h-2">
                     <div
                       className="bg-blue-500 h-2 rounded-full"
-                      style={{ width: "68%" }}
+                      style={{ width: '68%' }}
                     ></div>
                   </div>
                 </div>
@@ -266,7 +266,7 @@ export default function ChartsPage() {
                   <div className="w-full bg-gray-700 rounded-full h-2">
                     <div
                       className="bg-[#15941f] h-2 rounded-full"
-                      style={{ width: "82%" }}
+                      style={{ width: '82%' }}
                     ></div>
                   </div>
                 </div>
@@ -283,7 +283,7 @@ export default function ChartsPage() {
                   <div className="w-full bg-gray-700 rounded-full h-2">
                     <div
                       className="bg-yellow-500 h-2 rounded-full"
-                      style={{ width: "92%" }}
+                      style={{ width: '92%' }}
                     ></div>
                   </div>
                 </div>

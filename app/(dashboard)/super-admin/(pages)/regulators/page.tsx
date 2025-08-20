@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+'use client';
+import { SidebarTrigger } from '@/components/ui/sidebar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import {
   Table,
   TableBody,
@@ -12,7 +12,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from '@/components/ui/table';
 import {
   Dialog,
   DialogContent,
@@ -21,15 +21,15 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 import {
   Shield,
   Plus,
@@ -38,55 +38,55 @@ import {
   Edit,
   Trash2,
   Calendar,
-} from "lucide-react";
+} from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useState } from "react";
-import { toast } from "sonner";
+} from '@/components/ui/dropdown-menu';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 const regulators = [
   {
     id: 1,
-    name: "John Smith",
-    email: "john.smith@regulator.gov",
-    regCountry: "USA",
-    regState: "Los Angeles",
-    region: "North America",
-    status: "Active",
-    joinedDate: "2024-01-10",
-    phone: "+1 (555) 123-4567",
-    department: "Financial Oversight",
-    title: "Senior Regulatory Officer",
+    name: 'John Smith',
+    email: 'john.smith@regulator.gov',
+    regCountry: 'USA',
+    regState: 'Los Angeles',
+    region: 'North America',
+    status: 'Active',
+    joinedDate: '2024-01-10',
+    phone: '+1 (555) 123-4567',
+    department: 'Financial Oversight',
+    title: 'Senior Regulatory Officer',
   },
   {
     id: 2,
-    name: "Sarah Johnson",
-    email: "sarah.johnson@regulator.gov",
-    region: "Europe",
-    regCountry: "Spain",
-    regState: "Barcelona",
-    status: "Active",
-    joinedDate: "2024-02-15",
-    phone: "+44 20 7946 0958",
-    department: "Compliance Monitoring",
-    title: "Lead Compliance Analyst",
+    name: 'Sarah Johnson',
+    email: 'sarah.johnson@regulator.gov',
+    region: 'Europe',
+    regCountry: 'Spain',
+    regState: 'Barcelona',
+    status: 'Active',
+    joinedDate: '2024-02-15',
+    phone: '+44 20 7946 0958',
+    department: 'Compliance Monitoring',
+    title: 'Lead Compliance Analyst',
   },
   {
     id: 3,
-    name: "Michael Chen",
-    email: "michael.chen@regulator.gov",
-    region: "London",
-    regCountry: "England",
-    regState: "London",
-    status: "Inactive",
-    joinedDate: "2024-01-20",
-    phone: "+65 6123 4567",
-    department: "Risk Assessment",
-    title: "Risk Assessment Specialist",
+    name: 'Michael Chen',
+    email: 'michael.chen@regulator.gov',
+    region: 'London',
+    regCountry: 'England',
+    regState: 'London',
+    status: 'Inactive',
+    joinedDate: '2024-01-20',
+    phone: '+65 6123 4567',
+    department: 'Risk Assessment',
+    title: 'Risk Assessment Specialist',
   },
 ];
 
@@ -105,11 +105,11 @@ interface Regulator {
 }
 
 export default function Regulators() {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedRegulator, setSelectedRegulator] = useState<Regulator | null>(
-    null,
+    null
   );
   const [editFormData, setEditFormData] = useState<{
     name: string;
@@ -122,22 +122,22 @@ export default function Regulators() {
     title: string;
     status: string;
   }>({
-    name: "",
-    email: "",
-    region: "",
-    regCountry: "",
-    regState: "",
-    phone: "",
-    department: "",
-    title: "",
-    status: "",
+    name: '',
+    email: '',
+    region: '',
+    regCountry: '',
+    regState: '',
+    phone: '',
+    department: '',
+    title: '',
+    status: '',
   });
 
   const filteredRegulators = regulators.filter(
     (regulator) =>
       regulator.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       regulator.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      regulator.region.toLowerCase().includes(searchTerm.toLowerCase()),
+      regulator.region.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleEditRegulator = (regulator: any) => {
@@ -169,9 +169,9 @@ export default function Regulators() {
 
   const getStatusBadge = (status: any) => {
     switch (status.toLowerCase()) {
-      case "active":
+      case 'active':
         return <Badge className="bg-[#15941f] text-white">Active</Badge>;
-      case "inactive":
+      case 'inactive':
         return <Badge variant="destructive">Inactive</Badge>;
       default:
         return <Badge variant="outline">{status}</Badge>;
@@ -255,7 +255,7 @@ export default function Regulators() {
                       type="submit"
                       className="primary-button"
                       onClick={() => {
-                        toast.success("Regulator created successfully");
+                        toast.success('Regulator created successfully');
                         setIsCreateDialogOpen(false);
                       }}
                     >

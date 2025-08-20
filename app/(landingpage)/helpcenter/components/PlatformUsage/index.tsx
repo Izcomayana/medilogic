@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Settings, Plus, Minus } from "lucide-react";
-import { useInView } from "@/app/(landingpage)/hooks/useInView";
-import { fadeInUp, staggerDelay } from "@/app/(landingpage)/hooks/annimation";
+import { useState } from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Settings, Plus, Minus } from 'lucide-react';
+import { useInView } from '@/app/(landingpage)/hooks/useInView';
+import { fadeInUp, staggerDelay } from '@/app/(landingpage)/hooks/annimation';
 
 export default function PlatformUsageSection() {
   const [usageRef, usageInView] = useInView(0.1);
@@ -12,25 +12,25 @@ export default function PlatformUsageSection() {
 
   const toggleExpanded = (index: number) => {
     setExpandedItems((prev) =>
-      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index],
+      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
     );
   };
 
   const faqs = [
     {
-      question: "How do I assign a trip to a driver?",
+      question: 'How do I assign a trip to a driver?',
       answer:
         "Admins can assign trips from the dashboard by selecting a trip and choosing an available driver from their organization's roster.",
     },
     {
-      question: "What happens if a trip is delayed or missed?",
+      question: 'What happens if a trip is delayed or missed?',
       answer:
-        "Drivers can mark trips as delayed with a reason. The system logs this, notifies the admin, and includes it in the audit report.",
+        'Drivers can mark trips as delayed with a reason. The system logs this, notifies the admin, and includes it in the audit report.',
     },
     {
-      question: "Can I track past trips?",
+      question: 'Can I track past trips?',
       answer:
-        "Yes. All users (with the right access) can view completed trip history, including time stamps, cost, and delivery notes.",
+        'Yes. All users (with the right access) can view completed trip history, including time stamps, cost, and delivery notes.',
     },
   ];
 
@@ -41,7 +41,7 @@ export default function PlatformUsageSection() {
     >
       <div className="container mx-auto max-w-4xl">
         <div
-          className={`text-center mb-16 ${fadeInUp} ${usageInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+          className={`text-center mb-16 ${fadeInUp} ${usageInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
         >
           <div className="inline-flex items-center gap-2 bg-[#15941f]/10 text-[#15941f] px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300">
             <Settings className="w-4 h-4" />
@@ -58,8 +58,8 @@ export default function PlatformUsageSection() {
               key={index}
               className={`group hover:shadow-lg transition-all duration-500 border border-gray-200 hover:border-[#15941f]/30 ${fadeInUp} ${
                 usageInView
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-8"
+                  ? 'opacity-100 translate-y-0'
+                  : 'opacity-0 translate-y-8'
               }`}
               style={staggerDelay(index)}
             >
@@ -82,8 +82,8 @@ export default function PlatformUsageSection() {
                 <div
                   className={`overflow-hidden transition-all duration-300 ${
                     expandedItems.includes(index)
-                      ? "max-h-96 opacity-100"
-                      : "max-h-0 opacity-0"
+                      ? 'max-h-96 opacity-100'
+                      : 'max-h-0 opacity-0'
                   }`}
                 >
                   <div className="px-6 pb-6">

@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import { AlertTriangle, XCircle, CreditCard, Database } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { motion } from 'framer-motion';
+import { AlertTriangle, XCircle, CreditCard, Database } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function SuspensionTermination() {
   const terminationReasons = [
     {
       icon: XCircle,
-      title: "Terms Violation",
-      description: "You violate these Terms or any applicable law",
+      title: 'Terms Violation',
+      description: 'You violate these Terms or any applicable law',
     },
     {
       icon: AlertTriangle,
-      title: "Platform Misuse",
-      description: "You misuse the platform or disrupt service for others",
+      title: 'Platform Misuse',
+      description: 'You misuse the platform or disrupt service for others',
     },
     {
       icon: CreditCard,
-      title: "Payment Issues",
-      description: "You fail to pay required subscription fees after notice",
+      title: 'Payment Issues',
+      description: 'You fail to pay required subscription fees after notice',
     },
   ];
 

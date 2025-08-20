@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { fadeInUp, staggerDelay } from "@/app/(landingpage)/hooks/annimation";
-import { useInView } from "@/app/(landingpage)/hooks/useInView";
-import { Card, CardContent } from "@/components/ui/card";
+import { fadeInUp, staggerDelay } from '@/app/(landingpage)/hooks/annimation';
+import { useInView } from '@/app/(landingpage)/hooks/useInView';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Building2,
   Shield,
@@ -10,7 +10,7 @@ import {
   FileText,
   Users,
   BarChart3,
-} from "lucide-react";
+} from 'lucide-react';
 
 export default function NHSSolution() {
   const [nhsRef, nhsInView] = useInView(0.1);
@@ -18,23 +18,23 @@ export default function NHSSolution() {
   const features = [
     {
       icon: Calendar,
-      text: "Schedule and manage clinical waste pickups without manual coordination",
+      text: 'Schedule and manage clinical waste pickups without manual coordination',
     },
     {
       icon: FileText,
-      text: "Get instant access to full trip records and digital audit logs",
+      text: 'Get instant access to full trip records and digital audit logs',
     },
     {
       icon: Shield,
-      text: "Export data for regulatory compliance (e.g NHS DSP Toolkit)",
+      text: 'Export data for regulatory compliance (e.g NHS DSP Toolkit)',
     },
     {
       icon: Users,
-      text: "Assign staff and view their logistics activity in one secure platform",
+      text: 'Assign staff and view their logistics activity in one secure platform',
     },
     {
       icon: BarChart3,
-      text: "Predict trip costs and durations based on distance, waste type, and more",
+      text: 'Predict trip costs and durations based on distance, waste type, and more',
     },
   ];
 
@@ -42,7 +42,7 @@ export default function NHSSolution() {
     <section ref={nhsRef} className="py-20 px-4 bg-white">
       <div className="container mx-auto max-w-7xl">
         <div
-          className={`text-center mb-16 ${fadeInUp} ${nhsInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+          className={`text-center mb-16 ${fadeInUp} ${nhsInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
         >
           <div className="inline-flex items-center gap-2 bg-blue-50 text-blue-600 px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300">
             <Building2 className="w-4 h-4" />
@@ -59,8 +59,8 @@ export default function NHSSolution() {
 
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div
-            className={`${fadeInUp} ${nhsInView ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-12"}`}
-            style={{ transitionDelay: "200ms" }}
+            className={`${fadeInUp} ${nhsInView ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'}`}
+            style={{ transitionDelay: '200ms' }}
           >
             <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-0 shadow-lg hover:shadow-xl transition-all duration-500">
               <CardContent className="p-8">
@@ -90,16 +90,16 @@ export default function NHSSolution() {
           </div>
 
           <div
-            className={`space-y-4 ${fadeInUp} ${nhsInView ? "opacity-100 translate-x-0" : "opacity-0 translate-x-12"}`}
-            style={{ transitionDelay: "400ms" }}
+            className={`space-y-4 ${fadeInUp} ${nhsInView ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'}`}
+            style={{ transitionDelay: '400ms' }}
           >
             {features.map((feature, index) => (
               <div
                 key={index}
                 className={`flex items-start gap-4 group hover:translate-x-2 transition-all duration-300 ${fadeInUp} ${
                   nhsInView
-                    ? "opacity-100 translate-y-0"
-                    : "opacity-0 translate-y-8"
+                    ? 'opacity-100 translate-y-0'
+                    : 'opacity-0 translate-y-8'
                 }`}
                 style={staggerDelay(index)}
               >

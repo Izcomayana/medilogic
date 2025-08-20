@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
+import { motion } from 'framer-motion';
 import {
   Target,
   UserCheck,
@@ -8,36 +8,36 @@ import {
   BarChart3,
   MessageSquare,
   Shield,
-} from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+} from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function DataUsage() {
   const usageTypes = [
     {
       icon: UserCheck,
-      title: "Account Management",
-      description: "Create and manage user accounts",
+      title: 'Account Management',
+      description: 'Create and manage user accounts',
     },
     {
       icon: Truck,
-      title: "Logistics Operations",
-      description: "Assign and track trips and logistics tasks",
+      title: 'Logistics Operations',
+      description: 'Assign and track trips and logistics tasks',
     },
     {
       icon: BarChart3,
-      title: "Analytics & Reporting",
-      description: "Generate analytics and reports",
+      title: 'Analytics & Reporting',
+      description: 'Generate analytics and reports',
     },
     {
       icon: MessageSquare,
-      title: "Communication",
+      title: 'Communication',
       description:
-        "Communicate with you regarding your account or support requests",
+        'Communicate with you regarding your account or support requests',
     },
     {
       icon: Shield,
-      title: "Platform Improvement",
-      description: "Improve platform functionality and security",
+      title: 'Platform Improvement',
+      description: 'Improve platform functionality and security',
     },
   ];
 

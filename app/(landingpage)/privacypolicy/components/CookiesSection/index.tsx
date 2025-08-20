@@ -1,25 +1,25 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import { Cookie, Settings, BarChart3, Zap } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { motion } from 'framer-motion';
+import { Cookie, Settings, BarChart3, Zap } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function CookiesSection() {
   const cookieTypes = [
     {
       icon: Settings,
-      title: "Session State",
-      description: "Maintain session state",
+      title: 'Session State',
+      description: 'Maintain session state',
     },
     {
       icon: BarChart3,
-      title: "Analytics",
-      description: "Collect analytics (e.g., usage behavior)",
+      title: 'Analytics',
+      description: 'Collect analytics (e.g., usage behavior)',
     },
     {
       icon: Zap,
-      title: "Performance",
-      description: "Enhance performance",
+      title: 'Performance',
+      description: 'Enhance performance',
     },
   ];
 

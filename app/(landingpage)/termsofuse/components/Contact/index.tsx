@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { motion } from "framer-motion";
-import { Mail, Clock, MessageCircle } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { motion } from 'framer-motion';
+import { Mail, Clock, MessageCircle } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 export default function ContactSection() {
   return (
@@ -53,7 +53,7 @@ export default function ContactSection() {
                   <Button
                     className="bg-[#15941f] hover:bg-[#0f6b17] text-white"
                     onClick={() =>
-                      (window.location.href = "mailto:support@medilogicapp.com")
+                      (window.location.href = 'mailto:support@medilogicapp.com')
                     }
                   >
                     support@medilogicapp.com
@@ -105,7 +105,7 @@ export default function ContactSection() {
             </p>
             <Button
               className="bg-[#15941f] hover:bg-[#0f6b17] text-white"
-              onClick={() => (window.location.href = "/contact")}
+              onClick={() => (window.location.href = '/contact')}
             >
               Visit Contact Page
             </Button>

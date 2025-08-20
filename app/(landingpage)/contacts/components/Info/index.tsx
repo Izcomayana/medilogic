@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { fadeInUp, staggerDelay } from "@/app/(landingpage)/hooks/annimation";
-import { useInView } from "@/app/(landingpage)/hooks/useInView";
-import { Card, CardContent } from "@/components/ui/card";
-import { Mail, Phone, MapPin, Handshake, LifeBuoy } from "lucide-react";
-import Image from "next/image";
+import { fadeInUp, staggerDelay } from '@/app/(landingpage)/hooks/annimation';
+import { useInView } from '@/app/(landingpage)/hooks/useInView';
+import { Card, CardContent } from '@/components/ui/card';
+import { Mail, Phone, MapPin, Handshake, LifeBuoy } from 'lucide-react';
+import Image from 'next/image';
 
 export default function ContactInfo() {
   const [infoRef, infoInView] = useInView(0.1);
@@ -12,22 +12,22 @@ export default function ContactInfo() {
   const contactDetails = [
     {
       icon: Mail,
-      title: "General Inquiries",
-      email: "hello@medilogic.uk",
-      color: "from-blue-500 to-blue-600",
+      title: 'General Inquiries',
+      email: 'hello@medilogic.uk',
+      color: 'from-blue-500 to-blue-600',
     },
     {
       icon: Handshake,
-      title: "Partnership Opportunities",
-      email: "partnerships@medilogic.uk",
-      color: "from-[#15941f] to-green-500",
+      title: 'Partnership Opportunities',
+      email: 'partnerships@medilogic.uk',
+      color: 'from-[#15941f] to-green-500',
     },
     {
       icon: LifeBuoy,
-      title: "Support Team",
-      email: "support@medilogic.uk",
-      phone: "+44 20 1234 5678 (Weekdays 9AM–5PM)",
-      color: "from-orange-500 to-red-500",
+      title: 'Support Team',
+      email: 'support@medilogic.uk',
+      phone: '+44 20 1234 5678 (Weekdays 9AM–5PM)',
+      color: 'from-orange-500 to-red-500',
     },
   ];
 
@@ -38,7 +38,7 @@ export default function ContactInfo() {
     >
       <div className="container mx-auto max-w-7xl">
         <div
-          className={`text-center mb-16 ${fadeInUp} ${infoInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+          className={`text-center mb-16 ${fadeInUp} ${infoInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
         >
           <div className="inline-flex items-center gap-2 bg-[#15941f]/10 text-[#15941f] px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300">
             <Phone className="w-4 h-4" />
@@ -55,8 +55,8 @@ export default function ContactInfo() {
               key={index}
               className={`group hover:shadow-2xl transition-all duration-700 border-0 shadow-lg overflow-hidden hover:-translate-y-2 ${fadeInUp} ${
                 infoInView
-                  ? "opacity-100 translate-y-0 scale-100"
-                  : "opacity-0 translate-y-12 scale-95"
+                  ? 'opacity-100 translate-y-0 scale-100'
+                  : 'opacity-0 translate-y-12 scale-95'
               }`}
               style={staggerDelay(index)}
             >
@@ -81,8 +81,8 @@ export default function ContactInfo() {
         </div>
 
         <div
-          className={`mt-16 text-center ${fadeInUp} ${infoInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
-          style={{ transitionDelay: "450ms" }}
+          className={`mt-16 text-center ${fadeInUp} ${infoInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+          style={{ transitionDelay: '450ms' }}
         >
           <div className="inline-flex items-center gap-2 bg-[#15941f]/10 text-[#15941f] px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300">
             <MapPin className="w-4 h-4" />

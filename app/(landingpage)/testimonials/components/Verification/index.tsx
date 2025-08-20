@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { fadeInUp, staggerDelay } from "@/app/(landingpage)/hooks/annimation";
-import { useInView } from "@/app/(landingpage)/hooks/useInView";
-import { Card, CardContent } from "@/components/ui/card";
-import { Shield, CheckCircle, Users, Star } from "lucide-react";
+import { fadeInUp, staggerDelay } from '@/app/(landingpage)/hooks/annimation';
+import { useInView } from '@/app/(landingpage)/hooks/useInView';
+import { Card, CardContent } from '@/components/ui/card';
+import { Shield, CheckCircle, Users, Star } from 'lucide-react';
 
 export default function VerificationSection() {
   const [verificationRef, verificationInView] = useInView(0.1);
@@ -11,18 +11,18 @@ export default function VerificationSection() {
   const verificationPoints = [
     {
       icon: CheckCircle,
-      title: "Verified Users Only",
-      desc: "All testimonials come from active Medilogic users",
+      title: 'Verified Users Only',
+      desc: 'All testimonials come from active Medilogic users',
     },
     {
       icon: Users,
-      title: "Real Names & Companies",
-      desc: "No anonymous reviews or fake testimonials",
+      title: 'Real Names & Companies',
+      desc: 'No anonymous reviews or fake testimonials',
     },
     {
       icon: Star,
-      title: "Honest Feedback",
-      desc: "Unfiltered experiences from real healthcare teams",
+      title: 'Honest Feedback',
+      desc: 'Unfiltered experiences from real healthcare teams',
     },
   ];
 
@@ -33,7 +33,7 @@ export default function VerificationSection() {
     >
       <div className="container mx-auto max-w-7xl relative">
         <div
-          className={`text-center mb-16 ${fadeInUp} ${verificationInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+          className={`text-center mb-16 ${fadeInUp} ${verificationInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
         >
           <div className="inline-flex items-center gap-2 bg-white/10 text-white px-4 py-2 rounded-full text-sm font-medium mb-6 hover:scale-105 transition-transform duration-300 backdrop-blur-sm">
             <Shield className="w-4 h-4" />
@@ -55,8 +55,8 @@ export default function VerificationSection() {
               key={index}
               className={`bg-white/10 border-white/20 backdrop-blur-sm hover:bg-white/20 transition-all duration-500 group hover:-translate-y-2 hover:scale-105 ${fadeInUp} ${
                 verificationInView
-                  ? "opacity-100 translate-y-0 rotate-0"
-                  : "opacity-0 translate-y-12 rotate-3"
+                  ? 'opacity-100 translate-y-0 rotate-0'
+                  : 'opacity-0 translate-y-12 rotate-3'
               }`}
               style={staggerDelay(index)}
             >
@@ -74,8 +74,8 @@ export default function VerificationSection() {
         </div>
 
         <div
-          className={`text-center mt-16 ${fadeInUp} ${verificationInView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
-          style={{ transitionDelay: "450ms" }}
+          className={`text-center mt-16 ${fadeInUp} ${verificationInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+          style={{ transitionDelay: '450ms' }}
         >
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 max-w-2xl mx-auto">
             <div className="flex justify-center items-center gap-2 mb-4">

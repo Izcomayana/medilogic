@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/components/auth";
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/components/auth';
 
 interface RoleGuardProps {
   allowedRoles: string[];
@@ -16,12 +16,12 @@ export function RoleGuard({ allowedRoles, children }: RoleGuardProps) {
 
   useEffect(() => {
     if (!isLoggedIn) {
-      router.replace("/login");
+      router.replace('/login');
       return;
     }
 
     if (role && !allowedRoles.includes(role)) {
-      router.replace("/login");
+      router.replace('/login');
     }
 
     setLoading(false);
@@ -31,7 +31,7 @@ export function RoleGuard({ allowedRoles, children }: RoleGuardProps) {
     return (
       <div className="p-4">
         <p className="text-sm text-white font-semibold">
-          Unauthorized route <br />{" "}
+          Unauthorized route <br />{' '}
         </p>
         Redirecting...
         <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
