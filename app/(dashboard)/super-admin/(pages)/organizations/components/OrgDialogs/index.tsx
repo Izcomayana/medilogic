@@ -12,7 +12,6 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import {
   Building2,
-  Calendar,
   Hash,
   Power,
   PowerOff,
@@ -37,7 +36,7 @@ export function ViewOrganizationDialog({
   if (!org) return null;
   return (
     <AlertDialog open={open} onOpenChange={onClose}>
-      <AlertDialogContent className="bg-gray-800 border-gray-700 text-white max-w-2xl">
+      <AlertDialogContent className="bg-gray-800 border-gray-700 text-white max-w-6xl">
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-2">
             <Building2 className="h-5 w-5" /> Organization Details
@@ -46,67 +45,137 @@ export function ViewOrganizationDialog({
             View detailed information about this organization.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <div className="grid gap-6 py-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label>Organization Name</Label>
-              <p>{org.name}</p>
-            </div>
-            <div>
-              <Label>Type</Label>
-              <p>{org.type}</p>
-            </div>
-          </div>
-          <div className="grid grid-cols-3 gap-4">
-            <div>
-              <Label>Status</Label>
-              <div>
-                <StatusBadge status={org.status?.toLowerCase()} />
-              </div>
-            </div>
-            <div>
-              <Label>User Count</Label>
-              <div className="flex items-center gap-2">
-                <Users className="h-4 w-4" /> {org.userCount}
-              </div>
-            </div>
-            <div>
-              <Label>Created Date</Label>
-              <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4" /> {org.createdDate}
-              </div>
-            </div>
-          </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-4">
           <div>
-            <Label>Description</Label>
-            <p>{org.description}</p>
+            <Label className="text-xs uppercase text-gray-400">
+              Organization Name
+            </Label>
+            <p className="mt-1 text-base font-medium text-white">{org.name}</p>
           </div>
+
           <div>
-            <Label>Address</Label>
-            <p>{org.address}</p>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label>Phone</Label>
-              <p>{org.phone}</p>
-            </div>
-            <div>
-              <Label>Email</Label>
-              <p>{org.email}</p>
+            <Label className="text-xs uppercase text-gray-400">Status</Label>
+            <div className="mt-1">
+              <StatusBadge status={org.status?.toLowerCase()} />
             </div>
           </div>
+
           <div>
-            <Label>Organization ID</Label>
-            <div className="flex items-center gap-2">
+            <Label className="text-xs uppercase text-gray-400">
+              Invite Code
+            </Label>
+            <p className="mt-1 text-base text-gray-200">{org.invite_code}</p>
+          </div>
+
+          <div>
+            <Label className="text-xs uppercase text-gray-400">Email</Label>
+            <p className="mt-1 text-base text-gray-200">{org.email}</p>
+          </div>
+
+          <div>
+            <Label className="text-xs uppercase text-gray-400">Phone</Label>
+            <p className="mt-1 text-base text-gray-200">{org.phone}</p>
+          </div>
+
+          <div>
+            <Label className="text-xs uppercase text-gray-400">
+              Postal Code
+            </Label>
+            <p className="mt-1 text-base text-gray-200">{org.postal_code}</p>
+          </div>
+
+          <div>
+            <Label className="text-xs uppercase text-gray-400">
+              Data Retention Years
+            </Label>
+            <p className="mt-1 text-base text-gray-200">
+              {org.data_retention_years}
+            </p>
+          </div>
+
+          <div>
+            <Label className="text-xs uppercase text-gray-400">
+              ICO Registered
+            </Label>
+            <div className="mt-1">
+              <StatusBadge status={org.ico_registered} />
+            </div>
+          </div>
+
+          <div>
+            <Label className="text-xs uppercase text-gray-400">
+              License Expiry
+            </Label>
+            <p className="mt-1 text-base text-gray-200">{org.phone}</p>
+          </div>
+
+          <div>
+            <Label className="text-xs uppercase text-gray-400">
+              License Number
+            </Label>
+            <p className="mt-1 text-base text-gray-200">{org.license_number}</p>
+          </div>
+
+          <div>
+            <Label className="text-xs uppercase text-gray-400">
+              User Count
+            </Label>
+            <div className="mt-1 flex items-center gap-2 text-base text-gray-200">
+              <Users className="h-4 w-4" /> {org.userCount}
+            </div>
+          </div>
+
+          <div>
+            <Label className="text-xs uppercase text-gray-400">
+              Trip Count
+            </Label>
+            <div className="mt-1 flex items-center gap-2 text-base text-gray-200">
+              <Users className="h-4 w-4" /> {org.tripCount}
+            </div>
+          </div>
+
+          <div className="col-span-1 sm:col-span-2 lg:col-span-3">
+            <Label className="text-xs uppercase text-gray-400">Address</Label>
+            <p className="mt-1 text-base text-gray-200">{org.address}</p>
+          </div>
+
+          <div className="col-span-1 sm:col-span-2 lg:col-span-3">
+            <Label className="text-xs uppercase text-gray-400">
+              Organization ID
+            </Label>
+            <div className="mt-1 flex items-center gap-2 text-base text-gray-200">
               <Hash className="h-4 w-4" /> {org.id}
             </div>
           </div>
+
+          <div className="col-span-1 sm:col-span-2 lg:col-span-3">
+            <Label className="text-xs uppercase text-gray-400">
+              Supported Waste Types
+            </Label>
+            <div className="mt-1 flex flex-wrap gap-2">
+              {org.supported_waste_type &&
+              org.supported_waste_type.length > 0 ? (
+                org.supported_waste_type.map((waste, idx) => (
+                  <span
+                    key={idx}
+                    className="px-2 py-1 text-xs rounded-md bg-gray-700 text-gray-200"
+                  >
+                    {waste}
+                  </span>
+                ))
+              ) : (
+                <p className="text-gray-400">None</p>
+              )}
+            </div>
+          </div>
         </div>
+
         <AlertDialogFooter>
           <Button
             variant="outline"
             onClick={onClose}
-            className="border-gray-600 text-gray-800 hover:bg-gray-700"
+            className="border-gray-600 text-gray-700 hover:text-gray-200 hover:bg-gray-700"
           >
             Close
           </Button>
