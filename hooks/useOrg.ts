@@ -188,13 +188,15 @@ export function useOrganizations() {
           data.organization.created_at
         ).toLocaleDateString(),
         userCount: data.user_count ?? 0,
+        tripCount: data.tripCount ?? 0,
         description: data.organization.description ?? '',
-        address: data.organization.address ?? '',
-        phone: data.organization.phone ?? '',
+        address: data.organization.address_line ?? '',
+        phone: data.organization.phone_number ?? '',
         email: data.organization.email ?? '',
         invite_code: data.organization.invite_code,
         ico_registered: data.organization.ico_registered,
         data_retention_years: data.organization.data_retention_years,
+        supported_waste_type: data.organization.supported_waste_type ?? [],
       };
 
       setSelectedOrg(mappedOrg);

@@ -40,8 +40,7 @@ export default function OrganizationTable({
             <TableHead className="text-gray-300">Name</TableHead>
             <TableHead className="text-gray-300">Type</TableHead>
             <TableHead className="text-gray-300">Status</TableHead>
-            <TableHead className="text-gray-300">Users</TableHead>
-            <TableHead className="text-gray-300">Created Date</TableHead>
+            <TableHead className="text-gray-300">Invite Code</TableHead>
             <TableHead className="text-gray-300">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -61,10 +60,9 @@ export default function OrganizationTable({
               <TableCell className="text-gray-300">
                 <div className="flex items-center gap-1">
                   <Users className="h-4 w-4" />
-                  {org.userCount}
+                  {org.invite_code}
                 </div>
               </TableCell>
-              <TableCell className="text-gray-300">{org.createdDate}</TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">
                   <DropdownMenu>

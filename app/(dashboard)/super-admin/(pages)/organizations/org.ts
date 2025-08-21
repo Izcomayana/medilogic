@@ -9,6 +9,7 @@ export interface Organization {
   status: 'active' | 'inactive';
   createdDate: string;
   userCount: number;
+  tripCount?: number;
   description?: string;
   address?: string;
   phone?: string;
@@ -24,6 +25,7 @@ export interface Organization {
   contact_person_role?: 'string';
   latitude?: number;
   longitude?: number;
+  supported_waste_type?: string[];
 }
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
