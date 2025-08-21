@@ -36,7 +36,7 @@ export function ViewOrganizationDialog({
   if (!org) return null;
   return (
     <AlertDialog open={open} onOpenChange={onClose}>
-      <AlertDialogContent className="bg-gray-800 border-gray-700 text-white max-w-6xl">
+      <AlertDialogContent className="bg-gray-800 border-gray-700 text-white max-w-6xl max-h-[90vh] flex flex-col">
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-2">
             <Building2 className="h-5 w-5" /> Organization Details
@@ -46,127 +46,134 @@ export function ViewOrganizationDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-4">
-          <div>
-            <Label className="text-xs uppercase text-gray-400">
-              Organization Name
-            </Label>
-            <p className="mt-1 text-base font-medium text-white">{org.name}</p>
-          </div>
-
-          <div>
-            <Label className="text-xs uppercase text-gray-400">Status</Label>
-            <div className="mt-1">
-              <StatusBadge status={org.status?.toLowerCase()} />
+        {/* Scrollable content */}
+        <div className="flex-1 overflow-y-auto pr-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-4">
+            <div>
+              <Label className="text-xs uppercase text-gray-400">
+                Organization Name
+              </Label>
+              <p className="mt-1 text-base font-medium text-white">
+                {org.name}
+              </p>
             </div>
-          </div>
 
-          <div>
-            <Label className="text-xs uppercase text-gray-400">
-              Invite Code
-            </Label>
-            <p className="mt-1 text-base text-gray-200">{org.invite_code}</p>
-          </div>
-
-          <div>
-            <Label className="text-xs uppercase text-gray-400">Email</Label>
-            <p className="mt-1 text-base text-gray-200">{org.email}</p>
-          </div>
-
-          <div>
-            <Label className="text-xs uppercase text-gray-400">Phone</Label>
-            <p className="mt-1 text-base text-gray-200">{org.phone}</p>
-          </div>
-
-          <div>
-            <Label className="text-xs uppercase text-gray-400">
-              Postal Code
-            </Label>
-            <p className="mt-1 text-base text-gray-200">{org.postal_code}</p>
-          </div>
-
-          <div>
-            <Label className="text-xs uppercase text-gray-400">
-              Data Retention Years
-            </Label>
-            <p className="mt-1 text-base text-gray-200">
-              {org.data_retention_years}
-            </p>
-          </div>
-
-          <div>
-            <Label className="text-xs uppercase text-gray-400">
-              ICO Registered
-            </Label>
-            <div className="mt-1">
-              <StatusBadge status={org.ico_registered} />
+            <div>
+              <Label className="text-xs uppercase text-gray-400">Status</Label>
+              <div className="mt-1">
+                <StatusBadge status={org.status?.toLowerCase()} />
+              </div>
             </div>
-          </div>
 
-          <div>
-            <Label className="text-xs uppercase text-gray-400">
-              License Expiry
-            </Label>
-            <p className="mt-1 text-base text-gray-200">{org.phone}</p>
-          </div>
-
-          <div>
-            <Label className="text-xs uppercase text-gray-400">
-              License Number
-            </Label>
-            <p className="mt-1 text-base text-gray-200">{org.license_number}</p>
-          </div>
-
-          <div>
-            <Label className="text-xs uppercase text-gray-400">
-              User Count
-            </Label>
-            <div className="mt-1 flex items-center gap-2 text-base text-gray-200">
-              <Users className="h-4 w-4" /> {org.userCount}
+            <div>
+              <Label className="text-xs uppercase text-gray-400">
+                Invite Code
+              </Label>
+              <p className="mt-1 text-base text-gray-200">{org.invite_code}</p>
             </div>
-          </div>
 
-          <div>
-            <Label className="text-xs uppercase text-gray-400">
-              Trip Count
-            </Label>
-            <div className="mt-1 flex items-center gap-2 text-base text-gray-200">
-              <Users className="h-4 w-4" /> {org.tripCount}
+            <div>
+              <Label className="text-xs uppercase text-gray-400">Email</Label>
+              <p className="mt-1 text-base text-gray-200">{org.email}</p>
             </div>
-          </div>
 
-          <div className="col-span-1 sm:col-span-2 lg:col-span-3">
-            <Label className="text-xs uppercase text-gray-400">Address</Label>
-            <p className="mt-1 text-base text-gray-200">{org.address}</p>
-          </div>
-
-          <div className="col-span-1 sm:col-span-2 lg:col-span-3">
-            <Label className="text-xs uppercase text-gray-400">
-              Organization ID
-            </Label>
-            <div className="mt-1 flex items-center gap-2 text-base text-gray-200">
-              <Hash className="h-4 w-4" /> {org.id}
+            <div>
+              <Label className="text-xs uppercase text-gray-400">Phone</Label>
+              <p className="mt-1 text-base text-gray-200">{org.phone}</p>
             </div>
-          </div>
 
-          <div className="col-span-1 sm:col-span-2 lg:col-span-3">
-            <Label className="text-xs uppercase text-gray-400">
-              Supported Waste Types
-            </Label>
-            <div className="mt-1 flex flex-wrap gap-2">
-              {org.supported_waste_type &&
-              org.supported_waste_type.length > 0 ? (
-                org.supported_waste_type.map((waste, idx) => (
-                  <span
-                    key={idx}
-                    className="px-2 py-1 text-xs rounded-md bg-gray-700 text-gray-200"
-                  >
-                    {waste}
-                  </span>
-                ))
-              ) : (
-                <p className="text-gray-400">None</p>
-              )}
+            <div>
+              <Label className="text-xs uppercase text-gray-400">
+                Postal Code
+              </Label>
+              <p className="mt-1 text-base text-gray-200">{org.postal_code}</p>
+            </div>
+
+            <div>
+              <Label className="text-xs uppercase text-gray-400">
+                Data Retention Years
+              </Label>
+              <p className="mt-1 text-base text-gray-200">
+                {org.data_retention_years}
+              </p>
+            </div>
+
+            <div>
+              <Label className="text-xs uppercase text-gray-400">
+                ICO Registered
+              </Label>
+              <div className="mt-1">
+                <StatusBadge status={org.ico_registered} />
+              </div>
+            </div>
+
+            <div>
+              <Label className="text-xs uppercase text-gray-400">
+                License Expiry
+              </Label>
+              <p className="mt-1 text-base text-gray-200">{org.phone}</p>
+            </div>
+
+            <div>
+              <Label className="text-xs uppercase text-gray-400">
+                License Number
+              </Label>
+              <p className="mt-1 text-base text-gray-200">
+                {org.license_number}
+              </p>
+            </div>
+
+            <div>
+              <Label className="text-xs uppercase text-gray-400">
+                User Count
+              </Label>
+              <div className="mt-1 flex items-center gap-2 text-base text-gray-200">
+                <Users className="h-4 w-4" /> {org.userCount}
+              </div>
+            </div>
+
+            <div>
+              <Label className="text-xs uppercase text-gray-400">
+                Trip Count
+              </Label>
+              <div className="mt-1 flex items-center gap-2 text-base text-gray-200">
+                <Users className="h-4 w-4" /> {org.tripCount}
+              </div>
+            </div>
+
+            <div className="col-span-1 sm:col-span-2 lg:col-span-3">
+              <Label className="text-xs uppercase text-gray-400">Address</Label>
+              <p className="mt-1 text-base text-gray-200">{org.address}</p>
+            </div>
+
+            <div className="col-span-1 sm:col-span-2 lg:col-span-3">
+              <Label className="text-xs uppercase text-gray-400">
+                Organization ID
+              </Label>
+              <div className="mt-1 flex items-center gap-2 text-base text-gray-200">
+                <Hash className="h-4 w-4" /> {org.id}
+              </div>
+            </div>
+
+            <div className="col-span-1 sm:col-span-2 lg:col-span-3">
+              <Label className="text-xs uppercase text-gray-400">
+                Supported Waste Types
+              </Label>
+              <div className="mt-1 flex flex-wrap gap-2">
+                {org.supported_waste_type &&
+                org.supported_waste_type.length > 0 ? (
+                  org.supported_waste_type.map((waste, idx) => (
+                    <span
+                      key={idx}
+                      className="px-2 py-1 text-xs rounded-md bg-gray-700 text-gray-200"
+                    >
+                      {waste}
+                    </span>
+                  ))
+                ) : (
+                  <p className="text-gray-400">None</p>
+                )}
+              </div>
             </div>
           </div>
         </div>
