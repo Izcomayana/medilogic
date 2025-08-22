@@ -7,6 +7,7 @@ import { RegulatorTable } from './components/RegulatorTable';
 import { CreateRegulatorDialog } from './components/CreateRegulator';
 import { EditRegulatorDialog } from './components/EditRegulator';
 import { useRegulators } from '@/hooks/useReg';
+import { ViewRegulatorDialog } from './components/ViewReg';
 
 export default function RegulatorsPage() {
   const {
@@ -20,6 +21,8 @@ export default function RegulatorsPage() {
     editOpen,
     loading,
     viewReg,
+    viewOpen,
+    setViewOpen,
   } = useRegulators();
 
   return (
@@ -74,6 +77,16 @@ export default function RegulatorsPage() {
         </Card>
       </main>
 
+      {viewOpen && selectedReg && (
+        <ViewRegulatorDialog
+          open={viewOpen}
+          onClose={() => {
+            setViewOpen(false);
+            setSelectedReg(null);
+          }}
+          reg={selectedReg}
+        />
+      )}
       <EditRegulatorDialog
         regulator={selectedReg}
         open={editOpen}

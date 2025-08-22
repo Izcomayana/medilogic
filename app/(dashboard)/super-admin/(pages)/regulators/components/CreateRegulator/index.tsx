@@ -1,13 +1,13 @@
 'use client';
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import {
   Select,
   SelectContent,
@@ -76,9 +76,7 @@ export const CreateRegulatorDialog = ({ onCreate }: Props) => {
       setCountry('');
       setState('');
       setRegion('');
-    } catch (error: any) {
-      console.log('error:', error);
-      console.log('error:', error.reponse.data);
+    } catch {
       // onCreate should toast its own error; keep dialog open
     } finally {
       setSubmitting(false);
@@ -86,20 +84,20 @@ export const CreateRegulatorDialog = ({ onCreate }: Props) => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+    <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialogTrigger asChild>
         <Button className="primary-button cursor-pointer">
           <Plus className="h-4 w-4 mr-2" />
           Create Regulator
         </Button>
-      </DialogTrigger>
-      <DialogContent className="bg-gray-800 border-gray-700 text-white">
-        <DialogHeader>
-          <DialogTitle>Create New Regulator</DialogTitle>
-          <DialogDescription className="text-gray-400">
+      </AlertDialogTrigger>
+      <AlertDialogContent className="bg-gray-800 border-gray-700 text-white">
+        <AlertDialogHeader>
+          <AlertDialogTitle>Create New Regulator</AlertDialogTitle>
+          <AlertDialogDescription className="text-gray-400">
             Add a new regulator to the system.
-          </DialogDescription>
-        </DialogHeader>
+          </AlertDialogDescription>
+        </AlertDialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="name" className="text-right">
@@ -193,7 +191,7 @@ export const CreateRegulatorDialog = ({ onCreate }: Props) => {
             />
           </div>
         </div>
-        <DialogFooter>
+        <AlertDialogFooter>
           <Button
             type="submit"
             className="primary-button"
@@ -202,8 +200,8 @@ export const CreateRegulatorDialog = ({ onCreate }: Props) => {
           >
             {submitting ? 'Creating...' : 'Create Regulator'}
           </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };

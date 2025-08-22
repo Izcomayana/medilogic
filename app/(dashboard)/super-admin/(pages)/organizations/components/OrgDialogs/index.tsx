@@ -36,7 +36,7 @@ export function ViewOrganizationDialog({
   if (!org) return null;
   return (
     <AlertDialog open={open} onOpenChange={onClose}>
-      <AlertDialogContent className="bg-gray-800 border-gray-700 text-white max-w-6xl max-h-[90vh] flex flex-col">
+      <AlertDialogContent className="bg-gray-800 border-gray-700 text-white !max-w-2xl max-h-[80vh] flex flex-col">
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-2">
             <Building2 className="h-5 w-5" /> Organization Details

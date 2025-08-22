@@ -204,6 +204,8 @@ export function useRegulators() {
     selectedReg,
     setSelectedReg,
     createReg,
+    viewOpen,
+    setViewOpen,
     viewReg,
   };
 }

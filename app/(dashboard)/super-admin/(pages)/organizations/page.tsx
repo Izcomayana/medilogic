@@ -2,7 +2,7 @@
 
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Building2, Loader2, Search } from 'lucide-react';
+import { Building2, Search } from 'lucide-react';
 import OrganizationTable from './components/OrgTable';
 import { useOrganizations } from '@/hooks/useOrg';
 import {

@@ -18,18 +18,18 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Calendar, Edit, Shield } from 'lucide-react';
-import { Regulator } from '../../types/regulator';
+import { Regulators } from '../../types/regulator';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
 interface Props {
-  regulator: Regulator | null;
+  regulator: Regulators | null;
   open: boolean;
   setOpen: (open: boolean) => void;
 }
 
 export const EditRegulatorDialog = ({ regulator, open, setOpen }: Props) => {
-  const [formData, setFormData] = useState({ ...regulator } as Regulator);
+  const [formData, setFormData] = useState({ ...regulator } as Regulators);
 
   const handleSave = () => {
     if (!regulator) return;
