@@ -106,23 +106,18 @@ export default function OrganizationsPage() {
               </Select>
             </div>
 
-            {loading ? (
-              <div className="flex items-center justify-center w-full">
-                <Loader2 className="h-8 w-8 text-gray-400 animate-spin" />
-              </div>
-            ) : (
-              <MemoizedOrgTable
-                organizations={filteredOrgs}
-                onView={viewOrg}
-                onEdit={editOrg}
-                onDelete={(orgId) => {
-                  setSelectedOrg(
-                    filteredOrgs.find((o) => o.id === orgId) || null
-                  );
-                  setDeleteOpen(true);
-                }}
-              />
-            )}
+            <MemoizedOrgTable
+              organizations={filteredOrgs}
+              onView={viewOrg}
+              onEdit={editOrg}
+              onDelete={(orgId) => {
+                setSelectedOrg(
+                  filteredOrgs.find((o) => o.id === orgId) || null
+                );
+                setDeleteOpen(true);
+              }}
+              loading={loading}
+            />
 
             <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
               <AlertDialogContent>

@@ -3,9 +3,6 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Search, Shield } from 'lucide-react';
-import { useState } from 'react';
-// import { regulators as initialData } from './regulators';
-import { Regulators } from './types/regulator';
 import { RegulatorTable } from './components/RegulatorTable';
 import { CreateRegulatorDialog } from './components/CreateRegulator';
 import { EditRegulatorDialog } from './components/EditRegulator';
@@ -13,13 +10,16 @@ import { useRegulators } from '@/hooks/useReg';
 
 export default function RegulatorsPage() {
   const {
+    filteredRegs,
+    createReg,
     searchTerm,
     setSearchTerm,
-    filteredRegs,
     setSelectedReg,
     setEditOpen,
     selectedReg,
     editOpen,
+    loading,
+    viewReg,
   } = useRegulators();
 
   return (
@@ -44,7 +44,7 @@ export default function RegulatorsPage() {
                 <Shield className="h-5 w-5" /> Regulators ({filteredRegs.length}
                 )
               </CardTitle>
-              <CreateRegulatorDialog />
+              <CreateRegulatorDialog onCreate={createReg} />
             </div>
           </CardHeader>
 
@@ -67,6 +67,8 @@ export default function RegulatorsPage() {
                 setSelectedReg(reg);
                 setEditOpen(true);
               }}
+              onView={viewReg}
+              loading={loading}
             />
           </CardContent>
         </Card>
