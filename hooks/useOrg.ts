@@ -195,6 +195,8 @@ export function useOrganizations() {
         email: data.organization.email ?? '',
         invite_code: data.organization.invite_code,
         ico_registered: data.organization.ico_registered,
+        license_number: data.organization.license_number,
+        license_expiry: data.organization.license_expiry,
         data_retention_years: data.organization.data_retention_years,
         supported_waste_type: data.organization.supported_waste_type ?? [],
       };
@@ -210,45 +212,6 @@ export function useOrganizations() {
   const editOrg = async (org: Organization) => {
     setSelectedOrg(org);
     setEditOpen(true);
-    // try {
-    //   let validToken = token;
-    //   if (!validToken || isTokenExpired(validToken)) {
-    //     const refreshed = await refreshAccessToken();
-    //     if (!refreshed) return;
-    //     validToken = refreshed;
-    //   }
-
-    //   const res = await axios.get(
-    //     `https://medilogic-backend.onrender.com/super/${org.id}`,
-    //     { headers: { Authorization: `Bearer ${validToken}` } }
-    //   );
-
-    //   const data = res.data;
-    // setEditFormData({
-    //   id: data.organization.id,
-    //   name: data.organization.name,
-    //   type: data.organization.type,
-    //   description: data.organization.description ?? '',
-    //   address: data.organization.address_line ?? '',
-    //   phone: data.organization.phone_number ?? '',
-    //   email: data.organization.email ?? '',
-    //   postal_code: data.organization.postal_code ?? '',
-    //   license_number: data.organization.license_number ?? '',
-    //   waste_processing_capability:
-    //     data.organization.waste_processing_capability ?? '',
-    //   delivery_capacity: data.organization.delivery_capacity ?? 0,
-    //   contact_person_name: data.organization.contact_person_name ?? '',
-    //   contact_person_role: data.organization.contact_person_role ?? '',
-    //   latitude: data.organization.latitude ?? 0,
-    //   longitude: data.organization.longitude ?? 0,
-    //   status: data.organization.is_active,
-    //   createdDate: data.organization.createDate,
-    //   userCount: data.organization.user_count,
-    // });
-    //   setEditOpen(true);
-    // } catch {
-    //   toast.error('Failed to load organization details for editing');
-    // }
   };
 
   // Misc actions
