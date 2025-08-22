@@ -4,23 +4,23 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Search, Shield } from 'lucide-react';
 import { useState } from 'react';
-import { regulators as initialData } from './regulators';
-import { Regulator } from './types/regulator';
+// import { regulators as initialData } from './regulators';
+import { Regulators } from './types/regulator';
 import { RegulatorTable } from './components/RegulatorTable';
 import { CreateRegulatorDialog } from './components/CreateRegulator';
 import { EditRegulatorDialog } from './components/EditRegulator';
+import { useRegulators } from '@/hooks/useReg';
 
 export default function RegulatorsPage() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [editOpen, setEditOpen] = useState(false);
-  const [selectedReg, setSelectedReg] = useState<Regulator | null>(null);
-
-  const filtered = initialData.filter(
-    (r) =>
-      r.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      r.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      r.region.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const {
+    searchTerm,
+    setSearchTerm,
+    filteredRegs,
+    setSelectedReg,
+    setEditOpen,
+    selectedReg,
+    editOpen,
+  } = useRegulators();
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
@@ -39,9 +39,10 @@ export default function RegulatorsPage() {
       <main className="flex-1 p-6">
         <Card className="dashboard-card">
           <CardHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row gap-8 md:gap-0 items-center justify-between">
               <CardTitle className="text-white flex items-center gap-2">
-                <Shield className="h-5 w-5" /> Regulators ({filtered.length})
+                <Shield className="h-5 w-5" /> Regulators ({filteredRegs.length}
+                )
               </CardTitle>
               <CreateRegulatorDialog />
             </div>
@@ -52,7 +53,7 @@ export default function RegulatorsPage() {
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                 <Input
-                  placeholder="Search regulators..."
+                  placeholder="Search regulators by name, region or country..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10 bg-gray-700 border-gray-600 text-white placeholder-gray-400"
@@ -61,7 +62,7 @@ export default function RegulatorsPage() {
             </div>
 
             <RegulatorTable
-              regulators={filtered}
+              regulators={filteredRegs}
               onEdit={(reg) => {
                 setSelectedReg(reg);
                 setEditOpen(true);

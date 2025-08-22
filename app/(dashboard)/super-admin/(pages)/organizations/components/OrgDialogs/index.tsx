@@ -111,7 +111,9 @@ export function ViewOrganizationDialog({
               <Label className="text-xs uppercase text-gray-400">
                 License Expiry
               </Label>
-              <p className="mt-1 text-base text-gray-200">{org.phone}</p>
+              <p className="mt-1 text-base text-gray-200">
+                {org.license_expiry}
+              </p>
             </div>
 
             <div>

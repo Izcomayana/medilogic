@@ -15,13 +15,13 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Edit, MoreHorizontal, Trash2 } from 'lucide-react';
-import { Regulator } from '../../types/regulator';
+import { Regulators } from '../../types/regulator';
 import { StatusBadge } from '../StatusBadge';
 import { toast } from 'sonner';
 
 interface Props {
-  regulators: Regulator[];
-  onEdit: (reg: Regulator) => void;
+  regulators: Regulators[];
+  onEdit: (reg: Regulators) => void;
 }
 
 export const RegulatorTable = ({ regulators, onEdit }: Props) => {
@@ -37,7 +37,6 @@ export const RegulatorTable = ({ regulators, onEdit }: Props) => {
             <TableHead className="text-gray-300">Email</TableHead>
             <TableHead className="text-gray-300">Region</TableHead>
             <TableHead className="text-gray-300">Status</TableHead>
-            <TableHead className="text-gray-300">Joined Date</TableHead>
             <TableHead className="text-gray-300">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -46,11 +45,10 @@ export const RegulatorTable = ({ regulators, onEdit }: Props) => {
             <TableRow key={r.id} className="border-gray-700 hover:bg-gray-800">
               <TableCell className="font-medium text-white">{r.name}</TableCell>
               <TableCell className="text-gray-300">{r.email}</TableCell>
-              <TableCell className="text-gray-300">{r.region}</TableCell>
+              <TableCell className="text-gray-300">{r.regRegion}</TableCell>
               <TableCell>
                 <StatusBadge status={r.status} />
               </TableCell>
-              <TableCell className="text-gray-300">{r.joinedDate}</TableCell>
               <TableCell>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
