@@ -28,8 +28,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const _refresh = localStorage.getItem('refreshToken');
     const _role = localStorage.getItem('userRole');
 
-    console.log('Loaded from storage →', { _token, _refresh, _role });
-
     setTokenState(_token);
     setRefreshToken(_refresh);
     setRole(_role);

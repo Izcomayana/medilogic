@@ -59,6 +59,7 @@ export function useRegulators() {
           regRegion: r.regulated_region,
         }));
 
+        mapped.sort((a, b) => a.name.localeCompare(b.name));
         setRegs(mapped);
       } catch (err: any) {
         const detail = err?.response?.data?.detail;

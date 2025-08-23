@@ -6,8 +6,6 @@ import {
   Home,
   Shield,
   Users,
-  UserPlus,
-  RotateCcw,
   Truck,
   ClipboardList,
   FileText,

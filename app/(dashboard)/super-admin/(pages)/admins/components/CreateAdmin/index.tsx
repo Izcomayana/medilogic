@@ -31,6 +31,7 @@ interface Props {
     name: string;
     email: string;
     password: string;
+    status: 'active' | 'inactive';
     role: 'admin';
     organization_id: string;
   }) => void | Promise<void>;
@@ -41,6 +42,7 @@ export const CreateAdmin = ({ onCreate }: Props) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [status, setStatus] = useState<'active' | 'inactive'>('active');
   const [role, setRole] = useState<'admin'>('admin');
   const [organizationId, setOrganizationId] = useState<string>('');
   const [submitting, setSubmitting] = useState(false);
@@ -52,11 +54,11 @@ export const CreateAdmin = ({ onCreate }: Props) => {
       return;
     }
 
-    // // guard: only the two enum values
-    // if (!['admin', 'regulator'].includes(role)) {
-    //   toast.error("Type must be 'admin' or 'regulator'");
-    //   return;
-    // }
+    // guard: only the two enum values
+    if (!['active', 'inactive'].includes(status)) {
+      toast.error("Type must be 'active' or 'inactive'");
+      return;
+    }
 
     setSubmitting(true);
     try {
@@ -64,6 +66,7 @@ export const CreateAdmin = ({ onCreate }: Props) => {
         name: name.trim(),
         email: email.trim(),
         password: password.trim(),
+        status,
         role,
         organization_id: organizationId,
       });
@@ -73,6 +76,7 @@ export const CreateAdmin = ({ onCreate }: Props) => {
       setName('');
       setEmail('');
       setPassword('');
+      setStatus('active');
       setRole('admin');
       setOrganizationId('');
     } catch {
@@ -143,6 +147,23 @@ export const CreateAdmin = ({ onCreate }: Props) => {
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="status" className="text-right">
+              Status
+            </Label>
+            <Select
+              value={status}
+              onValueChange={(v) => setStatus(v as 'active' | 'inactive')}
+            >
+              <SelectTrigger className="col-span-3 bg-gray-700 border-gray-600 text-white">
+                <SelectValue placeholder="Select type" />
+              </SelectTrigger>
+              <SelectContent className="bg-gray-700 border-gray-600">
+                <SelectItem value="active">Active</SelectItem>
+                <SelectItem value="inactive">Inactive</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="organization" className="text-gray-300">
               Organization
             </Label>
@@ -157,7 +178,7 @@ export const CreateAdmin = ({ onCreate }: Props) => {
                   }
                 />
               </SelectTrigger>
-              <SelectContent className="bg-gray-700 border-gray-600">
+              <SelectContent className="bg-gray-500 border-gray-600">
                 {orgs.map((org) => (
                   <SelectItem key={org.id} value={org.id}>
                     {org.name}

@@ -9,103 +9,28 @@ import {
   Building2,
   // Users,
   Shield,
-  // AlertTriangle,
+  AlertTriangle,
   // RotateCcw,
   // TrendingUp,
   UserPlus,
-  // Loader2,
+  ShieldUser,
 } from 'lucide-react';
-import axios from 'axios';
-import { useAuth } from '@/components/auth';
-import { isTokenExpired } from '@/hooks/token';
 import CreateOrganizationDialog from './(pages)/organizations/components/creatOrg';
-import { toast } from 'sonner';
-import { Organization } from './(pages)/organizations/org';
+import { useAdmin } from '@/hooks/useAdmin';
+import { useOrganizations } from '@/hooks/useOrg';
+import { useRegulators } from '@/hooks/useReg';
+import { CreateRegulatorDialog } from './(pages)/regulators/components/CreateRegulator';
+import { CreateAdmin } from './(pages)/admins/components/CreateAdmin';
 
 export default function Dashboard() {
-  const { token, refreshAccessToken, setToken } = useAuth();
-  const [orgCount, setOrgCount] = useState<number | null>(null);
-  const [regulatorCount, setRegulatorCount] = useState<number | null>(null);
-  const [orgs, setOrgs] = useState<Organization[]>([]);
-
-  useEffect(() => {
-    console.log('Organizations:', orgs);
-    const fetchOrganizations = async () => {
-      let validToken = token;
-
-      if (!validToken || isTokenExpired(validToken)) {
-        console.log('Token expired → refreshing...');
-        try {
-          const refreshed = await refreshAccessToken();
-          if (!refreshed) return; // still failed
-          validToken = refreshed; // ✅ use freshly returned token
-        } catch (err: any) {
-          console.error('Failed to refresh token:', err);
-          return;
-        }
-      }
-
-      try {
-        const res = await axios.get(
-          'https://medilogic-backend.onrender.com/super/organizations',
-          {
-            headers: {
-              Authorization: `Bearer ${validToken}`,
-            },
-          }
-        );
-
-        setOrgCount(res.data.length);
-      } catch (error: any) {
-        console.error(
-          'Failed to fetch organizations:',
-          error?.response?.data?.detail || error.message
-        );
-      }
-    };
-
-    const fetchRegulators = async () => {
-      let validToken = token;
-
-      if (!validToken || isTokenExpired(validToken)) {
-        console.log('Token expired → refreshing...');
-        try {
-          const refreshed = await refreshAccessToken();
-          if (!refreshed) return; // still failed
-          validToken = refreshed; // ✅ use freshly returned token
-        } catch (err: any) {
-          console.error('Failed to refresh token:', err);
-          return;
-        }
-      }
-
-      try {
-        const res = await axios.get(
-          'https://medilogic-backend.onrender.com/super/super/regulators',
-          {
-            headers: {
-              Authorization: `Bearer ${validToken}`,
-            },
-          }
-        );
-
-        setRegulatorCount(res.data.length);
-      } catch (error: any) {
-        console.error(
-          'Failed to fetch regulators:',
-          error?.response?.data?.detail || error.message
-        );
-      }
-    };
-
-    fetchOrganizations();
-    fetchRegulators();
-  }, [token, refreshAccessToken, setToken, orgs]);
+  const { filteredAdmins, createAdmin } = useAdmin();
+  const { filteredRegs, createReg } = useRegulators();
+  const { filteredOrgs, createOrg } = useOrganizations();
 
   const stats = [
     {
       title: 'Total Organizations',
-      value: orgCount !== null ? String(orgCount) : '.',
+      value: filteredOrgs.length,
       change: '+2 this month',
       icon: Building2,
       trend: 'up',
@@ -119,25 +44,18 @@ export default function Dashboard() {
     // },
     {
       title: 'Total Regulators',
-      value: regulatorCount !== null ? String(regulatorCount) : '.',
+      value: filteredRegs.length,
       change: 'No change',
       icon: Shield,
       trend: 'neutral',
     },
-    // {
-    //   title: "Pending Deactivations",
-    //   value: "3",
-    //   change: "Requires attention",
-    //   icon: AlertTriangle,
-    //   trend: "warning",
-    // },
-    // {
-    //   title: "Invite Codes Regenerated",
-    //   value: "12",
-    //   change: "This month",
-    //   icon: RotateCcw,
-    //   trend: "neutral",
-    // },
+    {
+      title: 'Total Admins',
+      value: filteredAdmins.length,
+      change: 'Requires attention',
+      icon: ShieldUser,
+      trend: 'warning',
+    },
   ];
 
   return (
@@ -227,71 +145,9 @@ export default function Dashboard() {
             </CardHeader>
             <CardContent>
               <div className="grid gap-3">
-                <CreateOrganizationDialog
-                  onCreate={async (orgData) => {
-                    try {
-                      let validToken = token;
-                      if (!validToken || isTokenExpired(validToken)) {
-                        const refreshed = await refreshAccessToken();
-                        if (!refreshed) {
-                          toast.error(
-                            'Authentication expired. Please log in again.'
-                          );
-                          return;
-                        }
-                        validToken = refreshed;
-                      }
-
-                      const res = await axios.post(
-                        'https://medilogic-backend.onrender.com/super/organizations',
-                        orgData,
-                        {
-                          headers: {
-                            Authorization: `Bearer ${validToken}`,
-                            'Content-Type': 'application/json',
-                          },
-                        }
-                      );
-
-                      // optimistic update
-                      setOrgs((prev) => [
-                        ...prev,
-                        {
-                          id: res.data.id,
-                          name: res.data.name,
-                          type: res.data.type,
-                          status: res.data.is_active,
-                          userCount: res.data.user_count ?? 0,
-                          createdDate: new Date(
-                            res.data.created_at
-                          ).toLocaleDateString(),
-                          invite_code: res.data.invite_code,
-                          ico_registered: res.data.ico_registered,
-                          data_retention_years: res.data.data_retention_years,
-                        },
-                      ]);
-
-                      toast.success('Organization created successfully');
-                    } catch (err: any) {
-                      const detail = err?.response?.data?.detail;
-                      const msg = Array.isArray(detail)
-                        ? detail.map((d: any) => d.msg).join(' • ')
-                        : detail ||
-                          err.message ||
-                          'Failed to create organization';
-                      toast.error(msg);
-                      throw err; // so dialog keeps open (since we await it)
-                    }
-                  }}
-                />
-                <button className="primary-button flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium">
-                  <Shield className="h-4 w-4" />
-                  Add Regulator
-                </button>
-                <button className="primary-button flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium">
-                  <UserPlus className="h-4 w-4" />
-                  Create User
-                </button>
+                <CreateOrganizationDialog onCreate={createOrg} />
+                <CreateRegulatorDialog onCreate={createReg} />
+                <CreateAdmin onCreate={createAdmin} />
               </div>
             </CardContent>
           </Card>

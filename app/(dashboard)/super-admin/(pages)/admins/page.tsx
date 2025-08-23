@@ -3,15 +3,6 @@
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import {
   Select,
   SelectContent,
@@ -20,111 +11,47 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Users, Search, Building2 } from 'lucide-react';
-import { useState } from 'react';
 import { CreateAdmin } from './components/CreateAdmin';
 import { useAdmin } from '@/hooks/useAdmin';
-
-const orgUsers = [
-  {
-    id: 1,
-    name: 'Alice Johnson',
-    email: 'alice@techcorp.com',
-    role: 'Admin',
-    organization: 'TechCorp Solutions',
-    status: 'Active',
-    lastLogin: '2024-01-15',
-  },
-  {
-    id: 2,
-    name: 'Bob Smith',
-    email: 'bob@techcorp.com',
-    role: 'User',
-    organization: 'TechCorp Solutions',
-    status: 'Active',
-    lastLogin: '2024-01-14',
-  },
-  {
-    id: 3,
-    name: 'Carol Davis',
-    email: 'carol@financeinc.com',
-    role: 'Manager',
-    organization: 'FinanceInc',
-    status: 'Inactive',
-    lastLogin: '2024-01-10',
-  },
-  {
-    id: 4,
-    name: 'David Wilson',
-    email: 'david@healthcare.com',
-    role: 'User',
-    organization: 'HealthCare Plus',
-    status: 'Active',
-    lastLogin: '2024-01-16',
-  },
-];
-
-const organizations = [
-  'All Organizations',
-  'TechCorp Solutions',
-  'FinanceInc',
-  'HealthCare Plus',
-  'EduTech Academy',
-];
+import { AdminTable } from './components/AdminTable';
+import { useOrganizations } from '@/hooks/useOrg';
+import React from 'react';
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from '@/components/ui/alert-dialog';
+import { AdminActionsDialog } from './components/AdminActions';
 
 export default function OrgAdmin() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedOrg, setSelectedOrg] = useState('All Organizations');
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [deleteOpen, setDeleteOpen] = React.useState(false);
 
-  const filteredUsers = orgUsers.filter((user) => {
-    const matchesSearch =
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesOrg =
-      selectedOrg === 'All Organizations' || user.organization === selectedOrg;
-    const matchesStatus =
-      statusFilter === 'all' ||
-      user.status.toLowerCase() === statusFilter.toLowerCase();
-    return matchesSearch && matchesOrg && matchesStatus;
-  });
+  const {
+    createAdmin,
+    filteredAdmins,
+    searchTerm,
+    setSearchTerm,
+    selectedAdmin,
+    setSelectedAdmin,
+    statusFilter,
+    setStatusFilter,
+    loading,
+    loadingAction,
+    editOpen,
+    setEditOpen,
+    activateAdmin,
+    deactivateAdmin,
+    deleteAdmin,
+    editAdmin,
+    setEditAdmin,
+  } = useAdmin();
 
-  const { createAdmin } = useAdmin();
-
-  const getStatusBadge = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'active':
-        return <Badge className="bg-[#15941f] text-white">Active</Badge>;
-      case 'inactive':
-        return <Badge variant="destructive">Inactive</Badge>;
-      default:
-        return <Badge variant="outline">{status}</Badge>;
-    }
-  };
-
-  const getRoleBadge = (role: string) => {
-    switch (role.toLowerCase()) {
-      case 'admin':
-        return (
-          <Badge variant="secondary" className="bg-blue-600 text-white">
-            Admin
-          </Badge>
-        );
-      case 'manager':
-        return (
-          <Badge variant="secondary" className="bg-purple-600 text-white">
-            Manager
-          </Badge>
-        );
-      case 'user':
-        return (
-          <Badge variant="outline" className="border-gray-600 text-gray-300">
-            User
-          </Badge>
-        );
-      default:
-        return <Badge variant="outline">{role}</Badge>;
-    }
-  };
+  const { orgs } = useOrganizations();
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
@@ -146,7 +73,7 @@ export default function OrgAdmin() {
             <div className="flex flex-col md:flex-row gap-8 md:gap-0 items-center justify-between">
               <CardTitle className="text-white flex items-center gap-2">
                 <Users className="h-5 w-5" />
-                Organization Admins ({filteredUsers.length})
+                Organization Admins ({filteredAdmins.length})
               </CardTitle>
               <CreateAdmin onCreate={createAdmin} />
             </div>
@@ -163,15 +90,21 @@ export default function OrgAdmin() {
                   className="pl-10 bg-gray-700 border-gray-600 text-white placeholder-gray-400"
                 />
               </div>
-              <Select value={selectedOrg} onValueChange={setSelectedOrg}>
+              <Select value={selectedAdmin} onValueChange={setSelectedAdmin}>
                 <SelectTrigger className="w-[200px] bg-gray-700 border-gray-600 text-white">
                   <Building2 className="h-4 w-4 mr-2" />
-                  <SelectValue />
+                  <SelectValue
+                    placeholder={
+                      loading
+                        ? 'Loading organizations...'
+                        : 'Select organization'
+                    }
+                  />
                 </SelectTrigger>
                 <SelectContent className="bg-gray-700 border-gray-600">
-                  {organizations.map((org) => (
-                    <SelectItem key={org} value={org}>
-                      {org}
+                  {orgs.map((org) => (
+                    <SelectItem key={org.id} value={org.name}>
+                      {org.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -188,48 +121,65 @@ export default function OrgAdmin() {
               </Select>
             </div>
 
-            <div className="rounded-md border border-gray-700">
-              <Table>
-                <TableHeader>
-                  <TableRow className="border-gray-700 hover:bg-gray-800">
-                    <TableHead className="text-gray-300">Name</TableHead>
-                    <TableHead className="text-gray-300">Email</TableHead>
-                    <TableHead className="text-gray-300">
-                      Organization
-                    </TableHead>
-                    <TableHead className="text-gray-300">Role</TableHead>
-                    <TableHead className="text-gray-300">Status</TableHead>
-                    <TableHead className="text-gray-300">Last Login</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredUsers.map((user) => (
-                    <TableRow
-                      key={user.id}
-                      className="border-gray-700 hover:bg-gray-800"
-                    >
-                      <TableCell className="font-medium text-white">
-                        {user.name}
-                      </TableCell>
-                      <TableCell className="text-gray-300">
-                        {user.email}
-                      </TableCell>
-                      <TableCell className="text-gray-300">
-                        {user.organization}
-                      </TableCell>
-                      <TableCell>{getRoleBadge(user.role)}</TableCell>
-                      <TableCell>{getStatusBadge(user.status)}</TableCell>
-                      <TableCell className="text-gray-300">
-                        {user.lastLogin}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+            <AdminTable
+              admins={filteredAdmins}
+              loading={loading}
+              onEdit={(admin) => {
+                setEditAdmin(admin);
+                setEditOpen(true);
+              }}
+              onDelete={(adminId) => {
+                setEditAdmin(
+                  filteredAdmins.find((a) => a.id === adminId) || null
+                );
+                setDeleteOpen(true);
+              }}
+            />
           </CardContent>
         </Card>
       </main>
+
+      <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete {editAdmin?.name}?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete this
+              admin and remove all related data.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setDeleteOpen(false)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-600 hover:bg-red-700"
+              disabled={loading}
+              onClick={() => {
+                if (editAdmin) deleteAdmin(editAdmin.id);
+                setDeleteOpen(false);
+                setEditAdmin(null);
+              }}
+            >
+              Yes, Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {editOpen && (
+        <AdminActionsDialog
+          open={editOpen}
+          onClose={() => {
+            setEditOpen(false);
+            setEditAdmin(null);
+          }}
+          admin={editAdmin}
+          onDeactivate={deactivateAdmin}
+          onActivate={activateAdmin}
+          loadingAction={loadingAction}
+        />
+      )}
     </div>
   );
 }

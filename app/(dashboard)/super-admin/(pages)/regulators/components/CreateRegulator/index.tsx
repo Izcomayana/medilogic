@@ -21,7 +21,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Plus, XIcon } from 'lucide-react';
+import { Shield, XIcon } from 'lucide-react';
 import { toast } from 'sonner';
 import { useState } from 'react';
 
@@ -92,7 +92,7 @@ export const CreateRegulatorDialog = ({ onCreate }: Props) => {
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
         <Button className="primary-button cursor-pointer">
-          <Plus className="h-4 w-4 mr-2" />
+          <Shield className="h-4 w-4 mr-2" />
           Create Regulator
         </Button>
       </AlertDialogTrigger>
@@ -206,7 +206,7 @@ export const CreateRegulatorDialog = ({ onCreate }: Props) => {
             type="submit"
             className="primary-button"
             disabled={submitting}
-            onClick={handleCreate} // <-- call the function that posts to backend
+            onClick={handleCreate}
           >
             {submitting ? 'Creating...' : 'Create Regulator'}
           </Button>
