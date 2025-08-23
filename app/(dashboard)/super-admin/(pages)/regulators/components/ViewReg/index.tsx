@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Building2, Hash, Users } from 'lucide-react';
+import { Building2, Hash } from 'lucide-react';
 import type { Regulators } from '../../types/regulator';
 import { StatusBadge } from '../StatusBadge';
 
@@ -20,12 +20,7 @@ interface ViewDialogProps {
   reg: Regulators | null;
 }
 
-export function ViewRegulatorDialog({
-  open,
-  onClose,
-  reg,
-  // badgeRenderer,
-}: ViewDialogProps) {
+export function ViewRegulatorDialog({ open, onClose, reg }: ViewDialogProps) {
   if (!reg) return null;
   return (
     <AlertDialog open={open} onOpenChange={onClose}>
@@ -93,9 +88,7 @@ export function ViewRegulatorDialog({
               <Label className="text-xs uppercase text-gray-400">
                 Regulated State
               </Label>
-              <div className="mt-1 flex items-center gap-2 text-base text-gray-200">
-                <Users className="h-4 w-4" /> {reg.regState}
-              </div>
+              <div className="mt-1 text-base text-gray-200">{reg.regState}</div>
             </div>
 
             <div>

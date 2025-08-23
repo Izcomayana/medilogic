@@ -8,12 +8,21 @@ import { CreateRegulatorDialog } from './components/CreateRegulator';
 import { EditRegulatorDialog } from './components/EditRegulator';
 import { useRegulators } from '@/hooks/useReg';
 import { ViewRegulatorDialog } from './components/ViewReg';
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from '@/components/ui/select';
 
 export default function RegulatorsPage() {
   const {
     filteredRegs,
     createReg,
     searchTerm,
+    statusFilter,
+    setStatusFilter,
     setSearchTerm,
     setSelectedReg,
     setEditOpen,
@@ -23,6 +32,8 @@ export default function RegulatorsPage() {
     viewReg,
     viewOpen,
     setViewOpen,
+    activateReg,
+    deactivateReg,
   } = useRegulators();
 
   return (
@@ -62,6 +73,16 @@ export default function RegulatorsPage() {
                   className="pl-10 bg-gray-700 border-gray-600 text-white placeholder-gray-400"
                 />
               </div>
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="w-[180px] bg-gray-700 border-gray-600 text-white">
+                  <SelectValue placeholder="Filter by status" />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-600 border-gray-500">
+                  <SelectItem value="all">All Status</SelectItem>
+                  <SelectItem value="active">Active</SelectItem>
+                  <SelectItem value="inactive">Inactive</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <RegulatorTable
@@ -87,11 +108,20 @@ export default function RegulatorsPage() {
           reg={selectedReg}
         />
       )}
-      <EditRegulatorDialog
-        regulator={selectedReg}
-        open={editOpen}
-        setOpen={setEditOpen}
-      />
+
+      {editOpen && (
+        <EditRegulatorDialog
+          regulator={selectedReg}
+          open={editOpen}
+          setOpen={setEditOpen}
+          onClose={() => {
+            setEditOpen(false);
+            setSelectedReg(null);
+          }}
+          onDeactivate={deactivateReg}
+          onActivate={activateReg}
+        />
+      )}
     </div>
   );
 }

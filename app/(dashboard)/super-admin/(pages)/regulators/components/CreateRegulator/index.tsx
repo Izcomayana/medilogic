@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
+
 import {
   AlertDialog,
   AlertDialogContent,
@@ -72,7 +74,9 @@ export const CreateRegulatorDialog = ({ onCreate }: Props) => {
       setOpen(false);
       // reset
       setName('');
-      (setEmail(''), setPassword(''), setStatus('active'));
+      setEmail('');
+      setPassword('');
+      setStatus('active');
       setCountry('');
       setState('');
       setRegion('');
