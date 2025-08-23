@@ -21,35 +21,35 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Shield, XIcon } from 'lucide-react';
+import { UserPlus, XIcon } from 'lucide-react';
 import { toast } from 'sonner';
 import { useState } from 'react';
+import { useOrganizations } from '@/hooks/useOrg';
 
 interface Props {
-  onCreate: (regData: {
+  onCreate: (adminData: {
     name: string;
     email: string;
     password: string;
     status: 'active' | 'inactive';
-    country: string;
-    state: string;
-    region: string;
+    role: 'admin';
+    organization_id: string;
   }) => void | Promise<void>;
 }
 
-export const CreateRegulatorDialog = ({ onCreate }: Props) => {
+export const CreateAdmin = ({ onCreate }: Props) => {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [status, setStatus] = useState<'active' | 'inactive'>('active');
-  const [country, setCountry] = useState('');
-  const [state, setState] = useState('');
-  const [region, setRegion] = useState('');
+  const [role, setRole] = useState<'admin'>('admin');
+  const [organizationId, setOrganizationId] = useState<string>('');
   const [submitting, setSubmitting] = useState(false);
+  const { orgs, loading } = useOrganizations();
 
   const handleCreate = async () => {
-    if (!name || !email || !country || !region) {
+    if (!name || !email || !password || !organizationId) {
       toast.error('Please fill in all required fields');
       return;
     }
@@ -67,9 +67,8 @@ export const CreateRegulatorDialog = ({ onCreate }: Props) => {
         email: email.trim(),
         password: password.trim(),
         status,
-        country: country.trim(),
-        region: region.trim(),
-        state: state.trim(),
+        role,
+        organization_id: organizationId,
       });
       // close only on success
       setOpen(false);
@@ -78,9 +77,8 @@ export const CreateRegulatorDialog = ({ onCreate }: Props) => {
       setEmail('');
       setPassword('');
       setStatus('active');
-      setCountry('');
-      setState('');
-      setRegion('');
+      setRole('admin');
+      setOrganizationId('');
     } catch {
       // onCreate should toast its own error; keep dialog open
     } finally {
@@ -92,30 +90,31 @@ export const CreateRegulatorDialog = ({ onCreate }: Props) => {
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
         <Button className="primary-button cursor-pointer">
-          <Shield className="h-4 w-4 mr-2" />
-          Create Regulator
+          <UserPlus className="h-5 w-5" />
+          Create Admin
         </Button>
       </AlertDialogTrigger>
+
       <AlertDialogContent className="bg-gray-800 border-gray-700 text-white">
         <AlertDialogHeader>
           <div className="flex items-center justify-between">
-            <AlertDialogTitle>Create new regulator</AlertDialogTitle>
+            <AlertDialogTitle>Create new admin</AlertDialogTitle>
             <AlertDialogCancel className="bg-transparent">
               <XIcon />
             </AlertDialogCancel>
           </div>
           <AlertDialogDescription className="text-gray-400">
-            Add a new regulator to the system.
+            Add a new admin to an organization.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="name" className="text-right">
-              Name
+              Full Name
             </Label>
             <Input
               id="name"
-              placeholder="Full name"
+              placeholder="Enter full name"
               className="col-span-3 bg-gray-700 border-gray-600 text-white"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -123,7 +122,7 @@ export const CreateRegulatorDialog = ({ onCreate }: Props) => {
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="email" className="text-right">
-              Email
+              Email address
             </Label>
             <Input
               id="email"
@@ -165,51 +164,68 @@ export const CreateRegulatorDialog = ({ onCreate }: Props) => {
             </Select>
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="country" className="text-right">
-              Country
+            <Label htmlFor="organization" className="text-gray-300">
+              Organization
             </Label>
-            <Input
-              id="country"
-              value={country}
-              onChange={(e) => setCountry(e.target.value)}
-              placeholder="Country"
-              className="col-span-3 bg-gray-700 border-gray-600 text-white"
-            />
+            <Select
+              value={organizationId}
+              onValueChange={(v) => setOrganizationId(v)}
+            >
+              <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                <SelectValue
+                  placeholder={
+                    loading ? 'Loading organizations...' : 'Select organization'
+                  }
+                />
+              </SelectTrigger>
+              <SelectContent className="bg-gray-500 border-gray-600">
+                {orgs.map((org) => (
+                  <SelectItem key={org.id} value={org.id}>
+                    {org.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="region" className="text-right">
-              Region
+            <Label htmlFor="role" className="text-gray-300">
+              Role
             </Label>
-            <Input
-              id="region"
-              placeholder="e.g., North America"
-              className="col-span-3 bg-gray-700 border-gray-600 text-white"
-              value={region}
-              onChange={(e) => setRegion(e.target.value)}
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="state" className="text-right">
-              State
-            </Label>
-            <Input
-              id="state"
-              placeholder="e.g., North America"
-              className="col-span-3 bg-gray-700 border-gray-600 text-white"
-              value={state}
-              onChange={(e) => setState(e.target.value)}
-            />
+            <Select value={role} onValueChange={(v) => setRole(v as 'admin')}>
+              <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                <SelectValue placeholder="Select user role" />
+              </SelectTrigger>
+              <SelectContent className="bg-gray-700 border-gray-600">
+                <SelectItem value="admin">Admin</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
+
         <AlertDialogFooter>
-          <Button
-            type="submit"
-            className="primary-button"
-            disabled={submitting}
-            onClick={handleCreate}
-          >
-            {submitting ? 'Creating...' : 'Create Regulator'}
-          </Button>
+          <div className="flex gap-4">
+            <Button
+              type="submit"
+              className="primary-button flex-1"
+              disabled={submitting}
+              onClick={handleCreate}
+            >
+              {submitting ? 'Creating...' : 'Create Admin'}
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              className="border-gray-600 text-gray-300 hover:bg-gray-700 bg-transparent"
+              onClick={() => ({
+                name: '',
+                email: '',
+                password: '',
+                organizationId: '',
+              })}
+            >
+              Reset Form
+            </Button>
+          </div>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
