@@ -339,6 +339,38 @@ export function useRegulators() {
     }
   };
 
+  // delete regulator
+  const deleteReg = async (regId: string) => {
+    try {
+      let validToken = token;
+      if (!validToken || isTokenExpired(validToken)) {
+        const refreshed = await refreshAccessToken();
+        if (!refreshed) {
+          toast.error('Authentication expired. Please log in again.');
+          return;
+        }
+        validToken = refreshed;
+      }
+
+      await axios.delete(
+        `https://medilogic-backend.onrender.com/super/super/regulators/${regId}`,
+        { headers: { Authorization: `Bearer ${validToken}` } }
+      );
+
+      // ✅ Just remove locally, don’t refetch whole list
+      setRegs((prev) => prev.filter((r) => r.id !== regId));
+
+      toast.success('Regulator permanently deleted 🗑️');
+    } catch (err: any) {
+      console.error('Failed to delete org:', err);
+      const msg =
+        err?.response?.data?.detail ||
+        err.message ||
+        'Failed to delete organization';
+      toast.error(msg);
+    }
+  };
+
   return {
     regs,
     loading,
@@ -358,5 +390,6 @@ export function useRegulators() {
     editRegulatorJurisdiction,
     activateReg,
     deactivateReg,
+    deleteReg,
   };
 }

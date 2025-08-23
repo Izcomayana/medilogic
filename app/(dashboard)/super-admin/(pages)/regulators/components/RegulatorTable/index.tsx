@@ -26,6 +26,7 @@ interface Props {
   onEdit: (reg: Regulators) => void;
   onView: (reg: Regulators) => void;
   loading: boolean;
+  onDelete: (regId: string) => void;
 }
 
 const SkeletonRow = () => (
@@ -48,10 +49,8 @@ export const RegulatorTable = ({
   onEdit,
   onView,
   loading,
+  onDelete,
 }: Props) => {
-  const handleDisable = (name: string) =>
-    toast.success(`${name} has been disabled`);
-
   return (
     <div className="rounded-md border border-gray-700">
       <Table>
@@ -109,9 +108,9 @@ export const RegulatorTable = ({
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           className="text-red-400 hover:bg-gray-600 cursor-pointer"
-                          onClick={() => handleDisable(r.name)}
+                          onClick={() => onDelete(r.id)}
                         >
-                          <Trash2 className="mr-2 h-4 w-4" /> Disable
+                          <Trash2 className="mr-2 h-4 w-4" /> Delete
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>

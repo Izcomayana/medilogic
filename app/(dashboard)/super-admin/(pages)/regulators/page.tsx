@@ -1,4 +1,5 @@
 'use client';
+
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -15,8 +16,21 @@ import {
   SelectContent,
   SelectItem,
 } from '@/components/ui/select';
+import React from 'react';
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from '@/components/ui/alert-dialog';
 
 export default function RegulatorsPage() {
+  const [deleteOpen, setDeleteOpen] = React.useState(false);
+
   const {
     filteredRegs,
     createReg,
@@ -34,6 +48,7 @@ export default function RegulatorsPage() {
     setViewOpen,
     activateReg,
     deactivateReg,
+    deleteReg,
   } = useRegulators();
 
   return (
@@ -93,10 +108,43 @@ export default function RegulatorsPage() {
               }}
               onView={viewReg}
               loading={loading}
+              onDelete={(regId) => {
+                setSelectedReg(
+                  filteredRegs.find((r) => r.id === regId) || null
+                );
+                setDeleteOpen(true);
+              }}
             />
           </CardContent>
         </Card>
       </main>
+
+      <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete {selectedReg?.name}?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete this
+              regulator and remove all related data.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setDeleteOpen(false)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-600 hover:bg-red-700"
+              onClick={() => {
+                if (selectedReg) deleteReg(selectedReg.id);
+                setDeleteOpen(false);
+                setSelectedReg(null);
+              }}
+            >
+              Yes, Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {viewOpen && selectedReg && (
         <ViewRegulatorDialog
