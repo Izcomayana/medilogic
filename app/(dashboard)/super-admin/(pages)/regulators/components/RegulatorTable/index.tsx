@@ -18,7 +18,6 @@ import {
 import { Edit, Eye, MoreHorizontal, Trash2 } from 'lucide-react';
 import { Regulators } from '../../types/regulator';
 import { StatusBadge } from '../StatusBadge';
-import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 
 interface Props {
