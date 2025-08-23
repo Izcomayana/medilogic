@@ -21,6 +21,8 @@ import {
 } from '@/components/ui/select';
 import { Users, Search, Building2 } from 'lucide-react';
 import { useState } from 'react';
+import { CreateAdmin } from './components/CreateAdmin';
+import { useAdmin } from '@/hooks/useAdmin';
 
 const orgUsers = [
   {
@@ -69,7 +71,7 @@ const organizations = [
   'EduTech Academy',
 ];
 
-export default function OrgUsers() {
+export default function OrgAdmin() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedOrg, setSelectedOrg] = useState('All Organizations');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -85,6 +87,8 @@ export default function OrgUsers() {
       user.status.toLowerCase() === statusFilter.toLowerCase();
     return matchesSearch && matchesOrg && matchesStatus;
   });
+
+  const { createAdmin } = useAdmin();
 
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
@@ -128,10 +132,10 @@ export default function OrgUsers() {
         <SidebarTrigger className="text-white hover:bg-gray-800" />
         <div className="flex-1">
           <h1 className="text-xl font-semibold text-white">
-            Organization Users
+            Organization admins
           </h1>
           <p className="text-sm text-gray-400">
-            View and manage users across all organizations
+            View and manage admins across all organizations
           </p>
         </div>
       </header>
@@ -139,11 +143,15 @@ export default function OrgUsers() {
       <main className="flex-1 p-6">
         <Card className="dashboard-card">
           <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
-              <Users className="h-5 w-5" />
-              Organization Users ({filteredUsers.length})
-            </CardTitle>
+            <div className="flex flex-col md:flex-row gap-8 md:gap-0 items-center justify-between">
+              <CardTitle className="text-white flex items-center gap-2">
+                <Users className="h-5 w-5" />
+                Organization Admins ({filteredUsers.length})
+              </CardTitle>
+              <CreateAdmin onCreate={createAdmin} />
+            </div>
           </CardHeader>
+
           <CardContent>
             <div className="flex items-center gap-4 mb-6">
               <div className="relative flex-1">

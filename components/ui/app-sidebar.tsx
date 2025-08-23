@@ -40,9 +40,7 @@ const sidebarLinksByRole: Record<
       icon: Building2,
     },
     { title: 'Regulators', url: '/super-admin/regulators', icon: Shield },
-    { title: 'Org Users', url: '/super-admin/orgusers', icon: Users },
-    { title: 'Invite Codes', url: '/super-admin/invitecodes', icon: RotateCcw },
-    { title: 'Create User', url: '/super-admin/createuser', icon: UserPlus },
+    { title: 'Admins', url: '/super-admin/admins', icon: Users },
   ],
   admin: [
     { title: 'Dashboard', url: '/company-admin', icon: Home },
