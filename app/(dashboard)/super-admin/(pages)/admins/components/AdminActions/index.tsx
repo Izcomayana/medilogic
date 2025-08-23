@@ -9,7 +9,6 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { useAdmin } from '@/hooks/useAdmin';
 import { Power, PowerOff } from 'lucide-react';
 import type { Admin } from '../../type/admin';
 import React from 'react';
