@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { toast } from 'sonner';
 import axios from 'axios';
 import { Regulators } from '../app/(dashboard)/super-admin/(pages)/regulators/types/regulator';
@@ -59,6 +59,7 @@ export function useRegulators() {
           regRegion: r.regulated_region,
         }));
 
+        mapped.sort((a, b) => a.name.localeCompare(b.name));
         setRegs(mapped);
       } catch (err: any) {
         const detail = err?.response?.data?.detail;
@@ -145,7 +146,7 @@ export function useRegulators() {
       const detail = err?.response?.data?.detail;
       const msg = Array.isArray(detail)
         ? detail.map((d: any) => d.msg).join(' • ')
-        : detail || err.message || 'Failed to create organization';
+        : detail || err.message || 'Failed to create regulator';
       toast.error(msg);
       throw err;
     }

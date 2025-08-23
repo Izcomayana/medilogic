@@ -69,6 +69,8 @@ export function useOrganizations() {
           data_retention_years: o.data_retention_years,
         }));
 
+        mapped.sort((a, b) => a.name.localeCompare(b.name));
+
         setOrgs(mapped);
       } catch (e: any) {
         console.error(
