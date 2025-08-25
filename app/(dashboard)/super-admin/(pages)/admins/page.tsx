@@ -30,6 +30,7 @@ import { AdminActionsDialog } from './components/AdminActions';
 
 export default function OrgAdmin() {
   const [deleteOpen, setDeleteOpen] = React.useState(false);
+  const { orgs } = useOrganizations();
 
   const {
     createAdmin,
@@ -50,8 +51,6 @@ export default function OrgAdmin() {
     editAdmin,
     setEditAdmin,
   } = useAdmin();
-
-  const { orgs } = useOrganizations();
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
