@@ -53,6 +53,13 @@ export default function Dashboard() {
       icon: ShieldUser,
       trend: 'warning',
     },
+    // {
+    //   title: "Pending Deactivations",
+    //   value: "3",
+    //   change: "Requires attention",
+    //   icon: AlertTriangle,
+    //   trend: "warning",
+    // },
   ];
 
   return (

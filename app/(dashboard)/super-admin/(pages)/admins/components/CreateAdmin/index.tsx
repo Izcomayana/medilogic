@@ -48,6 +48,15 @@ export const CreateAdmin = ({ onCreate }: Props) => {
   const [submitting, setSubmitting] = useState(false);
   const { orgs, loading } = useOrganizations();
 
+  const resetForm = () => {
+    setName('');
+    setEmail('');
+    setPassword('');
+    setOrganizationId('');
+    setStatus('active');
+    setRole('admin');
+  };
+
   const handleCreate = async () => {
     if (!name || !email || !password || !organizationId) {
       toast.error('Please fill in all required fields');
@@ -72,14 +81,7 @@ export const CreateAdmin = ({ onCreate }: Props) => {
       });
       // close only on success
       setOpen(false);
-      // reset
-      setName('');
-      setEmail('');
-      setPassword('');
-      setStatus('active');
-      setRole('admin');
-      setOrganizationId('');
-    } catch {
+      resetForm();
       // onCreate should toast its own error; keep dialog open
     } finally {
       setSubmitting(false);
@@ -216,12 +218,7 @@ export const CreateAdmin = ({ onCreate }: Props) => {
               type="button"
               variant="outline"
               className="border-gray-600 text-gray-300 hover:bg-gray-700 bg-transparent"
-              onClick={() => ({
-                name: '',
-                email: '',
-                password: '',
-                organizationId: '',
-              })}
+              onClick={resetForm}
             >
               Reset Form
             </Button>

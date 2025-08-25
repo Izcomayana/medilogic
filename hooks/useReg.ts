@@ -7,79 +7,59 @@ import axios from 'axios';
 import { Regulators } from '../app/(dashboard)/super-admin/(pages)/regulators/types/regulator';
 import { useAuth } from '@/components/auth';
 import { isTokenExpired } from '@/hooks/token';
+import { useAuthorizedRequest } from './useRequest';
 
 export function useRegulators() {
   const [regs, setRegs] = useState<Regulators[]>([]);
   const [loading, setLoading] = useState(true);
-  const { token, refreshAccessToken } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [viewOpen, setViewOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [selectedReg, setSelectedReg] = useState<Regulators | null>(null);
 
+  const authorizedRequest = useAuthorizedRequest();
+
   // fecth regulators
   useEffect(() => {
-    if (!token) return;
     let isMounted = true;
+    setLoading(true);
 
-    const fetchRegs = async () => {
-      setLoading(true);
-      let validToken = token;
+    authorizedRequest(async (validToken) => {
+      const res = await axios.get(
+        'https://medilogic-backend.onrender.com/super/super/regulators',
+        { headers: { Authorization: `Bearer ${validToken}` } }
+      );
 
-      if (isTokenExpired(validToken)) {
-        const refreshed = await refreshAccessToken();
-        if (!refreshed) return;
-        validToken = refreshed;
-      }
+      type RegApi = {
+        id: string;
+        name: string;
+        email: string;
+        is_active: boolean;
+        regulated_region: string;
+        regulated_country: string;
+      };
 
-      try {
-        const res = await axios.get(
-          'https://medilogic-backend.onrender.com/super/super/regulators',
-          { headers: { Authorization: `Bearer ${validToken}` } }
-        );
+      const mapped: Regulators[] = (res.data as RegApi[]).map((r) => ({
+        id: r.id,
+        name: r.name,
+        email: r.email,
+        status: r.is_active ? 'active' : 'inactive',
+        regCountry: r.regulated_country,
+        regRegion: r.regulated_region,
+      }));
 
-        if (!isMounted) return;
+      mapped.sort((a, b) => a.name.localeCompare(b.name));
+      if (isMounted) setRegs(mapped);
+    }, 'Failed to fetch regulators').finally(() => {
+      if (isMounted) setLoading(false);
+    });
 
-        type RegApi = {
-          id: string;
-          name: string;
-          email: string;
-          is_active: boolean;
-          regulated_region: string;
-          regulated_country: string;
-        };
-
-        const mapped: Regulators[] = (res.data as RegApi[]).map((r) => ({
-          id: r.id,
-          name: r.name,
-          email: r.email,
-          status: r.is_active ? 'active' : 'inactive',
-          regCountry: r.regulated_country,
-          regRegion: r.regulated_region,
-        }));
-
-        mapped.sort((a, b) => a.name.localeCompare(b.name));
-        setRegs(mapped);
-      } catch (err: any) {
-        const detail = err?.response?.data?.detail;
-        const msg = Array.isArray(detail)
-          ? detail.map((d: any) => d.msg).join(' • ')
-          : detail || err.message || 'Failed to fetch organization';
-        toast.error(msg);
-        throw err;
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    };
-
-    fetchRegs();
     return () => {
       isMounted = false;
     };
-  }, [token, refreshAccessToken]);
+  }, [authorizedRequest]);
 
-  // Filtered orgs
   const filteredRegs = useMemo(() => {
     return regs.filter((reg) => {
       const matchesSearch =
@@ -97,17 +77,7 @@ export function useRegulators() {
 
   // Create Regulator
   const createReg = async (regData: any) => {
-    try {
-      let validToken = token;
-      if (!validToken || isTokenExpired(validToken)) {
-        const refreshed = await refreshAccessToken();
-        if (!refreshed) {
-          toast.error('Authentication expired. Please log in again.');
-          return;
-        }
-        validToken = refreshed;
-      }
-
+    await authorizedRequest(async (validToken) => {
       const res = await axios.post(
         'https://medilogic-backend.onrender.com/super/super/regulators',
         {
@@ -142,31 +112,13 @@ export function useRegulators() {
       ]);
 
       toast.success('Regulator created successfully');
-    } catch (err: any) {
-      const detail = err?.response?.data?.detail;
-      const msg = Array.isArray(detail)
-        ? detail.map((d: any) => d.msg).join(' • ')
-        : detail || err.message || 'Failed to create regulator';
-      toast.error(msg);
-      throw err;
-    }
+    }, 'Failed to create regulator');
   };
 
-  // View Regulator
   const viewReg = async (reg: Regulators) => {
     const regId = reg.id;
 
-    try {
-      let validToken = token;
-      if (!validToken || isTokenExpired(validToken)) {
-        const refreshed = await refreshAccessToken();
-        if (!refreshed) {
-          toast.error('Authentication expired. Please log in again.');
-          return;
-        }
-        validToken = refreshed;
-      }
-
+    await authorizedRequest(async (validToken) => {
       const res = await axios.get(
         `https://medilogic-backend.onrender.com/super/admin/regulators/${regId}`,
         { headers: { Authorization: `Bearer ${validToken}` } }
@@ -195,10 +147,7 @@ export function useRegulators() {
 
       setSelectedReg(mappedReg);
       setViewOpen(true);
-    } catch (error: any) {
-      console.error(error);
-      toast.error('Failed to load regulator details.');
-    }
+    }, 'Failed to load regulator details');
   };
 
   // Edit regulator jurisdiction
@@ -207,17 +156,7 @@ export function useRegulators() {
     data: { country: string; state: string; region: string },
     regulator: Regulators
   ) => {
-    try {
-      let validToken = token;
-      if (!validToken || isTokenExpired(validToken)) {
-        const refreshed = await refreshAccessToken();
-        if (!refreshed) {
-          toast.error('Authentication expired. Please log in again.');
-          return;
-        }
-        validToken = refreshed;
-      }
-
+    await authorizedRequest(async (validToken) => {
       const payload = {
         organization_name: regulator.orgName || '',
         name: regulator.name || '',
@@ -230,8 +169,6 @@ export function useRegulators() {
         regulated_waste_types: regulator.regWasteTypes || [],
         regulated_goods_types: regulator.regGoodsTypes || [],
         regulated_logistics_scope: regulator.regLogScope || [],
-
-        // updated fields
         regulated_country: data.country,
         regulated_state: data.state,
         regulated_region: data.region,
@@ -257,35 +194,16 @@ export function useRegulators() {
       );
 
       toast.success('Regulator jurisdiction updated successfully');
-    } catch (err: any) {
-      console.error('Failed to edit regulator jurisdiction:', err);
-      const msg =
-        err?.response?.data?.detail ||
-        err.message ||
-        'Failed to edit jurisdiction';
-      toast.error(msg);
-    }
+    }, 'Failed to edit jurisdiction');
   };
 
   // activate regulator
   const activateReg = async (regId: string) => {
-    try {
-      let validToken = token;
-      if (!validToken || isTokenExpired(validToken)) {
-        const refreshed = await refreshAccessToken();
-        if (!refreshed) {
-          toast.error('Authentication expired. Please log in again.');
-          return;
-        }
-        validToken = refreshed;
-      }
-
+    await authorizedRequest(async (validToken) => {
       await axios.patch(
         `https://medilogic-backend.onrender.com/super/super/regulators/${regId}/activate`,
         {},
-        {
-          headers: { Authorization: `Bearer ${validToken}` },
-        }
+        { headers: { Authorization: `Bearer ${validToken}` } }
       );
 
       setRegs((prev) =>
@@ -293,83 +211,36 @@ export function useRegulators() {
       );
 
       toast.success('Regulator activated successfully');
-    } catch (err: any) {
-      console.error('Failed to activate organization:', err);
-      const msg =
-        err?.response?.data?.detail ||
-        err.message ||
-        'Failed to activate organization';
-      toast.error(msg);
-    }
+    }, 'Failed to activate regulator');
   };
 
-  // deactivate regulator
   const deactivateReg = async (regId: string) => {
-    try {
-      let validToken = token;
-      if (!validToken || isTokenExpired(validToken)) {
-        const refreshed = await refreshAccessToken();
-        if (!refreshed) {
-          toast.error('Authentication expired. Please log in again.');
-          return;
-        }
-        validToken = refreshed;
-      }
-
+    await authorizedRequest(async (validToken) => {
       await axios.put(
         `https://medilogic-backend.onrender.com/super/super/regulators/${regId}/deactivate`,
         {},
-        {
-          headers: { Authorization: `Bearer ${validToken}` },
-        }
+        { headers: { Authorization: `Bearer ${validToken}` } }
       );
 
-      // update local state after successful deletion
       setRegs((prev) =>
         prev.map((r) => (r.id === regId ? { ...r, status: 'inactive' } : r))
       );
 
       toast.success('Regulator deactivated successfully');
-    } catch (err: any) {
-      console.error('Failed to deactivate organization:', err);
-      const msg =
-        err?.response?.data?.detail ||
-        err.message ||
-        'Failed to deactivate organization';
-      toast.error(msg);
-    }
+    }, 'Failed to deactivate regulator');
   };
 
   // delete regulator
   const deleteReg = async (regId: string) => {
-    try {
-      let validToken = token;
-      if (!validToken || isTokenExpired(validToken)) {
-        const refreshed = await refreshAccessToken();
-        if (!refreshed) {
-          toast.error('Authentication expired. Please log in again.');
-          return;
-        }
-        validToken = refreshed;
-      }
-
+    await authorizedRequest(async (validToken) => {
       await axios.delete(
         `https://medilogic-backend.onrender.com/super/super/regulators/${regId}`,
         { headers: { Authorization: `Bearer ${validToken}` } }
       );
 
-      // ✅ Just remove locally, don’t refetch whole list
       setRegs((prev) => prev.filter((r) => r.id !== regId));
-
       toast.success('Regulator permanently deleted 🗑️');
-    } catch (err: any) {
-      console.error('Failed to delete org:', err);
-      const msg =
-        err?.response?.data?.detail ||
-        err.message ||
-        'Failed to delete organization';
-      toast.error(msg);
-    }
+    }, 'Failed to delete regulator');
   };
 
   return {
