@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { FileText, Search, Download, MapPin, Clock } from 'lucide-react';
+import { FileText, MapPin, Clock } from 'lucide-react';
 import { useActivityLogs } from '@/hooks/useActivity';
 import {
   Table,
@@ -13,17 +13,17 @@ import { getRoleBadge } from '../RoleBadge';
 import { getActionBadge } from '../ActionBadge';
 import { Button } from '@/components/ui/button';
 
-export function LogsTable() {
-  const {
-    filteredLogs,
-    startIndex,
-    logsPerPage,
-    paginatedLogs,
-    totalPages,
-    currentPage,
-    setCurrentPage,
-  } = useActivityLogs();
+type LogsTableProps = ReturnType<typeof useActivityLogs>;
 
+export function LogsTable({
+  filteredLogs,
+  startIndex,
+  logsPerPage,
+  paginatedLogs,
+  totalPages,
+  currentPage,
+  setCurrentPage,
+}: LogsTableProps) {
   return (
     <Card className="dashboard-card">
       <CardHeader>

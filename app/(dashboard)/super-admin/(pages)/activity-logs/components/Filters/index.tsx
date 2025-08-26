@@ -16,21 +16,23 @@ import {
   Building2,
   Settings,
 } from 'lucide-react';
-import { useActivityLogs } from '@/hooks/useActivity';
 import { useOrganizations } from '@/hooks/useOrg';
+import { useActivityLogs } from '@/hooks/useActivity';
 
-type FiltersProps = {
-  searchTerm: string;
-  setSearchTerm: (val: string) => void;
-  roleFilter: string;
-  setRoleFilter: (val: string) => void;
-  dateRange: string;
-  setDateRange: (val: string) => void;
-  orgFilter: string;
-  setOrgFilter: (val: string) => void;
-  actionFilter: string;
-  setActionFilter: (val: string) => void;
-};
+type FiltersProps = ReturnType<typeof useActivityLogs>;
+
+// type FiltersProps = {
+//   searchTerm: string;
+//   setSearchTerm: (val: string) => void;
+//   roleFilter: string;
+//   setRoleFilter: (val: string) => void;
+//   dateRange: string;
+//   setDateRange: (val: string) => void;
+//   orgFilter: string;
+//   setOrgFilter: (val: string) => void;
+//   actionFilter: string;
+//   setActionFilter: (val: string) => void;
+// };
 
 export function Filters({
   searchTerm,

@@ -1,31 +1,17 @@
 'use client';
 
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { useState } from 'react';
 import { toast } from 'sonner';
-import { activityLogs } from './activity';
 import { Filters } from './components/Filters';
 import { LogsTable } from './components/LogsTable';
 import { Download } from 'lucide-react';
 import { useActivityLogs } from '@/hooks/useActivity';
 
 export default function ActivityLogs() {
-  const {
-    searchTerm,
-    setSearchTerm,
-    roleFilter,
-    setRoleFilter,
-    dateRange,
-    setDateRange,
-    orgFilter,
-    setOrgFilter,
-    actionFilter,
-    setActionFilter,
-    filteredLogs,
-  } = useActivityLogs();
+  const logsState = useActivityLogs();
+
+  const { filteredLogs } = logsState;
 
   const handleExport = (type: 'csv' | 'pdf') => {
     toast.success(
@@ -64,21 +50,10 @@ export default function ActivityLogs() {
 
       <main className="flex-1 p-6">
         {/* Filters Section */}
-        <Filters
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          roleFilter={roleFilter}
-          setRoleFilter={setRoleFilter}
-          dateRange={dateRange}
-          setDateRange={setDateRange}
-          orgFilter={orgFilter}
-          setOrgFilter={setOrgFilter}
-          actionFilter={actionFilter}
-          setActionFilter={setActionFilter}
-        />
+        <Filters {...logsState} />
 
         {/* Activity Logs Table */}
-        <LogsTable />
+        <LogsTable {...logsState} />
       </main>
     </div>
   );

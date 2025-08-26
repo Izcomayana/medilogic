@@ -10,8 +10,8 @@ import {
   ClipboardList,
   FileText,
   Logs,
-  Bell,
-  AppWindow,
+  // Bell,
+  // AppWindow,
 } from 'lucide-react';
 import { useAuth } from '@/components/auth';
 import {

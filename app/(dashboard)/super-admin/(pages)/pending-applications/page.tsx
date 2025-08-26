@@ -322,7 +322,7 @@ export default function PendingApplicationsPage() {
                   📭 No pending applications at the moment
                 </h3>
                 <p className="text-gray-400">
-                  You'll see new regulator and organization admin requests here.
+                  Youll see new regulator and organization admin requests here.
                 </p>
               </div>
             ) : (

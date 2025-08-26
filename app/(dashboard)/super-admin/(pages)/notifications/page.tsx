@@ -22,7 +22,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Bell, Search, Check, Trash2, CheckCheck, Filter } from 'lucide-react';
+import { Bell, Search, Check, Trash2, Filter, CheckCheck } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 
@@ -265,10 +265,10 @@ export default function NotificationsPage() {
             notifications as read or delete them.
           </p>
         </div>
-        {/* <Button onClick={markAllAsRead} className="primary-button">
-            <CheckCheck className="h-4 w-4 mr-2" />
-            Mark All as Read
-          </Button> */}
+        <Button onClick={markAllAsRead} className="primary-button">
+          <CheckCheck className="h-4 w-4 mr-2" />
+          Mark All as Read
+        </Button>
         <NotificationsDropdown />
       </header>
 
@@ -416,7 +416,7 @@ export default function NotificationsPage() {
               <div className="text-center py-12">
                 <Bell className="h-12 w-12 text-gray-600 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-white mb-2">
-                  You're all caught up!
+                  Youre all caught up!
                 </h3>
                 <p className="text-gray-400">
                   No notifications available for the selected filters.
