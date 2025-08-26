@@ -21,11 +21,11 @@ export default function ActivityLogs() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
-      <header className="flex h-16 items-center gap-4 border-b border-gray-700 bg-gray-900 px-6">
+      <header className="flex h-16 items-center gap-4 border-b border-gray-700 bg-gray-900 px-3">
         <SidebarTrigger className="text-white hover:bg-gray-800" />
         <div className="flex-1">
           <h1 className="text-xl font-semibold text-white">Activity Logs</h1>
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-gray-400 hidden lg;block">
             Track all system activities for accountability and compliance.
           </p>
         </div>
@@ -33,7 +33,7 @@ export default function ActivityLogs() {
           <Button
             onClick={() => handleExport('csv')}
             variant="outline"
-            className="border-gray-600 text-gray-300 hover:bg-gray-700"
+            className="border-gray-100 text-gray-700 hover:text-gray-300 hover:bg-gray-700"
           >
             <Download className="h-4 w-4 mr-2" />
             Export CSV
@@ -48,7 +48,7 @@ export default function ActivityLogs() {
         </div>
       </header>
 
-      <main className="flex-1 p-6">
+      <main className="flex-1 p-3">
         {/* Filters Section */}
         <Filters {...logsState} />
 
