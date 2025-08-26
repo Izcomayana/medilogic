@@ -11,12 +11,32 @@ import { useActivityLogs } from '@/hooks/useActivity';
 export default function ActivityLogs() {
   const logsState = useActivityLogs();
 
-  const { filteredLogs } = logsState;
+  const {
+    filteredLogs,
+    exportingcsv,
+    exportLogsCSV,
+    exportingpdf,
+    exportLogsPDF,
+  } = logsState;
 
-  const handleExport = (type: 'csv' | 'pdf') => {
-    toast.success(
-      `${type.toUpperCase()} export started for ${filteredLogs.length} activity logs`
-    );
+  const handleExport = async (type: 'csv' | 'pdf') => {
+    if (type === 'csv') {
+      try {
+        await exportLogsCSV();
+        toast.success(`CSV export completed for ${filteredLogs.length} logs`);
+      } catch {
+        toast.error('Failed to export CSV');
+      }
+    } else if (type === 'pdf') {
+      try {
+        await exportLogsPDF();
+        toast.success(`PDF export completed for ${filteredLogs.length} logs`);
+      } catch {
+        toast.error('Failed to export PDF');
+      }
+    } else {
+      toast.info('PDF export not implemented yet');
+    }
   };
 
   return (
@@ -32,18 +52,21 @@ export default function ActivityLogs() {
         <div className="flex gap-2">
           <Button
             onClick={() => handleExport('csv')}
+            disabled={exportingcsv}
             variant="outline"
             className="border-gray-100 text-gray-700 hover:text-gray-300 hover:bg-gray-700"
           >
             <Download className="h-4 w-4 mr-2" />
-            Export CSV
+            {exportingcsv ? 'Exporting...' : 'Export CSV'}
           </Button>
+
           <Button
             onClick={() => handleExport('pdf')}
+            disabled={exportingpdf}
             className="primary-button"
           >
             <Download className="h-4 w-4 mr-2" />
-            Export PDF
+            {exportingpdf ? 'Exporting...' : 'Export PDF'}
           </Button>
         </div>
       </header>

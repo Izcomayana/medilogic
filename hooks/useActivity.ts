@@ -29,13 +29,14 @@ const safeLower = (v: unknown): string => safe(v).toLowerCase();
 export function useActivityLogs(logsPerPage = 20) {
   const [logs, setLogs] = useState<ActivityLog[]>([]);
   const [loading, setLoading] = useState(true);
-
   const [searchTerm, setSearchTerm] = useState('');
   const [dateRange, setDateRange] = useState<DateRangeFilter>('all');
   const [roleFilter, setRoleFilter] = useState('all');
   const [orgFilter, setOrgFilter] = useState('all');
   const [actionFilter, setActionFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
+  const [exportingcsv, setExportingcsv] = useState(false);
+  const [exportingpdf, setExportingpdf] = useState(false);
 
   const authorizedRequest = useAuthorizedRequest();
 
@@ -173,6 +174,84 @@ export function useActivityLogs(logsPerPage = 20) {
     startIndex + logsPerPage
   );
 
+  const exportLogsCSV = async () => {
+    try {
+      setExportingcsv(true);
+
+      const data = await authorizedRequest(async (validToken) => {
+        const res = await axios.get(
+          'https://medilogic-backend.onrender.com/activity-logs/export/csv',
+          {
+            headers: { Authorization: `Bearer ${validToken}` },
+            responseType: 'blob', // important for file download
+            params: {
+              // Optional filters — you can wire these up if your backend supports them
+              // user_id: 'some-id',
+              // organization_id: 'some-org',
+              // start_date: ...,
+              // end_date: ...
+            },
+          }
+        );
+
+        // Convert blob to downloadable file
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `activity-logs-${Date.now()}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      }, 'Failed to export CSV');
+
+      return data;
+    } catch (err) {
+      console.error('CSV export failed:', err);
+      throw err;
+    } finally {
+      setExportingcsv(false);
+    }
+  };
+
+  const exportLogsPDF = async () => {
+    try {
+      setExportingpdf(true);
+
+      const data = await authorizedRequest(async (validToken) => {
+        const res = await axios.get(
+          'https://medilogic-backend.onrender.com/activity-logs/export/pdf',
+          {
+            headers: { Authorization: `Bearer ${validToken}` },
+            responseType: 'blob', // important for file download
+            params: {
+              // Optional filters if backend supports:
+              // user_id: 'some-id',
+              // organization_id: 'some-org',
+              // start_date: ...,
+              // end_date: ...
+            },
+          }
+        );
+
+        // Convert blob to downloadable file
+        const url = window.URL.createObjectURL(new Blob([res.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `activity-logs-${Date.now()}.pdf`);
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      }, 'Failed to export PDF');
+
+      return data;
+    } catch (err) {
+      console.error('PDF export failed:', err);
+      throw err;
+    } finally {
+      setExportingpdf(false);
+    }
+  };
+
   return {
     logs,
     loading,
@@ -193,6 +272,10 @@ export function useActivityLogs(logsPerPage = 20) {
     filteredLogs,
     paginatedLogs,
     logsPerPage,
+    exportingcsv,
+    exportLogsCSV,
+    exportingpdf,
+    exportLogsPDF,
   };
 }
 
