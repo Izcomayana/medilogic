@@ -210,6 +210,3 @@ export function Filters({
     </Card>
   );
 }
-function exportLogsCSV() {
-  throw new Error('Function not implemented.');
-}

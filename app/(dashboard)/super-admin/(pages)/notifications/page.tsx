@@ -8,8 +8,6 @@ import { PageHeader } from '../../PageHeader';
 export default function NotificationsPage() {
   const notificationState = useNotifications();
 
-  const { markAllAsRead } = notificationState;
-
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
       <PageHeader
