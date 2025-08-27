@@ -72,7 +72,7 @@ export function Filters({
       <CardContent>
         {/* Tabs */}
         <div className="flex items-center gap-4 mb-4">
-          <div className="flex bg-gray-800 rounded-lg p-1">
+          <div className="flex flex-col lg:flex-row bg-gray-800 rounded-lg p-1 gap-3">
             <Button
               variant={activeTab === 'all' ? 'default' : 'ghost'}
               size="sm"

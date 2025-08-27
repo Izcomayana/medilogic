@@ -2,7 +2,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -14,15 +13,12 @@ import {
   Mail,
   MapPin,
   FileText,
-  Check,
-  X,
 } from 'lucide-react';
 import { usePendingApplications } from '@/hooks/usePendingApplications';
 import {
   formatDate,
   getRoleBadge,
 } from '../../../pending-applications/components/Filters';
-import { Button } from '@/components/ui/button';
 
 type DetailsModalProps = ReturnType<typeof usePendingApplications>;
 
@@ -30,8 +26,6 @@ export function DetailsModal({
   isDetailsModalOpen,
   setIsDetailsModalOpen,
   selectedApplication,
-  handleReject,
-  handleApprove,
 }: DetailsModalProps) {
   return (
     <Dialog open={isDetailsModalOpen} onOpenChange={setIsDetailsModalOpen}>
@@ -54,41 +48,46 @@ export function DetailsModal({
               <h3 className="text-lg font-semibold text-white border-b border-gray-700 pb-2">
                 Applicant Information
               </h3>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label className="text-gray-400 text-sm">Name</Label>
-                  <p className="text-white font-medium flex items-center gap-2">
-                    <User className="h-4 w-4" />
-                    {selectedApplication.applicantName}
-                  </p>
-                </div>
-                <div>
-                  <Label className="text-gray-400 text-sm">Email</Label>
-                  <p className="text-white flex items-center gap-2">
-                    <Mail className="h-4 w-4" />
-                    {selectedApplication.email}
-                  </p>
-                </div>
-                <div>
-                  <Label className="text-gray-400 text-sm">Role</Label>
-                  <div className="mt-1">
-                    {getRoleBadge(selectedApplication.role)}
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-4">
+                  <div>
+                    <Label className="text-gray-400 text-sm">Name</Label>
+                    <p className="text-white font-medium flex items-center gap-2">
+                      <User className="h-4 w-4" />
+                      {selectedApplication.applicantName}
+                    </p>
+                  </div>
+                  <div>
+                    <Label className="text-gray-400 text-sm">Email</Label>
+                    <p className="text-white flex items-center gap-2">
+                      <Mail className="h-4 w-4" />
+                      {selectedApplication.email}
+                    </p>
                   </div>
                 </div>
-                <div>
-                  <Label className="text-gray-400 text-sm">
-                    Submitted Date
-                  </Label>
-                  <p className="text-white flex items-center gap-2">
-                    <Calendar className="h-4 w-4" />
-                    {formatDate(selectedApplication.submittedDate)}
-                  </p>
+
+                <div className="flex flex-row gap-36">
+                  <div>
+                    <Label className="text-gray-400 text-sm">Role</Label>
+                    <div className="mt-1">
+                      {getRoleBadge(selectedApplication.role)}
+                    </div>
+                  </div>
+                  <div>
+                    <Label className="text-gray-400 text-sm">
+                      Submitted Date
+                    </Label>
+                    <p className="text-white flex items-center gap-2">
+                      <Calendar className="h-4 w-4" />
+                      {formatDate(selectedApplication.submittedDate)}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Role-specific Information */}
-            {selectedApplication.role === 'Org Admin' ? (
+            {selectedApplication.role === 'Admin' ? (
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-white border-b border-gray-700 pb-2">
                   Organization Information
@@ -149,7 +148,7 @@ export function DetailsModal({
           </div>
         )}
 
-        <DialogFooter className="flex gap-2">
+        {/* <DialogFooter className="flex gap-2">
           <Button
             variant="outline"
             onClick={() =>
@@ -169,7 +168,7 @@ export function DetailsModal({
             <Check className="h-4 w-4 mr-2" />
             Approve Application
           </Button>
-        </DialogFooter>
+        </DialogFooter> */}
       </DialogContent>
     </Dialog>
   );
