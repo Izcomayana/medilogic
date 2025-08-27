@@ -1,6 +1,5 @@
 'use client';
 
-import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import {
@@ -27,6 +26,7 @@ import {
   AlertDialogAction,
 } from '@/components/ui/alert-dialog';
 import { AdminActionsDialog } from './components/AdminActions';
+import { PageHeader } from '../../PageHeader';
 
 export default function OrgAdmin() {
   const [deleteOpen, setDeleteOpen] = React.useState(false);
@@ -54,17 +54,10 @@ export default function OrgAdmin() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
-      <header className="flex h-16 items-center gap-4 border-b border-gray-700 bg-gray-900 px-6">
-        <SidebarTrigger className="text-white hover:bg-gray-800" />
-        <div className="flex-1">
-          <h1 className="text-xl font-semibold text-white">
-            Organization admins
-          </h1>
-          <p className="text-sm text-gray-400">
-            View and manage admins across all organizations
-          </p>
-        </div>
-      </header>
+      <PageHeader
+        title="Admins"
+        subtitle="View and manage admins across all organizations"
+      />
 
       <main className="flex-1 p-6">
         <Card className="dashboard-card">

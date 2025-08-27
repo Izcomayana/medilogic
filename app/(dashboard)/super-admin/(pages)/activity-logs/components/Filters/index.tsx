@@ -15,13 +15,21 @@ import {
   // User,
   Building2,
   Settings,
+  Download,
 } from 'lucide-react';
 import { useOrganizations } from '@/hooks/useOrg';
 import { DateRangeFilter, useActivityLogs } from '@/hooks/useActivity';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 type FiltersProps = ReturnType<typeof useActivityLogs>;
 
 export function Filters({
+  exportLogsCSV,
+  filteredLogs,
+  exportLogsPDF,
+  exportingpdf,
+  exportingcsv,
   searchTerm,
   setSearchTerm,
   dateRange,
@@ -39,14 +47,56 @@ export function Filters({
     }
   };
 
+  const handleExport = async (type: 'csv' | 'pdf') => {
+    if (type === 'csv') {
+      try {
+        await exportLogsCSV();
+        toast.success(`CSV export completed for ${filteredLogs.length} logs`);
+      } catch {
+        toast.error('Failed to export CSV');
+      }
+    } else if (type === 'pdf') {
+      try {
+        await exportLogsPDF();
+        toast.success(`PDF export completed for ${filteredLogs.length} logs`);
+      } catch {
+        toast.error('Failed to export PDF');
+      }
+    } else {
+      toast.info('PDF export not implemented yet');
+    }
+  };
+
   return (
     <Card className="dashboard-card mb-6 py-3">
-      <CardHeader className="px-3">
+      <CardHeader className="px-3 flex flex-col md:flex-row justify-between">
         <CardTitle className="text-white flex items-center gap-2">
           <Filter className="h-5 w-5" />
           Filters & Controls
         </CardTitle>
+
+        <div className="flex gap-2">
+          <Button
+            onClick={() => handleExport('csv')}
+            disabled={exportingcsv}
+            variant="outline"
+            className="border-gray-100 text-xs p-1 text-gray-700 hover:text-gray-300 hover:bg-gray-700"
+          >
+            <Download className="h-3 w-3 mr-1" />
+            {exportingcsv ? 'Exporting...' : 'Export CSV'}
+          </Button>
+
+          <Button
+            onClick={() => handleExport('pdf')}
+            disabled={exportingpdf}
+            className="primary-button text-xs"
+          >
+            <Download className="h-3 w-3 mr-1" />
+            {exportingpdf ? 'Exporting...' : 'Export PDF'}
+          </Button>
+        </div>
       </CardHeader>
+
       <CardContent className="px-3">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
           {/* Search Bar */}
@@ -159,4 +209,7 @@ export function Filters({
       </CardContent>
     </Card>
   );
+}
+function exportLogsCSV() {
+  throw new Error('Function not implemented.');
 }

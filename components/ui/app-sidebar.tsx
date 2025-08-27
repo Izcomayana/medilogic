@@ -20,7 +20,7 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
+  // SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -120,9 +120,9 @@ export function AppSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="text-gray-400 text-xs uppercase tracking-wider">
+          {/* <SidebarGroupLabel className="text-gray-400 text-xs uppercase tracking-wider">
             Navigation
-          </SidebarGroupLabel>
+          </SidebarGroupLabel> */}
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems.map((item) => (

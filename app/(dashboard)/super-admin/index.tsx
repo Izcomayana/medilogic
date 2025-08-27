@@ -2,9 +2,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
+  AlertTriangle,
   Building2,
   // Users,
   Shield,
@@ -18,11 +18,14 @@ import { useOrganizations } from '@/hooks/useOrg';
 import { useRegulators } from '@/hooks/useReg';
 import { CreateRegulatorDialog } from './(pages)/regulators/components/CreateRegulator';
 import { CreateAdmin } from './(pages)/admins/components/CreateAdmin';
+import { usePendingApplications } from '@/hooks/usePendingApplications';
+import { PageHeader } from './PageHeader';
 
 export default function Dashboard() {
   const { filteredAdmins, createAdmin } = useAdmin();
   const { filteredRegs, createReg } = useRegulators();
   const { filteredOrgs, createOrg } = useOrganizations();
+  const { sortedApplications } = usePendingApplications();
 
   const stats = [
     {
@@ -53,26 +56,18 @@ export default function Dashboard() {
       icon: ShieldUser,
       trend: 'warning',
     },
-    // {
-    //   title: "Pending Deactivations",
-    //   value: "3",
-    //   change: "Requires attention",
-    //   icon: AlertTriangle,
-    //   trend: "warning",
-    // },
+    {
+      title: 'Pending Applications',
+      value: sortedApplications.length,
+      change: 'Requires attention',
+      icon: AlertTriangle,
+      trend: 'warning',
+    },
   ];
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
-      <header className="flex h-16 items-center gap-4 border-b border-gray-700 bg-gray-900 px-6">
-        <SidebarTrigger className="text-white hover:bg-gray-800" />
-        <div className="flex-1">
-          <h1 className="text-xl font-semibold text-white">
-            Super Admin Dashboard
-          </h1>
-          <p className="text-sm text-gray-400">Welcome back, Damola</p>
-        </div>
-      </header>
+      <PageHeader title="Super Admin" subtitle="Welcome back, Damola" />
 
       <main className="flex-1 p-6">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
