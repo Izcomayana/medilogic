@@ -1,6 +1,5 @@
 'use client';
 
-import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Search, Shield } from 'lucide-react';
@@ -27,6 +26,7 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from '@/components/ui/alert-dialog';
+import { PageHeader } from '../../PageHeader';
 
 export default function RegulatorsPage() {
   const [deleteOpen, setDeleteOpen] = React.useState(false);
@@ -53,17 +53,10 @@ export default function RegulatorsPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
-      <header className="flex h-16 items-center gap-4 border-b border-gray-700 bg-gray-900 px-6">
-        <SidebarTrigger className="text-white hover:bg-gray-800" />
-        <div className="flex-1">
-          <h1 className="text-xl font-semibold text-white">
-            Regulator Management
-          </h1>
-          <p className="text-sm text-gray-400">
-            Manage regulatory oversight personnel
-          </p>
-        </div>
-      </header>
+      <PageHeader
+        title="Regulators"
+        subtitle="Manage regulatory oversight personnel"
+      />
 
       <main className="flex-1 p-6">
         <Card className="dashboard-card">
