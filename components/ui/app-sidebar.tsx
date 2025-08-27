@@ -10,8 +10,8 @@ import {
   ClipboardList,
   FileText,
   Logs,
-  Bell,
-  // AppWindow,
+  // Bell,
+  AppWindow,
 } from 'lucide-react';
 import { useAuth } from '@/components/auth';
 import {
@@ -42,9 +42,9 @@ const sidebarLinksByRole: Record<
     },
     { title: 'Regulators', url: '/super-admin/regulators', icon: Shield },
     { title: 'Admins', url: '/super-admin/admins', icon: Users },
-    // { title: 'Pending Applications', url: '/super-admin/pending-applications', icon: AppWindow },
+    { title: 'Pending Applications', url: '/super-admin/pending-applications', icon: AppWindow },
     { title: 'Activity Logs', url: '/super-admin/activity-logs', icon: Logs },
-    { title: 'Notifications', url: '/super-admin/notifications', icon: Bell },
+    // { title: 'Notifications', url: '/super-admin/notifications', icon: Bell },
   ],
   admin: [
     { title: 'Dashboard', url: '/company-admin', icon: Home },
