@@ -7,7 +7,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { Bell, Search, Check, Trash2, Filter, CheckCheck } from 'lucide-react';
+import { Bell, Search, Check, Trash2, Filter } from 'lucide-react';
 import { useNotifications } from '@/hooks/useNotifications';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
