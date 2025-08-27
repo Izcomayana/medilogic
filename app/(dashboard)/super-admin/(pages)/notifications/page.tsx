@@ -12,6 +12,7 @@ export default function NotificationsPage() {
   const notificationState = useNotifications();
 
   const { markAllAsRead } = notificationState;
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
       <header className="flex h-16 items-center gap-4 border-b border-gray-700 bg-gray-900 px-3">
@@ -19,8 +20,7 @@ export default function NotificationsPage() {
         <div className="flex-1">
           <h1 className="text-xl font-semibold text-white">Notifications</h1>
           <p className="text-sm text-gray-400">
-            Stay updated on important system activities. You can mark
-            notifications as read or delete them.
+            Stay updated on important system activities.
           </p>
         </div>
         <Button onClick={markAllAsRead} className="primary-button">

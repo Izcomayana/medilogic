@@ -171,7 +171,7 @@ export function NotificationsTable({
                       <TableCell>{getTypeBadge(notification.type)}</TableCell>
                       <TableCell>
                         <div className="flex items-start gap-3">
-                          <span className="text-lg">{notification.icon}</span>
+                          {/* <span className="text-lg">{notification.icon}</span> */}
                           <div className="flex-1 min-w-0">
                             <p
                               className={`text-sm font-medium ${
