@@ -1,28 +1,22 @@
 'use client';
 
-import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Filters } from './components/Filters';
 import { usePendingApplications } from '@/hooks/usePendingApplications';
 import { ApplicationsTable } from './components/ApplicationsTable';
 import { DetailsModal } from './components/Details';
+import { PageHeader } from '../../PageHeader';
 
 export default function PendingApplicationsPage() {
   const pendingApplicationState = usePendingApplications();
+  const { sortedApplications } = pendingApplicationState;
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
-      <header className="flex h-16 items-center gap-4 border-b border-gray-700 bg-gray-900 px-6">
-        <SidebarTrigger className="text-white hover:bg-gray-800" />
-        <div className="flex-1">
-          <h1 className="text-xl font-semibold text-white">
-            Pending Applications
-          </h1>
-          <p className="text-sm text-gray-400">
-            View applications from regulators and organization admins awaiting
-            review.
-          </p>
-        </div>
-      </header>
+      <PageHeader
+        title={`Pending Applications (${sortedApplications.length})`}
+        subtitle=" View applications from regulators and organization admins awaiting
+            review."
+      />
 
       <main className="flex-1 p-6">
         {/* Filters and Controls */}
