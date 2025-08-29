@@ -1,6 +1,5 @@
 'use client';
 
-import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -38,6 +37,7 @@ import {
   Calendar,
 } from 'lucide-react';
 import { useState } from 'react';
+import { PageHeader } from '../../../PageHeader';
 
 const assignments = [
   {
@@ -142,17 +142,10 @@ export default function AssignmentsPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
-      <header className="flex h-16 items-center gap-4 border-b border-gray-700 bg-gray-900 px-6">
-        <SidebarTrigger className="text-white hover:bg-gray-800" />
-        <div className="flex-1">
-          <h1 className="text-xl font-semibold text-white">
-            Assignment Management
-          </h1>
-          <p className="text-sm text-gray-400">
-            View and manage driver assignments and shifts
-          </p>
-        </div>
-      </header>
+      <PageHeader
+        title="Assignment Management"
+        subtitle="View and manage driver assignments and shifts"
+      />
 
       <div className="flex-1 p-6">
         <Card className="dashboard-card">

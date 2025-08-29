@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import {
@@ -70,10 +70,10 @@ export default function ChartsPage() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
       {/* ✅ Header always visible */}
-            <PageHeader
-              title="Analytics & Charts"
-              subtitle="Visual insights for operations and logistics"
-            />
+      <PageHeader
+        title="Analytics & Charts"
+        subtitle="Visual insights for operations and logistics"
+      />
 
       <div className="flex-1 p-6">
         {/* Filters */}
