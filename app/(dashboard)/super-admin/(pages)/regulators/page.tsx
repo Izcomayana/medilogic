@@ -26,7 +26,7 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from '@/components/ui/alert-dialog';
-import { PageHeader } from '../../PageHeader';
+import { PageHeader } from '../../../PageHeader';
 
 export default function RegulatorsPage() {
   const [deleteOpen, setDeleteOpen] = React.useState(false);

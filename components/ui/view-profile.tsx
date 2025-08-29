@@ -19,6 +19,7 @@ import {
   XCircle,
   Phone,
   MapPin,
+  IdCard,
 } from 'lucide-react';
 // import Link from 'next/link';
 import { useAuthorizedRequest } from '@/hooks/useRequest';
@@ -135,6 +136,15 @@ export function ViewProfileDropdown() {
                     )}
                   </div>
                 )}
+
+              {user.organization.id && (
+                <div className="flex items-center gap-2">
+                  <IdCard className="h-4 w-4 text-gray-400" />
+                  <span className="text-[10px]">
+                    ID: {user.organization.id}
+                  </span>
+                </div>
+              )}
             </div>
 
             <DropdownMenuSeparator className="bg-gray-700" />

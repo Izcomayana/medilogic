@@ -26,7 +26,7 @@ import {
   AlertDialogAction,
 } from '@/components/ui/alert-dialog';
 import { AdminActionsDialog } from './components/AdminActions';
-import { PageHeader } from '../../PageHeader';
+import { PageHeader } from '../../../PageHeader';
 
 export default function OrgAdmin() {
   const [deleteOpen, setDeleteOpen] = React.useState(false);

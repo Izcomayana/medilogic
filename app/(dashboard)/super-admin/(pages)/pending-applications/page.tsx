@@ -4,7 +4,7 @@ import { Filters } from './components/Filters';
 import { usePendingApplications } from '@/hooks/usePendingApplications';
 import { ApplicationsTable } from './components/ApplicationsTable';
 import { DetailsModal } from './components/Details';
-import { PageHeader } from '../../PageHeader';
+import { PageHeader } from '../../../PageHeader';
 
 export default function PendingApplicationsPage() {
   const pendingApplicationState = usePendingApplications();

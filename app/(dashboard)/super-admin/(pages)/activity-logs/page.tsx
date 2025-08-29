@@ -3,7 +3,7 @@
 import { Filters } from './components/Filters';
 import { LogsTable } from './components/LogsTable';
 import { useActivityLogs } from '@/hooks/useActivity';
-import { PageHeader } from '../../PageHeader';
+import { PageHeader } from '../../../PageHeader';
 
 export default function ActivityLogs() {
   const logsState = useActivityLogs();
