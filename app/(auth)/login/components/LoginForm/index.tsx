@@ -174,7 +174,7 @@ export default function LoginForm({
             Don&apos;t have an account?{' '}
             <Link
               href="/register"
-              className="text-[#15941f] hover:text-[#117a1a] font-semibold transition-colors"
+              className="text-[#15941f] hover:text-[#117a1a] underline font-semibold transition-colors"
             >
               Create one here
             </Link>

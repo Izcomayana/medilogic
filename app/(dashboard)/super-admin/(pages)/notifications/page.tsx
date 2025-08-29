@@ -3,7 +3,7 @@
 import { TabsFilter } from './components/TabsFilter';
 import { useNotifications } from '@/hooks/useNotifications';
 import { NotificationsTable } from './components/NotificationsTable';
-import { PageHeader } from '../../PageHeader';
+import { PageHeader } from '../../../PageHeader';
 
 export default function NotificationsPage() {
   const notificationState = useNotifications();
