@@ -112,11 +112,37 @@ export function useLogin() {
 
       const errorMessage = typeof msg === 'string' ? msg : JSON.stringify(msg);
 
-      setErrors({ general: errorMessage });
+      // 🔎 If account is deactivated
+      if (
+        errorMessage.toLowerCase().includes('deactivated') ||
+        errorMessage.toLowerCase().includes('inactive')
+      ) {
+        setErrors({
+          general:
+            'Sorry, your account has been deactivated. please reach out to our support team.',
+        });
+        toast.error('Account Deactivated', {
+          description: 'Sorry, your account has been deactivated.',
+        });
+      } else {
+        const errorMessage =
+          typeof msg === 'string' ? msg : JSON.stringify(msg);
 
-      toast.error('Login failed', {
-        description: errorMessage,
-      });
+        // If backend always says "Invalid credentials", show something more helpful
+        if (errorMessage.toLowerCase().includes('invalid')) {
+          setErrors({
+            general:
+              'Login failed. Your account may be deactivated or your credentials are incorrect.',
+          });
+          toast.error('Login failed', {
+            description:
+              'Your account may be deactivated or your credentials are incorrect.',
+          });
+        } else {
+          setErrors({ general: errorMessage });
+          toast.error('Login failed', { description: errorMessage });
+        }
+      }
     } finally {
       setLoading(false);
     }
