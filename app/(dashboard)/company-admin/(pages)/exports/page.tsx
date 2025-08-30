@@ -36,7 +36,7 @@ export default function ExportPage() {
 
   const handleExport = async (type: 'csv' | 'pdf') => {
     const selectedItems = Object.entries(selectedData)
-      .filter(([_, selected]) => selected)
+      .filter(([, selected]) => selected)
       .map(([key]) => key);
 
     if (selectedItems.length === 0) {
