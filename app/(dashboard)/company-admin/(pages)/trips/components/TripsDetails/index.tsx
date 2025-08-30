@@ -8,7 +8,18 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { useTrips } from '@/hooks/useTrips';
-import { MapPin, Edit, Calendar, User, Clock, Navigation, CheckCircle, Loader, AlertCircle, XCircle } from 'lucide-react';
+import {
+  MapPin,
+  Edit,
+  Calendar,
+  User,
+  Clock,
+  Navigation,
+  CheckCircle,
+  Loader,
+  AlertCircle,
+  XCircle,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 

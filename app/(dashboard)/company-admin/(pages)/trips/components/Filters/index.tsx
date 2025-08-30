@@ -79,7 +79,7 @@ export function Filters({
                 </Button>
               </DialogTrigger>
             </div>
-            
+
             <DialogContent className="bg-gray-800 border-gray-700 text-white max-w-2xl">
               <DialogHeader>
                 <DialogTitle>Create New Trip</DialogTitle>

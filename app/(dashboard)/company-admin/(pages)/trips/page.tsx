@@ -1,6 +1,5 @@
 'use client';
 
-import { Badge } from '@/components/ui/badge';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,7 +10,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { CheckCircle, XCircle, AlertCircle, Loader } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { useTrips } from '@/hooks/useTrips';
@@ -177,9 +175,6 @@ export default function TripsPage() {
     </div>
   );
 }
-
-
-
 
 // "use client"
 

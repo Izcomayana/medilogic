@@ -9,10 +9,10 @@ import {
   User,
   Clock,
   Navigation,
-  CheckCircle, 
-  Loader, 
-  AlertCircle, 
-  XCircle
+  CheckCircle,
+  Loader,
+  AlertCircle,
+  XCircle,
 } from 'lucide-react';
 import {
   Table,
