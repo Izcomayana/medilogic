@@ -54,16 +54,19 @@ export default function ExportPage() {
           end_date: endDate || '2025-12-31',
         });
 
-        return fetch(
-          `https://medilogic-backend.onrender.com/admin-dashboard/admin-dashboard/export/${type}?${params.toString()}`,
-          {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${token}`,
-              Accept: type === 'pdf' ? 'application/pdf' : 'text/csv',
-            },
-          }
-        );
+        // pick correct endpoint
+        const endpoint =
+          type === 'csv'
+            ? 'https://medilogic-backend.onrender.com/admin-dashboard/admin-dashboard/export/csv'
+            : 'https://medilogic-backend.onrender.com/admin-dashboard/admin-dashboard/export/pdf';
+
+        return fetch(`${endpoint}?${params.toString()}`, {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: type === 'pdf' ? 'application/pdf' : 'text/csv',
+          },
+        });
       }, 'Failed to get exports.');
 
       if (!res) {
@@ -87,11 +90,6 @@ export default function ExportPage() {
         return;
       }
 
-      if (!res.ok) {
-        const errText = await res.text();
-        throw new Error(`Export failed: ${res.status} - ${errText}`);
-      }
-
       const blob = await res.blob();
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -105,7 +103,6 @@ export default function ExportPage() {
       toast.error('Failed to export data. Please try again.');
     }
   };
-
   const exportOptions = [
     {
       key: 'tripLogs',

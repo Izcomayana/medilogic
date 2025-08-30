@@ -12,6 +12,7 @@ import {
   Logs,
   // Bell,
   AppWindow,
+  Route,
 } from 'lucide-react';
 import { useAuth } from '@/components/auth';
 import {
@@ -59,6 +60,7 @@ const sidebarLinksByRole: Record<
       icon: ClipboardList,
     },
     { title: 'Exports', url: '/company-admin/exports', icon: FileText },
+    { title: 'Trips', url: '/company-admin/trips', icon: Route },
   ],
   regulator: [
     { title: 'Dashboard', url: '/regulator', icon: Home },
