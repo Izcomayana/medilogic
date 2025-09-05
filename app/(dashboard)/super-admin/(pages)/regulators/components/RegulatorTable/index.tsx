@@ -15,7 +15,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Edit, Eye, MoreHorizontal, Trash2 } from 'lucide-react';
+import { Edit, Eye, MoreHorizontal } from 'lucide-react';
 import { Regulators } from '../../types/regulator';
 import { StatusBadge } from '../StatusBadge';
 import { motion } from 'framer-motion';
@@ -25,7 +25,7 @@ interface Props {
   onEdit: (reg: Regulators) => void;
   onView: (reg: Regulators) => void;
   loading: boolean;
-  onDelete: (regId: string) => void;
+  // onDelete: (regId: string) => void;
 }
 
 const SkeletonRow = () => (
@@ -48,7 +48,7 @@ export const RegulatorTable = ({
   onEdit,
   onView,
   loading,
-  onDelete,
+  // onDelete,
 }: Props) => {
   return (
     <div className="rounded-md border border-gray-700">
@@ -63,59 +63,61 @@ export const RegulatorTable = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {loading
-            ? Array.from({ length: 5 }).map((_, i) => <SkeletonRow key={i} />)
-            : regulators.map((r) => (
-                <TableRow
-                  key={r.id}
-                  className="border-gray-700 hover:bg-gray-800"
-                >
-                  <TableCell className="font-medium text-white">
-                    {r.name}
-                  </TableCell>
-                  <TableCell className="text-gray-300">{r.email}</TableCell>
-                  <TableCell className="text-gray-300">{r.regRegion}</TableCell>
-                  <TableCell>
-                    <StatusBadge status={r.status} />
-                  </TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          className="h-8 w-8 p-0 text-gray-400 hover:bg-gray-700"
-                        >
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        align="end"
-                        className="bg-gray-700 border-gray-600"
+          {loading ? (
+            Array.from({ length: 5 }).map((_, i) => <SkeletonRow key={i} />)
+          ) : regulators.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={5} className="text-center text-gray-400 py-6">
+                No regulators found
+              </TableCell>
+            </TableRow>
+          ) : (
+            regulators.map((r) => (
+              <TableRow
+                key={r.id}
+                className="border-gray-700 hover:bg-gray-800"
+              >
+                <TableCell className="font-medium text-white">
+                  {r.name}
+                </TableCell>
+                <TableCell className="text-gray-300">{r.email}</TableCell>
+                <TableCell className="text-gray-300">{r.regRegion}</TableCell>
+                <TableCell>
+                  <StatusBadge status={r.status} />
+                </TableCell>
+                <TableCell>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        className="h-8 w-8 p-0 text-gray-400 hover:bg-gray-700"
                       >
-                        <DropdownMenuItem
-                          className="text-gray-300 hover:bg-gray-600 cursor-pointer"
-                          onClick={() => onView(r)}
-                        >
-                          <Eye className="mr-2 h-4 w-4" />
-                          View Details
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          className="text-gray-300 hover:bg-gray-600 cursor-pointer"
-                          onClick={() => onEdit(r)}
-                        >
-                          <Edit className="mr-2 h-4 w-4" /> Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          className="text-red-400 hover:bg-gray-600 cursor-pointer"
-                          onClick={() => onDelete(r.id)}
-                        >
-                          <Trash2 className="mr-2 h-4 w-4" /> Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))}
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      align="end"
+                      className="bg-gray-700 border-gray-600"
+                    >
+                      <DropdownMenuItem
+                        className="text-gray-300 hover:bg-gray-600 cursor-pointer"
+                        onClick={() => onView(r)}
+                      >
+                        <Eye className="mr-2 h-4 w-4" />
+                        View Details
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="text-gray-300 hover:bg-gray-600 cursor-pointer"
+                        onClick={() => onEdit(r)}
+                      >
+                        <Edit className="mr-2 h-4 w-4" /> Edit
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
     </div>

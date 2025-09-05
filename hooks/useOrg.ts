@@ -148,10 +148,10 @@ export function useOrganizations() {
       id: data.organization.id,
       name: data.organization.name,
       type: data.organization.type ?? data.organization.org_type ?? 'Unknown',
-      status: data.is_active ? 'active' : 'inactive',
+      status: data.organization.is_active ? 'active' : 'inactive',
       createdDate: new Date(data.organization.created_at).toLocaleDateString(),
       userCount: data.user_count ?? 0,
-      tripCount: data.tripCount ?? 0,
+      tripCount: data.trip_count ?? 0,
       description: data.organization.description ?? '',
       address: data.organization.address_line ?? '',
       phone: data.organization.phone_number ?? '',
@@ -161,7 +161,7 @@ export function useOrganizations() {
       license_number: data.organization.license_number,
       license_expiry: data.organization.license_expiry,
       data_retention_years: data.organization.data_retention_years,
-      supported_waste_type: data.organization.supported_waste_type ?? [],
+      supported_waste_type: data.organization.supported_waste_types ?? [],
     };
 
     setSelectedOrg(mappedOrg);

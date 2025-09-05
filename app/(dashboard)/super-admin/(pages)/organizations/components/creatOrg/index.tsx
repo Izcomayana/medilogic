@@ -28,7 +28,7 @@ import { Switch } from '@/components/ui/switch';
 interface Props {
   onCreate: (orgData: {
     name: string;
-    type: 'clinic' | 'waste_company';
+    type: 'clinic' | 'waste_company' | 'logistic_company';
     country: string;
     state: string;
     region: string;
@@ -40,13 +40,14 @@ interface Props {
 export default function CreateOrganizationDialog({ onCreate }: Props) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
-  // ✅ default to a valid enum
-  const [type, setType] = useState<'clinic' | 'waste_company'>('clinic');
+  const [type, setType] = useState<
+    'clinic' | 'waste_company' | 'logistic_company'
+  >('clinic');
   const [country, setCountry] = useState('');
   const [stateVal, setStateVal] = useState('');
   const [region, setRegion] = useState('');
   const [icoRegistered, setIcoRegistered] = useState(false);
-  const [dataRetentionYears, setDataRetentionYears] = useState<number>(3);
+  const [dataRetentionYears, setDataRetentionYears] = useState<string>('3');
   const [submitting, setSubmitting] = useState(false);
 
   const handleCreate = async () => {
@@ -56,8 +57,10 @@ export default function CreateOrganizationDialog({ onCreate }: Props) {
     }
 
     // guard: only the two enum values
-    if (!['clinic', 'waste_company'].includes(type)) {
-      toast.error("Type must be 'clinic' or 'waste_company'");
+    if (!['clinic', 'waste_company', 'logistic_company'].includes(type)) {
+      toast.error(
+        "Type must be 'clinic', 'waste_company' or 'logistic_company'"
+      );
       return;
     }
 
@@ -70,7 +73,7 @@ export default function CreateOrganizationDialog({ onCreate }: Props) {
         state: stateVal.trim(),
         region: region.trim(),
         ico_registered: icoRegistered,
-        data_retention_years: Number(dataRetentionYears) || 1,
+        data_retention_years: Math.max(1, Number(dataRetentionYears) || 1),
       });
       // close only on success
       setOpen(false);
@@ -81,7 +84,7 @@ export default function CreateOrganizationDialog({ onCreate }: Props) {
       setStateVal('');
       setRegion('');
       setIcoRegistered(false);
-      setDataRetentionYears(3);
+      setDataRetentionYears('3');
     } catch {
       // onCreate should toast its own error; keep dialog open
     } finally {
@@ -133,7 +136,9 @@ export default function CreateOrganizationDialog({ onCreate }: Props) {
             </Label>
             <Select
               value={type}
-              onValueChange={(v) => setType(v as 'clinic' | 'waste_company')}
+              onValueChange={(v) =>
+                setType(v as 'clinic' | 'waste_company' | 'logistic_company')
+              }
             >
               <SelectTrigger className="col-span-3 bg-gray-700 border-gray-600 text-white">
                 <SelectValue placeholder="Select type" />
@@ -141,6 +146,9 @@ export default function CreateOrganizationDialog({ onCreate }: Props) {
               <SelectContent className="bg-gray-700 border-gray-600">
                 <SelectItem value="clinic">Clinic</SelectItem>
                 <SelectItem value="waste_company">Waste Company</SelectItem>
+                <SelectItem value="logistic_company">
+                  Logistic Company
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -214,9 +222,8 @@ export default function CreateOrganizationDialog({ onCreate }: Props) {
               type="number"
               min={1}
               value={dataRetentionYears}
-              onChange={(e) =>
-                setDataRetentionYears(Math.max(1, Number(e.target.value)))
-              }
+              placeholder="the minimum is 1"
+              onChange={(e) => setDataRetentionYears(e.target.value)}
               className="col-span-3 bg-gray-700 border-gray-600 text-white"
             />
           </div>

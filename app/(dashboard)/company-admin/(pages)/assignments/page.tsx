@@ -71,7 +71,7 @@ export default function AssignmentsPage() {
 
   useEffect(() => {
     fetchAssignments();
-  }, []);
+  }, [fetchAssignments]);
 
   // 🔹 Local filters (search, status, date)
   const filteredAssignments = assignments.filter((assignment) => {
