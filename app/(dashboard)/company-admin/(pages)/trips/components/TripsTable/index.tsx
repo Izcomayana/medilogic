@@ -30,7 +30,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
 import { TripsTableSkeleton } from './tripSkeleton';
 
 type TableProps = ReturnType<typeof useTrips>;
