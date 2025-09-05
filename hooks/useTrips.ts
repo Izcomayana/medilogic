@@ -3,6 +3,11 @@ import { toast } from 'sonner';
 import { useAuthorizedRequest } from '@/hooks/useRequest';
 import axios from 'axios';
 import { useProfile } from './useProfile';
+import React from 'react';
+import {
+  formatDateEnd,
+  formatDateStart,
+} from '@/app/(dashboard)/company-admin/(pages)/trips/components/Filters/dateRange';
 
 const trips = [
   {
@@ -138,13 +143,15 @@ type Trip = {
   created_at: string;
 };
 
+export type DateRangeLocal = { from?: Date; to?: Date };
+
 export function useTrips(tripsPerPage = 10) {
   const [tripsList, setTripsList] = useState<any[]>([]);
   const [totalTrips, setTotalTrips] = useState(0);
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [dateFilter, setDateFilter] = useState('all');
+  const [dateRange, setDateRange] = React.useState<DateRangeLocal>();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedTrip, setSelectedTrip] = useState<(typeof trips)[0] | null>(
     null
@@ -166,26 +173,6 @@ export function useTrips(tripsPerPage = 10) {
   });
 
   const authorizedRequest = useAuthorizedRequest();
-
-  // const filteredTrips = tripsList.filter((trip) => {
-  //   const matchesSearch =
-  //     trip.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //     trip.clientOrganization
-  //       .toLowerCase()
-  //       .includes(searchTerm.toLowerCase()) ||
-  //     trip.driverAssigned.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //     trip.pickupLocation.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //     trip.dropoffLocation.toLowerCase().includes(searchTerm.toLowerCase());
-
-  //   const matchesStatus =
-  //     statusFilter === 'all' ||
-  //     trip.status.toLowerCase() === statusFilter.toLowerCase();
-
-  //   const matchesDate =
-  //     dateFilter === 'all' || trip.dateTime.startsWith(dateFilter);
-
-  //   return matchesSearch && matchesStatus && matchesDate;
-  // });
 
   const resetForm = () => {
     setFormData({
@@ -222,51 +209,82 @@ export function useTrips(tripsPerPage = 10) {
     };
   }
 
-  // 📡 Fetch trips from API
-  const fetchTrips = async () => {
-    setLoading(true);
-    const data = await authorizedRequest<any>(async (token) => {
-      const res = await axios.get(
-        'https://medilogic-backend.onrender.com/trips',
-        {
-          headers: { Authorization: `Bearer ${token}` },
-          params: {
-            status: statusFilter !== 'all' ? statusFilter : undefined,
-            client_name: searchTerm || undefined,
-            skip: (currentPage - 1) * tripsPerPage,
-            limit: tripsPerPage,
-            from_date:
-              dateFilter !== 'all' ? dateFilter + 'T00:00:00' : undefined,
-            to_date:
-              dateFilter !== 'all' ? dateFilter + 'T23:59:59' : undefined,
-            sort_by: 'scheduled_time',
-          },
-        }
-      );
-      return res.data;
-    }, 'Failed to fetch trips');
+  type UiTrip = ReturnType<typeof mapApiTripToUiTrip>;
 
-    if (Array.isArray(data)) {
-      setTripsList(data.map(mapApiTripToUiTrip));
-      setTotalTrips(data.length);
-    } else if (data && Array.isArray(data.items)) {
-      setTripsList(data.items.map(mapApiTripToUiTrip));
-      setTotalTrips(data.total || data.items.length);
-    } else {
+  const fetchTrips = async () => {
+    try {
+      setLoading(true);
+
+      const data = await authorizedRequest<any>(async (token) => {
+        const res = await axios.get(
+          'https://medilogic-backend.onrender.com/trips',
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            params: {
+              status: statusFilter !== 'all' ? statusFilter : undefined,
+              driver_name: searchTerm || undefined,
+              client_name: searchTerm || undefined,
+              skip: (currentPage - 1) * tripsPerPage,
+              limit: tripsPerPage,
+              from_date: dateRange?.from
+                ? formatDateStart(dateRange.from)
+                : undefined, // '2025-06-10T00:00:00'
+              to_date: dateRange?.to
+                ? formatDateEnd(dateRange.to)
+                : dateRange?.from
+                  ? formatDateEnd(dateRange.from)
+                  : undefined,
+              sort_by: 'scheduled_time',
+              sort_order: 'desc',
+            },
+          }
+        );
+        return res.data;
+      }, 'Failed to fetch trips');
+
+      if (!data) {
+        setTripsList([]);
+        setTotalTrips(0);
+        return;
+      }
+
+      // Normalise to an array of API trips
+      let items: any[] = [];
+      let total = 0;
+      if (Array.isArray(data)) {
+        items = data;
+        total = data.length;
+      } else if (data && Array.isArray(data.items)) {
+        items = data.items;
+        total = data.total ?? data.items.length;
+      } else {
+        items = [];
+        total = 0;
+      }
+
+      // Map API trips -> UI trips
+      const mapped: UiTrip[] = items.map(mapApiTripToUiTrip);
+
+      setTripsList(mapped);
+      setTotalTrips(total);
+      console.log('total:', total);
+    } catch (err) {
+      console.error('fetchTrips error', err);
       setTripsList([]);
       setTotalTrips(0);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   // 🔄 Refetch whenever filters or pagination change
   useEffect(() => {
     fetchTrips();
-  }, [statusFilter, searchTerm, dateFilter, currentPage]);
+    console.log('totalTrips:', totalTrips);
+  }, [statusFilter, searchTerm, dateRange, currentPage]);
 
-  const filteredTrips = tripsList; // no extra filtering needed
-  const paginatedTrips = tripsList; // backend handles skip/limit
+  const filteredTrips = tripsList;
+  const paginatedTrips = tripsList;
   const totalPages = Math.ceil(totalTrips / tripsPerPage);
   const startIndex = (currentPage - 1) * tripsPerPage;
 
@@ -284,36 +302,41 @@ export function useTrips(tripsPerPage = 10) {
       return;
     }
 
-    const payload = {
-      delivery_type: 'clinical_waste',
-      organization_id: user.organization.id,
-      status: formData.status || 'Pending',
-      driver_name: formData.driverAssigned || undefined,
-      scheduled_time: formData.dateTime
-        ? new Date(formData.dateTime).toISOString()
-        : undefined,
-      client_name: user.organization.name,
-      pickup_location: formData.pickupLocation || undefined,
-      dropoff_location: formData.dropoffLocation || undefined,
-      custom_delivery_description: formData.notes || undefined,
-    };
+    setLoading(true);
+    try {
+      const payload = {
+        delivery_type: 'clinical_waste',
+        organization_id: user.organization.id,
+        status: formData.status || 'Pending',
+        driver_name: formData.driverAssigned || undefined,
+        scheduled_time: formData.dateTime
+          ? new Date(formData.dateTime).toISOString()
+          : undefined,
+        client_name: user.organization.name,
+        pickup_location: formData.pickupLocation || undefined,
+        dropoff_location: formData.dropoffLocation || undefined,
+        custom_delivery_description: formData.notes || undefined,
+      };
 
-    const created = await authorizedRequest<Trip>(async (token) => {
-      const res = await axios.post<Trip>(
-        'https://medilogic-backend.onrender.com/trips/',
-        payload,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      return res.data;
-    }, 'Failed to create trip');
+      const created = await authorizedRequest<Trip>(async (token) => {
+        const res = await axios.post<Trip>(
+          'https://medilogic-backend.onrender.com/trips/',
+          payload,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        return res.data;
+      }, 'Failed to create trip');
 
-    if (!created) return;
+      if (!created) return;
 
-    const createdUiTrip = mapApiTripToUiTrip(created);
-    setTripsList((prev) => [createdUiTrip, ...prev]);
-    setIsCreateModalOpen(false);
-    resetForm();
-    toast.success('Trip created successfully');
+      const createdUiTrip = mapApiTripToUiTrip(created);
+      setTripsList((prev) => [createdUiTrip, ...prev]);
+      setIsCreateModalOpen(false);
+      resetForm();
+      toast.success('Trip created successfully');
+    } finally {
+      setLoading(false); // ✅ always stop loading
+    }
   };
 
   const formatDateTime = (dateTime: string) => {
@@ -407,7 +430,7 @@ export function useTrips(tripsPerPage = 10) {
     drivers,
     searchTerm,
     statusFilter,
-    dateFilter,
+    dateRange,
     isCreateModalOpen,
     isDetailsModalOpen,
     formData,
@@ -423,7 +446,7 @@ export function useTrips(tripsPerPage = 10) {
     setTripsList,
     setSearchTerm,
     setStatusFilter,
-    setDateFilter,
+    setDateRange,
     setIsCreateModalOpen,
     setIsDetailsModalOpen,
     setIsEditModalOpen,

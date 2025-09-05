@@ -1,6 +1,5 @@
 'use client';
 
-import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -133,7 +132,7 @@ export default function AdminSettingsPage() {
   };
 
   const handleTerminateSession = (sessionId: string) => {
-    toast.success('Session terminated successfully');
+    toast.success(`Session terminated successfully: ${sessionId}`);
   };
 
   const handleToggle2FA = () => {

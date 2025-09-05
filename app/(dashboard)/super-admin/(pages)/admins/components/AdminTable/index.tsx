@@ -9,13 +9,13 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Edit, MoreHorizontal, Trash2 } from 'lucide-react';
+// import {
+//   DropdownMenu,
+//   DropdownMenuContent,
+//   DropdownMenuItem,
+//   DropdownMenuTrigger,
+// } from '@/components/ui/dropdown-menu';
+import { Edit } from 'lucide-react';
 import { Admin } from '../../type/admin';
 // import { StatusBadge } from '../StatusBadge';
 import { motion } from 'framer-motion';
@@ -25,7 +25,7 @@ interface Props {
   admins: Admin[];
   onEdit: (reg: Admin) => void;
   loading: boolean;
-  onDelete: (regId: string) => void;
+  // onDelete: (regId: string) => void;
 }
 
 const SkeletonRow = () => (
@@ -43,7 +43,7 @@ const SkeletonRow = () => (
   </motion.tr>
 );
 
-export const AdminTable = ({ admins, onEdit, loading, onDelete }: Props) => {
+export const AdminTable = ({ admins, onEdit, loading }: Props) => {
   return (
     <div className="rounded-md border border-gray-700">
       <Table>

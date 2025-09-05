@@ -6,7 +6,6 @@ import OTPForm from './components/OTPForm';
 import { useLogin } from './useLogin';
 import Link from 'next/link';
 import { HomeLogo } from '@/components/HomeLogo';
-import authImg from '@/public/auth.jpg';
 
 export default function Login() {
   const login = useLogin();

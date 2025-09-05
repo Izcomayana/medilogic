@@ -10,11 +10,11 @@ import {
   AlertDialogCancel,
 } from '@/components/ui/alert-dialog';
 import { useTrips } from '@/hooks/useTrips';
-import { Plus, Download, X } from 'lucide-react';
+import { Plus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { toast } from 'sonner';
+// import { toast } from 'sonner';
 import {
   Select,
   SelectContent,
@@ -29,25 +29,26 @@ type CreateTripProps = ReturnType<typeof useTrips>;
 export function CreateTrips({
   isCreateModalOpen,
   setIsCreateModalOpen,
-  filteredTrips,
+  // filteredTrips,
   formData,
   setFormData,
   drivers,
   handleCreateTrip,
+  loading,
 }: CreateTripProps) {
-  const handleExport = (type: 'csv' | 'pdf') => {
-    toast.success(
-      `${type.toUpperCase()} export started for ${filteredTrips.length} trips`
-    );
-  };
+  // const handleExport = (type: 'csv' | 'pdf') => {
+  //   toast.success(
+  //     `${type.toUpperCase()} export started for ${filteredTrips.length} trips`
+  //   );
+  // };
 
   return (
     <AlertDialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
       <div className="flex flex-col md:flex-row mt-4 lg:mt-0 gap-2">
-        <Button
+        {/* <Button
           onClick={() => handleExport('csv')}
           variant="outline"
-          className="border-gray-600 text-gray-300 hover:bg-gray-700"
+          className="border-gray-600 text-gray-700 hover:text-gray-300 hover:bg-gray-700"
         >
           <Download className="h-4 w-4 mr-2" />
           Export CSV
@@ -55,7 +56,7 @@ export function CreateTrips({
         <Button onClick={() => handleExport('pdf')} className="primary-button">
           <Download className="h-4 w-4 mr-2" />
           Export PDF
-        </Button>
+        </Button> */}
         <AlertDialogTrigger asChild>
           <Button className="primary-button">
             <Plus className="h-4 w-4 mr-2" />
@@ -230,9 +231,12 @@ export function CreateTrips({
             {' '}
             Cancel{' '}
           </Button>{' '}
-          <Button onClick={handleCreateTrip} className="primary-button">
-            {' '}
-            Create Trip{' '}
+          <Button
+            onClick={handleCreateTrip}
+            className="primary-button"
+            disabled={loading} // ✅ disable while loading
+          >
+            {loading ? 'Creating...' : 'Create Trip'}
           </Button>{' '}
         </AlertDialogFooter>{' '}
       </AlertDialogContent>{' '}

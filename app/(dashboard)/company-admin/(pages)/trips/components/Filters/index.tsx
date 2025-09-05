@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { MapPin, Search, CalendarDays, Filter } from 'lucide-react';
+import { MapPin, Search, Filter } from 'lucide-react';
 import { useTrips } from '@/hooks/useTrips';
 import {
   Select,
@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { CreateTrips } from '../CreateTrip/indes';
+import DateRangeFilter from './dateRange';
 
 type FiltersProps = ReturnType<typeof useTrips>;
 
@@ -17,10 +18,10 @@ export function Filters({
   filteredTrips,
   searchTerm,
   setSearchTerm,
-  dateFilter,
+  dateRange,
   statusFilter,
   setStatusFilter,
-  setDateFilter,
+  setDateRange,
 }: FiltersProps) {
   const tripState = useTrips();
 
@@ -32,8 +33,8 @@ export function Filters({
             <MapPin className="h-5 w-5" />
             Trips Management ({filteredTrips.length})
           </CardTitle>
+          <CreateTrips {...tripState} />
         </div>
-        <CreateTrips {...tripState} />
       </CardHeader>
 
       <CardContent>
@@ -60,18 +61,7 @@ export function Filters({
               <SelectItem value="cancelled">Cancelled</SelectItem>
             </SelectContent>
           </Select>
-          <Select value={dateFilter} onValueChange={setDateFilter}>
-            <SelectTrigger className="w-[150px] bg-gray-700 border-gray-600 text-white">
-              <CalendarDays className="h-4 w-4 mr-2" />
-              <SelectValue placeholder="Date" />
-            </SelectTrigger>
-            <SelectContent className="bg-gray-700 border-gray-600">
-              <SelectItem value="all">All Dates</SelectItem>
-              <SelectItem value="2025-08-24">Today</SelectItem>
-              <SelectItem value="2025-08-23">Yesterday</SelectItem>
-              <SelectItem value="2025-08-22">2 days ago</SelectItem>
-            </SelectContent>
-          </Select>
+          <DateRangeFilter value={dateRange} onChange={setDateRange} />
         </div>
       </CardContent>
     </Card>

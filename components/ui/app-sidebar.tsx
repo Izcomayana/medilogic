@@ -88,7 +88,7 @@ export function AppSidebar() {
   const pathname = usePathname();
   const { role } = useAuth();
 
-  console.log('Sidebar role:', role); // Add this in AppSidebar
+  // console.log('Sidebar role:', role);
 
   const menuItems = sidebarLinksByRole[role ?? ''] || [];
 

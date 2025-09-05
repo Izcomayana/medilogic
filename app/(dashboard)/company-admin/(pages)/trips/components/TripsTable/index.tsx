@@ -172,7 +172,7 @@ export function TripsTable({
                             variant="outline"
                             size="sm"
                             onClick={() => handleViewDetails(trip)}
-                            className="border-gray-600 text-gray-300 hover:bg-gray-700"
+                            className="border-gray-600 text-gray-700 hover:text-gray-300 hover:bg-gray-700"
                           >
                             <Eye className="h-3 w-3 mr-1" />
                             View
@@ -238,7 +238,7 @@ export function TripsTable({
                     size="sm"
                     onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
                     disabled={currentPage === 1}
-                    className="border-gray-600 text-gray-300 hover:bg-gray-700 disabled:opacity-50"
+                    className="border-gray-600 text-gray-700 hover:text-gray-300 hover:bg-gray-700 disabled:opacity-50"
                   >
                     Previous
                   </Button>
@@ -249,7 +249,7 @@ export function TripsTable({
                       setCurrentPage(Math.min(totalPages, currentPage + 1))
                     }
                     disabled={currentPage === totalPages}
-                    className="border-gray-600 text-gray-300 hover:bg-gray-700 disabled:opacity-50"
+                    className="border-gray-600 text-gray-700 hover:text-gray-300 hover:bg-gray-700 disabled:opacity-50"
                   >
                     Next
                   </Button>
