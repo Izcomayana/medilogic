@@ -30,6 +30,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
+import { TripsTableSkeleton } from './tripSkeleton';
 
 type TableProps = ReturnType<typeof useTrips>;
 
@@ -81,11 +83,14 @@ export function TripsTable({
   tripsPerPage,
   currentPage,
   setCurrentPage,
+  loading,
 }: TableProps) {
   return (
     <Card className="dashboard-card">
       <CardContent className="p-0">
-        {filteredTrips.length === 0 ? (
+        {loading ? (
+          <TripsTableSkeleton />
+        ) : filteredTrips.length === 0 ? (
           <div className="text-center py-12">
             <MapPin className="h-12 w-12 text-gray-600 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-white mb-2">
@@ -101,13 +106,13 @@ export function TripsTable({
               <Table>
                 <TableHeader>
                   <TableRow className="border-gray-700 hover:bg-gray-800">
-                    <TableHead className="text-gray-300">Trip ID</TableHead>
-                    <TableHead className="text-gray-300">
-                      Client / Organization
-                    </TableHead>
-                    <TableHead className="text-gray-300">Route</TableHead>
+                    {/* <TableHead className="text-gray-300">Trip ID</TableHead> */}
+                    {/* <TableHead className="text-gray-300">
+                      Organization
+                    </TableHead> */}
                     <TableHead className="text-gray-300">Driver</TableHead>
                     <TableHead className="text-gray-300">Status</TableHead>
+                    <TableHead className="text-gray-300">Route</TableHead>
                     <TableHead className="text-gray-300">Date & Time</TableHead>
                     <TableHead className="text-gray-300">Actions</TableHead>
                   </TableRow>
@@ -118,29 +123,43 @@ export function TripsTable({
                       key={trip.id}
                       className="border-gray-700 hover:bg-gray-800"
                     >
-                      <TableCell className="font-medium text-white">
+                      {/* <TableCell className="font-medium text-white">
                         {trip.id}
-                      </TableCell>
-                      <TableCell className="text-gray-300">
+                      </TableCell> */}
+                      {/* <TableCell className="text-gray-300">
                         {trip.clientOrganization}
+                      </TableCell> */}
+                      <TableCell className="text-gray-300 flex items-center gap-1">
+                        <User className="h-3 w-3" />
+                        {trip.driverAssigned &&
+                        trip.driverAssigned.trim() !== '' ? (
+                          trip.driverAssigned
+                        ) : (
+                          <Badge
+                            variant="outline"
+                            className="text-gray-400 border-gray-600"
+                          >
+                            Unassigned
+                          </Badge>
+                        )}
                       </TableCell>
+                      <TableCell>{getStatusBadge(trip.status)}</TableCell>
                       <TableCell className="text-gray-300">
                         <div className="flex flex-col gap-1">
                           <span className="text-sm flex items-center gap-1">
                             <Navigation className="h-3 w-3 text-green-500" />
-                            {trip.pickupLocation.split(',')[0]}
+                            {trip.pickupLocation
+                              ? trip.pickupLocation.split(',')[0]
+                              : 'N/A'}
                           </span>
                           <span className="text-sm flex items-center gap-1">
                             <MapPin className="h-3 w-3 text-red-500" />
-                            {trip.dropoffLocation.split(',')[0]}
+                            {trip.dropoffLocation
+                              ? trip.dropoffLocation.split(',')[0]
+                              : 'N/A'}
                           </span>
                         </div>
                       </TableCell>
-                      <TableCell className="text-gray-300 flex items-center gap-1">
-                        <User className="h-3 w-3" />
-                        {trip.driverAssigned}
-                      </TableCell>
-                      <TableCell>{getStatusBadge(trip.status)}</TableCell>
                       <TableCell className="text-gray-300">
                         <div className="flex items-center gap-1">
                           <Clock className="h-3 w-3" />

@@ -21,7 +21,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { UserPlus, XIcon } from 'lucide-react';
+import { UserPlus, XIcon, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 import { useState } from 'react';
 import { useOrganizations } from '@/hooks/useOrg';
@@ -47,6 +47,7 @@ export const CreateAdmin = ({ onCreate }: Props) => {
   const [organizationId, setOrganizationId] = useState<string>('');
   const [submitting, setSubmitting] = useState(false);
   const { orgs, loading } = useOrganizations();
+  const [showPassword, setShowPassword] = useState(false);
 
   const resetForm = () => {
     setName('');
@@ -139,14 +140,23 @@ export const CreateAdmin = ({ onCreate }: Props) => {
             <Label htmlFor="password" className="text-right">
               Password
             </Label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="Enter a secure password"
-              className="col-span-3 bg-gray-700 border-gray-600 text-white"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <div className="col-span-3 relative">
+              <Input
+                id="password"
+                type={showPassword ? 'text' : 'password'} // 👈 toggle type
+                placeholder="Enter a secure password"
+                className="w-full bg-gray-700 border-gray-600 text-white pr-10"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute inset-y-0 right-2 flex items-center text-gray-400 hover:text-white"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="status" className="text-right">

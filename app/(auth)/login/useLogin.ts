@@ -106,10 +106,11 @@ export function useLogin() {
       }
     } catch (error: any) {
       const msg =
-        error?.response?.data?.message ??
         error?.response?.data?.detail ??
+        error?.message ??
         'An unexpected error occurred. Please try again.';
-
+      console.log('error:', error);
+      console.log('error2:', error?.response?.data?.detail);
       const errorMessage = typeof msg === 'string' ? msg : JSON.stringify(msg);
 
       // 🔎 If account is deactivated
@@ -132,7 +133,7 @@ export function useLogin() {
         if (errorMessage.toLowerCase().includes('invalid')) {
           setErrors({
             general:
-              'Login failed. Your account may be deactivated or your credentials are incorrect.',
+              'Login failed. Your account may be deactivated, deleted or your credentials are incorrect.',
           });
           toast.error('Login failed', {
             description:
@@ -231,11 +232,14 @@ export function useLogin() {
         qs.stringify({ username: email, password }),
         { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
       );
+
       if (response.data.session_id) {
         setSessionId(response.data.session_id);
         setSuccessMessage('OTP resent to your email.');
+        toast.success('OTP resent successfully!');
       } else {
         setErrors({ general: 'Failed to resend OTP.' });
+        toast.error('Failed to resend OTP.');
       }
     } catch (error: any) {
       const res = error.response?.data;
@@ -250,6 +254,9 @@ export function useLogin() {
       }
 
       setErrors({ general: message });
+      toast.error('Error', { description: message });
+    } finally {
+      setLoading(false); // ✅ always reset loading
     }
   };
 

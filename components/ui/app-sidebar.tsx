@@ -13,6 +13,7 @@ import {
   // Bell,
   AppWindow,
   Route,
+  // Settings,
 } from 'lucide-react';
 import { useAuth } from '@/components/auth';
 import {
@@ -36,13 +37,13 @@ const sidebarLinksByRole: Record<
 > = {
   super_admin: [
     { title: 'Dashboard', url: '/super-admin', icon: Home },
+    { title: 'Regulators', url: '/super-admin/regulators', icon: Shield },
+    { title: 'Admins', url: '/super-admin/admins', icon: Users },
     {
       title: 'Organizations',
       url: '/super-admin/organizations',
       icon: Building2,
     },
-    { title: 'Regulators', url: '/super-admin/regulators', icon: Shield },
-    { title: 'Admins', url: '/super-admin/admins', icon: Users },
     {
       title: 'Pending Applications',
       url: '/super-admin/pending-applications',
@@ -53,6 +54,7 @@ const sidebarLinksByRole: Record<
   ],
   admin: [
     { title: 'Dashboard', url: '/company-admin', icon: Home },
+    { title: 'Trips', url: '/company-admin/trips', icon: Route },
     { title: 'Charts', url: '/company-admin/charts', icon: Truck },
     {
       title: 'Assignments',
@@ -60,7 +62,7 @@ const sidebarLinksByRole: Record<
       icon: ClipboardList,
     },
     { title: 'Exports', url: '/company-admin/exports', icon: FileText },
-    { title: 'Trips', url: '/company-admin/trips', icon: Route },
+    // { title: 'Settings', url: '/company-admin/settings', icon: Settings },
   ],
   regulator: [
     { title: 'Dashboard', url: '/regulator', icon: Home },
