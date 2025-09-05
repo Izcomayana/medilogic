@@ -101,12 +101,12 @@ export default function RegulatorsPage() {
               }}
               onView={viewReg}
               loading={loading}
-              onDelete={(regId) => {
-                setSelectedReg(
-                  filteredRegs.find((r) => r.id === regId) || null
-                );
-                setDeleteOpen(true);
-              }}
+              // onDelete={(regId) => {
+              //   setSelectedReg(
+              //     filteredRegs.find((r) => r.id === regId) || null
+              //   );
+              //   setDeleteOpen(true);
+              // }}
             />
           </CardContent>
         </Card>
