@@ -120,12 +120,12 @@ export default function OrgAdmin() {
                 setEditAdmin(admin);
                 setEditOpen(true);
               }}
-              onDelete={(adminId) => {
-                setEditAdmin(
-                  filteredAdmins.find((a) => a.id === adminId) || null
-                );
-                setDeleteOpen(true);
-              }}
+              // onDelete={(adminId) => {
+              //   setEditAdmin(
+              //     filteredAdmins.find((a) => a.id === adminId) || null
+              //   );
+              //   setDeleteOpen(true);
+              // }}
             />
           </CardContent>
         </Card>

@@ -9,13 +9,13 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Edit, MoreHorizontal, Trash2 } from 'lucide-react';
+// import {
+//   DropdownMenu,
+//   DropdownMenuContent,
+//   DropdownMenuItem,
+//   DropdownMenuTrigger,
+// } from '@/components/ui/dropdown-menu';
+import { Edit } from 'lucide-react';
 import { Admin } from '../../type/admin';
 // import { StatusBadge } from '../StatusBadge';
 import { motion } from 'framer-motion';
@@ -25,7 +25,7 @@ interface Props {
   admins: Admin[];
   onEdit: (reg: Admin) => void;
   loading: boolean;
-  onDelete: (regId: string) => void;
+  // onDelete: (regId: string) => void;
 }
 
 const SkeletonRow = () => (
@@ -43,7 +43,7 @@ const SkeletonRow = () => (
   </motion.tr>
 );
 
-export const AdminTable = ({ admins, onEdit, loading, onDelete }: Props) => {
+export const AdminTable = ({ admins, onEdit, loading }: Props) => {
   return (
     <div className="rounded-md border border-gray-700">
       <Table>
@@ -57,52 +57,66 @@ export const AdminTable = ({ admins, onEdit, loading, onDelete }: Props) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {loading
-            ? Array.from({ length: 5 }).map((_, i) => <SkeletonRow key={i} />)
-            : admins.map((a) => (
-                <TableRow
-                  key={a.id}
-                  className="border-gray-700 hover:bg-gray-800"
-                >
-                  <TableCell className="font-medium text-white">
-                    {a.name}
-                  </TableCell>
-                  <TableCell className="text-gray-300">{a.email}</TableCell>
-                  <TableCell className="text-gray-300">{a.orgName}</TableCell>
-                  <TableCell>
-                    <StatusBadge status={a.status} />
-                  </TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          className="h-8 w-8 p-0 text-gray-400 hover:bg-gray-700"
-                        >
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        align="end"
-                        className="bg-gray-700 border-gray-600"
+          {loading ? (
+            Array.from({ length: 5 }).map((_, i) => <SkeletonRow key={i} />)
+          ) : admins.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={5} className="text-center text-gray-400 py-6">
+                No admins found.
+              </TableCell>
+            </TableRow>
+          ) : (
+            admins.map((a) => (
+              <TableRow
+                key={a.id}
+                className="border-gray-700 hover:bg-gray-800"
+              >
+                <TableCell className="font-medium text-white">
+                  {a.name}
+                </TableCell>
+                <TableCell className="text-gray-300">{a.email}</TableCell>
+                <TableCell className="text-gray-300">{a.orgName}</TableCell>
+                <TableCell>
+                  <StatusBadge status={a.status} />
+                </TableCell>
+                <TableCell>
+                  <Button
+                    className="bg-gray-700 rounded-sm border border-gray-600 flex text-sm !p-1 hover:bg-gray-500"
+                    onClick={() => onEdit(a)}
+                  >
+                    <Edit className="h-4 w-4" /> Edit
+                  </Button>
+                  {/* <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        className="h-8 w-8 p-0 text-gray-400 hover:bg-gray-700"
                       >
-                        <DropdownMenuItem
-                          className="text-gray-300 hover:bg-gray-600 cursor-pointer"
-                          onClick={() => onEdit(a)}
-                        >
-                          <Edit className="mr-2 h-4 w-4" /> Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      align="end"
+                      className="bg-gray-700 border-gray-600"
+                    >
+                      <DropdownMenuItem
+                        className="text-gray-300 hover:bg-gray-600 cursor-pointer"
+                        onClick={() => onEdit(a)}
+                      >
+                        <Edit className="mr-2 h-4 w-4" /> Edit
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
                           className="text-red-400 hover:bg-gray-600 cursor-pointer"
                           onClick={() => onDelete(a.id)}
                         >
                           <Trash2 className="mr-2 h-4 w-4" /> Delete
                         </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu> */}
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </TableBody>
       </Table>
     </div>

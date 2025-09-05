@@ -11,8 +11,15 @@ export default function Login() {
   const login = useLogin();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center px-4 pt-8 pb-12">
-      <div className="w-full max-w-md">
+    <div
+      className="relative min-h-screen flex items-center justify-center px-4 pt-8 pb-12 bg-cover bg-center"
+      style={{ backgroundImage: "url('/auth2.png')" }}
+    >
+      {/* Dark overlay */}
+      <div className="absolute inset-0 bg-black opacity-50"></div>
+
+      {/* Content */}
+      <div className="relative w-full max-w-md z-10">
         {/* Logo and Header */}
         <div className="text-center mb-8">
           <HomeLogo />

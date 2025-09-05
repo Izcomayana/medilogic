@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -20,58 +19,25 @@ import {
   Phone,
   MapPin,
   IdCard,
+  Tally4,
+  Code,
+  Copy,
 } from 'lucide-react';
 // import Link from 'next/link';
-import { useAuthorizedRequest } from '@/hooks/useRequest';
-import axios from 'axios';
 import { useAuth } from '@/components/auth';
-
-type UserProfile = {
-  name: string;
-  email: string;
-  role: string;
-  is_verified: boolean;
-  organization: {
-    id: string | null;
-    name: string | null;
-    address: string | null;
-    phone_number: string | null;
-  };
-};
+import { useProfile } from '@/hooks/useProfile';
+import { useState } from 'react';
 
 export function ViewProfileDropdown() {
-  const [user, setUser] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState(true);
-  const authorizedRequest = useAuthorizedRequest();
+  const { user, loading } = useProfile();
   const { logout } = useAuth();
+  const [copied, setCopied] = useState(false);
 
-  useEffect(() => {
-    let isMounted = true;
-
-    (async () => {
-      setLoading(true);
-
-      const data = await authorizedRequest(async (validToken) => {
-        const res = await axios.get(
-          'https://medilogic-backend.onrender.com/profile',
-          {
-            headers: { Authorization: `Bearer ${validToken}` },
-          }
-        );
-
-        return res.data as UserProfile;
-      }, 'Failed to load profile');
-
-      if (isMounted) {
-        if (data) setUser(data);
-        setLoading(false);
-      }
-    })();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [authorizedRequest]);
+  const handleCopy = (code: string) => {
+    navigator.clipboard.writeText(code);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000); // reset after 2s
+  };
 
   return (
     <DropdownMenu>
@@ -134,6 +100,43 @@ export function ViewProfileDropdown() {
                         <span>{user.organization.phone_number}</span>
                       </div>
                     )}
+                    {user.organization.license_number && (
+                      <div className="flex items-center gap-2 pl-6 text-gray-400">
+                        <Tally4 className="h-4 w-4" />
+                        <span>{user.organization.license_number}</span>
+                      </div>
+                    )}
+                    {user.organization.ico_registered ? (
+                      <div title="Verified" className="flex items-center">
+                        <span className="mr-2">Ico registered:</span>
+                        <CheckCircle2 className="h-5 w-5 text-green-500" />
+                      </div>
+                    ) : (
+                      <div title="Not Verified">
+                        <span className="mr-2">Ico registered:</span>
+                        <XCircle className="h-5 w-5 text-red-500" />
+                      </div>
+                    )}
+                    {user.organization.invite_code && (
+                      <div className="flex items-center gap-2">
+                        <Code className="h-4 w-4" />
+                        <span>{user.organization.invite_code}</span>
+                        <button
+                          onClick={() =>
+                            handleCopy(user.organization.invite_code)
+                          }
+                          className="text-gray-400 hover:text-white transition-colors"
+                          title="Copy invite code"
+                        >
+                          <Copy className="h-4 w-4" />
+                        </button>
+                        {copied && (
+                          <span className="text-green-500 text-xs">
+                            Copied!
+                          </span>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -150,7 +153,7 @@ export function ViewProfileDropdown() {
             <DropdownMenuSeparator className="bg-gray-700" />
 
             <div className="p-3 space-y-2">
-              {/* <Link href="/#">
+              {/* <Link href="/settings">
                 <Button
                   variant="ghost"
                   className="w-full justify-center text-[#15941f] hover:bg-gray-700"

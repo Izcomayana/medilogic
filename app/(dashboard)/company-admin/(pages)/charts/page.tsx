@@ -65,7 +65,7 @@ export default function ChartsPage() {
 
   useEffect(() => {
     fetchCharts();
-  }, [dateRange, orgUnit]);
+  }, [dateRange, orgUnit, fetchCharts]);
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
