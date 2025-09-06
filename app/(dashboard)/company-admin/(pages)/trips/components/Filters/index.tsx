@@ -28,7 +28,7 @@ export function Filters({
   return (
     <Card className="dashboard-card mb-6 w-full items-start">
       <CardHeader className="w-full">
-        <div className="flex flex-col lg:flex-row justify-between">
+        <div className="flex flex-col md:flex-row justify-between items-center">
           <CardTitle className="text-white flex  gap-2">
             <MapPin className="h-5 w-5" />
             Trips Management ({filteredTrips.length})

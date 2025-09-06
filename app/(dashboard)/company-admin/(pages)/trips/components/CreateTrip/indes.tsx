@@ -83,20 +83,6 @@ export function CreateTrips({
         <div className="grid gap-4 py-4">
           {' '}
           <div className="grid grid-cols-2 gap-4">
-            {' '}
-            {/* <div> 
-              <Label htmlFor="client" className="text-gray-300"> 
-                Client / Organization 
-              </Label> 
-              <Select value={formData.clientOrganization} onValueChange={(value) => setFormData({ ...formData, clientOrganization: value }) }> 
-                <SelectTrigger className="bg-gray-700 border-gray-600 text-white mt-2"> 
-                  <SelectValue placeholder="Select client" /> 
-                </SelectTrigger> 
-                <SelectContent className="bg-gray-700 border-gray-600"> 
-                  {clients.map((client) => ( <SelectItem key={client} value={client}> {client} </SelectItem> ))} 
-                </SelectContent> 
-              </Select> 
-            </div> */}{' '}
             <div>
               {' '}
               <Label htmlFor="driver" className="text-gray-300">
@@ -202,6 +188,27 @@ export function CreateTrips({
                 </SelectContent>{' '}
               </Select>{' '}
             </div>{' '}
+            <div>
+              <Label htmlFor="priority" className="text-gray-300">
+                Priority
+              </Label>
+              <Select
+                value={formData.priority}
+                onValueChange={(value) =>
+                  setFormData({ ...formData, priority: value })
+                }
+              >
+                <SelectTrigger className="bg-gray-700 border-gray-600 text-white mt-2">
+                  <SelectValue placeholder="Select priority" />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-700 border-gray-600">
+                  <SelectItem value="urgent">Urgent</SelectItem>
+                  <SelectItem value="high">High</SelectItem>
+                  <SelectItem value="normal">Normal</SelectItem>
+                  <SelectItem value="low">Low</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>{' '}
           <div>
             {' '}

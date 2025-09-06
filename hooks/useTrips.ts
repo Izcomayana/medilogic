@@ -17,6 +17,7 @@ const trips = [
     dropoffLocation: '456 Waste Facility Rd, Lagos',
     driverAssigned: 'John Smith',
     status: 'Completed',
+    priority: 'Normal',
     dateTime: '2025-08-22 09:00',
     notes: 'Medical waste pickup - handle with care',
     createdDate: '2025-08-20',
@@ -45,6 +46,7 @@ const trips = [
     dropoffLocation: '321 Recycling Center, Abuja',
     driverAssigned: 'Sarah Johnson',
     status: 'In Progress',
+    priority: 'Urgent',
     dateTime: '2025-08-23 14:00',
     notes: 'Electronic waste disposal',
     createdDate: '2025-08-21',
@@ -68,6 +70,7 @@ const trips = [
     dropoffLocation: '777 Hazmat Facility, Port Harcourt',
     driverAssigned: 'Mike Davis',
     status: 'Pending',
+    priority: 'Normal',
     dateTime: '2025-08-24 10:00',
     notes: 'Pharmaceutical waste - requires special handling certification',
     createdDate: '2025-08-22',
@@ -111,6 +114,7 @@ const clients = [
   'WasteTech Solutions',
   'HealthCare Plus',
 ];
+
 const drivers = [
   'John Smith',
   'Sarah Johnson',
@@ -170,6 +174,7 @@ export function useTrips(tripsPerPage = 10) {
     dateTime: '',
     notes: '',
     status: 'Pending',
+    priority: 'normal',
   });
 
   const authorizedRequest = useAuthorizedRequest();
@@ -183,6 +188,7 @@ export function useTrips(tripsPerPage = 10) {
       dateTime: '',
       notes: '',
       status: 'Pending',
+      priority: 'Normal',
     });
     setSelectedTrip(null);
   };
@@ -196,6 +202,7 @@ export function useTrips(tripsPerPage = 10) {
       dropoffLocation: apiTrip.dropoff_location,
       driverAssigned: apiTrip.driver_name,
       status: apiTrip.status,
+      priority: apiTrip.priority,
       dateTime: apiTrip.scheduled_time,
       notes: apiTrip.custom_delivery_description,
       createdDate: apiTrip.created_at,
@@ -235,7 +242,7 @@ export function useTrips(tripsPerPage = 10) {
                   ? formatDateEnd(dateRange.from)
                   : undefined,
               sort_by: 'scheduled_time',
-              sort_order: 'desc',
+              sort_order: 'asc',
             },
           }
         );
@@ -267,7 +274,7 @@ export function useTrips(tripsPerPage = 10) {
 
       setTripsList(mapped);
       setTotalTrips(total);
-      console.log('total:', total);
+      console.log('total:', totalTrips);
     } catch (err) {
       console.error('fetchTrips error', err);
       setTripsList([]);
@@ -308,6 +315,7 @@ export function useTrips(tripsPerPage = 10) {
         delivery_type: 'clinical_waste',
         organization_id: user.organization.id,
         status: formData.status || 'Pending',
+        priority: formData.priority || 'normal',
         driver_name: formData.driverAssigned || undefined,
         scheduled_time: formData.dateTime
           ? new Date(formData.dateTime).toISOString()
@@ -363,7 +371,8 @@ export function useTrips(tripsPerPage = 10) {
       driverAssigned: trip.driverAssigned,
       dateTime: trip.dateTime,
       notes: trip.notes,
-      status: trip.status,
+      status: trip.status || 'Pending',
+      priority: trip.priority || 'Normal',
     });
     setIsEditModalOpen(true);
   };

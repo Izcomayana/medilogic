@@ -16,14 +16,15 @@ export function TripsTableSkeleton() {
         <TableHeader>
           <TableRow className="border-gray-700">
             <TableHead className="text-gray-300">Driver</TableHead>
-            <TableHead className="text-gray-300">Status</TableHead>
+            <TableHead className="text-gray-300">Priority</TableHead>
             <TableHead className="text-gray-300">Route</TableHead>
             <TableHead className="text-gray-300">Date & Time</TableHead>
+            <TableHead className="text-gray-300">Status</TableHead>
             <TableHead className="text-gray-300">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {Array.from({ length: 5 }).map((_, i) => (
+          {Array.from({ length: 10 }).map((_, i) => (
             <TableRow key={i} className="border-gray-700">
               <TableCell>
                 <div className="flex items-center gap-2">
@@ -43,10 +44,10 @@ export function TripsTableSkeleton() {
                 <Skeleton className="h-4 w-28 bg-gray-700" />
               </TableCell>
               <TableCell>
-                <div className="flex gap-2">
-                  <Skeleton className="h-8 w-16 bg-gray-700 rounded-md" />
-                  <Skeleton className="h-8 w-8 bg-gray-700 rounded-md" />
-                </div>
+                <Skeleton className="h-5 w-24 bg-gray-700 rounded-full" />
+              </TableCell>
+              <TableCell>
+                <Skeleton className="h-4 w-8 bg-gray-700 rounded-md" />
               </TableCell>
             </TableRow>
           ))}

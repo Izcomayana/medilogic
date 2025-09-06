@@ -34,41 +34,6 @@ import { TripsTableSkeleton } from './tripSkeleton';
 
 type TableProps = ReturnType<typeof useTrips>;
 
-function getStatusBadge(status: string) {
-  switch (status.toLowerCase()) {
-    case 'completed':
-      return (
-        <Badge className="bg-[#15941f] text-white">
-          <CheckCircle className="h-3 w-3 mr-1" />
-          Completed
-        </Badge>
-      );
-    case 'in progress':
-      return (
-        <Badge variant="secondary" className="bg-blue-600 text-white">
-          <Loader className="h-3 w-3 mr-1" />
-          In Progress
-        </Badge>
-      );
-    case 'pending':
-      return (
-        <Badge variant="secondary" className="bg-yellow-600 text-white">
-          <AlertCircle className="h-3 w-3 mr-1" />
-          Pending
-        </Badge>
-      );
-    case 'cancelled':
-      return (
-        <Badge variant="destructive">
-          <XCircle className="h-3 w-3 mr-1" />
-          Cancelled
-        </Badge>
-      );
-    default:
-      return <Badge variant="outline">{status}</Badge>;
-  }
-}
-
 export function TripsTable({
   filteredTrips,
   paginatedTrips,
@@ -84,8 +49,70 @@ export function TripsTable({
   setCurrentPage,
   loading,
 }: TableProps) {
+  function getStatusBadge(status: string) {
+    switch (status.toLowerCase()) {
+      case 'completed':
+        return (
+          <Badge className="bg-[#15941f] text-white">
+            <CheckCircle className="h-3 w-3 mr-1" />
+            Completed
+          </Badge>
+        );
+      case 'in progress':
+        return (
+          <Badge variant="secondary" className="bg-blue-600 text-white">
+            <Loader className="h-3 w-3 mr-1" />
+            In Progress
+          </Badge>
+        );
+      case 'pending':
+        return (
+          <Badge variant="secondary" className="bg-yellow-600 text-white">
+            <AlertCircle className="h-3 w-3 mr-1" />
+            Pending
+          </Badge>
+        );
+      case 'cancelled':
+        return (
+          <Badge variant="destructive">
+            <XCircle className="h-3 w-3 mr-1" />
+            Cancelled
+          </Badge>
+        );
+      default:
+        return <Badge variant="outline">{status}</Badge>;
+    }
+  }
+
+  function getPriorityBadge(priority?: string | null) {
+    if (!priority) {
+      return (
+        <Badge variant="outline" className="text-gray-400 border-gray-600">
+          N/A
+        </Badge>
+      );
+    }
+
+    switch (priority.toLowerCase()) {
+      case 'urgent':
+        return <Badge className="bg-red-600 text-white">Urgent</Badge>;
+      case 'high':
+        return <Badge className="bg-orange-500 text-white">High</Badge>;
+      case 'normal':
+        return <Badge className="bg-green-600 text-white">Normal</Badge>;
+      case 'low':
+        return <Badge className="bg-blue-600 text-white">Low</Badge>;
+      default:
+        return (
+          <Badge variant="outline" className="text-gray-300 border-gray-600">
+            {priority}
+          </Badge>
+        );
+    }
+  }
+
   return (
-    <Card className="dashboard-card">
+    <Card className="dashboard-card py-0">
       <CardContent className="p-0">
         {loading ? (
           <TripsTableSkeleton />
@@ -110,9 +137,10 @@ export function TripsTable({
                       Organization
                     </TableHead> */}
                     <TableHead className="text-gray-300">Driver</TableHead>
-                    <TableHead className="text-gray-300">Status</TableHead>
+                    <TableHead className="text-gray-300">Priority</TableHead>
                     <TableHead className="text-gray-300">Route</TableHead>
                     <TableHead className="text-gray-300">Date & Time</TableHead>
+                    <TableHead className="text-gray-300">Status</TableHead>
                     <TableHead className="text-gray-300">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -142,7 +170,7 @@ export function TripsTable({
                           </Badge>
                         )}
                       </TableCell>
-                      <TableCell>{getStatusBadge(trip.status)}</TableCell>
+                      <TableCell>{getPriorityBadge(trip.priority)}</TableCell>
                       <TableCell className="text-gray-300">
                         <div className="flex flex-col gap-1">
                           <span className="text-sm flex items-center gap-1">
@@ -165,17 +193,9 @@ export function TripsTable({
                           {formatDateTime(trip.dateTime)}
                         </div>
                       </TableCell>
+                      <TableCell>{getStatusBadge(trip.status)}</TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleViewDetails(trip)}
-                            className="border-gray-600 text-gray-700 hover:text-gray-300 hover:bg-gray-700"
-                          >
-                            <Eye className="h-3 w-3 mr-1" />
-                            View
-                          </Button>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <Button
@@ -189,6 +209,13 @@ export function TripsTable({
                               align="end"
                               className="bg-gray-700 border-gray-600"
                             >
+                              <DropdownMenuItem
+                                onClick={() => handleViewDetails(trip)}
+                                className="text-gray-300 hover:bg-gray-600"
+                              >
+                                <Eye className="h-3 w-3 mr-1" />
+                                View
+                              </DropdownMenuItem>
                               <DropdownMenuItem
                                 className="text-gray-300 hover:bg-gray-600"
                                 onClick={() => handleEdit(trip)}
