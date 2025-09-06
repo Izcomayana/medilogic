@@ -5,8 +5,6 @@ import { useState, useEffect, useMemo } from 'react';
 import { toast } from 'sonner';
 import axios from 'axios';
 import { Regulators } from '../app/(dashboard)/super-admin/(pages)/regulators/types/regulator';
-import { useAuth } from '@/components/auth';
-import { isTokenExpired } from '@/hooks/token';
 import { useAuthorizedRequest } from './useRequest';
 
 export function useRegulators() {
