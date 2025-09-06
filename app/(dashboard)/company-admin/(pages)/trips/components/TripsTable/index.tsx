@@ -39,7 +39,7 @@ export function TripsTable({
   paginatedTrips,
   formatDateTime,
   handleViewDetails,
-  handleEdit,
+  // handleEdit,
   handleQuickStatusUpdate,
   setTripToDelete,
   totalPages,
@@ -218,7 +218,7 @@ export function TripsTable({
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 className="text-gray-300 hover:bg-gray-600"
-                                onClick={() => handleEdit(trip)}
+                                // onClick={() => handleEdit(trip)}
                               >
                                 <Edit className="mr-2 h-4 w-4" />
                                 Edit Trip

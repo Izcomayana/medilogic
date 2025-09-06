@@ -157,9 +157,7 @@ export function useTrips(tripsPerPage = 10) {
   const [statusFilter, setStatusFilter] = useState('all');
   const [dateRange, setDateRange] = React.useState<DateRangeLocal>();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [selectedTrip, setSelectedTrip] = useState<(typeof trips)[0] | null>(
-    null
-  );
+  const [selectedTrip, setSelectedTrip] = useState<UiTrip | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -171,10 +169,20 @@ export function useTrips(tripsPerPage = 10) {
     pickupLocation: '',
     dropoffLocation: '',
     driverAssigned: '',
+    driverId: '', // 👈 NEW
     dateTime: '',
     notes: '',
     status: 'Pending',
     priority: 'normal',
+    deliveryType: 'clinical_waste', // ✅ default to Clinical Waste
+    customDeliveryDescription: '',
+    cost: 0, // 👈 NEW
+    distanceKm: 0, // 👈 NEW
+    vehicleType: '', // 👈 NEW
+    locationZone: '', // 👈 NEW
+    shiftWindow: '', // 👈 NEW
+    complianceFlag: false, // 👈 NEW
+    recurrenceRule: 'none', // 👈 NEW
   });
 
   const authorizedRequest = useAuthorizedRequest();
@@ -185,10 +193,20 @@ export function useTrips(tripsPerPage = 10) {
       pickupLocation: '',
       dropoffLocation: '',
       driverAssigned: '',
+      driverId: '',
       dateTime: '',
       notes: '',
       status: 'Pending',
-      priority: 'Normal',
+      priority: 'normal',
+      deliveryType: 'clinical_waste',
+      customDeliveryDescription: '',
+      cost: 0,
+      distanceKm: 0,
+      vehicleType: '',
+      locationZone: '',
+      shiftWindow: '',
+      complianceFlag: false,
+      recurrenceRule: 'none',
     });
     setSelectedTrip(null);
   };
@@ -198,13 +216,15 @@ export function useTrips(tripsPerPage = 10) {
     return {
       id: apiTrip.id,
       clientOrganization: apiTrip.client_name,
+      deliveryType: apiTrip.delivery_type,
       pickupLocation: apiTrip.pickup_location,
       dropoffLocation: apiTrip.dropoff_location,
+      driverId: apiTrip.driver_id,
       driverAssigned: apiTrip.driver_name,
       status: apiTrip.status,
       priority: apiTrip.priority,
       dateTime: apiTrip.scheduled_time,
-      notes: apiTrip.custom_delivery_description,
+      // notes: apiTrip.custom_delivery_description,
       createdDate: apiTrip.created_at,
       statusHistory: [
         {
@@ -312,10 +332,11 @@ export function useTrips(tripsPerPage = 10) {
     setLoading(true);
     try {
       const payload = {
-        delivery_type: 'clinical_waste',
+        delivery_type: formData.deliveryType,
         organization_id: user.organization.id,
         status: formData.status || 'Pending',
         priority: formData.priority || 'normal',
+        driver_id: formData.driverId || undefined, // 👈 NEW
         driver_name: formData.driverAssigned || undefined,
         scheduled_time: formData.dateTime
           ? new Date(formData.dateTime).toISOString()
@@ -323,7 +344,18 @@ export function useTrips(tripsPerPage = 10) {
         client_name: user.organization.name,
         pickup_location: formData.pickupLocation || undefined,
         dropoff_location: formData.dropoffLocation || undefined,
-        custom_delivery_description: formData.notes || undefined,
+        notes: formData.notes,
+        cost: formData.cost || 0, // 👈 NEW
+        distance_km: formData.distanceKm || 0, // 👈 NEW
+        vehicle_type: formData.vehicleType || undefined, // 👈 NEW
+        location_zone: formData.locationZone || undefined, // 👈 NEW
+        shift_window: formData.shiftWindow || undefined, // 👈 NEW
+        compliance_flag: formData.complianceFlag || false, // 👈 NEW
+        recurrence_rule: formData.recurrenceRule || 'none', // 👈 NEW
+        custom_delivery_description:
+          formData.deliveryType === 'other'
+            ? formData.customDeliveryDescription
+            : formData.notes || undefined,
       };
 
       const created = await authorizedRequest<Trip>(async (token) => {
@@ -357,25 +389,55 @@ export function useTrips(tripsPerPage = 10) {
     });
   };
 
-  const handleViewDetails = (trip: (typeof trips)[0]) => {
-    setSelectedTrip(trip);
-    setIsDetailsModalOpen(true);
+  const fetchTripById = async (tripId: string) => {
+    try {
+      setLoading(true);
+
+      const data = await authorizedRequest<any>(async (token) => {
+        const res = await axios.get(
+          `https://medilogic-backend.onrender.com/trips/${tripId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        return res.data;
+      }, 'Failed to fetch trip details');
+
+      if (!data) return null;
+
+      return mapApiTripToUiTrip(data as Trip);
+    } catch (err) {
+      console.error('fetchTripById error', err);
+      return null;
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleEdit = (trip: (typeof trips)[0]) => {
-    setSelectedTrip(trip);
-    setFormData({
-      clientOrganization: trip.clientOrganization,
-      pickupLocation: trip.pickupLocation,
-      dropoffLocation: trip.dropoffLocation,
-      driverAssigned: trip.driverAssigned,
-      dateTime: trip.dateTime,
-      notes: trip.notes,
-      status: trip.status || 'Pending',
-      priority: trip.priority || 'Normal',
-    });
-    setIsEditModalOpen(true);
+  const handleViewDetails = async (trip: { id: string }) => {
+    const detailedTrip = await fetchTripById(trip.id);
+    if (detailedTrip) {
+      setSelectedTrip(detailedTrip);
+      setIsDetailsModalOpen(true);
+    } else {
+      toast.error('Failed to load trip details');
+    }
   };
+
+  // const handleEdit = (trip: (typeof trips)[0]) => {
+  //   setSelectedTrip(trip);
+  //   setFormData({
+  //     clientOrganization: trip.clientOrganization,
+  //     pickupLocation: trip.pickupLocation,
+  //     dropoffLocation: trip.dropoffLocation,
+  //     driverAssigned: trip.driverAssigned,
+  //     dateTime: trip.dateTime,
+  //     notes: trip.notes,
+  //     status: trip.status || 'Pending',
+  //     priority: trip.priority || 'Normal',
+  //   });
+  //   setIsEditModalOpen(true);
+  // };
 
   const handleQuickStatusUpdate = (tripId: string, newStatus: string) => {
     setTripsList((prev) =>
@@ -466,7 +528,7 @@ export function useTrips(tripsPerPage = 10) {
     handleCreateTrip,
     formatDateTime,
     handleViewDetails,
-    handleEdit,
+    // handleEdit,
     handleQuickStatusUpdate,
     handleUpdateTrip,
   };
