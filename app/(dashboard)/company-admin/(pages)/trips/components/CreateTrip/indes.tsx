@@ -122,9 +122,8 @@ export function CreateTrips({
                 </SelectTrigger>
                 <SelectContent className="bg-gray-700 border-gray-600">
                   <SelectItem value="urgent">Urgent</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
                   <SelectItem value="normal">Normal</SelectItem>
-                  <SelectItem value="low">Low</SelectItem>
+                  <SelectItem value="stat">Stat</SelectItem>
                 </SelectContent>
               </Select>
             </div>

@@ -15,57 +15,57 @@ import {
   User,
   Clock,
   Navigation,
-  CheckCircle,
-  Loader,
-  AlertCircle,
-  XCircle,
+  // CheckCircle,
+  // Loader,
+  // AlertCircle,
+  // XCircle,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+// import { Badge } from '@/components/ui/badge';
 
 type TripsDetailsProps = ReturnType<typeof useTrips>;
 
-function getStatusBadge(status: string) {
-  switch (status.toLowerCase()) {
-    case 'completed':
-      return (
-        <Badge className="bg-[#15941f] text-white">
-          <CheckCircle className="h-3 w-3 mr-1" />
-          Completed
-        </Badge>
-      );
-    case 'in progress':
-      return (
-        <Badge variant="secondary" className="bg-blue-600 text-white">
-          <Loader className="h-3 w-3 mr-1" />
-          In Progress
-        </Badge>
-      );
-    case 'pending':
-      return (
-        <Badge variant="secondary" className="bg-yellow-600 text-white">
-          <AlertCircle className="h-3 w-3 mr-1" />
-          Pending
-        </Badge>
-      );
-    case 'cancelled':
-      return (
-        <Badge variant="destructive">
-          <XCircle className="h-3 w-3 mr-1" />
-          Cancelled
-        </Badge>
-      );
-    default:
-      return <Badge variant="outline">{status}</Badge>;
-  }
-}
+// function getStatusBadge(status: string) {
+//   switch (status.toLowerCase()) {
+//     case 'completed':
+//       return (
+//         <Badge className="bg-[#15941f] text-white">
+//           <CheckCircle className="h-3 w-3 mr-1" />
+//           Completed
+//         </Badge>
+//       );
+//     case 'in progress':
+//       return (
+//         <Badge variant="secondary" className="bg-blue-600 text-white">
+//           <Loader className="h-3 w-3 mr-1" />
+//           In Progress
+//         </Badge>
+//       );
+//     case 'pending':
+//       return (
+//         <Badge variant="secondary" className="bg-yellow-600 text-white">
+//           <AlertCircle className="h-3 w-3 mr-1" />
+//           Pending
+//         </Badge>
+//       );
+//     case 'cancelled':
+//       return (
+//         <Badge variant="destructive">
+//           <XCircle className="h-3 w-3 mr-1" />
+//           Cancelled
+//         </Badge>
+//       );
+//     default:
+//       return <Badge variant="outline">{status}</Badge>;
+//   }
+// }
 
 export function TripsDetailModal({
   isDetailsModalOpen,
   setIsDetailsModalOpen,
   selectedTrip,
   // handleEdit,
-  formatDateTime,
+  // formatDateTime,
 }: TripsDetailsProps) {
   return (
     <Dialog open={isDetailsModalOpen} onOpenChange={setIsDetailsModalOpen}>
@@ -174,7 +174,7 @@ export function TripsDetailModal({
             </div>
 
             {/* Notes */}
-            {selectedTrip.notes && (
+            {/* {selectedTrip.notes && (
               <div className="space-y-2">
                 <Label className="text-gray-400 text-sm">
                   Notes / Special Instructions
@@ -183,7 +183,7 @@ export function TripsDetailModal({
                   <p className="text-gray-300 text-sm">{selectedTrip.notes}</p>
                 </div>
               </div>
-            )}
+            )} */}
 
             {/* Status History */}
             <div className="space-y-4">

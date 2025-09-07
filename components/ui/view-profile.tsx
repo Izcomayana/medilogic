@@ -22,6 +22,7 @@ import {
   Tally4,
   Code,
   Copy,
+  CardSim,
 } from 'lucide-react';
 // import Link from 'next/link';
 import { useAuth } from '@/components/auth';
@@ -78,7 +79,7 @@ export function ViewProfileDropdown() {
             <div className="p-4 space-y-3 text-sm">
               <div className="flex items-center gap-2">
                 <Shield className="h-4 w-4 text-gray-400" />
-                <span>Role: {user.role}</span>
+                <span>{user.role}</span>
               </div>
 
               {user.organization &&
@@ -88,35 +89,6 @@ export function ViewProfileDropdown() {
                       <Building className="h-4 w-4 text-gray-400" />
                       <span>{user.organization.name || 'No Organization'}</span>
                     </div>
-                    {user.organization.address && (
-                      <div className="flex items-center gap-2 pl-6 text-gray-400">
-                        <MapPin className="h-4 w-4" />
-                        <span>{user.organization.address}</span>
-                      </div>
-                    )}
-                    {user.organization.phone_number && (
-                      <div className="flex items-center gap-2 pl-6 text-gray-400">
-                        <Phone className="h-4 w-4" />
-                        <span>{user.organization.phone_number}</span>
-                      </div>
-                    )}
-                    {user.organization.license_number && (
-                      <div className="flex items-center gap-2 pl-6 text-gray-400">
-                        <Tally4 className="h-4 w-4" />
-                        <span>{user.organization.license_number}</span>
-                      </div>
-                    )}
-                    {user.organization.ico_registered ? (
-                      <div title="Verified" className="flex items-center">
-                        <span className="mr-2">Ico registered:</span>
-                        <CheckCircle2 className="h-5 w-5 text-green-500" />
-                      </div>
-                    ) : (
-                      <div title="Not Verified">
-                        <span className="mr-2">Ico registered:</span>
-                        <XCircle className="h-5 w-5 text-red-500" />
-                      </div>
-                    )}
                     {user.organization.invite_code && (
                       <div className="flex items-center gap-2">
                         <Code className="h-4 w-4" />
@@ -135,6 +107,41 @@ export function ViewProfileDropdown() {
                             Copied!
                           </span>
                         )}
+                      </div>
+                    )}
+                    {user.organization.address && (
+                      <div className="flex items-center gap-2">
+                        <MapPin className="h-4 w-4" />
+                        <span>{user.organization.address}</span>
+                      </div>
+                    )}
+                    {user.organization.phone_number && (
+                      <div className="flex items-center gap-2 pl-6 text-gray-400">
+                        <Phone className="h-4 w-4" />
+                        <span>{user.organization.phone_number}</span>
+                      </div>
+                    )}
+                    {user.organization.license_number && (
+                      <div className="flex items-center gap-2 pl-6 text-gray-400">
+                        <Tally4 className="h-4 w-4" />
+                        <span>{user.organization.license_number}</span>
+                      </div>
+                    )}
+{user.organization.data_retention_years && (
+                      <div className="flex items-center gap-2">
+                        <CardSim className="h-4 w-4" />
+                        <span>{user.organization.data_retention_years} years of data retention</span>
+                      </div>
+                    )}
+                    {user.organization.ico_registered ? (
+                      <div title="Verified" className="flex items-center">
+                        <span className="mr-2">Ico registered:</span>
+                        <CheckCircle2 className="h-5 w-5 text-green-500" />
+                      </div>
+                    ) : (
+                      <div title="Not Verified">
+                        <span className="mr-2">Ico registered:</span>
+                        <XCircle className="h-5 w-5 text-red-500" />
                       </div>
                     )}
                   </div>
