@@ -64,7 +64,7 @@ export function TripsDetailModal({
   isDetailsModalOpen,
   setIsDetailsModalOpen,
   selectedTrip,
-  handleEdit,
+  // handleEdit,
   formatDateTime,
 }: TripsDetailsProps) {
   return (
@@ -113,7 +113,7 @@ export function TripsDetailModal({
                   <div>
                     <Label className="text-gray-400 text-sm">Status</Label>
                     <div className="mt-1">
-                      {getStatusBadge(selectedTrip.status)}
+                      {/* {getStatusBadge(selectedTrip.status)} */}
                     </div>
                   </div>
                 </div>
@@ -130,7 +130,7 @@ export function TripsDetailModal({
                     </Label>
                     <p className="text-white flex items-center gap-2">
                       <Clock className="h-4 w-4" />
-                      {formatDateTime(selectedTrip.dateTime)}
+                      {/* {formatDateTime(selectedTrip.dateTime)} */}
                     </p>
                   </div>
                   <div>
@@ -197,7 +197,7 @@ export function TripsDetailModal({
                     className="flex items-center gap-3 p-3 bg-gray-700 rounded-lg"
                   >
                     <div className="flex-shrink-0">
-                      {getStatusBadge(entry.status)}
+                      {/* {getStatusBadge(entry.status)} */}
                     </div>
                     <div className="flex-1">
                       <p className="text-white text-sm">{entry.note}</p>
@@ -218,7 +218,7 @@ export function TripsDetailModal({
             Close
           </Button>
           <Button
-            onClick={() => selectedTrip && handleEdit(selectedTrip)}
+            // onClick={() => selectedTrip && handleEdit(selectedTrip)}
             className="primary-button"
           >
             <Edit className="h-4 w-4 mr-2" />
