@@ -17,7 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { useTrips } from '@/hooks/useTrips';
+import { useTrips } from '@/hooks/useTrips/useTrips';
 
 type EditTrpProps = ReturnType<typeof useTrips>;
 

@@ -1,5 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { useTrips } from '@/hooks/useTrips';
+import { useTrips } from '@/hooks/useTrips/useTrips';
 import {
   MapPin,
   Eye,
