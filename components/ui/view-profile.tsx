@@ -127,10 +127,13 @@ export function ViewProfileDropdown() {
                         <span>{user.organization.license_number}</span>
                       </div>
                     )}
-{user.organization.data_retention_years && (
+                    {user.organization.data_retention_years && (
                       <div className="flex items-center gap-2">
                         <CardSim className="h-4 w-4" />
-                        <span>{user.organization.data_retention_years} years of data retention</span>
+                        <span>
+                          {user.organization.data_retention_years} years of data
+                          retention
+                        </span>
                       </div>
                     )}
                     {user.organization.ico_registered ? (
