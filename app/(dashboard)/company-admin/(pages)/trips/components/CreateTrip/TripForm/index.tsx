@@ -16,8 +16,8 @@ export default function TripForm({ formData, setFormData }: any) {
     <>
       {/* 🔽 Scrollable form section */}
       <div className="grid gap-4 py-4">
-        {/* Driver ID + Name */}
         <div className="grid grid-cols-2 gap-4">
+          {/* Driver & Client Name */}
           <div>
             <Label htmlFor="client" className="text-gray-300">
               Client Name
@@ -176,7 +176,7 @@ export default function TripForm({ formData, setFormData }: any) {
                 <SelectItem value="Pending">Pending</SelectItem>
                 <SelectItem value="In Progress">In Progress</SelectItem>
                 <SelectItem value="Completed">Completed</SelectItem>
-                <SelectItem value="Cancelled">Cancelled</SelectItem>
+                <SelectItem value="Cancelled">Canceled</SelectItem>
               </SelectContent>
             </Select>
           </div>
