@@ -17,7 +17,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { useTrips } from '@/hooks/useTrips';
+import { useTrips } from '@/hooks/useTrips/useTrips';
 
 type EditTrpProps = ReturnType<typeof useTrips>;
 
@@ -48,9 +48,9 @@ export function EditTripModal({
                 Client / Organization
               </Label>
               <Select
-                value={formData.clientOrganization}
+                value={formData.clientName}
                 onValueChange={(value) =>
-                  setFormData({ ...formData, clientOrganization: value })
+                  setFormData({ ...formData, clientName: value })
                 }
               >
                 <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
@@ -70,9 +70,9 @@ export function EditTripModal({
                 Driver Assigned
               </Label>
               <Select
-                value={formData.driverAssigned}
+                value={formData.driverName}
                 onValueChange={(value) =>
-                  setFormData({ ...formData, driverAssigned: value })
+                  setFormData({ ...formData, driverName: value })
                 }
               >
                 <SelectTrigger className="bg-gray-700 border-gray-600 text-white">

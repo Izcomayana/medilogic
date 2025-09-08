@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { useTrips } from '@/hooks/useTrips';
+import { useTrips } from '@/hooks/useTrips/useTrips';
 import { Filters } from './components/Filters';
 import { TripsTable } from './components/TripsTable';
 import { EditTripModal } from './components/EditTrips';

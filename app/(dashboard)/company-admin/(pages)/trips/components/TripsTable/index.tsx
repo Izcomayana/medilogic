@@ -1,5 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { useTrips } from '@/hooks/useTrips';
+import { useTrips } from '@/hooks/useTrips/useTrips';
 import {
   MapPin,
   Eye,
@@ -41,7 +41,7 @@ export function TripsTable({
   handleViewDetails,
   // handleEdit,
   handleQuickStatusUpdate,
-  setTripToDelete,
+  handleDeleteTrip,
   totalPages,
   startIndex,
   tripsPerPage,
@@ -235,7 +235,7 @@ export function TripsTable({
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 className="text-red-400 hover:bg-gray-600"
-                                onClick={() => setTripToDelete(trip.id)}
+                                onClick={() => handleDeleteTrip(trip.id)}
                               >
                                 <Trash2 className="mr-2 h-4 w-4" />
                                 Delete

@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { useTrips } from '@/hooks/useTrips';
+import { useTrips } from '@/hooks/useTrips/useTrips';
 import {
   MapPin,
   Edit,
@@ -97,9 +97,7 @@ export function TripsDetailModal({
                     <Label className="text-gray-400 text-sm">
                       Client / Organization
                     </Label>
-                    <p className="text-white">
-                      {selectedTrip.clientOrganization}
-                    </p>
+                    <p className="text-white">{selectedTrip.clientName}</p>
                   </div>
                   <div>
                     <Label className="text-gray-400 text-sm">
@@ -107,7 +105,7 @@ export function TripsDetailModal({
                     </Label>
                     <p className="text-white flex items-center gap-2">
                       <User className="h-4 w-4" />
-                      {selectedTrip.driverAssigned}
+                      {selectedTrip.driverName}
                     </p>
                   </div>
                   <div>
