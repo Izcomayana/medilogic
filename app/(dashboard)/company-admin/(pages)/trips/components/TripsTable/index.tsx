@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Card, CardContent } from '@/components/ui/card';
 import { useTrips } from '@/hooks/useTrips/useTrips';
 import {
@@ -39,7 +41,7 @@ export function TripsTable({
   paginatedTrips,
   formatDateTime,
   handleViewDetails,
-  // handleEdit,
+  handleEdit,
   handleQuickStatusUpdate,
   handleDeleteTrip,
   totalPages,
@@ -145,22 +147,15 @@ export function TripsTable({
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {paginatedTrips.map((trip) => (
+                  {paginatedTrips.map((trip: any) => (
                     <TableRow
                       key={trip.id}
                       className="border-gray-700 hover:bg-gray-800"
                     >
-                      {/* <TableCell className="font-medium text-white">
-                        {trip.id}
-                      </TableCell> */}
-                      {/* <TableCell className="text-gray-300">
-                        {trip.clientOrganization}
-                      </TableCell> */}
                       <TableCell className="text-gray-300 flex items-center gap-1">
                         <User className="h-3 w-3" />
-                        {trip.driverAssigned &&
-                        trip.driverAssigned.trim() !== '' ? (
-                          trip.driverAssigned
+                        {trip.driverName && trip.driverName.trim() !== '' ? (
+                          trip.driverName
                         ) : (
                           <Badge
                             variant="outline"
@@ -218,7 +213,7 @@ export function TripsTable({
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 className="text-gray-300 hover:bg-gray-600"
-                                // onClick={() => handleEdit(trip)}
+                                onClick={() => handleEdit(trip)}
                               >
                                 <Edit className="mr-2 h-4 w-4" />
                                 Edit Trip
@@ -232,6 +227,16 @@ export function TripsTable({
                               >
                                 <CheckCircle className="mr-2 h-4 w-4" />
                                 Mark Complete
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                className="text-yellow-400 hover:bg-gray-600"
+                                onClick={() =>
+                                  handleQuickStatusUpdate(trip.id, 'Cancelled')
+                                }
+                                disabled={trip.status === 'Cancelled'}
+                              >
+                                <XCircle className="mr-2 h-4 w-4" />
+                                Cancel Trip
                               </DropdownMenuItem>
                               <DropdownMenuItem
                                 className="text-red-400 hover:bg-gray-600"
