@@ -3,12 +3,12 @@ export type Trip = {
   driver_name: string | null;
   delivery_type: string;
   scheduled_time: string | null;
-  cost: number | null;
+  cost: string | null;
   client_name: string | null;
   organization_id: string | null;
   pickup_location: string | null;
   dropoff_location: string | null;
-  distance_km: number | null;
+  distance_km: string | null;
   status: string | null;
   vehicle_type: string | null;
   location_zone: string | null;
@@ -24,12 +24,12 @@ export type Trip = {
 export function mapApiTripToUiTrip(apiTrip: Trip) {
   return {
     id: apiTrip.id,
-    clientOrganization: apiTrip.client_name,
+    clientName: apiTrip.client_name,
     deliveryType: apiTrip.delivery_type,
     pickupLocation: apiTrip.pickup_location,
     dropoffLocation: apiTrip.dropoff_location,
     driverId: apiTrip.driver_id,
-    driverAssigned: apiTrip.driver_name,
+    driverName: apiTrip.driver_name,
     status: apiTrip.status,
     priority: apiTrip.priority,
     dateTime: apiTrip.scheduled_time,

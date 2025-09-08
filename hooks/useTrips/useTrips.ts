@@ -8,6 +8,7 @@ import {
   fetchTripsRequest,
   fetchTripByIdRequest,
   createTripRequest,
+  deleteTripRequest,
 } from './api';
 import { formatDateTime } from './utils';
 import { clients, drivers, trips } from './constants';
@@ -30,34 +31,34 @@ export function useTrips(tripsPerPage = 10) {
   const { user, loading: userLoading } = useProfile();
 
   const [formData, setFormData] = useState({
-    clientOrganization: '',
+    clientName: '',
     pickupLocation: '',
     dropoffLocation: '',
-    driverAssigned: '',
-    driverId: '', // 👈 NEW
+    driverName: '',
+    driverId: '',
     dateTime: '',
     notes: '',
     status: 'Pending',
     priority: 'normal',
-    deliveryType: 'clinical_waste', // ✅ default
+    deliveryType: 'clinical_waste',
     customDeliveryDescription: '',
-    cost: 0, // 👈 NEW
-    distanceKm: 0, // 👈 NEW
-    vehicleType: '', // 👈 NEW
-    locationZone: '', // 👈 NEW
-    shiftWindow: '', // 👈 NEW
-    complianceFlag: false, // 👈 NEW
-    recurrenceRule: 'none', // 👈 NEW
+    cost: '',
+    distanceKm: '',
+    vehicleType: '',
+    locationZone: '',
+    shiftWindow: '',
+    complianceFlag: false,
+    recurrenceRule: 'none',
   });
 
   const authorizedRequest = useAuthorizedRequest();
 
   const resetForm = () => {
     setFormData({
-      clientOrganization: '',
+      clientName: '',
       pickupLocation: '',
       dropoffLocation: '',
-      driverAssigned: '',
+      driverName: '',
       driverId: '',
       dateTime: '',
       notes: '',
@@ -65,8 +66,8 @@ export function useTrips(tripsPerPage = 10) {
       priority: 'normal',
       deliveryType: 'clinical_waste',
       customDeliveryDescription: '',
-      cost: 0,
-      distanceKm: 0,
+      cost: '',
+      distanceKm: '',
       vehicleType: '',
       locationZone: '',
       shiftWindow: '',
@@ -152,16 +153,16 @@ export function useTrips(tripsPerPage = 10) {
         status: formData.status || 'Pending',
         priority: formData.priority || 'normal',
         driver_id: formData.driverId || undefined,
-        driver_name: formData.driverAssigned || undefined,
+        driver_name: formData.driverName || undefined,
         scheduled_time: formData.dateTime
           ? new Date(formData.dateTime).toISOString()
           : undefined,
-        client_name: user.organization.name,
+        client_name: formData.clientName,
         pickup_location: formData.pickupLocation || undefined,
         dropoff_location: formData.dropoffLocation || undefined,
         notes: formData.notes,
-        cost: formData.cost || 0,
-        distance_km: formData.distanceKm || 0,
+        cost: formData.cost,
+        distance_km: formData.distanceKm,
         vehicle_type: formData.vehicleType || undefined,
         location_zone: formData.locationZone || undefined,
         shift_window: formData.shiftWindow || undefined,
@@ -182,8 +183,8 @@ export function useTrips(tripsPerPage = 10) {
 
       const createdUiTrip = mapApiTripToUiTrip(created);
       setTripsList((prev) => [createdUiTrip, ...prev]);
-      setIsCreateModalOpen(false);
       resetForm();
+      setIsCreateModalOpen(false);
       toast.success('Trip created successfully');
     } finally {
       setLoading(false);
@@ -217,13 +218,28 @@ export function useTrips(tripsPerPage = 10) {
     }
   };
 
+  const handleDeleteTrip = async (tripId: string) => {
+    try {
+      await authorizedRequest(
+        (token) => deleteTripRequest(token, tripId),
+        'Failed to delete trip'
+      );
+
+      setTripsList((prev) => prev.filter((trip) => trip.id !== tripId));
+      toast.success('Trip deleted successfully');
+    } catch (err) {
+      console.error('Delete error:', err);
+      toast.error('Failed to delete trip');
+    }
+  };
+
   // const handleEdit = (trip: (typeof trips)[0]) => {
   //   setSelectedTrip(trip);
   //   setFormData({
-  //     clientOrganization: trip.clientOrganization,
+  //     clientName: trip.clientName,
   //     pickupLocation: trip.pickupLocation,
   //     dropoffLocation: trip.dropoffLocation,
-  //     driverAssigned: trip.driverAssigned,
+  //     driverName: trip.driverName,
   //     dateTime: trip.dateTime,
   //     notes: trip.notes,
   //     status: trip.status || 'Pending',
@@ -322,6 +338,7 @@ export function useTrips(tripsPerPage = 10) {
     formatDateTime,
     handleViewDetails,
     // handleEdit,
+    handleDeleteTrip,
     handleQuickStatusUpdate,
     handleUpdateTrip,
   };

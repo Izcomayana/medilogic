@@ -11,63 +11,45 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 
-export default function TripForm({ formData, setFormData, drivers }: any) {
+export default function TripForm({ formData, setFormData }: any) {
   return (
     <>
       {/* 🔽 Scrollable form section */}
       <div className="grid gap-4 py-4">
         {/* Driver ID + Name */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="client" className="text-gray-300">
+              Client Name
+            </Label>
+            <Input
+              id="client"
+              value={formData.clientName}
+              onChange={(e) =>
+                setFormData({ ...formData, clientName: e.target.value })
+              }
+              placeholder="Enter client name"
+              className="bg-gray-700 border-gray-600 text-white mt-2"
+            />
+          </div>
           <div>
             <Label htmlFor="driver" className="text-gray-300">
-              Driver Assigned
+              Driver Name
             </Label>
-            <Select
-              value={formData.driverAssigned}
-              onValueChange={(value) =>
-                setFormData({ ...formData, driverAssigned: value })
+            <Input
+              id="driver"
+              value={formData.driverName}
+              onChange={(e) =>
+                setFormData({ ...formData, driverName: e.target.value })
               }
-            >
-              <SelectTrigger className="bg-gray-700 border-gray-600 text-white mt-2">
-                <SelectValue placeholder="Select driver" />
-              </SelectTrigger>
-              <SelectContent className="bg-gray-700 border-gray-600">
-                {drivers.map((driver: any) => (
-                  <SelectItem key={driver} value={driver}>
-                    {driver}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              placeholder="Enter driver name"
+              className="bg-gray-700 border-gray-600 text-white mt-2"
+            />
           </div>
-          <div>
-            <Label htmlFor="priority" className="text-gray-300">
-              Priority
-            </Label>
-            <Select
-              value={formData.priority}
-              onValueChange={(value) =>
-                setFormData({ ...formData, priority: value })
-              }
-            >
-              <SelectTrigger className="bg-gray-700 border-gray-600 text-white mt-2">
-                <SelectValue placeholder="Select priority" />
-              </SelectTrigger>
-              <SelectContent className="bg-gray-700 border-gray-600">
-                <SelectItem value="urgent">Urgent</SelectItem>
-                <SelectItem value="normal">Normal</SelectItem>
-                <SelectItem value="stat">Stat</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+
           {/* Delivery Type */}
           <div className="">
-            <Label
-              htmlFor="delivery_type"
-              className="block text-sm font-medium mb-1"
-            >
-              Delivery Type
-            </Label>
+            <Label className="text-gray-300">Delivery Type</Label>
             <Select
               value={formData.deliveryType}
               onValueChange={(value) =>
@@ -100,24 +82,35 @@ export default function TripForm({ formData, setFormData, drivers }: any) {
                       customDeliveryDescription: e.target.value,
                     }))
                   }
-                  className="w-full border rounded p-2"
+                  className="bg-gray-700 border-gray-600 text-white mt-2"
+                  rows={2}
                   placeholder="Enter custom delivery details..."
                 />
               </div>
             )}
           </div>
-          {/* <div>
-        <Label htmlFor="driverId" className="text-gray-300">Driver ID</Label>
-        <Input
-          id="driverId"
-          value={formData.driverId}
-          onChange={(e) =>
-            setFormData({ ...formData, driverId: e.target.value })
-          }
-          placeholder="Enter driver ID"
-          className="bg-gray-700 border-gray-600 text-white mt-2"
-        />
-      </div> */}
+
+          {/* Priority */}
+          <div>
+            <Label htmlFor="priority" className="text-gray-300">
+              Priority
+            </Label>
+            <Select
+              value={formData.priority}
+              onValueChange={(value) =>
+                setFormData({ ...formData, priority: value })
+              }
+            >
+              <SelectTrigger className="bg-gray-700 border-gray-600 text-white mt-2">
+                <SelectValue placeholder="Select priority" />
+              </SelectTrigger>
+              <SelectContent className="bg-gray-700 border-gray-600">
+                <SelectItem value="urgent">Urgent</SelectItem>
+                <SelectItem value="normal">Normal</SelectItem>
+                <SelectItem value="stat">Stat</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         {/* Pickup + Dropoff */}
@@ -166,7 +159,7 @@ export default function TripForm({ formData, setFormData, drivers }: any) {
               className="bg-gray-700 border-gray-600 text-white mt-2"
             />
           </div>
-          <div>
+          <div className="">
             <Label htmlFor="status" className="text-gray-300">
               Status
             </Label>
@@ -308,7 +301,6 @@ export default function TripForm({ formData, setFormData, drivers }: any) {
               </SelectTrigger>
               <SelectContent className="bg-gray-700 border-gray-600">
                 <SelectItem value="none">None</SelectItem>
-                <SelectItem value="daily">Daily</SelectItem>
                 <SelectItem value="weekly">Weekly</SelectItem>
                 <SelectItem value="monthly">Monthly</SelectItem>
               </SelectContent>

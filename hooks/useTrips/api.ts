@@ -58,3 +58,23 @@ export async function createTripRequest(token: string, payload: Partial<Trip>) {
   );
   return res.data;
 }
+
+export async function deleteTripRequest(token: string, tripId: string) {
+  try {
+    const res = await axios.delete(
+      `https://medilogic-backend.onrender.com/trips/trips/${tripId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return res.status === 200 || res.status === 204;
+  } catch (error: any) {
+    // Axios wraps errors → check response details
+    const status = error.response?.status;
+    const message = error.response?.data?.detail || error.message;
+    throw new Error(`Failed to delete trip: ${status} ${message}`);
+  }
+}
