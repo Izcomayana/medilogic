@@ -320,40 +320,40 @@ export function useTrips(tripsPerPage = 10) {
     setIsEditModalOpen(true);
   };
 
-const updateTrip = async (tripId: string, updatedData: Partial<Trip>) => {
-  try {
-    setLoading(true);
+  const updateTrip = async (tripId: string, updatedData: Partial<Trip>) => {
+    try {
+      setLoading(true);
 
-    const updated = await authorizedRequest<Trip>(
-      (token) => updateTripRequest(token, tripId, updatedData),
-      "Failed to update trip"
-    );
+      const updated = await authorizedRequest<Trip>(
+        (token) => updateTripRequest(token, tripId, updatedData),
+        'Failed to update trip'
+      );
 
-    if (!updated) return;
+      if (!updated) return;
 
-    // Map backend trip → UI trip
-    const updatedUiTrip = mapApiTripToUiTrip(updated);
+      // Map backend trip → UI trip
+      const updatedUiTrip = mapApiTripToUiTrip(updated);
 
-    // Update local cache
-    setTripsList((prev) =>
-      prev.map((trip) => (trip.id === tripId ? updatedUiTrip : trip))
-    );
+      // Update local cache
+      setTripsList((prev) =>
+        prev.map((trip) => (trip.id === tripId ? updatedUiTrip : trip))
+      );
 
-    setIsEditModalOpen(false);
-    resetForm();
-    toast.success("Trip updated successfully");
-  } catch (err) {
-    console.error("updateTrip error:", err);
-    toast.error("Failed to update trip");
-  } finally {
-    setLoading(false);
-  }
-};
+      setIsEditModalOpen(false);
+      resetForm();
+      toast.success('Trip updated successfully');
+    } catch (err) {
+      console.error('updateTrip error:', err);
+      toast.error('Failed to update trip');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-const handleUpdateTrip = async () => {
-  if (!selectedTrip) return;
+  const handleUpdateTrip = async () => {
+    if (!selectedTrip) return;
 
-      if (userLoading) {
+    if (userLoading) {
       toast(
         'Organization info is still loading, please try again after few seconds.'
       );
@@ -365,31 +365,31 @@ const handleUpdateTrip = async () => {
       return;
     }
 
-  const payload: Partial<Trip> = {
-    driver_name: formData.driverName || undefined,
-    driver_id: formData.driverId || undefined,
-    delivery_type: formData.deliveryType,
-    scheduled_time: formData.dateTime
-      ? new Date(formData.dateTime).toISOString()
-      : undefined,
-    cost: formData.cost,
-    client_name: formData.clientName,
-    organization_id: user?.organization?.id || undefined,
-    pickup_location: formData.pickupLocation || undefined,
-    dropoff_location: formData.dropoffLocation || undefined,
-    distance_km: formData.distanceKm,
-    status: formData.status,
-    vehicle_type: formData.vehicleType || undefined,
-    location_zone: formData.locationZone || undefined,
-    shift_window: formData.shiftWindow || undefined,
-    compliance_flag: formData.complianceFlag,
-    recurrence_rule: formData.recurrenceRule,
-    priority: formData.priority,
-    custom_delivery_description: formData.customDeliveryDescription,
-  };
+    const payload: Partial<Trip> = {
+      driver_name: formData.driverName || undefined,
+      driver_id: formData.driverId || undefined,
+      delivery_type: formData.deliveryType,
+      scheduled_time: formData.dateTime
+        ? new Date(formData.dateTime).toISOString()
+        : undefined,
+      cost: formData.cost,
+      client_name: formData.clientName,
+      organization_id: user?.organization?.id || undefined,
+      pickup_location: formData.pickupLocation || undefined,
+      dropoff_location: formData.dropoffLocation || undefined,
+      distance_km: formData.distanceKm,
+      status: formData.status,
+      vehicle_type: formData.vehicleType || undefined,
+      location_zone: formData.locationZone || undefined,
+      shift_window: formData.shiftWindow || undefined,
+      compliance_flag: formData.complianceFlag,
+      recurrence_rule: formData.recurrenceRule,
+      priority: formData.priority,
+      custom_delivery_description: formData.customDeliveryDescription,
+    };
 
-  await updateTrip(selectedTrip.id, payload);
-};
+    await updateTrip(selectedTrip.id, payload);
+  };
 
   return {
     loading,

@@ -99,8 +99,12 @@ export async function updateTripRequest(
   tripId: string,
   payload: Partial<Trip>
 ) {
-  const res = await axios.put<Trip>(`https://medilogic-backend.onrender.com/trips/trips/${tripId}`, payload, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+  const res = await axios.put<Trip>(
+    `https://medilogic-backend.onrender.com/trips/trips/${tripId}`,
+    payload,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
   return res.data;
 }

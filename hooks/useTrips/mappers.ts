@@ -19,7 +19,6 @@ export type Trip = {
   custom_delivery_description: string | null;
   id: string;
   created_at: string;
-  
 };
 
 export function mapApiTripToUiTrip(apiTrip: Trip) {

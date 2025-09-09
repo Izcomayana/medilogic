@@ -99,7 +99,9 @@ export function TripsDetailModal({
               </h3>
               <div className="space-y-3">
                 <div>
-                  <Label className="text-gray-400 text-sm">Scheduled Time</Label>
+                  <Label className="text-gray-400 text-sm">
+                    Scheduled Time
+                  </Label>
                   <p className="text-white flex items-center gap-2">
                     <Clock className="h-4 w-4" />
                     {selectedTrip.dateTime || 'Not scheduled'}
@@ -114,7 +116,9 @@ export function TripsDetailModal({
                 </div>
                 <div>
                   <Label className="text-gray-400 text-sm">Shift Window</Label>
-                  <p className="text-white">{selectedTrip.shiftWindow || '—'}</p>
+                  <p className="text-white">
+                    {selectedTrip.shiftWindow || '—'}
+                  </p>
                 </div>
               </div>
             </div>
