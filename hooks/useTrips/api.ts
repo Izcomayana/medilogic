@@ -62,7 +62,7 @@ export async function createTripRequest(token: string, payload: Partial<Trip>) {
 export async function deleteTripRequest(token: string, tripId: string) {
   try {
     const res = await axios.delete(
-      `https://medilogic-backend.onrender.com/trips/trips/${tripId}`,
+      `https://medilogic-backend.onrender.com/trips/${tripId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -77,4 +77,30 @@ export async function deleteTripRequest(token: string, tripId: string) {
     const message = error.response?.data?.detail || error.message;
     throw new Error(`Failed to delete trip: ${status} ${message}`);
   }
+}
+
+export async function partialUpdateTripRequest(
+  token: string,
+  tripId: string,
+  payload: Partial<Trip>
+) {
+  const res = await axios.patch<Trip>(
+    `https://medilogic-backend.onrender.com/trips/trips/${tripId}`,
+    payload,
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  return res.data;
+}
+
+export async function updateTripRequest(
+  token: string,
+  tripId: string,
+  payload: Partial<Trip>
+) {
+  const res = await axios.put<Trip>(`https://medilogic-backend.onrender.com/trips/trips/${tripId}`, payload, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data;
 }

@@ -19,6 +19,7 @@ export type Trip = {
   custom_delivery_description: string | null;
   id: string;
   created_at: string;
+  
 };
 
 export function mapApiTripToUiTrip(apiTrip: Trip) {
@@ -26,6 +27,7 @@ export function mapApiTripToUiTrip(apiTrip: Trip) {
     id: apiTrip.id,
     clientName: apiTrip.client_name,
     deliveryType: apiTrip.delivery_type,
+    organizationId: apiTrip.organization_id,
     pickupLocation: apiTrip.pickup_location,
     dropoffLocation: apiTrip.dropoff_location,
     driverId: apiTrip.driver_id,
@@ -33,6 +35,13 @@ export function mapApiTripToUiTrip(apiTrip: Trip) {
     status: apiTrip.status,
     priority: apiTrip.priority,
     dateTime: apiTrip.scheduled_time,
+    vehicleType: apiTrip.vehicle_type,
+    shiftWindow: apiTrip.shift_window,
+    cost: apiTrip.cost,
+    distance: apiTrip.distance_km,
+    locationZone: apiTrip.location_zone,
+    complianceFlag: apiTrip.compliance_flag,
+    recurrenceRule: apiTrip.recurrence_rule,
     // notes: apiTrip.custom_delivery_description,
     createdDate: apiTrip.created_at,
     statusHistory: [

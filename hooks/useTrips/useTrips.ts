@@ -9,9 +9,12 @@ import {
   fetchTripByIdRequest,
   createTripRequest,
   deleteTripRequest,
+  partialUpdateTripRequest,
+  updateTripRequest,
 } from './api';
 import { formatDateTime } from './utils';
 import { clients, drivers, trips } from './constants';
+import axios from 'axios';
 
 export type DateRangeLocal = { from?: Date; to?: Date };
 
@@ -145,8 +148,8 @@ export function useTrips(tripsPerPage = 10) {
       return;
     }
 
-    setLoading(true);
     try {
+      setLoading(true);
       const payload = {
         delivery_type: formData.deliveryType,
         organization_id: user.organization.id,
@@ -161,8 +164,8 @@ export function useTrips(tripsPerPage = 10) {
         pickup_location: formData.pickupLocation || undefined,
         dropoff_location: formData.dropoffLocation || undefined,
         notes: formData.notes,
-        cost: formData.cost,
-        distance_km: formData.distanceKm,
+        cost: formData.cost || null,
+        distance_km: formData.distanceKm || null,
         vehicle_type: formData.vehicleType || undefined,
         location_zone: formData.locationZone || undefined,
         shift_window: formData.shiftWindow || undefined,
@@ -193,8 +196,7 @@ export function useTrips(tripsPerPage = 10) {
 
   const fetchTripById = async (tripId: string) => {
     try {
-      setLoading(true);
-      const data = await authorizedRequest<any>(
+      const data = await authorizedRequest<Trip>(
         (token) => fetchTripByIdRequest(token, tripId),
         'Failed to fetch trip details'
       );
@@ -203,8 +205,6 @@ export function useTrips(tripsPerPage = 10) {
     } catch (err) {
       console.error('fetchTripById error', err);
       return null;
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -233,76 +233,163 @@ export function useTrips(tripsPerPage = 10) {
     }
   };
 
-  // const handleEdit = (trip: (typeof trips)[0]) => {
-  //   setSelectedTrip(trip);
-  //   setFormData({
-  //     clientName: trip.clientName,
-  //     pickupLocation: trip.pickupLocation,
-  //     dropoffLocation: trip.dropoffLocation,
-  //     driverName: trip.driverName,
-  //     dateTime: trip.dateTime,
-  //     notes: trip.notes,
-  //     status: trip.status || 'Pending',
-  //     priority: trip.priority || 'Normal',
-  //   });
-  //   setIsEditModalOpen(true);
-  // };
+  async function handleQuickStatusUpdate(tripId: string, newStatus: string) {
+    // optimistic UI is possible, but here we update only after a successful API response
+    try {
+      setLoading(true);
+      // Try to read required fields from local UI cache first
+      const local = tripsList.find((t: any) => t.id === tripId);
+      let delivery_type: string | undefined = local?.deliveryType;
+      let organization_id: string | undefined = local?.organizationId;
 
-  const handleQuickStatusUpdate = (tripId: string, newStatus: string) => {
-    setTripsList((prev) =>
-      prev.map((trip) =>
-        trip.id === tripId
-          ? {
-              ...trip,
-              status: newStatus,
-              statusHistory: [
-                ...trip.statusHistory,
-                {
-                  status: newStatus,
-                  timestamp: new Date()
-                    .toISOString()
-                    .slice(0, 16)
-                    .replace('T', ' '),
-                  note: 'Quick status update',
-                },
-              ],
-            }
-          : trip
-      )
-    );
-    toast.success(`Trip status updated to ${newStatus}`);
+      // If any required field is missing, fetch the full trip from the API
+      if (!delivery_type || !organization_id) {
+        const fetched = await authorizedRequest<any>(
+          (token) => fetchTripByIdRequest(token, tripId),
+          'Failed to fetch trip for update'
+        );
+        if (!fetched) {
+          toast.error('Failed to retrieve trip details');
+          return;
+        }
+        delivery_type = fetched.delivery_type;
+        organization_id = fetched.organization_id;
+      }
+
+      // Ensure we have required fields the backend expects
+      if (!delivery_type || !organization_id) {
+        toast.error('Missing required trip fields for update');
+        return;
+      }
+
+      // Build minimal payload containing required fields + status
+      const payload: Partial<Trip> = {
+        status: newStatus,
+        delivery_type,
+        organization_id,
+      };
+
+      // Call patch endpoint
+      const updated = await authorizedRequest<Trip>(
+        (token) => partialUpdateTripRequest(token, tripId, payload),
+        'Failed to update trip status'
+      );
+
+      if (!updated) {
+        toast.error('Failed to update trip status');
+        return;
+      }
+
+      // Replace local item with server truth
+      const mapped = mapApiTripToUiTrip(updated);
+      setTripsList((prev: any[]) =>
+        prev.map((t) => (t.id === tripId ? mapped : t))
+      );
+
+      toast.success(`Trip status updated to ${newStatus}`);
+    } catch (err) {
+      console.error('handleQuickStatusUpdate error:', err);
+      toast.error('Failed to update trip status');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const handleEdit = (trip: UiTrip) => {
+    setSelectedTrip(trip);
+    setFormData({
+      clientName: trip.clientName || '',
+      pickupLocation: trip.pickupLocation || '',
+      dropoffLocation: trip.dropoffLocation || '',
+      driverName: trip.driverName || '',
+      driverId: trip.driverId || '',
+      dateTime: trip.dateTime || '',
+      notes: trip.statusHistory?.[0]?.note || '',
+      status: trip.status || 'Pending',
+      priority: trip.priority || 'normal',
+      deliveryType: trip.deliveryType || 'clinical_waste',
+      customDeliveryDescription: trip.statusHistory?.[0]?.note || '',
+      cost: '0',
+      distanceKm: '0',
+      vehicleType: '',
+      locationZone: '',
+      shiftWindow: '',
+      complianceFlag: false,
+      recurrenceRule: 'none',
+    });
+    setIsEditModalOpen(true);
   };
 
-  const handleUpdateTrip = () => {
-    if (!selectedTrip) return;
-    setTripsList((prev) =>
-      prev.map((trip) =>
-        trip.id === selectedTrip.id
-          ? {
-              ...trip,
-              ...formData,
-              statusHistory:
-                trip.status !== formData.status
-                  ? [
-                      ...trip.statusHistory,
-                      {
-                        status: formData.status,
-                        timestamp: new Date()
-                          .toISOString()
-                          .slice(0, 16)
-                          .replace('T', ' '),
-                        note: 'Status updated',
-                      },
-                    ]
-                  : trip.statusHistory,
-            }
-          : trip
-      )
+const updateTrip = async (tripId: string, updatedData: Partial<Trip>) => {
+  try {
+    setLoading(true);
+
+    const updated = await authorizedRequest<Trip>(
+      (token) => updateTripRequest(token, tripId, updatedData),
+      "Failed to update trip"
     );
+
+    if (!updated) return;
+
+    // Map backend trip → UI trip
+    const updatedUiTrip = mapApiTripToUiTrip(updated);
+
+    // Update local cache
+    setTripsList((prev) =>
+      prev.map((trip) => (trip.id === tripId ? updatedUiTrip : trip))
+    );
+
     setIsEditModalOpen(false);
     resetForm();
-    toast.success('Trip updated successfully');
+    toast.success("Trip updated successfully");
+  } catch (err) {
+    console.error("updateTrip error:", err);
+    toast.error("Failed to update trip");
+  } finally {
+    setLoading(false);
+  }
+};
+
+const handleUpdateTrip = async () => {
+  if (!selectedTrip) return;
+
+      if (userLoading) {
+      toast(
+        'Organization info is still loading, please try again after few seconds.'
+      );
+      return;
+    }
+
+    if (!user?.organization.id) {
+      toast.error('No organization found for this user');
+      return;
+    }
+
+  const payload: Partial<Trip> = {
+    driver_name: formData.driverName || undefined,
+    driver_id: formData.driverId || undefined,
+    delivery_type: formData.deliveryType,
+    scheduled_time: formData.dateTime
+      ? new Date(formData.dateTime).toISOString()
+      : undefined,
+    cost: formData.cost,
+    client_name: formData.clientName,
+    organization_id: user?.organization?.id || undefined,
+    pickup_location: formData.pickupLocation || undefined,
+    dropoff_location: formData.dropoffLocation || undefined,
+    distance_km: formData.distanceKm,
+    status: formData.status,
+    vehicle_type: formData.vehicleType || undefined,
+    location_zone: formData.locationZone || undefined,
+    shift_window: formData.shiftWindow || undefined,
+    compliance_flag: formData.complianceFlag,
+    recurrence_rule: formData.recurrenceRule,
+    priority: formData.priority,
+    custom_delivery_description: formData.customDeliveryDescription,
   };
+
+  await updateTrip(selectedTrip.id, payload);
+};
 
   return {
     loading,
@@ -337,7 +424,7 @@ export function useTrips(tripsPerPage = 10) {
     handleCreateTrip,
     formatDateTime,
     handleViewDetails,
-    // handleEdit,
+    handleEdit,
     handleDeleteTrip,
     handleQuickStatusUpdate,
     handleUpdateTrip,
