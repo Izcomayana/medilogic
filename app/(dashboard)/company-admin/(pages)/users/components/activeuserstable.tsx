@@ -13,7 +13,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-type UserStatus = "active" | "inactive" | "suspended";
+type UserStatus = "active" | "suspended";
+// If you want to allow "inactive", update the ActiveUser type in ../page to accept "inactive" as well.
 
 type ActiveUsersTableProps = {
   users: ActiveUser[];
