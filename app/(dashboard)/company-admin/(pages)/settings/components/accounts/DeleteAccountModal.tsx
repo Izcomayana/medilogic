@@ -12,7 +12,7 @@ export default function DeleteAccountModal({ open, onClose }: Props) {
       const token = localStorage.getItem("access_token");
       if (!token) throw new Error("No token found. Please log in again.");
 
-      const res = await fetch("https://medilogic-backend.onrender.com/users/users/me", {
+      const res = await fetch("https://medilogic-backend.onrender.com/users/users/users/me", {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });

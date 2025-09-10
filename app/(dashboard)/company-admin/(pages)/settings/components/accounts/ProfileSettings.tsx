@@ -17,7 +17,7 @@ export default function ProfileSettings() {
 
   const handleUpdateProfile = async () => {
     try {
-      const res = await fetch("/api/admin/profile", {
+      const res = await fetch("https://medilogic-backend.onrender.com/users/users/update", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(profileData),
