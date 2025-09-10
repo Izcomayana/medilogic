@@ -12,16 +12,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import ConfirmActionModal from "./ConfirmActionModal";
 
-type UserStatus = "active" | "inactive" | "suspended";
+type UserStatus = "active" | "suspended";
 
 type ActiveUsersTableProps = {
   users: ActiveUser[];
@@ -35,6 +28,7 @@ export default function ActiveUsersTable({ users, onViewDetails }: ActiveUsersTa
   const [pendingAction, setPendingAction] = useState<{
     id: string | number;
     status: UserStatus;
+    name: string;
   } | null>(null);
 
   const updateUserStatus = (id: string | number, newStatus: UserStatus) => {
@@ -43,14 +37,8 @@ export default function ActiveUsersTable({ users, onViewDetails }: ActiveUsersTa
         user.id === id ? { ...user, status: newStatus } : user
       )
     );
-    setConfirmOpen(false); // close modal after update
+    setConfirmOpen(false);
     setPendingAction(null);
-  };
-
-  const handleConfirm = () => {
-    if (pendingAction) {
-      updateUserStatus(pendingAction.id, pendingAction.status);
-    }
   };
 
   return (
@@ -105,20 +93,15 @@ export default function ActiveUsersTable({ users, onViewDetails }: ActiveUsersTa
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => {
-                          setPendingAction({ id: user.id, status: "active" });
+                          setPendingAction({ id: user.id, status: "active", name: user.name });
                           setConfirmOpen(true);
                         }}
                       >
                         Activate User
                       </DropdownMenuItem>
-                      {/* <DropdownMenuItem
-                        onClick={() => updateUserStatus(user.id, "inactive")}
-                      >
-                        Deactivate User
-                      </DropdownMenuItem> */}
                       <DropdownMenuItem
                         onClick={() => {
-                          setPendingAction({ id: user.id, status: "suspended" });
+                          setPendingAction({ id: user.id, status: "suspended", name: user.name });
                           setConfirmOpen(true);
                         }}
                       >
@@ -133,34 +116,17 @@ export default function ActiveUsersTable({ users, onViewDetails }: ActiveUsersTa
         </Table>
       </div>
 
-      {/* Confirmation Modal */}
-      <Dialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-        <DialogContent className="bg-gray-900 border border-gray-700 text-gray-200">
-          <DialogHeader>
-            <DialogTitle>Confirm Action</DialogTitle>
-            <DialogDescription>
-              {pendingAction?.status === "active"
-                ? "Are you sure you want to activate this user?"
-                : "Are you sure you want to suspend this user?"}
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setConfirmOpen(false)}
-              className="border-gray-600 text-gray-300 hover:bg-gray-700"
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleConfirm}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              Confirm
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {/* Reusable Modal */}
+      <ConfirmActionModal
+        open={confirmOpen}
+        onOpenChange={setConfirmOpen}
+        pendingAction={pendingAction}
+        onConfirm={() => {
+          if (pendingAction) {
+            updateUserStatus(pendingAction.id, pendingAction.status);
+          }
+        }}
+      />
     </>
   );
 }
