@@ -1,22 +1,22 @@
-"use client";
+'use client';
 
-import { Badge } from "@/components/ui/badge";
-import { User, UserCheck, CheckCircle, AlertCircle } from "lucide-react";
-import { ReactNode } from "react";
+import { Badge } from '@/components/ui/badge';
+import { User, UserCheck, CheckCircle, AlertCircle } from 'lucide-react';
+import { ReactNode } from 'react';
 
 // Role badge
 export const getRoleBadge = (role?: string): ReactNode => {
   if (!role) return <Badge variant="outline">Unknown</Badge>;
 
   switch (role.toLowerCase()) {
-    case "client":
+    case 'client':
       return (
         <Badge variant="secondary" className="bg-blue-600 text-white">
           <User className="h-3 w-3 mr-1" />
           Client
         </Badge>
       );
-    case "driver":
+    case 'driver':
       return (
         <Badge variant="secondary" className="bg-green-600 text-white">
           <UserCheck className="h-3 w-3 mr-1" />
@@ -33,14 +33,14 @@ export const getStatusBadge = (status?: string): ReactNode => {
   if (!status) return <Badge variant="outline">Unknown</Badge>;
 
   switch (status.toLowerCase()) {
-    case "active":
+    case 'active':
       return (
         <Badge className="bg-[#15941f] text-white">
           <CheckCircle className="h-3 w-3 mr-1" />
           Active
         </Badge>
       );
-    case "suspended":
+    case 'suspended':
       return (
         <Badge variant="destructive">
           <AlertCircle className="h-3 w-3 mr-1" />
@@ -54,17 +54,17 @@ export const getStatusBadge = (status?: string): ReactNode => {
 
 // Date formatters
 export const formatDate = (dateString: string): string =>
-  new Date(dateString).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
+  new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
   });
 
 export const formatDateTime = (dateTimeString: string): string =>
-  new Date(dateTimeString).toLocaleString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
+  new Date(dateTimeString).toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
   });

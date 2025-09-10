@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 
 type PaginationControlsProps = {
   currentPage: number;
@@ -22,8 +22,8 @@ export default function PaginationControls({
   return (
     <div className="flex items-center justify-between px-6 py-4 border-t border-gray-700">
       <div className="text-sm text-gray-400">
-        Showing {startIndex + 1}–{Math.min(startIndex + usersPerPage, totalUsers)} of{" "}
-        {totalUsers} users
+        Showing {startIndex + 1}–
+        {Math.min(startIndex + usersPerPage, totalUsers)} of {totalUsers} users
       </div>
       <div className="flex gap-2">
         <Button

@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { toast } from "sonner";
+import { useState } from 'react';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { toast } from 'sonner';
 
 type Props = { onChangePassword: () => void };
 
@@ -13,15 +13,15 @@ export default function SecuritySettings({ onChangePassword }: Props) {
 
   const handleToggle2FA = async () => {
     try {
-      const res = await fetch("/api/admin/2fa", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('/api/admin/2fa', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ enabled: !is2FAEnabled }),
       });
 
-      if (!res.ok) throw new Error("Failed to update 2FA");
+      if (!res.ok) throw new Error('Failed to update 2FA');
       setIs2FAEnabled(!is2FAEnabled);
-      toast.success(!is2FAEnabled ? "2FA enabled" : "2FA disabled");
+      toast.success(!is2FAEnabled ? '2FA enabled' : '2FA disabled');
     } catch (error) {
       toast.error((error as Error).message);
     }

@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { useEffect, useState } from 'react';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
 
 type LoginSession = {
   id: string;
@@ -18,8 +18,8 @@ export default function LoginSessions() {
   useEffect(() => {
     const fetchSessions = async () => {
       try {
-        const res = await fetch("/api/admin/sessions");
-        if (!res.ok) throw new Error("Failed to load sessions");
+        const res = await fetch('/api/admin/sessions');
+        if (!res.ok) throw new Error('Failed to load sessions');
         const data = await res.json();
         setLoginSessions(data);
       } catch (error) {
@@ -32,10 +32,10 @@ export default function LoginSessions() {
   const handleTerminateSession = async (sessionId: string) => {
     try {
       const res = await fetch(`/api/admin/sessions/${sessionId}/terminate`, {
-        method: "POST",
+        method: 'POST',
       });
 
-      if (!res.ok) throw new Error("Failed to terminate session");
+      if (!res.ok) throw new Error('Failed to terminate session');
       toast.success(`Session terminated: ${sessionId}`);
       setLoginSessions((prev) => prev.filter((s) => s.id !== sessionId));
     } catch (error) {

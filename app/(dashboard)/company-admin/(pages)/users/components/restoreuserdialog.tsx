@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   AlertDialog,
@@ -9,7 +9,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from '@/components/ui/alert-dialog';
 
 type RestoreUserDialogProps = {
   isOpen: boolean;
@@ -26,9 +26,12 @@ export default function RestoreUserDialog({
     <AlertDialog open={isOpen} onOpenChange={onCancel}>
       <AlertDialogContent className="bg-gray-800 border border-gray-700">
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-white">Restore User</AlertDialogTitle>
+          <AlertDialogTitle className="text-white">
+            Restore User
+          </AlertDialogTitle>
           <AlertDialogDescription className="text-gray-300">
-            Are you sure you want to restore this user? They will regain access to the system.
+            Are you sure you want to restore this user? They will regain access
+            to the system.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

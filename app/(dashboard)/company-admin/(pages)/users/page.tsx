@@ -1,22 +1,22 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import PageHeader from "@/components/layout/PageHeader";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { useState } from 'react';
+import PageHeader from '@/components/layout/PageHeader';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
-import UserFilters from "./components/usersfilters";
-import ActiveUsersTable from "./components/activeuserstable";
-import DeletedUsersTable from "./components/deleteduserstable";
-import UserDetailsModal from "./components/userdetailsmodal";
-import RestoreUserDialog from "./components/restoreuserdialog";
-import PaginationControls from "./components/paginationcontrols";
+import UserFilters from './components/usersfilters';
+import ActiveUsersTable from './components/activeuserstable';
+import DeletedUsersTable from './components/deleteduserstable';
+import UserDetailsModal from './components/userdetailsmodal';
+import RestoreUserDialog from './components/restoreuserdialog';
+import PaginationControls from './components/paginationcontrols';
 
 export type ActiveUser = {
   id: string;
   name: string;
   email: string;
-  role: "client" | "driver";
-  status: "active" | "suspended";
+  role: 'client' | 'driver';
+  status: 'active' | 'suspended';
   dateJoined: string;
 };
 
@@ -24,34 +24,62 @@ export type DeletedUser = {
   id: string;
   name: string;
   email: string;
-  role: "client" | "driver";
+  role: 'client' | 'driver';
   dateDeleted: string;
 };
 
 export default function UsersPage() {
   // state management
-  const [activeTab, setActiveTab] = useState<"active" | "deleted">("active");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [roleFilter, setRoleFilter] = useState("all");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [dateFilter, setDateFilter] = useState("all");
+  const [activeTab, setActiveTab] = useState<'active' | 'deleted'>('active');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [roleFilter, setRoleFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [dateFilter, setDateFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 5;
 
-  const [selectedUser, setSelectedUser] = useState<ActiveUser | DeletedUser | null>(null);
+  const [selectedUser, setSelectedUser] = useState<
+    ActiveUser | DeletedUser | null
+  >(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userToRestore, setUserToRestore] = useState<string | null>(null);
   const [isRestoreDialogOpen, setIsRestoreDialogOpen] = useState(false);
 
   // mock data
   const activeUsers: ActiveUser[] = [
-    { id: "U001", name: "John Doe", email: "john@example.com", role: "client", status: "active", dateJoined: "2025-08-01" },
-    { id: "U002", name: "Jane Smith", email: "jane@example.com", role: "driver", status: "suspended", dateJoined: "2025-07-15" },
+    {
+      id: 'U001',
+      name: 'John Doe',
+      email: 'john@example.com',
+      role: 'client',
+      status: 'active',
+      dateJoined: '2025-08-01',
+    },
+    {
+      id: 'U002',
+      name: 'Jane Smith',
+      email: 'jane@example.com',
+      role: 'driver',
+      status: 'suspended',
+      dateJoined: '2025-07-15',
+    },
   ];
 
   const deletedUsersData: DeletedUser[] = [
-    { id: "U003", name: "Michael Johnson", email: "michael@example.com", role: "driver", dateDeleted: "2025-08-20T14:30:00" },
-    { id: "U004", name: "Emily Davis", email: "emily@example.com", role: "client", dateDeleted: "2025-07-05T09:15:00" },
+    {
+      id: 'U003',
+      name: 'Michael Johnson',
+      email: 'michael@example.com',
+      role: 'driver',
+      dateDeleted: '2025-08-20T14:30:00',
+    },
+    {
+      id: 'U004',
+      name: 'Emily Davis',
+      email: 'emily@example.com',
+      role: 'client',
+      dateDeleted: '2025-07-05T09:15:00',
+    },
   ];
 
   // handlers
@@ -66,42 +94,52 @@ export default function UsersPage() {
   };
 
   const handleConfirmRestore = () => {
-    console.log("Restoring user:", userToRestore);
+    console.log('Restoring user:', userToRestore);
     setIsRestoreDialogOpen(false);
     setUserToRestore(null);
   };
 
   const filteredActiveUsers = activeUsers.filter((user) => {
     return (
-      (searchTerm === "" ||
+      (searchTerm === '' ||
         user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.id.toLowerCase().includes(searchTerm.toLowerCase())) &&
-      (roleFilter === "all" || user.role === roleFilter) &&
-      (statusFilter === "all" || user.status === statusFilter)
+      (roleFilter === 'all' || user.role === roleFilter) &&
+      (statusFilter === 'all' || user.status === statusFilter)
     );
   });
 
   const filteredDeletedUsers = deletedUsersData.filter((user) => {
     return (
-      (searchTerm === "" ||
+      (searchTerm === '' ||
         user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.id.toLowerCase().includes(searchTerm.toLowerCase())) &&
-      (roleFilter === "all" || user.role === roleFilter)
+      (roleFilter === 'all' || user.role === roleFilter)
     );
   });
 
-  const usersToDisplay = activeTab === "active" ? filteredActiveUsers : filteredDeletedUsers;
+  const usersToDisplay =
+    activeTab === 'active' ? filteredActiveUsers : filteredDeletedUsers;
   const startIndex = (currentPage - 1) * usersPerPage;
-  const paginatedUsers = usersToDisplay.slice(startIndex, startIndex + usersPerPage);
+  const paginatedUsers = usersToDisplay.slice(
+    startIndex,
+    startIndex + usersPerPage
+  );
   const totalPages = Math.ceil(usersToDisplay.length / usersPerPage);
 
   return (
     <div className="flex-1 overflow-auto">
-      <PageHeader title="Users" description="Manage active and deleted users." />
+      <PageHeader
+        title="Users"
+        description="Manage active and deleted users."
+      />
 
-      <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as "active" | "deleted")}>
+      <Tabs
+        value={activeTab}
+        onValueChange={(v) => setActiveTab(v as 'active' | 'deleted')}
+      >
         <TabsList className="bg-gray-800 px-6">
           <TabsTrigger value="active">Active Users</TabsTrigger>
           <TabsTrigger value="deleted">Deleted Users</TabsTrigger>
@@ -121,7 +159,10 @@ export default function UsersPage() {
 
         <div className="p-6">
           <TabsContent value="active">
-            <ActiveUsersTable users={paginatedUsers as ActiveUser[]} onViewDetails={handleViewDetails} />
+            <ActiveUsersTable
+              users={paginatedUsers as ActiveUser[]}
+              onViewDetails={handleViewDetails}
+            />
           </TabsContent>
           <TabsContent value="deleted">
             <DeletedUsersTable

@@ -1,11 +1,17 @@
-"use client";
+'use client';
 
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Filter, Calendar } from "lucide-react";
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Search, Filter, Calendar } from 'lucide-react';
 
 type UserFiltersProps = {
-  activeTab: "active" | "deleted";
+  activeTab: 'active' | 'deleted';
   searchTerm: string;
   setSearchTerm: (val: string) => void;
   roleFilter: string;
@@ -55,7 +61,7 @@ export default function UserFilters({
         </Select>
 
         {/* Active-only Filters */}
-        {activeTab === "active" && (
+        {activeTab === 'active' && (
           <>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-[150px] bg-gray-700 border-gray-600 text-white">

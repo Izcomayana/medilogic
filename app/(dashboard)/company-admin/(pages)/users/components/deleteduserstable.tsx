@@ -1,10 +1,17 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Mail, Calendar, Eye, RotateCcw } from "lucide-react";
-import { DeletedUser } from "../page";
-import { getRoleBadge, formatDateTime } from "./helpers/userUtil";
+import { Button } from '@/components/ui/button';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Mail, Calendar, Eye, RotateCcw } from 'lucide-react';
+import { DeletedUser } from '../page';
+import { getRoleBadge, formatDateTime } from './helpers/userUtil';
 
 type DeletedUsersTableProps = {
   users: DeletedUser[];
@@ -12,7 +19,11 @@ type DeletedUsersTableProps = {
   onRestoreClick: (id: string) => void;
 };
 
-export default function DeletedUsersTable({ users, onViewDetails, onRestoreClick }: DeletedUsersTableProps) {
+export default function DeletedUsersTable({
+  users,
+  onViewDetails,
+  onRestoreClick,
+}: DeletedUsersTableProps) {
   return (
     <div className="rounded-md border border-gray-700">
       <Table>
@@ -28,8 +39,13 @@ export default function DeletedUsersTable({ users, onViewDetails, onRestoreClick
         </TableHeader>
         <TableBody>
           {users.map((user) => (
-            <TableRow key={user.id} className="border-gray-700 hover:bg-gray-800">
-              <TableCell className="font-medium text-white">{user.id}</TableCell>
+            <TableRow
+              key={user.id}
+              className="border-gray-700 hover:bg-gray-800"
+            >
+              <TableCell className="font-medium text-white">
+                {user.id}
+              </TableCell>
               <TableCell className="text-gray-300">{user.name}</TableCell>
               <TableCell className="text-gray-300 flex items-center gap-1">
                 <Mail className="h-3 w-3" />
