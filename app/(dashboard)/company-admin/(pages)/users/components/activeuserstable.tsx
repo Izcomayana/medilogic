@@ -1,27 +1,37 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Mail, Calendar, Eye, MoreVertical } from "lucide-react";
-import { ActiveUser } from "../page";
-import { getRoleBadge, getStatusBadge, formatDate } from "./helpers/userUtil";
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Mail, Calendar, Eye, MoreVertical } from 'lucide-react';
+import { ActiveUser } from '../page';
+import { getRoleBadge, getStatusBadge, formatDate } from './helpers/userUtil';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import ConfirmActionModal from "./ConfirmActionModal";
+} from '@/components/ui/dropdown-menu';
+import ConfirmActionModal from './ConfirmActionModal';
 
-type UserStatus = "active" | "suspended";
+type UserStatus = 'active' | 'suspended';
 
 type ActiveUsersTableProps = {
   users: ActiveUser[];
   onViewDetails: (user: ActiveUser) => void;
 };
 
-export default function ActiveUsersTable({ users, onViewDetails }: ActiveUsersTableProps) {
+export default function ActiveUsersTable({
+  users,
+  onViewDetails,
+}: ActiveUsersTableProps) {
   const [userList, setUserList] = useState<ActiveUser[]>(users);
 
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -58,8 +68,13 @@ export default function ActiveUsersTable({ users, onViewDetails }: ActiveUsersTa
           </TableHeader>
           <TableBody>
             {userList.map((user) => (
-              <TableRow key={user.id} className="border-gray-700 hover:bg-gray-800">
-                <TableCell className="font-medium text-white">{user.id}</TableCell>
+              <TableRow
+                key={user.id}
+                className="border-gray-700 hover:bg-gray-800"
+              >
+                <TableCell className="font-medium text-white">
+                  {user.id}
+                </TableCell>
                 <TableCell className="text-gray-300">{user.name}</TableCell>
                 <TableCell className="text-gray-300 flex items-center gap-1">
                   <Mail className="h-3 w-3" />
@@ -93,7 +108,11 @@ export default function ActiveUsersTable({ users, onViewDetails }: ActiveUsersTa
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => {
-                          setPendingAction({ id: user.id, status: "active", name: user.name });
+                          setPendingAction({
+                            id: user.id,
+                            status: 'active',
+                            name: user.name,
+                          });
                           setConfirmOpen(true);
                         }}
                       >
@@ -101,7 +120,11 @@ export default function ActiveUsersTable({ users, onViewDetails }: ActiveUsersTa
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => {
-                          setPendingAction({ id: user.id, status: "suspended", name: user.name });
+                          setPendingAction({
+                            id: user.id,
+                            status: 'suspended',
+                            name: user.name,
+                          });
                           setConfirmOpen(true);
                         }}
                       >

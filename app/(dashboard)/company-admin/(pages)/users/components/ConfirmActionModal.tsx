@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -8,9 +8,9 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 
-type UserStatus = "active" | "inactive" | "suspended";
+type UserStatus = 'active' | 'inactive' | 'suspended';
 
 type ConfirmActionModalProps = {
   open: boolean;
@@ -31,11 +31,11 @@ export default function ConfirmActionModal({
   if (!pendingAction) return null;
 
   const actionText =
-    pendingAction.status === "active"
-      ? "activate"
-      : pendingAction.status === "suspended"
-      ? "suspend"
-      : "deactivate";
+    pendingAction.status === 'active'
+      ? 'activate'
+      : pendingAction.status === 'suspended'
+        ? 'suspend'
+        : 'deactivate';
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -43,11 +43,11 @@ export default function ConfirmActionModal({
         <DialogHeader>
           <DialogTitle>Confirm Action</DialogTitle>
           <DialogDescription>
-            Are you sure you want to <strong>{actionText}</strong>{" "}
+            Are you sure you want to <strong>{actionText}</strong>{' '}
             {pendingAction.name ? (
               <span className="text-white">{pendingAction.name}</span>
             ) : (
-              "this user"
+              'this user'
             )}
             ?
           </DialogDescription>
