@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-
+import axios from 'axios';
+import { useAuthorizedRequest } from '../../../../../../../hooks/useRequest';
 type ProfileData = { name: string; email: string };
 
 export default function ProfileSettings() {
@@ -14,24 +15,28 @@ export default function ProfileSettings() {
     name: 'John Doe',
     email: 'admin@example.com',
   });
-
-  const handleUpdateProfile = async () => {
-    try {
-      const res = await fetch(
-        'https://medilogic-backend.onrender.com/users/users/update',
+const authorizedRequest = useAuthorizedRequest();
+const handleUpdateProfile = async () => {
+  await authorizedRequest(
+    async (validToken) => {
+      await axios.put(
+        "https://medilogic-backend.onrender.com/users/users/update",
         {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(profileData),
+          name: profileData.name,
+          email: profileData.email,
+        },
+        {
+          headers: { Authorization: `Bearer ${validToken}` },
         }
       );
 
-      if (!res.ok) throw new Error('Failed to update profile');
-      toast.success('Profile updated successfully');
-    } catch (error) {
-      toast.error((error as Error).message);
-    }
-  };
+      toast.success("Profile updated successfully ✅");
+    },
+    "Failed to update profile"
+  );
+};
+
+
 
   return (
     <Card>
