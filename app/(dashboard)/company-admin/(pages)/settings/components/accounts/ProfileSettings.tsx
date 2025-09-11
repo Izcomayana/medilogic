@@ -15,12 +15,11 @@ export default function ProfileSettings() {
     name: 'John Doe',
     email: 'admin@example.com',
   });
-const authorizedRequest = useAuthorizedRequest();
-const handleUpdateProfile = async () => {
-  await authorizedRequest(
-    async (validToken) => {
+  const authorizedRequest = useAuthorizedRequest();
+  const handleUpdateProfile = async () => {
+    await authorizedRequest(async (validToken) => {
       await axios.put(
-        "https://medilogic-backend.onrender.com/users/users/update",
+        'https://medilogic-backend.onrender.com/users/users/update',
         {
           name: profileData.name,
           email: profileData.email,
@@ -30,13 +29,9 @@ const handleUpdateProfile = async () => {
         }
       );
 
-      toast.success("Profile updated successfully ✅");
-    },
-    "Failed to update profile"
-  );
-};
-
-
+      toast.success('Profile updated successfully ✅');
+    }, 'Failed to update profile');
+  };
 
   return (
     <Card>

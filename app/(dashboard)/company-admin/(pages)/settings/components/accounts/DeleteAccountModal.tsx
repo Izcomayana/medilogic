@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Dialog,
@@ -6,28 +6,27 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import axios from "axios";
-import { useAuthorizedRequest } from "../../../../../../../hooks/useRequest";
-import { useState } from "react";
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
+import axios from 'axios';
+import { useAuthorizedRequest } from '../../../../../../../hooks/useRequest';
+import { useState } from 'react';
 
 type Props = { open: boolean; onClose: () => void };
 
 export default function DeleteAccountModal({ open, onClose }: Props) {
   const [loading, setLoading] = useState(false);
-  const [password, setPassword] = useState("");
-  const [reason, setReason] = useState("");
+  const [password, setPassword] = useState('');
+  const [reason, setReason] = useState('');
   const authorizedRequest = useAuthorizedRequest();
 
   const handleDeleteAccount = async () => {
-  setLoading(true);
+    setLoading(true);
 
-  await authorizedRequest(
-    async (validToken) => {
+    await authorizedRequest(async (validToken) => {
       await axios.delete(
-        "https://medilogic-backend.onrender.com/users/users/users/me",
+        'https://medilogic-backend.onrender.com/users/users/users/me',
         {
           headers: { Authorization: `Bearer ${validToken}` },
           data: {
@@ -37,14 +36,11 @@ export default function DeleteAccountModal({ open, onClose }: Props) {
         }
       );
 
-      toast.success("Account deleted successfully. You will be logged out.");
-      localStorage.removeItem("access_token");
-      window.location.href = "/login";
-    },
-    "Failed to delete account"
-  ).finally(() => setLoading(false));
-};
-
+      toast.success('Account deleted successfully. You will be logged out.');
+      localStorage.removeItem('access_token');
+      window.location.href = '/login';
+    }, 'Failed to delete account').finally(() => setLoading(false));
+  };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -80,7 +76,7 @@ export default function DeleteAccountModal({ open, onClose }: Props) {
             onClick={handleDeleteAccount}
             disabled={loading}
           >
-            {loading ? "Deleting..." : "Confirm Delete"}
+            {loading ? 'Deleting...' : 'Confirm Delete'}
           </Button>
         </DialogFooter>
       </DialogContent>
