@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import ProfileSettings from '../settings/components/accounts/ProfileSettings';
 import SecuritySettings from '../settings/components/accounts/SecuritySettings';
-import LoginSessions from '../settings/components/accounts/loginSessions';
+import LoginSessions from '../settings/components/accounts/loginSessions'; // fixed casing
 import DangerZone from '../settings/components/accounts/DangerZone';
 import ChangePasswordModal from '../settings/components/accounts/ChangePasswordModal';
 import DeleteAccountModal from '../settings/components/accounts/DeleteAccountModal';

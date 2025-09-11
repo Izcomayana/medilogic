@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Dialog,
@@ -6,38 +6,45 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { toast } from 'sonner';
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import axios from "axios";
+import { useAuthorizedRequest } from "../../../../../../../hooks/useRequest";
+import { useState } from "react";
 
 type Props = { open: boolean; onClose: () => void };
 
 export default function DeleteAccountModal({ open, onClose }: Props) {
-  const handleDeleteAccount = async () => {
-    try {
-      const token = localStorage.getItem('access_token');
-      if (!token) throw new Error('No token found. Please log in again.');
+  const [loading, setLoading] = useState(false);
+  const [password, setPassword] = useState("");
+  const [reason, setReason] = useState("");
+  const authorizedRequest = useAuthorizedRequest();
 
-      const res = await fetch(
-        'https://medilogic-backend.onrender.com/users/users/users/me',
+  const handleDeleteAccount = async () => {
+  setLoading(true);
+
+  await authorizedRequest(
+    async (validToken) => {
+      await axios.delete(
+        "https://medilogic-backend.onrender.com/users/users/users/me",
         {
-          method: 'DELETE',
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { Authorization: `Bearer ${validToken}` },
+          data: {
+            password,
+            reason,
+          },
         }
       );
 
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.detail || 'Failed to delete account');
-      }
+      toast.success("Account deleted successfully. You will be logged out.");
+      localStorage.removeItem("access_token");
+      window.location.href = "/login";
+    },
+    "Failed to delete account"
+  ).finally(() => setLoading(false));
+};
 
-      toast.success('Account deleted successfully. You will be logged out.');
-      localStorage.removeItem('access_token');
-      window.location.href = '/login';
-    } catch (error) {
-      toast.error((error as Error).message);
-    }
-  };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -45,13 +52,35 @@ export default function DeleteAccountModal({ open, onClose }: Props) {
         <DialogHeader>
           <DialogTitle>Delete Account</DialogTitle>
         </DialogHeader>
-        <p className="text-sm text-gray-600">
+
+        <p className="text-sm text-gray-600 mb-3">
           Are you sure you want to delete your account? This action cannot be
           undone.
         </p>
+
+        <input
+          type="password"
+          placeholder="Enter your password"
+          className="w-full p-2 border rounded mb-2 text-sm"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        <input
+          type="text"
+          placeholder="Reason for deleting account"
+          className="w-full p-2 border rounded mb-4 text-sm"
+          value={reason}
+          onChange={(e) => setReason(e.target.value)}
+        />
+
         <DialogFooter>
-          <Button variant="destructive" onClick={handleDeleteAccount}>
-            Confirm Delete
+          <Button
+            variant="destructive"
+            onClick={handleDeleteAccount}
+            disabled={loading}
+          >
+            {loading ? "Deleting..." : "Confirm Delete"}
           </Button>
         </DialogFooter>
       </DialogContent>
