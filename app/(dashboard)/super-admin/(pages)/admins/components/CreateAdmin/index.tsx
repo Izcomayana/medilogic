@@ -24,6 +24,7 @@ import { UserPlus, XIcon, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 import { useState } from 'react';
 import { useOrganizations } from '@/hooks/useOrg';
+// import axios, { AxiosError } from 'axios';
 import axios from 'axios';
 import { useAuthorizedRequest } from '../../../../../../../hooks/useRequest';
 
@@ -61,7 +62,7 @@ export const CreateAdmin = () => {
         const payload = {
           email: email.trim(),
           password: password.trim(),
-          role: 'admin', // ✅ ensure admin role is sent
+          role: 'admin', // ✅ ensure admin role
           name: name.trim(),
           organization_id: organizationId,
         };
@@ -83,23 +84,27 @@ export const CreateAdmin = () => {
         toast.success('User created successfully!');
         setOpen(false);
         resetForm();
-      } catch (error: any) {
-        // Case 1: backend actually responded with error
-        if (error.response) {
-          console.error('Backend error:', error.response.data);
-          toast.error(error.response.data?.message || 'Failed to create user');
-        }
-        // Case 2: Axios "Network Error" but request may have succeeded
-        else if (error.message?.includes('Network Error')) {
-          console.warn(
-            'Network Error but user may have been created successfully.'
-          );
-          toast.success('User created successfully');
-          setOpen(false);
-          resetForm();
-        }
-        // Case 3: Unexpected error
-        else {
+      } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+          // Backend returned a response
+          if (error.response) {
+            console.error('Backend error:', error.response.data);
+            toast.error(
+              (error.response.data as { message?: string })?.message ||
+                'Failed to create user'
+            );
+          }
+          // Axios "Network Error" but request may still have succeeded
+          else if (error.message?.includes('Network Error')) {
+            console.warn(
+              'Network Error but user may have been created successfully.'
+            );
+            toast.success('User created successfully (no response received).');
+            setOpen(false);
+            resetForm();
+          }
+        } else {
+          // Unexpected non-Axios error
           console.error('Unexpected error:', error);
           toast.error('Something went wrong');
         }
