@@ -24,9 +24,17 @@ import { UserPlus, XIcon, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 import { useState } from 'react';
 import { useOrganizations } from '@/hooks/useOrg';
-// import axios, { AxiosError } from 'axios';
 import axios from 'axios';
 import { useAuthorizedRequest } from '../../../../../../../hooks/useRequest';
+
+// ✅ Define a type for the payload instead of using `any`
+type NewAdmin = {
+  name: string;
+  email: string;
+  password: string;
+  role: 'admin';
+  organization_id: string;
+};
 
 export const CreateAdmin = () => {
   const [open, setOpen] = useState(false);
@@ -59,10 +67,10 @@ export const CreateAdmin = () => {
 
     await authorizedRequest(async (validToken: string) => {
       try {
-        const payload = {
+        const payload: NewAdmin = {
           email: email.trim(),
           password: password.trim(),
-          role: 'admin', // ✅ ensure admin role
+          role: 'admin',
           name: name.trim(),
           organization_id: organizationId,
         };
@@ -86,25 +94,19 @@ export const CreateAdmin = () => {
         resetForm();
       } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
-          // Backend returned a response
           if (error.response) {
             console.error('Backend error:', error.response.data);
             toast.error(
               (error.response.data as { message?: string })?.message ||
                 'Failed to create user'
             );
-          }
-          // Axios "Network Error" but request may still have succeeded
-          else if (error.message?.includes('Network Error')) {
-            console.warn(
-              'Network Error but user may have been created successfully.'
-            );
+          } else if (error.message?.includes('Network Error')) {
+            console.warn('Network Error but user may have been created.');
             toast.success('User created successfully (no response received).');
             setOpen(false);
             resetForm();
           }
         } else {
-          // Unexpected non-Axios error
           console.error('Unexpected error:', error);
           toast.error('Something went wrong');
         }
