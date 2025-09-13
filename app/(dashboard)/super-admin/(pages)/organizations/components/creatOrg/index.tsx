@@ -28,7 +28,7 @@ import { Switch } from '@/components/ui/switch';
 interface Props {
   onCreate: (orgData: {
     name: string;
-    type: 'clinic' | 'waste_company' | 'logistic_company';
+    type: 'clinic' | 'waste_company' | 'logistics_company';
     country: string;
     state: string;
     region: string;
@@ -41,7 +41,7 @@ export default function CreateOrganizationDialog({ onCreate }: Props) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [type, setType] = useState<
-    'clinic' | 'waste_company' | 'logistic_company'
+    'clinic' | 'waste_company' | 'logistics_company'
   >('clinic');
   const [country, setCountry] = useState('');
   const [stateVal, setStateVal] = useState('');
@@ -57,9 +57,9 @@ export default function CreateOrganizationDialog({ onCreate }: Props) {
     }
 
     // guard: only the two enum values
-    if (!['clinic', 'waste_company', 'logistic_company'].includes(type)) {
+    if (!['clinic', 'waste_company', 'logistics_company'].includes(type)) {
       toast.error(
-        "Type must be 'clinic', 'waste_company' or 'logistic_company'"
+        "Type must be 'clinic', 'waste_company' or 'logistics_company'"
       );
       return;
     }
@@ -137,7 +137,7 @@ export default function CreateOrganizationDialog({ onCreate }: Props) {
             <Select
               value={type}
               onValueChange={(v) =>
-                setType(v as 'clinic' | 'waste_company' | 'logistic_company')
+                setType(v as 'clinic' | 'waste_company' | 'logistics_company')
               }
             >
               <SelectTrigger className="col-span-3 bg-gray-700 border-gray-600 text-white">
@@ -146,8 +146,8 @@ export default function CreateOrganizationDialog({ onCreate }: Props) {
               <SelectContent className="bg-gray-700 border-gray-600">
                 <SelectItem value="clinic">Clinic</SelectItem>
                 <SelectItem value="waste_company">Waste Company</SelectItem>
-                <SelectItem value="logistic_company">
-                  Logistic Company
+                <SelectItem value="logistics_company">
+                  Logistics Company
                 </SelectItem>
               </SelectContent>
             </Select>

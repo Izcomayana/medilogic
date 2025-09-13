@@ -1,6 +1,7 @@
 export type Trip = {
   driver_id: string;
   driver_name: string | null;
+  driver_assigned: string | null;
   delivery_type: string;
   scheduled_time: string | null;
   cost: string | null;
@@ -31,6 +32,7 @@ export function mapApiTripToUiTrip(apiTrip: Trip) {
     dropoffLocation: apiTrip.dropoff_location,
     driverId: apiTrip.driver_id,
     driverName: apiTrip.driver_name,
+    driverAssigned: apiTrip.driver_assigned,
     status: apiTrip.status,
     priority: apiTrip.priority,
     dateTime: apiTrip.scheduled_time,

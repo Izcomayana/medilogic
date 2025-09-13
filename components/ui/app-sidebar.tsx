@@ -13,7 +13,7 @@ import {
   // Bell,
   AppWindow,
   Route,
-  // Settings,
+  Settings,
 } from 'lucide-react';
 import { useAuth } from '@/components/auth';
 import {
@@ -55,14 +55,15 @@ const sidebarLinksByRole: Record<
   admin: [
     { title: 'Dashboard', url: '/company-admin', icon: Home },
     { title: 'Trips', url: '/company-admin/trips', icon: Route },
-    { title: 'Charts', url: '/company-admin/charts', icon: Truck },
     {
       title: 'Assignments',
       url: '/company-admin/assignments',
       icon: ClipboardList,
     },
+    { title: 'Users', url: '/company-admin/users', icon: Users },
+    { title: 'Charts', url: '/company-admin/charts', icon: Truck },
     { title: 'Exports', url: '/company-admin/exports', icon: FileText },
-    // { title: 'Settings', url: '/company-admin/settings', icon: Settings },
+    { title: 'Settings', url: '/company-admin/settings', icon: Settings },
   ],
   regulator: [
     { title: 'Dashboard', url: '/regulator', icon: Home },
