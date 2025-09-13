@@ -2,8 +2,17 @@
 
 import React from 'react';
 import { ApplicationForm, Field } from '../ApplicationForm';
-import { CircleUserRound, Mail, Lock } from 'lucide-react';
+import {
+  CircleUserRound,
+  Mail,
+  Lock,
+  Database,
+  MapPinHouse,
+} from 'lucide-react';
 import { useApplyAdmin } from './useApplyAdmin';
+import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
+import { InputField } from '@/app/(auth)/components/InputField';
 
 export const AdminTab = () => {
   const {
@@ -84,6 +93,42 @@ export const AdminTab = () => {
       ),
     },
     {
+      label: 'Country',
+      name: 'country',
+      type: 'text',
+      placeholder: 'North West, London, etc.',
+      icon: (
+        <MapPinHouse className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+      ),
+    },
+    {
+      label: 'Region',
+      name: 'region',
+      type: 'text',
+      placeholder: 'North West, London, etc.',
+      icon: (
+        <MapPinHouse className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+      ),
+    },
+    {
+      label: 'State',
+      name: 'state',
+      type: 'text',
+      placeholder: 'England, Scotland, etc.',
+      icon: (
+        <MapPinHouse className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+      ),
+    },
+    {
+      label: 'Data Retention Years',
+      name: 'dry',
+      type: 'number',
+      placeholder: '3',
+      icon: (
+        <Database className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+      ),
+    },
+    {
       label: 'Additional Message',
       name: 'adminMessage',
       type: 'textarea',
@@ -110,6 +155,40 @@ export const AdminTab = () => {
       handleAcceptCookies={handleAcceptCookies}
       showSuccessModal={showSuccessModal}
       setShowSuccessModal={setShowSuccessModal}
-    />
+    >
+      {/* 👇 Extra section just for Admins */}
+      <div className="space-y-2 mt-4">
+        <Label htmlFor="" className="text-sm font-medium text-gray-700">
+          ICO Registration
+        </Label>
+        <div className="flex items-center space-x-3">
+          <Checkbox
+            id="icoRegistered"
+            name="icoregistered"
+            checked={formData.icoRegistered}
+            onCheckedChange={(checked) =>
+              handleCheckboxChange('icoRegistered', checked === true)
+            }
+            disabled={loading}
+          />
+          <Label className="" htmlFor="icoRegistered">
+            Are you ICO registered?
+          </Label>
+        </div>
+
+        {formData.icoRegistered && (
+          <InputField
+            label="ICO Registration Number"
+            name="icoNumber"
+            type="text"
+            placeholder="Enter ICO number"
+            value={formData.icoNumber}
+            onChange={handleChange}
+            error={error.icoNumber}
+            disabled={loading}
+          />
+        )}
+      </div>
+    </ApplicationForm>
   );
 };
