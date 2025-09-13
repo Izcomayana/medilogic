@@ -158,10 +158,7 @@ export const AdminTab = () => {
     >
       {/* 👇 Extra section just for Admins */}
       <div className="space-y-2 mt-4">
-        <Label
-          htmlFor=""
-          className="text-sm font-medium text-gray-700"
-        >
+        <Label htmlFor="" className="text-sm font-medium text-gray-700">
           ICO Registration
         </Label>
         <div className="flex items-center space-x-3">
@@ -174,7 +171,9 @@ export const AdminTab = () => {
             }
             disabled={loading}
           />
-          <Label className="" htmlFor="icoRegistered">Are you ICO registered?</Label>
+          <Label className="" htmlFor="icoRegistered">
+            Are you ICO registered?
+          </Label>
         </div>
 
         {formData.icoRegistered && (
