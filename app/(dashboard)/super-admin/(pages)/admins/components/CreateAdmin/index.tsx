@@ -24,30 +24,29 @@ import { UserPlus, XIcon, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 import { useState } from 'react';
 import { useOrganizations } from '@/hooks/useOrg';
-import axios from 'axios';
-import { useAuthorizedRequest } from '../../../../../../../hooks/useRequest';
 
-// ✅ Define a type for the payload instead of using `any`
-type NewAdmin = {
-  name: string;
-  email: string;
-  password: string;
-  role: 'admin';
-  organization_id: string;
-};
+interface Props {
+  onCreate: (adminData: {
+    name: string;
+    email: string;
+    password: string;
+    status: 'active' | 'inactive';
+    role: 'admin';
+    organization_id: string;
+  }) => void | Promise<void>;
+}
 
-export const CreateAdmin = () => {
+export const CreateAdmin = ({ onCreate }: Props) => {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [status, setStatus] = useState<'active' | 'inactive'>('active');
+  const [role, setRole] = useState<'admin'>('admin');
   const [organizationId, setOrganizationId] = useState<string>('');
   const [submitting, setSubmitting] = useState(false);
   const { orgs, loading } = useOrganizations();
   const [showPassword, setShowPassword] = useState(false);
-
-  const authorizedRequest = useAuthorizedRequest();
 
   const resetForm = () => {
     setName('');
@@ -55,6 +54,7 @@ export const CreateAdmin = () => {
     setPassword('');
     setOrganizationId('');
     setStatus('active');
+    setRole('admin');
   };
 
   const handleCreate = async () => {
@@ -63,55 +63,29 @@ export const CreateAdmin = () => {
       return;
     }
 
+    // guard: only the two enum values
+    if (!['active', 'inactive'].includes(status)) {
+      toast.error("Type must be 'active' or 'inactive'");
+      return;
+    }
+
     setSubmitting(true);
-
-    await authorizedRequest(async (validToken: string) => {
-      try {
-        const payload: NewAdmin = {
-          email: email.trim(),
-          password: password.trim(),
-          role: 'admin',
-          name: name.trim(),
-          organization_id: organizationId,
-        };
-
-        console.log('Payload being sent:', payload);
-
-        const res = await axios.post(
-          'https://medilogic-backend.onrender.com/super/super/admins',
-          payload,
-          {
-            headers: {
-              Authorization: `Bearer ${validToken}`,
-              'Content-Type': 'application/json',
-            },
-          }
-        );
-
-        console.log('Response from backend:', res.data);
-        toast.success('User created successfully!');
-        setOpen(false);
-        resetForm();
-      } catch (error: unknown) {
-        if (axios.isAxiosError(error)) {
-          if (error.response) {
-            console.error('Backend error:', error.response.data);
-            toast.error(
-              (error.response.data as { message?: string })?.message ||
-                'Failed to create user'
-            );
-          } else if (error.message?.includes('Network Error')) {
-            console.warn('Network Error but user may have been created.');
-            toast.success('User created successfully (no response received).');
-            setOpen(false);
-            resetForm();
-          }
-        } else {
-          console.error('Unexpected error:', error);
-          toast.error('Something went wrong');
-        }
-      }
-    }, 'Failed to create user').finally(() => setSubmitting(false));
+    try {
+      await onCreate({
+        name: name.trim(),
+        email: email.trim(),
+        password: password.trim(),
+        status,
+        role,
+        organization_id: organizationId,
+      });
+      // close only on success
+      setOpen(false);
+      resetForm();
+      // onCreate should toast its own error; keep dialog open
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -119,25 +93,23 @@ export const CreateAdmin = () => {
       <AlertDialogTrigger asChild>
         <Button className="primary-button cursor-pointer">
           <UserPlus className="h-5 w-5" />
-          Create User
+          Create Admin
         </Button>
       </AlertDialogTrigger>
 
       <AlertDialogContent className="bg-gray-800 border-gray-700 text-white">
         <AlertDialogHeader>
           <div className="flex items-center justify-between">
-            <AlertDialogTitle>Create new user</AlertDialogTitle>
+            <AlertDialogTitle>Create new admin</AlertDialogTitle>
             <AlertDialogCancel className="bg-transparent">
               <XIcon />
             </AlertDialogCancel>
           </div>
           <AlertDialogDescription className="text-gray-400">
-            Add a new user to an organization.
+            Add a new admin to an organization.
           </AlertDialogDescription>
         </AlertDialogHeader>
-
         <div className="grid gap-4 py-4">
-          {/* Full Name */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="name" className="text-right">
               Full Name
@@ -150,8 +122,6 @@ export const CreateAdmin = () => {
               onChange={(e) => setName(e.target.value)}
             />
           </div>
-
-          {/* Email */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="email" className="text-right">
               Email address
@@ -165,8 +135,6 @@ export const CreateAdmin = () => {
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-
-          {/* Password */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="password" className="text-right">
               Password
@@ -174,7 +142,7 @@ export const CreateAdmin = () => {
             <div className="col-span-3 relative">
               <Input
                 id="password"
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? 'text' : 'password'} // 👈 toggle type
                 placeholder="Enter a secure password"
                 className="w-full bg-gray-700 border-gray-600 text-white pr-10"
                 value={password}
@@ -189,8 +157,6 @@ export const CreateAdmin = () => {
               </button>
             </div>
           </div>
-
-          {/* Status */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="status" className="text-right">
               Status
@@ -200,7 +166,7 @@ export const CreateAdmin = () => {
               onValueChange={(v) => setStatus(v as 'active' | 'inactive')}
             >
               <SelectTrigger className="col-span-3 bg-gray-700 border-gray-600 text-white">
-                <SelectValue placeholder="Select status" />
+                <SelectValue placeholder="Select type" />
               </SelectTrigger>
               <SelectContent className="bg-gray-700 border-gray-600">
                 <SelectItem value="active">Active</SelectItem>
@@ -208,8 +174,6 @@ export const CreateAdmin = () => {
               </SelectContent>
             </Select>
           </div>
-
-          {/* Organization */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="organization" className="text-gray-300">
               Organization
@@ -234,6 +198,19 @@ export const CreateAdmin = () => {
               </SelectContent>
             </Select>
           </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="role" className="text-gray-300">
+              Role
+            </Label>
+            <Select value={role} onValueChange={(v) => setRole(v as 'admin')}>
+              <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                <SelectValue placeholder="Select user role" />
+              </SelectTrigger>
+              <SelectContent className="bg-gray-700 border-gray-600">
+                <SelectItem value="admin">Admin</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         <AlertDialogFooter>
@@ -244,7 +221,7 @@ export const CreateAdmin = () => {
               disabled={submitting}
               onClick={handleCreate}
             >
-              {submitting ? 'Creating...' : 'Create User'}
+              {submitting ? 'Creating...' : 'Create Admin'}
             </Button>
             <Button
               type="button"

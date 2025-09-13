@@ -10,6 +10,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Users, Search, Building2 } from 'lucide-react';
+import { CreateAdmin } from './components/CreateAdmin';
+import { useAdmin } from '@/hooks/useAdmin';
 import { AdminTable } from './components/AdminTable';
 import { useOrganizations } from '@/hooks/useOrg';
 import React from 'react';
@@ -25,48 +27,9 @@ import {
 } from '@/components/ui/alert-dialog';
 import { AdminActionsDialog } from './components/AdminActions';
 import { PageHeader } from '../../../PageHeader';
-import { useAdmin } from '@/hooks/useAdmin';
 
-//
-// ✅ Strongly typed NewAdmin type
-//
-type NewAdmin = {
-  name: string;
-  email: string;
-  role: 'admin' | 'super-admin' | 'user';
-  organizationId?: string;
-};
-
-//
-// ✅ CreateAdmin Component with proper props
-//
-interface CreateAdminProps {
-  onCreate: (adminData: NewAdmin) => Promise<void>;
-}
-
-export function CreateAdmin({ onCreate }: CreateAdminProps) {
-  return (
-    <button
-      onClick={() =>
-        onCreate({
-          name: 'Test Admin',
-          email: 'test@example.com',
-          role: 'admin',
-        })
-      }
-      className="px-4 py-2 bg-blue-600 text-white rounded"
-    >
-      Create Admin
-    </button>
-  );
-}
-
-//
-// ✅ OrgAdmin Page
-//
 export default function OrgAdmin() {
   const [deleteOpen, setDeleteOpen] = React.useState(false);
-  const [selectedOrg, setSelectedOrg] = React.useState<string>(''); // org filter
   const { orgs } = useOrganizations();
 
   const {
@@ -74,6 +37,8 @@ export default function OrgAdmin() {
     filteredAdmins,
     searchTerm,
     setSearchTerm,
+    selectedAdmin,
+    setSelectedAdmin,
     statusFilter,
     setStatusFilter,
     loading,
@@ -108,7 +73,6 @@ export default function OrgAdmin() {
 
           <CardContent>
             <div className="flex items-center gap-4 mb-6">
-              {/* Search Input */}
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                 <Input
@@ -118,9 +82,7 @@ export default function OrgAdmin() {
                   className="pl-10 bg-gray-700 border-gray-600 text-white placeholder-gray-400"
                 />
               </div>
-
-              {/* Organization Filter */}
-              <Select value={selectedOrg} onValueChange={setSelectedOrg}>
+              <Select value={selectedAdmin} onValueChange={setSelectedAdmin}>
                 <SelectTrigger className="w-[200px] bg-gray-700 border-gray-600 text-white">
                   <Building2 className="h-4 w-4 mr-2" />
                   <SelectValue
@@ -139,8 +101,6 @@ export default function OrgAdmin() {
                   ))}
                 </SelectContent>
               </Select>
-
-              {/* Status Filter */}
               <Select value={statusFilter} onValueChange={setStatusFilter}>
                 <SelectTrigger className="w-[150px] bg-gray-700 border-gray-600 text-white">
                   <SelectValue placeholder="Status" />
@@ -153,7 +113,6 @@ export default function OrgAdmin() {
               </Select>
             </div>
 
-            {/* Admin Table */}
             <AdminTable
               admins={filteredAdmins}
               loading={loading}
@@ -161,9 +120,10 @@ export default function OrgAdmin() {
                 setEditAdmin(admin);
                 setEditOpen(true);
               }}
-              // If delete is enabled:
               // onDelete={(adminId) => {
-              //   setEditAdmin(filteredAdmins.find((a) => a.id === adminId) || null);
+              //   setEditAdmin(
+              //     filteredAdmins.find((a) => a.id === adminId) || null
+              //   );
               //   setDeleteOpen(true);
               // }}
             />
@@ -171,7 +131,6 @@ export default function OrgAdmin() {
         </Card>
       </main>
 
-      {/* Delete Dialog */}
       <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -200,7 +159,6 @@ export default function OrgAdmin() {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Edit / Activate / Deactivate */}
       {editOpen && (
         <AdminActionsDialog
           open={editOpen}
