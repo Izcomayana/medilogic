@@ -103,7 +103,7 @@ export default function OrganizationTable({
                             onClick={() => onView(org)}
                           >
                             <Eye className="mr-2 h-4 w-4" />
-                            View Details
+                            View
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-gray-300 hover:bg-gray-600 cursor-pointer"

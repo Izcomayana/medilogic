@@ -221,7 +221,11 @@ export const CreateAdmin = ({ onCreate }: Props) => {
               disabled={submitting}
               onClick={handleCreate}
             >
-              {submitting ? 'Creating...' : 'Create Admin'}
+              {submitting ? (
+                <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></span>
+              ) : (
+                'Create Admin'
+              )}
             </Button>
             <Button
               type="button"

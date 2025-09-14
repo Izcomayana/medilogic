@@ -14,6 +14,7 @@ import {
   AppWindow,
   Route,
   Settings,
+  ChartNoAxesCombined,
 } from 'lucide-react';
 import { useAuth } from '@/components/auth';
 import {
@@ -61,7 +62,11 @@ const sidebarLinksByRole: Record<
       icon: ClipboardList,
     },
     { title: 'Users', url: '/company-admin/users', icon: Users },
-    { title: 'Charts', url: '/company-admin/charts', icon: Truck },
+    {
+      title: 'Charts',
+      url: '/company-admin/charts',
+      icon: ChartNoAxesCombined,
+    },
     { title: 'Exports', url: '/company-admin/exports', icon: FileText },
     { title: 'Settings', url: '/company-admin/settings', icon: Settings },
   ],

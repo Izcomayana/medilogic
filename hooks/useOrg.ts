@@ -37,6 +37,7 @@ export function useOrganizations() {
         name: string;
         invite_code: string;
         ico_registered: boolean;
+        ico_registration_number: string;
         data_retention_years: number;
         type: string;
         is_active: boolean;
@@ -53,6 +54,7 @@ export function useOrganizations() {
         createdDate: new Date(o.created_at).toLocaleDateString(),
         invite_code: o.invite_code,
         ico_registered: o.ico_registered,
+        ico_registration_number: o.ico_registration_number,
         data_retention_years: o.data_retention_years,
       }));
 
@@ -116,6 +118,7 @@ export function useOrganizations() {
         createdDate: new Date(o.created_at).toLocaleDateString(),
         invite_code: o.invite_code,
         ico_registered: o.ico_registered,
+        icoNumber: o.ico_registration_number,
         data_retention_years: o.data_retention_years,
       },
     ]);
@@ -158,6 +161,10 @@ export function useOrganizations() {
       email: data.organization.email ?? '',
       invite_code: data.organization.invite_code,
       ico_registered: data.organization.ico_registered,
+      ico_registration_number:
+        data.organization.ico_registration_number ??
+        // existingOrg?.ico_registration_number ??
+        '',
       license_number: data.organization.license_number,
       license_expiry: data.organization.license_expiry,
       data_retention_years: data.organization.data_retention_years,
