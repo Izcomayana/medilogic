@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/table';
 import { Mail, Calendar, Eye, RotateCcw } from 'lucide-react';
 import { DeletedUser } from '../page';
-import { getRoleBadge, formatDateTime } from './helpers/userUtil';
+import { getRoleBadge, formatDateTime } from '../helpers/userUtil';
 
 type DeletedUsersTableProps = {
   users: DeletedUser[];

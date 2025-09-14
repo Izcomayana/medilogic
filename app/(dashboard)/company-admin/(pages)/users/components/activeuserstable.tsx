@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/table';
 import { Mail, Calendar, Eye, MoreVertical } from 'lucide-react';
 import { ActiveUser } from '../page';
-import { getRoleBadge, getStatusBadge, formatDate } from './helpers/userUtil';
+import { getRoleBadge, getStatusBadge, formatDate } from '../helpers/userUtil';
 import {
   DropdownMenu,
   DropdownMenuContent,

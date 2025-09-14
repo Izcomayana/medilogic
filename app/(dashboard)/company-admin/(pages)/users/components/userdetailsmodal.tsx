@@ -14,7 +14,7 @@ import {
   getStatusBadge,
   formatDate,
   formatDateTime,
-} from './helpers/userUtil';
+} from '../helpers/userUtil';
 
 type UserDetailsModalProps = {
   isOpen: boolean;
