@@ -1,13 +1,8 @@
-'use client';
-
 import { Badge } from '@/components/ui/badge';
 import { User, UserCheck, CheckCircle, AlertCircle } from 'lucide-react';
-import { ReactNode } from 'react';
 
-// Role badge
-export const getRoleBadge = (role?: string): ReactNode => {
+export const getRoleBadge = (role?: string) => {
   if (!role) return <Badge variant="outline">Unknown</Badge>;
-
   switch (role.toLowerCase()) {
     case 'client':
       return (
@@ -28,10 +23,9 @@ export const getRoleBadge = (role?: string): ReactNode => {
   }
 };
 
-// Status badge
-export const getStatusBadge = (status?: string): ReactNode => {
+export const getStatusBadge = (status?: string) => {
+  // guard against undefined/null
   if (!status) return <Badge variant="outline">Unknown</Badge>;
-
   switch (status.toLowerCase()) {
     case 'active':
       return (
@@ -52,19 +46,20 @@ export const getStatusBadge = (status?: string): ReactNode => {
   }
 };
 
-// Date formatters
-export const formatDate = (dateString: string): string =>
-  new Date(dateString).toLocaleDateString('en-US', {
+export const formatDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
   });
+};
 
-export const formatDateTime = (dateTimeString: string): string =>
-  new Date(dateTimeString).toLocaleString('en-US', {
+export const formatDateTime = (dateTimeString: string) => {
+  return new Date(dateTimeString).toLocaleString('en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
   });
+};
