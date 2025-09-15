@@ -1,8 +1,10 @@
-import { Button } from '@/components/ui/button';
-import { TabsContent } from '@radix-ui/react-tabs';
-import { useSettings } from '@/hooks/useSettings';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Button } from "@/components/ui/button";
+import { TabsContent } from "@radix-ui/react-tabs";
+import { useSettings } from "@/hooks/useSettings";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import axios from "axios";
+import { useAuthorizedRequest } from "../../../../../../../hooks/useRequest";
 import {
   Dialog,
   DialogContent,
@@ -10,18 +12,20 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import {
   AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
+  // AlertDialogTrigger,
   AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
   AlertDialogHeader,
+  AlertDialogFooter,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { Trash2, Eye, EyeOff, AlertTriangle } from 'lucide-react';
+  AlertDialogDescription,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
+import { Trash2, Eye, EyeOff, AlertTriangle } from "lucide-react";
+import { useState } from "react";
 
 type AccountProps = ReturnType<typeof useSettings>;
 
@@ -39,8 +43,43 @@ export function AccountsTab({
   setShowConfirmPassword,
   handleChangePassword,
   isDeleteModalOpen,
-  handleDeleteAccount,
 }: AccountProps) {
+  const authorizedRequest = useAuthorizedRequest();
+
+  // Local state for delete confirmation inputs
+  const [deleteReason, setDeleteReason] = useState("");
+  const [deletePassword, setDeletePassword] = useState("");
+
+  // 🔹 Delete account handler with API integration
+  const handleDeleteAccount = async () => {
+    try {
+      await authorizedRequest(
+        async (validToken) => {
+          const res = await axios.delete(
+            "https://medilogic-backend.onrender.com/users/users/users/me",
+            {
+              headers: { Authorization: `Bearer ${validToken}` },
+              data: {
+                reason: deleteReason,
+                password: deletePassword,
+              },
+            }
+          );
+
+          if (res.status === 200) {
+            console.log("Account deleted successfully");
+            // 👉 redirect, clear auth, or show success toast here
+          } else {
+            console.error("Failed to delete account:", res.data);
+          }
+        },
+        "Failed to delete account"
+      );
+    } catch (error: unknown) {
+      console.error("Error deleting account:", error);
+    }
+  };
+
   return (
     <>
       <TabsContent value="account" className="p-6 space-y-6">
@@ -114,7 +153,7 @@ export function AccountsTab({
               <div className="relative">
                 <Input
                   id="currentPassword"
-                  type={showCurrentPassword ? 'text' : 'password'}
+                  type={showCurrentPassword ? "text" : "password"}
                   value={passwordData.currentPassword}
                   onChange={(e) =>
                     setPasswordData({
@@ -146,7 +185,7 @@ export function AccountsTab({
               <div className="relative">
                 <Input
                   id="newPassword"
-                  type={showNewPassword ? 'text' : 'password'}
+                  type={showNewPassword ? "text" : "password"}
                   value={passwordData.newPassword}
                   onChange={(e) =>
                     setPasswordData({
@@ -178,7 +217,7 @@ export function AccountsTab({
               <div className="relative">
                 <Input
                   id="confirmPassword"
-                  type={showConfirmPassword ? 'text' : 'password'}
+                  type={showConfirmPassword ? "text" : "password"}
                   value={passwordData.confirmPassword}
                   onChange={(e) =>
                     setPasswordData({
@@ -230,11 +269,39 @@ export function AccountsTab({
               <strong className="text-red-400">Warning:</strong> This action
               cannot be undone. This will permanently delete your account and
               remove all your data from our servers.
-              <br />
-              <br />
-              Are you absolutely sure you want to delete your account?
             </AlertDialogDescription>
           </AlertDialogHeader>
+
+          {/* Reason + Password fields */}
+          <div className="space-y-4 py-4">
+            <div>
+              <Label htmlFor="deleteReason" className="text-gray-300">
+                Reason for deletion
+              </Label>
+              <Input
+                id="deleteReason"
+                type="text"
+                value={deleteReason}
+                onChange={(e) => setDeleteReason(e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white"
+                placeholder="Enter your reason"
+              />
+            </div>
+            <div>
+              <Label htmlFor="deletePassword" className="text-gray-300">
+                Confirm Password
+              </Label>
+              <Input
+                id="deletePassword"
+                type="password"
+                value={deletePassword}
+                onChange={(e) => setDeletePassword(e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white"
+                placeholder="Enter your password"
+              />
+            </div>
+          </div>
+
           <AlertDialogFooter>
             <AlertDialogCancel className="border-gray-600 text-gray-300 hover:bg-gray-700">
               Cancel
