@@ -1,6 +1,6 @@
-'use client';
-
 import { Input } from '@/components/ui/input';
+import { Calendar, Filter, Search } from 'lucide-react';
+import { useUsers } from '@/hooks/useUsers';
 import {
   Select,
   SelectContent,
@@ -8,35 +8,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Search, Filter, Calendar } from 'lucide-react';
 
-type UserFiltersProps = {
-  activeTab: 'active' | 'deleted';
-  searchTerm: string;
-  setSearchTerm: (val: string) => void;
-  roleFilter: string;
-  setRoleFilter: (val: string) => void;
-  statusFilter: string;
-  setStatusFilter: (val: string) => void;
-  dateFilter: string;
-  setDateFilter: (val: string) => void;
-};
+type FiltersProps = ReturnType<typeof useUsers>;
 
-export default function UserFilters({
-  activeTab,
+export function Filters({
   searchTerm,
   setSearchTerm,
   roleFilter,
   setRoleFilter,
+  activeTab,
   statusFilter,
   setStatusFilter,
   dateFilter,
   setDateFilter,
-}: UserFiltersProps) {
+}: FiltersProps) {
   return (
     <div className="p-6 border-b border-gray-700">
       <div className="flex items-center gap-4">
-        {/* Search */}
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
           <Input
@@ -46,8 +34,6 @@ export default function UserFilters({
             className="pl-10 bg-gray-700 border-gray-600 text-white placeholder-gray-400"
           />
         </div>
-
-        {/* Role Filter */}
         <Select value={roleFilter} onValueChange={setRoleFilter}>
           <SelectTrigger className="w-[150px] bg-gray-700 border-gray-600 text-white">
             <Filter className="h-4 w-4 mr-2" />
@@ -59,8 +45,6 @@ export default function UserFilters({
             <SelectItem value="driver">Driver</SelectItem>
           </SelectContent>
         </Select>
-
-        {/* Active-only Filters */}
         {activeTab === 'active' && (
           <>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -73,7 +57,6 @@ export default function UserFilters({
                 <SelectItem value="suspended">Suspended</SelectItem>
               </SelectContent>
             </Select>
-
             <Select value={dateFilter} onValueChange={setDateFilter}>
               <SelectTrigger className="w-[150px] bg-gray-700 border-gray-600 text-white">
                 <Calendar className="h-4 w-4 mr-2" />
