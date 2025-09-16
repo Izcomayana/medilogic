@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Users, UserX, UserCheck } from 'lucide-react';
-import { PageHeader } from '@/app/(dashboard)/PageHeader';
+import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 import { useUsers } from '@/hooks/useUsers';
 import { Filters } from './components/Filters';
 import { ActiveUsersTab } from './components/ActiveUsers';
