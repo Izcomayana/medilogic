@@ -1,10 +1,10 @@
-import { Button } from "@/components/ui/button";
-import { TabsContent } from "@radix-ui/react-tabs";
-import { useSettings } from "@/hooks/useSettings";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import axios from "axios";
-import { useAuthorizedRequest } from "../../../../../../../hooks/useRequest";
+import { Button } from '@/components/ui/button';
+import { TabsContent } from '@radix-ui/react-tabs';
+import { useSettings } from '@/hooks/useSettings';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import axios from 'axios';
+import { useAuthorizedRequest } from '../../../../../../../hooks/useRequest';
 import {
   Dialog,
   DialogContent,
@@ -12,7 +12,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 import {
   AlertDialog,
   // AlertDialogTrigger,
@@ -23,9 +23,9 @@ import {
   AlertDialogDescription,
   AlertDialogCancel,
   AlertDialogAction,
-} from "@/components/ui/alert-dialog";
-import { Trash2, Eye, EyeOff, AlertTriangle } from "lucide-react";
-import { useState } from "react";
+} from '@/components/ui/alert-dialog';
+import { Trash2, Eye, EyeOff, AlertTriangle } from 'lucide-react';
+import { useState } from 'react';
 
 type AccountProps = ReturnType<typeof useSettings>;
 
@@ -47,36 +47,33 @@ export function AccountsTab({
   const authorizedRequest = useAuthorizedRequest();
 
   // Local state for delete confirmation inputs
-  const [deleteReason, setDeleteReason] = useState("");
-  const [deletePassword, setDeletePassword] = useState("");
+  const [deleteReason, setDeleteReason] = useState('');
+  const [deletePassword, setDeletePassword] = useState('');
 
   // 🔹 Delete account handler with API integration
   const handleDeleteAccount = async () => {
     try {
-      await authorizedRequest(
-        async (validToken) => {
-          const res = await axios.delete(
-            "https://medilogic-backend.onrender.com/users/users/users/me",
-            {
-              headers: { Authorization: `Bearer ${validToken}` },
-              data: {
-                reason: deleteReason,
-                password: deletePassword,
-              },
-            }
-          );
-
-          if (res.status === 200) {
-            console.log("Account deleted successfully");
-            // 👉 redirect, clear auth, or show success toast here
-          } else {
-            console.error("Failed to delete account:", res.data);
+      await authorizedRequest(async (validToken) => {
+        const res = await axios.delete(
+          'https://medilogic-backend.onrender.com/users/users/users/me',
+          {
+            headers: { Authorization: `Bearer ${validToken}` },
+            data: {
+              reason: deleteReason,
+              password: deletePassword,
+            },
           }
-        },
-        "Failed to delete account"
-      );
+        );
+
+        if (res.status === 200) {
+          console.log('Account deleted successfully');
+          // 👉 redirect, clear auth, or show success toast here
+        } else {
+          console.error('Failed to delete account:', res.data);
+        }
+      }, 'Failed to delete account');
     } catch (error: unknown) {
-      console.error("Error deleting account:", error);
+      console.error('Error deleting account:', error);
     }
   };
 
@@ -153,7 +150,7 @@ export function AccountsTab({
               <div className="relative">
                 <Input
                   id="currentPassword"
-                  type={showCurrentPassword ? "text" : "password"}
+                  type={showCurrentPassword ? 'text' : 'password'}
                   value={passwordData.currentPassword}
                   onChange={(e) =>
                     setPasswordData({
@@ -185,7 +182,7 @@ export function AccountsTab({
               <div className="relative">
                 <Input
                   id="newPassword"
-                  type={showNewPassword ? "text" : "password"}
+                  type={showNewPassword ? 'text' : 'password'}
                   value={passwordData.newPassword}
                   onChange={(e) =>
                     setPasswordData({
@@ -217,7 +214,7 @@ export function AccountsTab({
               <div className="relative">
                 <Input
                   id="confirmPassword"
-                  type={showConfirmPassword ? "text" : "password"}
+                  type={showConfirmPassword ? 'text' : 'password'}
                   value={passwordData.confirmPassword}
                   onChange={(e) =>
                     setPasswordData({
