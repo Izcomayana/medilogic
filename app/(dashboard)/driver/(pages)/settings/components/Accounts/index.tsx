@@ -1,10 +1,8 @@
 import { Button } from '@/components/ui/button';
 import { TabsContent } from '@radix-ui/react-tabs';
-import { useSettings } from '@/app/(dashboard)/company-admin/(pages)/settings/useSettings';
+import { useSettings } from '../../useSettings';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import axios from 'axios';
-import { useAuthorizedRequest } from '../../../../../../../hooks/useRequest';
 import {
   Dialog,
   DialogContent,
@@ -25,7 +23,6 @@ import {
   AlertDialogAction,
 } from '@/components/ui/alert-dialog';
 import { Trash2, Eye, EyeOff, AlertTriangle } from 'lucide-react';
-import { useState } from 'react';
 
 type AccountProps = ReturnType<typeof useSettings>;
 
@@ -43,40 +40,12 @@ export function AccountsTab({
   setShowConfirmPassword,
   handleChangePassword,
   isDeleteModalOpen,
+  deleteReason,
+  setDeleteReason,
+  deletePassword,
+  setDeletePassword,
+  handleDeleteAccount,
 }: AccountProps) {
-  const authorizedRequest = useAuthorizedRequest();
-
-  // Local state for delete confirmation inputs
-  const [deleteReason, setDeleteReason] = useState('');
-  const [deletePassword, setDeletePassword] = useState('');
-
-  // 🔹 Delete account handler with API integration
-  const handleDeleteAccount = async () => {
-    try {
-      await authorizedRequest(async (validToken) => {
-        const res = await axios.delete(
-          'https://medilogic-backend.onrender.com/users/users/users/me',
-          {
-            headers: { Authorization: `Bearer ${validToken}` },
-            data: {
-              reason: deleteReason,
-              password: deletePassword,
-            },
-          }
-        );
-
-        if (res.status === 200) {
-          console.log('Account deleted successfully');
-          // 👉 redirect, clear auth, or show success toast here
-        } else {
-          console.error('Failed to delete account:', res.data);
-        }
-      }, 'Failed to delete account');
-    } catch (error: unknown) {
-      console.error('Error deleting account:', error);
-    }
-  };
-
   return (
     <>
       <TabsContent value="account" className="p-6 space-y-6">
@@ -280,7 +249,7 @@ export function AccountsTab({
                 type="text"
                 value={deleteReason}
                 onChange={(e) => setDeleteReason(e.target.value)}
-                className="bg-gray-700 border-gray-600 text-white"
+                className="bg-gray-700 border-gray-600 text-white mt-2"
                 placeholder="Enter your reason"
               />
             </div>
@@ -293,14 +262,14 @@ export function AccountsTab({
                 type="password"
                 value={deletePassword}
                 onChange={(e) => setDeletePassword(e.target.value)}
-                className="bg-gray-700 border-gray-600 text-white"
+                className="bg-gray-700 border-gray-600 text-white mt-2"
                 placeholder="Enter your password"
               />
             </div>
           </div>
 
           <AlertDialogFooter>
-            <AlertDialogCancel className="border-gray-600 text-gray-300 hover:bg-gray-700">
+            <AlertDialogCancel className="border-gray-600 text-gray-700 hover:text-gray-300 hover:bg-gray-700">
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction

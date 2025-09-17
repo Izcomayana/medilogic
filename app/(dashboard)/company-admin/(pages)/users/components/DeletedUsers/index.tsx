@@ -160,9 +160,7 @@ export function DeletedUsersTab({
 
         {/* Error message UI */}
         {errorMsg && (
-          <div className="mt-4 text-red-400 text-sm">
-            {errorMsg}
-          </div>
+          <div className="mt-4 text-red-400 text-sm">{errorMsg}</div>
         )}
       </TabsContent>
 

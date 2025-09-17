@@ -1,10 +1,10 @@
-// import { RoleGuard } from "@/components/RoleGuard";
+import { RoleGuard } from '@/components/RoleGuard';
 import { AdminDashboard } from '.';
 
 export default function Page() {
   return (
-    // <RoleGuard allowedRoles={["admin"]}>
-    <AdminDashboard />
-    // </RoleGuard>
+    <RoleGuard allowedRoles={['admin']}>
+      <AdminDashboard />
+    </RoleGuard>
   );
 }

@@ -81,7 +81,7 @@ const sidebarLinksByRole: Record<
   ],
   driver: [
     { title: 'Dashboard', url: '/driver', icon: Home },
-    { title: 'My Trips', url: '/driver/trips', icon: ClipboardList },
+    { title: 'Settings', url: '/driver/settings', icon: Settings },
   ],
 };
 
