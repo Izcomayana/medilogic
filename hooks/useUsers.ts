@@ -9,11 +9,25 @@ type ActiveUser = {
   email: string;
   phone: string;
   role: string;
-  status: string;
+  status: 'Active' | 'Suspended';
   dateJoined: string;
   organization: string;
   location: string;
   lastActive: string;
+  totalTrips: number;
+};
+
+type InactiveUser = {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  role: string;
+  status: 'Inactive';
+  dateJoined: string;
+  organization: string;
+  location: string;
+  lastActive?: string;
   totalTrips: number;
 };
 
@@ -75,31 +89,32 @@ const activeUsers: ActiveUser[] = [
     lastActive: '2025-08-20 09:15',
     totalTrips: 8,
   },
+];
+
+const inactiveUsers: InactiveUser[] = [
   {
-    id: 'USR004',
-    name: 'Lisa Wilson',
-    email: 'lisa.wilson@driver.com',
-    phone: '+234 444 567 8901',
-    role: 'Driver',
-    status: 'Active',
-    dateJoined: '2025-01-05',
-    organization: 'Logistics Corp',
+    id: 'USR009',
+    name: 'Grace Lee',
+    email: 'grace.lee@inactive.com',
+    phone: '+234 777 123 4567',
+    role: 'Client',
+    status: 'Inactive',
+    dateJoined: '2025-01-10',
+    organization: 'MediHealth',
     location: 'Kano, Nigeria',
-    lastActive: '2025-08-23 12:20',
-    totalTrips: 38,
+    totalTrips: 0,
   },
   {
-    id: 'USR005',
-    name: 'Tom Brown',
-    email: 'tom.brown@waste.com',
-    phone: '+234 333 789 0123',
-    role: 'Client',
-    status: 'Active',
-    dateJoined: '2025-04-12',
-    organization: 'WasteTech Solutions',
+    id: 'USR010',
+    name: 'James Bond',
+    email: 'james.bond@inactive.com',
+    phone: '+234 888 654 3210',
+    role: 'Driver',
+    status: 'Inactive',
+    dateJoined: '2025-03-05',
+    organization: 'TransportX',
     location: 'Ibadan, Nigeria',
-    lastActive: '2025-08-22 18:30',
-    totalTrips: 15,
+    totalTrips: 12,
   },
 ];
 
@@ -132,24 +147,12 @@ const deletedUsersData: DeletedUser[] = [
     dateJoined: '2024-11-15',
     totalTrips: 6,
   },
-  {
-    id: 'USR008',
-    name: 'David Kim',
-    email: 'david.kim@deleted.com',
-    phone: '+234 999 876 5432',
-    role: 'Driver',
-    deletedAt: '2025-08-05 16:45',
-    deletedBy: 'Super Admin',
-    reason: 'Duplicate account detected',
-    organization: 'Logistics Corp',
-    location: 'Port Harcourt, Nigeria',
-    dateJoined: '2024-10-20',
-    totalTrips: 3,
-  },
 ];
 
 export function useUsers() {
-  const [activeTab, setActiveTab] = useState<'active' | 'deleted'>('active');
+  const [activeTab, setActiveTab] = useState<'active' | 'inactive' | 'deleted'>(
+    'active'
+  );
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -160,10 +163,12 @@ export function useUsers() {
   const [userToRestore, setUserToRestore] = useState<string | null>(null);
   const [deletedUsers, setDeletedUsers] =
     useState<DeletedUser[]>(deletedUsersData);
-  const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 10;
+  const [currentPage, setCurrentPage] = useState(1);
 
-  // Filter active users
+  /* -----------------------
+     Filtering
+     ----------------------- */
   const filteredActiveUsers: ActiveUser[] = activeUsers.filter((user) => {
     const matchesSearch =
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -180,6 +185,17 @@ export function useUsers() {
     return matchesSearch && matchesRole && matchesStatus && matchesDate;
   });
 
+  const filteredInactiveUsers: InactiveUser[] = inactiveUsers.filter((user) => {
+    const matchesSearch =
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.id.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesRole =
+      roleFilter === 'all' ||
+      user.role.toLowerCase() === roleFilter.toLowerCase();
+    return matchesSearch && matchesRole;
+  });
+
   const filteredDeletedUsers: DeletedUser[] = deletedUsers.filter((user) => {
     const matchesSearch =
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -191,26 +207,36 @@ export function useUsers() {
     return matchesSearch && matchesRole;
   });
 
-  const currentUsers =
-    activeTab === 'active' ? filteredActiveUsers : filteredDeletedUsers;
-
-  const totalPages =
-    activeTab === 'active'
-      ? Math.ceil(filteredActiveUsers.length / usersPerPage)
-      : Math.ceil(filteredDeletedUsers.length / usersPerPage);
-
+  /* -----------------------
+     Pagination
+     ----------------------- */
   const startIndex = (currentPage - 1) * usersPerPage;
 
   const paginatedActiveUsers = filteredActiveUsers.slice(
     startIndex,
     startIndex + usersPerPage
   );
-
+  const paginatedInactiveUsers = filteredInactiveUsers.slice(
+    startIndex,
+    startIndex + usersPerPage
+  );
   const paginatedDeletedUsers = filteredDeletedUsers.slice(
     startIndex,
     startIndex + usersPerPage
   );
 
+  const currentUsers =
+    activeTab === 'active'
+      ? filteredActiveUsers
+      : activeTab === 'inactive'
+        ? filteredInactiveUsers
+        : filteredDeletedUsers;
+
+  const totalPages = Math.ceil(currentUsers.length / usersPerPage);
+
+  /* -----------------------
+     Handlers
+     ----------------------- */
   const handleViewDetails = (user: any) => {
     setSelectedUser(user);
     setIsDetailsModalOpen(true);
@@ -219,7 +245,6 @@ export function useUsers() {
   const handleRestoreUser = (userId: string) => {
     const userToRestore = deletedUsers.find((user) => user.id === userId);
     if (userToRestore) {
-      // Remove from deleted users
       setDeletedUsers((prev) => prev.filter((user) => user.id !== userId));
       toast.success(
         `User ${userToRestore.name} has been restored successfully`
@@ -251,11 +276,13 @@ export function useUsers() {
     setCurrentPage,
     usersPerPage,
     filteredActiveUsers,
+    filteredInactiveUsers,
     filteredDeletedUsers,
     currentUsers,
     totalPages,
     startIndex,
     paginatedActiveUsers,
+    paginatedInactiveUsers,
     paginatedDeletedUsers,
     handleViewDetails,
     handleRestoreUser,
