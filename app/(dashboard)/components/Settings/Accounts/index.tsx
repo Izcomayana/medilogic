@@ -45,6 +45,7 @@ export function AccountsTab({
   deletePassword,
   setDeletePassword,
   handleDeleteAccount,
+  isDeleting,
 }: AccountProps) {
   return (
     <>
@@ -277,7 +278,11 @@ export function AccountsTab({
               className="bg-red-600 hover:bg-red-700 text-white"
             >
               <Trash2 className="h-4 w-4 mr-2" />
-              Delete Account
+              {isDeleting ? (
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+              ) : (
+                'Delete Account'
+              )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

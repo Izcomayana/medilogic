@@ -151,7 +151,7 @@ export const useRegister = () => {
       }
 
       setSuccessMessage('Signup successful! Redirecting to verify prompt...');
-      toast.success('Signup successful! 🎉');
+      toast.success('Signup successful! 🎉 Redirecting to verify prompt...');
       setTimeout(
         () => router.push(`/verifyprompt?email=${formData.email}`),
         1000

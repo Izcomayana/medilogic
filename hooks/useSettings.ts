@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { useAuthorizedRequest } from '@/hooks/useRequest';
 import axios from 'axios';
+import { useAuth } from '@/components/auth';
 
 // Mock data for login sessions
 const loginSessions = [
@@ -36,6 +37,8 @@ export function useSettings() {
   const [is2FAEnabled, setIs2FAEnabled] = useState(false);
   const [deleteReason, setDeleteReason] = useState('');
   const [deletePassword, setDeletePassword] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+  const { logout } = useAuth();
 
   const authorizedRequest = useAuthorizedRequest();
 
@@ -89,12 +92,9 @@ export function useSettings() {
     });
   };
 
-  // const handleDeleteAccount = () => {
-
-  // };
-
   const handleDeleteAccount = async () => {
     try {
+      setIsDeleting(true);
       await authorizedRequest(async (validToken) => {
         const res = await axios.delete(
           'https://medilogic-backend.onrender.com/users/users/users/me',
@@ -107,19 +107,17 @@ export function useSettings() {
           }
         );
 
-        if (res.status === 200) {
-          console.log('Account deleted successfully');
-          // 👉 redirect, clear auth,
-          toast.success(
-            'Account deletion request submitted. You will be logged out shortly.'
-          );
-          setIsDeleteModalOpen(false);
-        } else {
-          console.error('Failed to delete account:', res.data);
-        }
+        console.log('Account deleted successfully');
+        toast.success(
+          'Account deletion request submitted. You will be logged out shortly.'
+        );
+        setIsDeleteModalOpen(false);
+        logout();
       }, 'Failed to delete account');
     } catch (error: unknown) {
       console.error('Error deleting account:', error);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -147,6 +145,7 @@ export function useSettings() {
     setDeleteReason,
     deletePassword,
     setDeletePassword,
+    isDeleting,
     showNewPassword,
     setShowNewPassword,
     showConfirmPassword,
