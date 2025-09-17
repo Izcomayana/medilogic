@@ -2,9 +2,6 @@
 
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { useAuthorizedRequest } from '@/hooks/useRequest';
-import axios from 'axios';
-import { useAuth } from '@/components/auth';
 
 // Mock data for login sessions
 const loginSessions = [
@@ -35,12 +32,6 @@ export function useSettings() {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [is2FAEnabled, setIs2FAEnabled] = useState(false);
-  const [deleteReason, setDeleteReason] = useState('');
-  const [deletePassword, setDeletePassword] = useState('');
-  const [isDeleting, setIsDeleting] = useState(false);
-  const { logout } = useAuth();
-
-  const authorizedRequest = useAuthorizedRequest();
 
   // Profile form state
   const [profileData, setProfileData] = useState({
@@ -92,33 +83,11 @@ export function useSettings() {
     });
   };
 
-  const handleDeleteAccount = async () => {
-    try {
-      setIsDeleting(true);
-      await authorizedRequest(async (validToken) => {
-        const res = await axios.delete(
-          'https://medilogic-backend.onrender.com/users/users/users/me',
-          {
-            headers: { Authorization: `Bearer ${validToken}` },
-            data: {
-              reason: deleteReason,
-              password: deletePassword,
-            },
-          }
-        );
-
-        console.log('Account deleted successfully');
-        toast.success(
-          'Account deletion request submitted. You will be logged out shortly.'
-        );
-        setIsDeleteModalOpen(false);
-        logout();
-      }, 'Failed to delete account');
-    } catch (error: unknown) {
-      console.error('Error deleting account:', error);
-    } finally {
-      setIsDeleting(false);
-    }
+  const handleDeleteAccount = () => {
+    toast.success(
+      'Account deletion request submitted. You will be logged out shortly.'
+    );
+    setIsDeleteModalOpen(false);
   };
 
   const handleTerminateSession = (sessionId: string) => {
@@ -141,11 +110,6 @@ export function useSettings() {
     showCurrentPassword,
     setShowCurrentPassword,
     is2FAEnabled,
-    deleteReason,
-    setDeleteReason,
-    deletePassword,
-    setDeletePassword,
-    isDeleting,
     showNewPassword,
     setShowNewPassword,
     showConfirmPassword,

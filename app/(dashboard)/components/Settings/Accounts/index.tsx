@@ -13,13 +13,14 @@ import {
 } from '@/components/ui/dialog';
 import {
   AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
+  // AlertDialogTrigger,
   AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
   AlertDialogHeader,
+  AlertDialogFooter,
   AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogCancel,
+  AlertDialogAction,
 } from '@/components/ui/alert-dialog';
 import { Trash2, Eye, EyeOff, AlertTriangle } from 'lucide-react';
 
@@ -39,7 +40,12 @@ export function AccountsTab({
   setShowConfirmPassword,
   handleChangePassword,
   isDeleteModalOpen,
+  deleteReason,
+  setDeleteReason,
+  deletePassword,
+  setDeletePassword,
   handleDeleteAccount,
+  isDeleting,
 }: AccountProps) {
   return (
     <>
@@ -230,13 +236,41 @@ export function AccountsTab({
               <strong className="text-red-400">Warning:</strong> This action
               cannot be undone. This will permanently delete your account and
               remove all your data from our servers.
-              <br />
-              <br />
-              Are you absolutely sure you want to delete your account?
             </AlertDialogDescription>
           </AlertDialogHeader>
+
+          {/* Reason + Password fields */}
+          <div className="space-y-4 py-4">
+            <div>
+              <Label htmlFor="deleteReason" className="text-gray-300">
+                Reason for deletion
+              </Label>
+              <Input
+                id="deleteReason"
+                type="text"
+                value={deleteReason}
+                onChange={(e) => setDeleteReason(e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white mt-2"
+                placeholder="Enter your reason"
+              />
+            </div>
+            <div>
+              <Label htmlFor="deletePassword" className="text-gray-300">
+                Confirm Password
+              </Label>
+              <Input
+                id="deletePassword"
+                type="password"
+                value={deletePassword}
+                onChange={(e) => setDeletePassword(e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white mt-2"
+                placeholder="Enter your password"
+              />
+            </div>
+          </div>
+
           <AlertDialogFooter>
-            <AlertDialogCancel className="border-gray-600 text-gray-300 hover:bg-gray-700">
+            <AlertDialogCancel className="border-gray-600 text-gray-700 hover:text-gray-300 hover:bg-gray-700">
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
@@ -244,7 +278,11 @@ export function AccountsTab({
               className="bg-red-600 hover:bg-red-700 text-white"
             >
               <Trash2 className="h-4 w-4 mr-2" />
-              Delete Account
+              {isDeleting ? (
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+              ) : (
+                'Delete Account'
+              )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

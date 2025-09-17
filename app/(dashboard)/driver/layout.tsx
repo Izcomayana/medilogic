@@ -3,9 +3,8 @@ import { PageTransition } from '@/components/PageTransition';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Admin Dashboard',
-  description:
-    'Comprehensive admin dashboard for managing organizations, users, and regulators',
+  title: 'Driver Dashboard',
+  description: '',
 };
 
 export default function Admin({ children }: { children: ReactNode }) {

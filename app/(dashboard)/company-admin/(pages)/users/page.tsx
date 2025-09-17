@@ -4,12 +4,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Users, UserX, UserCheck } from 'lucide-react';
-import { PageHeader } from '@/app/(dashboard)/PageHeader';
+import { Users, UserX, UserCheck, UserMinus } from 'lucide-react';
+import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 import { useUsers } from '@/hooks/useUsers';
 import { Filters } from './components/Filters';
 import { ActiveUsersTab } from './components/ActiveUsers';
 import { DeletedUsersTab } from './components/DeletedUsers';
+import { InactiveUsersTab } from './components/InactiveUsers';
 
 export default function UsersPage() {
   const {
@@ -17,6 +18,7 @@ export default function UsersPage() {
     setActiveTab,
     setCurrentPage,
     filteredActiveUsers,
+    filteredInactiveUsers,
     filteredDeletedUsers,
     totalPages,
     startIndex,
@@ -27,7 +29,7 @@ export default function UsersPage() {
 
   const userState = useUsers();
 
-  type TabType = 'active' | 'deleted';
+  type TabType = 'active' | 'inactive' | 'deleted';
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
@@ -54,13 +56,20 @@ export default function UsersPage() {
               className="w-full"
             >
               <div className="border-b border-gray-700 px-6">
-                <TabsList className="grid w-full grid-cols-2 bg-transparent h-auto p-0 max-w-md">
+                <TabsList className="grid w-full grid-cols-3 bg-transparent h-auto p-0 max-w-2xl">
                   <TabsTrigger
                     value="active"
                     className="flex items-center gap-2 py-3 px-4 data-[state=active]:bg-gray-800 data-[state=active]:text-white text-gray-400 hover:text-white border-b-2 border-transparent data-[state=active]:border-b-[#15941f] rounded-none"
                   >
                     <UserCheck className="h-4 w-4" />
                     Active Users ({filteredActiveUsers.length})
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="inactive"
+                    className="flex items-center gap-2 py-3 px-4 data-[state=active]:bg-gray-800 data-[state=active]:text-white text-gray-400 hover:text-white border-b-2 border-transparent data-[state=active]:border-b-[#15941f] rounded-none"
+                  >
+                    <UserMinus className="h-4 w-4" />
+                    Inactive Users ({filteredInactiveUsers.length})
                   </TabsTrigger>
                   <TabsTrigger
                     value="deleted"
@@ -77,6 +86,9 @@ export default function UsersPage() {
 
               {/* Active Users Tab */}
               <ActiveUsersTab {...userState} />
+
+              {/* Inactive Users Tab */}
+              <InactiveUsersTab {...userState} />
 
               {/* Deleted Users Tab */}
               <DeletedUsersTab {...userState} />

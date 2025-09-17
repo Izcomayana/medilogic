@@ -18,7 +18,7 @@ export function ProfileTab({
       case 'Admin':
         return (
           <Badge variant="secondary" className="bg-blue-600 text-white">
-            Admin
+            Client
           </Badge>
         );
       default:

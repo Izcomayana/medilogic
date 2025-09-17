@@ -76,12 +76,14 @@ const sidebarLinksByRole: Record<
   ],
   client: [
     { title: 'Dashboard', url: '/client', icon: Home },
-    { title: 'My Trips', url: '/client/trips', icon: ClipboardList },
-    { title: 'Waste Reports', url: '/client/reports', icon: FileText },
+    { title: 'Settings', url: '/client/settings', icon: Settings },
+    { title: 'My Trips', url: '/client/#', icon: ClipboardList },
+    { title: 'Waste Reports', url: '/client/#', icon: FileText },
   ],
   driver: [
     { title: 'Dashboard', url: '/driver', icon: Home },
-    { title: 'My Trips', url: '/driver/trips', icon: ClipboardList },
+    { title: 'My Trips', url: '/client/#', icon: ClipboardList },
+    { title: 'Settings', url: '/driver/settings', icon: Settings },
   ],
 };
 

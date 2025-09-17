@@ -74,7 +74,7 @@ export function useAdmin() {
   const createAdmin = async (adminData: any) => {
     await authorizedRequest(async (validToken) => {
       const res = await axios.post(
-        'https://medilogic-backend.onrender.com/super/create-user',
+        'https://medilogic-backend.onrender.com/super/super/admins',
         {
           name: adminData.name,
           email: adminData.email,

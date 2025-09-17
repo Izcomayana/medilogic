@@ -41,6 +41,13 @@ export const getStatusBadge = (status?: string) => {
           Suspended
         </Badge>
       );
+    case 'inactive':
+      return (
+        <Badge variant="destructive">
+          <AlertCircle className="h-3 w-3 mr-1" />
+          Inactive
+        </Badge>
+      );
     default:
       return <Badge variant="outline">{status}</Badge>;
   }
