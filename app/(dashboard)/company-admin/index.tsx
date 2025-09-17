@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Truck, Package, FileText, Calendar, Clock } from 'lucide-react';
 import { useAuthorizedRequest } from '@/hooks/useRequest';
 import axios from 'axios';
-import { PageHeader } from '../PageHeader';
+import { PageHeader } from '../components/PageHeader';
 
 // Skeleton component for dashboard cards
 const DashboardSkeleton = () => (

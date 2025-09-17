@@ -17,7 +17,7 @@ import { Download, FileText, BarChart3, Calendar, Filter } from 'lucide-react';
 import { useState } from 'react';
 import { useAuthorizedRequest } from '@/hooks/useRequest';
 import { toast } from 'sonner';
-import { PageHeader } from '../../../PageHeader';
+import { PageHeader } from '../../../components/PageHeader';
 
 export default function ExportPage() {
   // const [exportType, setExportType] = useState("csv")

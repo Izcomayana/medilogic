@@ -18,7 +18,7 @@ import { useRegulators } from '@/hooks/useReg';
 import { CreateRegulatorDialog } from './(pages)/regulators/components/CreateRegulator';
 import { CreateAdmin } from './(pages)/admins/components/CreateAdmin';
 import { usePendingApplications } from '@/hooks/usePendingApplications';
-import { PageHeader } from '../PageHeader';
+import { PageHeader } from '../components/PageHeader';
 
 export default function Dashboard() {
   const { filteredAdmins, createAdmin } = useAdmin();

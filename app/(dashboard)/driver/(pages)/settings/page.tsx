@@ -1,11 +1,11 @@
 'use client';
 
+import { useSettings } from '@/hooks/useSettings';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Settings, User, Shield, Bell } from 'lucide-react';
-import { PageHeader } from '@/app/(dashboard)/PageHeader';
-import { useSettings } from './useSettings';
-import { AccountsTab } from './components/Accounts';
+import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
+import { AccountsTab } from '../../../components/Settings/Accounts';
 import { ProfileTab } from './components/Profiles';
 import { SecurityTab } from './components/Security';
 import { NotificationsTab } from './components/Notifications';
