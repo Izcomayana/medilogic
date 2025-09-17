@@ -71,7 +71,8 @@ export const ApplicationForm = ({
   handleAcceptCookies,
   showSuccessModal,
   setShowSuccessModal,
-}: ApplicationFormProps) => {
+  children, // 👈 NEW
+}: ApplicationFormProps & { children?: React.ReactNode }) => {
   return (
     <>
       <Card>
@@ -81,6 +82,7 @@ export const ApplicationForm = ({
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="grid gap-4">
+            {/* Default fields */}
             {fields.map((field) => (
               <InputField
                 key={field.name}
@@ -99,6 +101,10 @@ export const ApplicationForm = ({
               />
             ))}
 
+            {/* 👇 Any extra fields passed from parent */}
+            {children}
+
+            {/* Terms & Conditions */}
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="terms"
@@ -120,7 +126,6 @@ export const ApplicationForm = ({
                 >
                   Terms of Use
                 </Link>{' '}
-                <br className="md:hidden" />
                 and{' '}
                 <Link
                   href="/privacypolicy"
@@ -169,13 +174,8 @@ export const ApplicationForm = ({
             </AlertDialogTitle>
             <AlertDialogDescription className="text-sm text-gray-600 mt-2">
               Your application has been submitted successfully. <br />
-              The Super Admin will get back to you with the next 3 days via the
-              email you provided.
-              <br />
-              If you don&#39;t hear from us, then{' '}
-              <Link href="/contacts" className="underline text-[#15941f]">
-                contact support
-              </Link>
+              The Super Admin will get back to you within 3 days via the email
+              you provided.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

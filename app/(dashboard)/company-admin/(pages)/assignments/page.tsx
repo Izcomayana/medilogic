@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ClipboardList } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { PageHeader } from '../../../PageHeader';
+import { PageHeader } from '../../../components/PageHeader';
 import { Filters } from './components/Filters';
 import { AssignmentsTable } from './components/Table/indes';
 import { Skeleton } from '@/components/ui/skeleton';

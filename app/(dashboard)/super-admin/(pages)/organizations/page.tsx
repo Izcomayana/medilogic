@@ -28,7 +28,7 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from '@/components/ui/alert-dialog';
-import { PageHeader } from '../../../PageHeader';
+import { PageHeader } from '../../../components/PageHeader';
 
 export default function OrganizationsPage() {
   const [deleteOpen, setDeleteOpen] = React.useState(false);

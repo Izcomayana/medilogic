@@ -53,7 +53,11 @@ export function AdminActionsDialog({
               className="flex items-center gap-2"
             >
               <PowerOff className="h-4 w-4" />
-              {loadingAction ? 'Deactivating...' : 'Deactivate'}
+              {loadingAction ? (
+                <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></span>
+              ) : (
+                'Deactivate'
+              )}
             </Button>
           ) : (
             <Button
@@ -62,7 +66,11 @@ export function AdminActionsDialog({
               className="flex items-center gap-2 bg-green-600 hover:bg-green-700"
             >
               <Power className="h-4 w-4" />
-              {loadingAction ? 'Activating...' : 'Activate'}
+              {loadingAction ? (
+                <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></span>
+              ) : (
+                'Activate'
+              )}
             </Button>
           )}
         </div>

@@ -1,200 +1,138 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { useState } from 'react';
-import PageHeader from '@/components/layout/PageHeader';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-
-import UserFilters from './components/usersfilters';
-import ActiveUsersTable from './components/activeuserstable';
-import DeletedUsersTable from './components/deleteduserstable';
-import UserDetailsModal from './components/userdetailsmodal';
-import RestoreUserDialog from './components/restoreuserdialog';
-import PaginationControls from './components/paginationcontrols';
-
-export type ActiveUser = {
-  id: string;
-  name: string;
-  email: string;
-  role: 'client' | 'driver';
-  status: 'active' | 'suspended';
-  dateJoined: string;
-};
-
-export type DeletedUser = {
-  id: string;
-  name: string;
-  email: string;
-  role: 'client' | 'driver';
-  dateDeleted: string;
-};
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Users, UserX, UserCheck, UserMinus } from 'lucide-react';
+import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
+import { useUsers } from '@/hooks/useUsers';
+import { Filters } from './components/Filters';
+import { ActiveUsersTab } from './components/ActiveUsers';
+import { DeletedUsersTab } from './components/DeletedUsers';
+import { InactiveUsersTab } from './components/InactiveUsers';
 
 export default function UsersPage() {
-  // state management
-  const [activeTab, setActiveTab] = useState<'active' | 'deleted'>('active');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [roleFilter, setRoleFilter] = useState('all');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [dateFilter, setDateFilter] = useState('all');
-  const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 5;
-
-  const [selectedUser, setSelectedUser] = useState<
-    ActiveUser | DeletedUser | null
-  >(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [userToRestore, setUserToRestore] = useState<string | null>(null);
-  const [isRestoreDialogOpen, setIsRestoreDialogOpen] = useState(false);
-
-  // mock data
-  const activeUsers: ActiveUser[] = [
-    {
-      id: 'U001',
-      name: 'John Doe',
-      email: 'john@example.com',
-      role: 'client',
-      status: 'active',
-      dateJoined: '2025-08-01',
-    },
-    {
-      id: 'U002',
-      name: 'Jane Smith',
-      email: 'jane@example.com',
-      role: 'driver',
-      status: 'suspended',
-      dateJoined: '2025-07-15',
-    },
-  ];
-
-  const deletedUsersData: DeletedUser[] = [
-    {
-      id: 'U003',
-      name: 'Michael Johnson',
-      email: 'michael@example.com',
-      role: 'driver',
-      dateDeleted: '2025-08-20T14:30:00',
-    },
-    {
-      id: 'U004',
-      name: 'Emily Davis',
-      email: 'emily@example.com',
-      role: 'client',
-      dateDeleted: '2025-07-05T09:15:00',
-    },
-  ];
-
-  // handlers
-  const handleViewDetails = (user: ActiveUser | DeletedUser) => {
-    setSelectedUser(user);
-    setIsModalOpen(true);
-  };
-
-  const handleRestoreClick = (userId: string) => {
-    setUserToRestore(userId);
-    setIsRestoreDialogOpen(true);
-  };
-
-  const handleConfirmRestore = () => {
-    console.log('Restoring user:', userToRestore);
-    setIsRestoreDialogOpen(false);
-    setUserToRestore(null);
-  };
-
-  const filteredActiveUsers = activeUsers.filter((user) => {
-    return (
-      (searchTerm === '' ||
-        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.id.toLowerCase().includes(searchTerm.toLowerCase())) &&
-      (roleFilter === 'all' || user.role === roleFilter) &&
-      (statusFilter === 'all' || user.status === statusFilter)
-    );
-  });
-
-  const filteredDeletedUsers = deletedUsersData.filter((user) => {
-    return (
-      (searchTerm === '' ||
-        user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        user.id.toLowerCase().includes(searchTerm.toLowerCase())) &&
-      (roleFilter === 'all' || user.role === roleFilter)
-    );
-  });
-
-  const usersToDisplay =
-    activeTab === 'active' ? filteredActiveUsers : filteredDeletedUsers;
-  const startIndex = (currentPage - 1) * usersPerPage;
-  const paginatedUsers = usersToDisplay.slice(
+  const {
+    activeTab,
+    setActiveTab,
+    setCurrentPage,
+    filteredActiveUsers,
+    filteredInactiveUsers,
+    filteredDeletedUsers,
+    totalPages,
     startIndex,
-    startIndex + usersPerPage
-  );
-  const totalPages = Math.ceil(usersToDisplay.length / usersPerPage);
+    usersPerPage,
+    currentUsers,
+    currentPage,
+  } = useUsers();
+
+  const userState = useUsers();
+
+  type TabType = 'active' | 'inactive' | 'deleted';
 
   return (
-    <div className="flex-1 overflow-auto">
+    <div className="flex flex-col min-h-screen bg-gray-900">
       <PageHeader
-        title="Users"
-        description="Manage active and deleted users."
+        title={'Users'}
+        subtitle="Manage clients and drivers linked to your organization"
       />
 
-      <Tabs
-        value={activeTab}
-        onValueChange={(v) => setActiveTab(v as 'active' | 'deleted')}
-      >
-        <TabsList className="bg-gray-800 px-6">
-          <TabsTrigger value="active">Active Users</TabsTrigger>
-          <TabsTrigger value="deleted">Deleted Users</TabsTrigger>
-        </TabsList>
+      <main className="flex-1 p-6">
+        <Card className="dashboard-card">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <Users className="h-5 w-5" />
+              User Management
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <Tabs
+              value={activeTab}
+              onValueChange={(v: string) => {
+                setActiveTab(v as TabType);
+                setCurrentPage(1);
+              }}
+              className="w-full"
+            >
+              <div className="border-b border-gray-700 px-6">
+                <TabsList className="grid w-full grid-cols-3 bg-transparent h-auto p-0 max-w-2xl">
+                  <TabsTrigger
+                    value="active"
+                    className="flex items-center gap-2 py-3 px-4 data-[state=active]:bg-gray-800 data-[state=active]:text-white text-gray-400 hover:text-white border-b-2 border-transparent data-[state=active]:border-b-[#15941f] rounded-none"
+                  >
+                    <UserCheck className="h-4 w-4" />
+                    Active Users ({filteredActiveUsers.length})
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="inactive"
+                    className="flex items-center gap-2 py-3 px-4 data-[state=active]:bg-gray-800 data-[state=active]:text-white text-gray-400 hover:text-white border-b-2 border-transparent data-[state=active]:border-b-[#15941f] rounded-none"
+                  >
+                    <UserMinus className="h-4 w-4" />
+                    Inactive Users ({filteredInactiveUsers.length})
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="deleted"
+                    className="flex items-center gap-2 py-3 px-4 data-[state=active]:bg-gray-800 data-[state=active]:text-white text-gray-400 hover:text-white border-b-2 border-transparent data-[state=active]:border-b-[#15941f] rounded-none"
+                  >
+                    <UserX className="h-4 w-4" />
+                    Deleted Users ({filteredDeletedUsers.length})
+                  </TabsTrigger>
+                </TabsList>
+              </div>
 
-        <UserFilters
-          activeTab={activeTab}
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
-          roleFilter={roleFilter}
-          setRoleFilter={setRoleFilter}
-          statusFilter={statusFilter}
-          setStatusFilter={setStatusFilter}
-          dateFilter={dateFilter}
-          setDateFilter={setDateFilter}
-        />
+              {/* Filters */}
+              <Filters {...userState} />
 
-        <div className="p-6">
-          <TabsContent value="active">
-            <ActiveUsersTable
-              users={paginatedUsers as ActiveUser[]}
-              onViewDetails={handleViewDetails}
-            />
-          </TabsContent>
-          <TabsContent value="deleted">
-            <DeletedUsersTable
-              users={paginatedUsers as DeletedUser[]}
-              onViewDetails={handleViewDetails}
-              onRestoreClick={handleRestoreClick}
-            />
-          </TabsContent>
+              {/* Active Users Tab */}
+              <ActiveUsersTab {...userState} />
 
-          <PaginationControls
-            currentPage={currentPage}
-            totalPages={totalPages}
-            startIndex={startIndex}
-            usersPerPage={usersPerPage}
-            totalUsers={usersToDisplay.length}
-            setCurrentPage={setCurrentPage}
-          />
-        </div>
-      </Tabs>
+              {/* Inactive Users Tab */}
+              <InactiveUsersTab {...userState} />
 
-      {/* Modals */}
-      <UserDetailsModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        user={selectedUser}
-        activeTab={activeTab}
-      />
-      <RestoreUserDialog
-        isOpen={isRestoreDialogOpen}
-        onCancel={() => setIsRestoreDialogOpen(false)}
-        onConfirm={handleConfirmRestore}
-      />
+              {/* Deleted Users Tab */}
+              <DeletedUsersTab {...userState} />
+
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-between p-6 border-t border-gray-700">
+                  <div className="text-sm text-gray-400">
+                    Showing {startIndex + 1}-
+                    {Math.min(startIndex + usersPerPage, currentUsers.length)}{' '}
+                    of {currentUsers.length}
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        setCurrentPage(Math.max(1, currentPage - 1))
+                      }
+                      disabled={currentPage === 1}
+                      className="border-gray-600 text-gray-300 hover:bg-gray-700 disabled:opacity-50"
+                    >
+                      Previous
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() =>
+                        setCurrentPage(Math.min(totalPages, currentPage + 1))
+                      }
+                      disabled={currentPage === totalPages}
+                      className="border-gray-600 text-gray-300 hover:bg-gray-700 disabled:opacity-50"
+                    >
+                      Next
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </Tabs>
+          </CardContent>
+        </Card>
+      </main>
+
+      {/* User Details Modal */}
     </div>
   );
 }

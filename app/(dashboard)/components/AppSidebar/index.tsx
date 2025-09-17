@@ -6,7 +6,6 @@ import {
   Home,
   Shield,
   Users,
-  Truck,
   ClipboardList,
   FileText,
   Logs,
@@ -14,6 +13,7 @@ import {
   AppWindow,
   Route,
   Settings,
+  ChartNoAxesCombined,
 } from 'lucide-react';
 import { useAuth } from '@/components/auth';
 import {
@@ -61,7 +61,11 @@ const sidebarLinksByRole: Record<
       icon: ClipboardList,
     },
     { title: 'Users', url: '/company-admin/users', icon: Users },
-    { title: 'Charts', url: '/company-admin/charts', icon: Truck },
+    {
+      title: 'Charts',
+      url: '/company-admin/charts',
+      icon: ChartNoAxesCombined,
+    },
     { title: 'Exports', url: '/company-admin/exports', icon: FileText },
     { title: 'Settings', url: '/company-admin/settings', icon: Settings },
   ],
@@ -76,12 +80,14 @@ const sidebarLinksByRole: Record<
   ],
   client: [
     { title: 'Dashboard', url: '/client', icon: Home },
-    { title: 'My Trips', url: '/client/trips', icon: ClipboardList },
-    { title: 'Waste Reports', url: '/client/reports', icon: FileText },
+    { title: 'Settings', url: '/client/settings', icon: Settings },
+    { title: 'My Trips', url: '/client/#', icon: ClipboardList },
+    { title: 'Waste Reports', url: '/client/#', icon: FileText },
   ],
   driver: [
     { title: 'Dashboard', url: '/driver', icon: Home },
-    { title: 'My Trips', url: '/driver/trips', icon: ClipboardList },
+    { title: 'My Trips', url: '/client/#', icon: ClipboardList },
+    { title: 'Settings', url: '/driver/settings', icon: Settings },
   ],
 };
 
