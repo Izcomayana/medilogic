@@ -76,7 +76,7 @@ const sidebarLinksByRole: Record<
   ],
   client: [
     { title: 'Dashboard', url: '/client', icon: Home },
-    { title: 'Settings', url: '/client /settings', icon: Settings },
+    { title: 'Settings', url: '/client/settings', icon: Settings },
     { title: 'My Trips', url: '/client/#', icon: ClipboardList },
     { title: 'Waste Reports', url: '/client/#', icon: FileText },
   ],
