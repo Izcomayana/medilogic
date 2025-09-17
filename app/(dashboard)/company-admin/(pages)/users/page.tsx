@@ -58,7 +58,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { PageHeader } from '@/app/(dashboard)/PageHeader';
+import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 
 type ActiveUser = {
   id: string;

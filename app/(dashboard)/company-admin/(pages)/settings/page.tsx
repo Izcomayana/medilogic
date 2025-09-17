@@ -42,7 +42,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { PageHeader } from '@/app/(dashboard)/PageHeader';
+import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 
 // Mock data for login sessions
 const loginSessions = [
