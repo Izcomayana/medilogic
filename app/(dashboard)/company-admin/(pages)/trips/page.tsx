@@ -17,7 +17,7 @@ import { Filters } from './components/Filters';
 import { TripsTable } from './components/TripsTable';
 import { EditTripModal } from './components/EditTrips';
 import { TripsDetailModal } from './components/TripDetail';
-import { PageHeader } from '@/app/(dashboard)/PageHeader';
+import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 
 const trips = [
   {

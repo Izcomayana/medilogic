@@ -120,10 +120,11 @@ export function useLogin() {
       ) {
         setErrors({
           general:
-            'Sorry, your account has been deactivated. please reach out to our support team.',
+            'Sorry, your account has been deactivated or deleted. please reach out to our support team.',
         });
         toast.error('Account Deactivated', {
-          description: 'Sorry, your account has been deactivated.',
+          description:
+            'Sorry, your account has been deactivated or deleted. please reach out to our support team.',
         });
       } else {
         const errorMessage =

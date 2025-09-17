@@ -1,7 +1,7 @@
 import type React from 'react';
 import './globals.css';
 import { SidebarProvider } from '@/components/ui/sidebar';
-import { AppSidebar } from '@/components/ui/app-sidebar';
+import { AppSidebar } from '@/app/(dashboard)/components/AppSidebar';
 import { AuthProvider } from '@/components/auth';
 
 export default function RootLayout({

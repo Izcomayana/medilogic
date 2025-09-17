@@ -33,6 +33,7 @@ interface Props {
     state: string;
     region: string;
     ico_registered: boolean;
+    ico_registration_number?: string; // 👈 new
     data_retention_years: number;
   }) => void | Promise<void>;
 }
@@ -47,6 +48,7 @@ export default function CreateOrganizationDialog({ onCreate }: Props) {
   const [stateVal, setStateVal] = useState('');
   const [region, setRegion] = useState('');
   const [icoRegistered, setIcoRegistered] = useState(false);
+  const [icoNumber, setIcoNumber] = useState('');
   const [dataRetentionYears, setDataRetentionYears] = useState<string>('3');
   const [submitting, setSubmitting] = useState(false);
 
@@ -56,7 +58,12 @@ export default function CreateOrganizationDialog({ onCreate }: Props) {
       return;
     }
 
-    // guard: only the two enum values
+    if (icoRegistered && !icoNumber.trim()) {
+      toast.error('Please provide an ICO registration number');
+      return;
+    }
+
+    // guard: only the enum values
     if (!['clinic', 'waste_company', 'logistics_company'].includes(type)) {
       toast.error(
         "Type must be 'clinic', 'waste_company' or 'logistics_company'"
@@ -73,10 +80,13 @@ export default function CreateOrganizationDialog({ onCreate }: Props) {
         state: stateVal.trim(),
         region: region.trim(),
         ico_registered: icoRegistered,
+        ico_registration_number: icoRegistered ? icoNumber : undefined,
         data_retention_years: Math.max(1, Number(dataRetentionYears) || 1),
       });
+
       // close only on success
       setOpen(false);
+
       // reset
       setName('');
       setType('clinic');
@@ -84,6 +94,7 @@ export default function CreateOrganizationDialog({ onCreate }: Props) {
       setStateVal('');
       setRegion('');
       setIcoRegistered(false);
+      setIcoNumber('');
       setDataRetentionYears('3');
     } catch {
       // onCreate should toast its own error; keep dialog open
@@ -129,7 +140,7 @@ export default function CreateOrganizationDialog({ onCreate }: Props) {
             />
           </div>
 
-          {/* Type — ONLY allowed enum values */}
+          {/* Type */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="type" className="text-right">
               Type
@@ -212,6 +223,23 @@ export default function CreateOrganizationDialog({ onCreate }: Props) {
             </div>
           </div>
 
+          {/* ICO Number (conditional) */}
+          {icoRegistered && (
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="icoNumber" className="text-right">
+                ICO Number
+              </Label>
+              <Input
+                id="icoNumber"
+                type="number"
+                value={icoNumber}
+                onChange={(e) => setIcoNumber(e.target.value)}
+                placeholder="Enter ICO Registration Number"
+                className="col-span-3 bg-gray-700 border-gray-600 text-white"
+              />
+            </div>
+          )}
+
           {/* Data Retention Years */}
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="dataRetention" className="text-right">
@@ -236,7 +264,11 @@ export default function CreateOrganizationDialog({ onCreate }: Props) {
             onClick={handleCreate}
             disabled={submitting}
           >
-            {submitting ? 'Creating...' : 'Create Organization'}
+            {submitting ? (
+              <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></span>
+            ) : (
+              'Create Organization'
+            )}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

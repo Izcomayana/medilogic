@@ -16,7 +16,7 @@ import axios from 'axios';
 import { useAuthorizedRequest } from '@/hooks/useRequest';
 import Plot from 'react-plotly.js';
 import { Skeleton } from '@/components/ui/skeleton';
-import { PageHeader } from '../../../PageHeader';
+import { PageHeader } from '../../../components/PageHeader';
 
 type ChartsResponse = {
   delivery_type_chart: { data: any[]; layout: any };
