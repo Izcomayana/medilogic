@@ -110,10 +110,10 @@ export function useSettings() {
         if (res.status === 200) {
           console.log('Account deleted successfully');
           // 👉 redirect, clear auth,
-        toast.success(
-          'Account deletion request submitted. You will be logged out shortly.'
-        );
-        setIsDeleteModalOpen(false);
+          toast.success(
+            'Account deletion request submitted. You will be logged out shortly.'
+          );
+          setIsDeleteModalOpen(false);
         } else {
           console.error('Failed to delete account:', res.data);
         }
