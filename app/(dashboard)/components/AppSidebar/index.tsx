@@ -6,7 +6,6 @@ import {
   Home,
   Shield,
   Users,
-  Truck,
   ClipboardList,
   FileText,
   Logs,

@@ -1,7 +1,3 @@
-// super-admin/(pages)/organizations/org.ts
-
-import axios from 'axios';
-
 export interface Organization {
   id: string;
   name: string;
