@@ -1,275 +1,260 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { toast } from 'sonner';
-import { useAuthorizedRequest } from './useRequest';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import axios from 'axios';
+import { useAuthorizedRequest } from './useRequest';
 
-type ActiveUser = {
+export type ActiveUser = {
   id: string;
   name: string;
   email: string;
-  phone: string;
   role: string;
-  status: 'Active' | 'Suspended';
-  dateJoined: string;
-  organization: string;
-  location: string;
-  lastActive: string;
-  totalTrips: number;
+  status: string; // ✅ derived from is_active
+  dateJoined: string; // ✅ from created_at
 };
 
-type InactiveUser = {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  role: string;
-  status: 'Inactive';
-  dateJoined: string;
-  organization: string;
-  location: string;
-  lastActive?: string;
-  totalTrips: number;
-};
-
-interface DeletedUser {
-  id: string;
-  code: string;
-  name: string;
-  email: string;
-  role: string;
-  deleted_at: string;
-}
-
-/* -----------------------
-   Mock data (typed)
-   ----------------------- */
-const activeUsers: ActiveUser[] = [
-  {
-    id: 'USR001',
-    name: 'John Smith',
-    email: 'john.smith@clinic.com',
-    phone: '+234 123 456 7890',
-    role: 'Client',
-    status: 'Active',
-    dateJoined: '2025-01-15',
-    organization: 'Clinic ABC',
-    location: 'Lagos, Nigeria',
-    lastActive: '2025-08-23 14:30',
-    totalTrips: 12,
-  },
-  {
-    id: 'USR002',
-    name: 'Sarah Johnson',
-    email: 'sarah.johnson@driver.com',
-    phone: '+234 987 654 3210',
-    role: 'Driver',
-    status: 'Active',
-    dateJoined: '2025-02-20',
-    organization: 'Logistics Corp',
-    location: 'Abuja, Nigeria',
-    lastActive: '2025-08-23 16:45',
-    totalTrips: 45,
-  },
-  {
-    id: 'USR003',
-    name: 'Mike Davis',
-    email: 'mike.davis@pharma.com',
-    phone: '+234 555 123 4567',
-    role: 'Client',
-    status: 'Suspended',
-    dateJoined: '2025-03-10',
-    organization: 'PharmaCare Industries',
-    location: 'Port Harcourt, Nigeria',
-    lastActive: '2025-08-20 09:15',
-    totalTrips: 8,
-  },
-];
-
-const inactiveUsers: InactiveUser[] = [
-  {
-    id: 'USR009',
-    name: 'Grace Lee',
-    email: 'grace.lee@inactive.com',
-    phone: '+234 777 123 4567',
-    role: 'Client',
-    status: 'Inactive',
-    dateJoined: '2025-01-10',
-    organization: 'MediHealth',
-    location: 'Kano, Nigeria',
-    totalTrips: 0,
-  },
-  {
-    id: 'USR010',
-    name: 'James Bond',
-    email: 'james.bond@inactive.com',
-    phone: '+234 888 654 3210',
-    role: 'Driver',
-    status: 'Inactive',
-    dateJoined: '2025-03-05',
-    organization: 'TransportX',
-    location: 'Ibadan, Nigeria',
-    totalTrips: 12,
-  },
-];
+export type InactiveUser = ActiveUser;
+export type DeletedUser = ActiveUser;
 
 export function useUsers() {
-  const [loading, setLoading] = useState(true);
+  const authorizedRequest = useAuthorizedRequest();
+
+  const [activeUsers, setActiveUsers] = useState<ActiveUser[]>([]);
+  const [inactiveUsers, setInactiveUsers] = useState<InactiveUser[]>([]);
+  const [deletedUsers, setDeletedUsers] = useState<DeletedUser[]>([]);
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // 🔹 UI State
   const [activeTab, setActiveTab] = useState<'active' | 'inactive' | 'deleted'>(
     'active'
   );
   const [searchTerm, setSearchTerm] = useState('');
-  const [roleFilter, setRoleFilter] = useState('all');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [dateFilter, setDateFilter] = useState('all');
-  const [selectedUser, setSelectedUser] = useState<any>(null);
-  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
-  const [isRestoreModalOpen, setIsRestoreModalOpen] = useState(false);
-  const [userToRestore, setUserToRestore] = useState<string | null>(null);
-  const [deletedUsers, setDeletedUsers] = useState<DeletedUser[]>([]);
-  const usersPerPage = 10;
+  const [roleFilter, setRoleFilter] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const authorizedRequest = useAuthorizedRequest();
+  const usersPerPage = 5;
 
-  /* -----------------------
-     Filtering
-     ----------------------- */
-  const filteredActiveUsers: ActiveUser[] = activeUsers.filter((user) => {
-    const matchesSearch =
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.id.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesRole =
-      roleFilter === 'all' ||
-      user.role.toLowerCase() === roleFilter.toLowerCase();
-    const matchesStatus =
-      statusFilter === 'all' ||
-      user.status.toLowerCase() === statusFilter.toLowerCase();
-    const matchesDate =
-      dateFilter === 'all' || user.dateJoined.startsWith(dateFilter);
-    return matchesSearch && matchesRole && matchesStatus && matchesDate;
-  });
-
-  const filteredInactiveUsers: InactiveUser[] = inactiveUsers.filter((user) => {
-    const matchesSearch =
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.id.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesRole =
-      roleFilter === 'all' ||
-      user.role.toLowerCase() === roleFilter.toLowerCase();
-    return matchesSearch && matchesRole;
-  });
-
-  const filteredDeletedUsers: DeletedUser[] = deletedUsers.filter((user) => {
-    const matchesSearch =
-      // user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.id.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesRole =
-      roleFilter === 'all' ||
-      user.role.toLowerCase() === roleFilter.toLowerCase();
-    return matchesSearch && matchesRole;
-  });
-
-  /* -----------------------
-     Pagination
-     ----------------------- */
-  const startIndex = (currentPage - 1) * usersPerPage;
-
-  const paginatedActiveUsers = filteredActiveUsers.slice(
-    startIndex,
-    startIndex + usersPerPage
-  );
-  const paginatedInactiveUsers = filteredInactiveUsers.slice(
-    startIndex,
-    startIndex + usersPerPage
-  );
-  const paginatedDeletedUsers = filteredDeletedUsers.slice(
-    startIndex,
-    startIndex + usersPerPage
-  );
-
-  const currentUsers =
-    activeTab === 'active'
-      ? filteredActiveUsers
-      : activeTab === 'inactive'
-        ? filteredInactiveUsers
-        : filteredDeletedUsers;
-
-  const totalPages = Math.ceil(currentUsers.length / usersPerPage);
-
-  const handleActivateUser = (user: any) => {
-    console.log('user activated');
+  /**
+   * ✅ Normalizer: Convert API → frontend shape
+   */
+  type ApiUser = {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+    is_active: boolean;
+    created_at: string;
   };
 
-  const handleViewDetails = (user: any) => {
-    setSelectedUser(user);
-    setIsDetailsModalOpen(true);
-  };
+  const normalizeUser = useCallback(
+    (user: ApiUser): ActiveUser => ({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      status: user.is_active ? 'active' : 'inactive',
+      dateJoined: user.created_at,
+    }),
+    []
+  );
 
-  // 🔹 Fetch deleted users
+  /**
+   * ✅ Fetch Active Users from API
+   */
   useEffect(() => {
     let isMounted = true;
     setLoading(true);
 
-    authorizedRequest(async (token) => {
-      const res = await axios.get<DeletedUser[]>(
-        'https://medilogic-backend.onrender.com/users/users/users/deleted',
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      const mapped = res.data.map((u: any) => ({
-        ...u,
-      }));
-
-      // mapped.sort((a, b) => a.name.localeCompare(b.name));
-      setDeletedUsers(mapped);
-    }, 'Failed to fetch deleted users').finally(() => {
-      if (isMounted) setLoading(false);
-
-      return () => {
-        isMounted = false;
-      };
-    });
-  }, [authorizedRequest]);
-
-  // 🔹 Restore user
-  const handleRestoreUser = async (uuid: string) => {
-    try {
-      await authorizedRequest(async (token) => {
-        const res = await axios.patch(
-          `https://medilogic-backend.onrender.com/users/users/users/${uuid}/restore`,
-          {},
-          { headers: { Authorization: `Bearer ${token}` } }
+    authorizedRequest(async (validToken) => {
+      try {
+        const res = await axios.get(
+          'https://medilogic-backend.onrender.com/admin/users',
+          { headers: { Authorization: `Bearer ${validToken}` } }
         );
-
-        if (res.status === 200) {
-          console.log('User restored successfully');
-          toast.success(`User has been restored successfully`);
-          setDeletedUsers((prev) => prev.filter((u) => u.id !== uuid));
+        if (isMounted) {
+          const normalized = res.data.map(normalizeUser);
+          setActiveUsers(normalized);
         }
-      }, 'Failed to restore user');
-    } catch (err: unknown) {
-      let message = 'Failed to restore user';
-      if (axios.isAxiosError(err)) {
-        message =
-          (err.response?.data as { msg?: string; detail?: string })?.msg ||
-          (err.response?.data as { msg?: string; detail?: string })?.detail ||
-          err.message ||
-          message;
-      } else if (err instanceof Error) {
-        message = err.message;
+      } catch (err) {
+        console.error(err);
+        if (isMounted) setError('Failed to fetch active users');
+      } finally {
+        if (isMounted) setLoading(false);
       }
-      toast.error('Error restoring user:', { description: message });
-    } finally {
-      setIsRestoreModalOpen(false);
-    }
-  };
+    }, 'Failed to fetch active users');
+
+    return () => {
+      isMounted = false;
+    };
+  }, [authorizedRequest, normalizeUser]);
+
+  /**
+   * 🟡 Mock Inactive Users (can be replaced with API)
+   */
+  useEffect(() => {
+    setInactiveUsers([
+      {
+        id: '201',
+        name: 'Mock Inactive User',
+        email: 'inactive@example.com',
+        role: 'user',
+        status: 'inactive',
+        dateJoined: '2023-03-10',
+      },
+    ]);
+  }, []);
+
+  /**
+   * ✅ Fetch Deleted Users from API
+   */
+  const fetchDeletedUsers = useCallback(() => {
+    setLoading(true);
+
+    authorizedRequest(async (validToken) => {
+      try {
+        const res = await axios.get(
+          'https://medilogic-backend.onrender.com/users/users/users/deleted',
+          { headers: { Authorization: `Bearer ${validToken}` } }
+        );
+        const normalized = res.data.map(normalizeUser);
+        setDeletedUsers(normalized);
+      } catch (err) {
+        console.error(err);
+        setError('Failed to fetch deleted users');
+      } finally {
+        setLoading(false);
+      }
+    }, 'Failed to fetch deleted users');
+  }, [authorizedRequest, normalizeUser]);
+
+  useEffect(() => {
+    fetchDeletedUsers();
+  }, [fetchDeletedUsers]);
+
+  /**
+   * ✅ Restore Deleted User
+   */
+  const restoreUser = useCallback(
+    async (id: string) => {
+      setLoading(true);
+      try {
+        await authorizedRequest(async (token) => {
+          await axios.patch(
+            `https://medilogic-backend.onrender.com/users/${id}/restore`,
+            {},
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+        }, 'Failed to restore user');
+
+        fetchDeletedUsers();
+      } catch (err) {
+        console.error(err);
+        setError('Failed to restore user');
+      } finally {
+        setLoading(false);
+      }
+    },
+    [authorizedRequest, fetchDeletedUsers]
+  );
+
+  /**
+   * ✅ Deactivate Active User
+   */
+  const deactivateUser = useCallback(
+    async (id: string) => {
+      setLoading(true);
+      try {
+        await authorizedRequest(async (validToken) => {
+          await axios.patch(
+            `https://medilogic-backend.onrender.com/admin/users/${id}/deactivate`,
+            {},
+            { headers: { Authorization: `Bearer ${validToken}` } }
+          );
+        }, 'Failed to deactivate user');
+
+        // Move user from active → inactive
+        setActiveUsers((prev) => prev.filter((u) => u.id !== id));
+        setInactiveUsers((prev) => [
+          ...prev,
+          {
+            ...(activeUsers.find((u) => u.id === id) as ActiveUser),
+            status: 'inactive',
+          },
+        ]);
+      } catch (err) {
+        console.error(err);
+        setError('Failed to deactivate user');
+      } finally {
+        setLoading(false);
+      }
+    },
+    [authorizedRequest, activeUsers]
+  );
+
+  /**
+   * 🔎 Filters
+   */
+  const filterUsers = useCallback(
+    <T extends ActiveUser>(users: T[]) =>
+      users.filter(
+        (u) =>
+          (!searchTerm ||
+            u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            u.email.toLowerCase().includes(searchTerm.toLowerCase())) &&
+          (!roleFilter || u.role === roleFilter) &&
+          (!statusFilter || u.status === statusFilter)
+      ),
+    [searchTerm, roleFilter, statusFilter]
+  );
+
+  const filteredActiveUsers = useMemo(
+    () => filterUsers(activeUsers),
+    [activeUsers, filterUsers]
+  );
+  const filteredInactiveUsers = useMemo(
+    () => filterUsers(inactiveUsers),
+    [inactiveUsers, filterUsers]
+  );
+  const filteredDeletedUsers = useMemo(
+    () => filterUsers(deletedUsers),
+    [deletedUsers, filterUsers]
+  );
+
+  /**
+   * 📖 Pagination
+   */
+  const currentUsers = useMemo(() => {
+    let list: ActiveUser[] = [];
+    if (activeTab === 'active') list = filteredActiveUsers;
+    if (activeTab === 'inactive') list = filteredInactiveUsers;
+    if (activeTab === 'deleted') list = filteredDeletedUsers;
+
+    const start = (currentPage - 1) * usersPerPage;
+    return list.slice(start, start + usersPerPage);
+  }, [
+    activeTab,
+    currentPage,
+    filteredActiveUsers,
+    filteredInactiveUsers,
+    filteredDeletedUsers,
+  ]);
+
+  const totalPages = Math.ceil(currentUsers.length / usersPerPage);
+  const startIndex = (currentPage - 1) * usersPerPage;
 
   return {
-    loading,
+    // Data
+    activeUsers,
+    inactiveUsers,
+    deletedUsers,
+    filteredActiveUsers,
+    filteredInactiveUsers,
+    filteredDeletedUsers,
+    currentUsers,
+
+    // UI State
     activeTab,
     setActiveTab,
     searchTerm,
@@ -278,31 +263,16 @@ export function useUsers() {
     setRoleFilter,
     statusFilter,
     setStatusFilter,
-    dateFilter,
-    setDateFilter,
-    selectedUser,
-    isDetailsModalOpen,
-    setIsDetailsModalOpen,
-    isRestoreModalOpen,
-    setIsRestoreModalOpen,
-    userToRestore,
-    setUserToRestore,
-    deletedUsers,
-    setDeletedUsers,
     currentPage,
     setCurrentPage,
     usersPerPage,
-    filteredActiveUsers,
-    filteredInactiveUsers,
-    filteredDeletedUsers,
-    currentUsers,
     totalPages,
     startIndex,
-    paginatedActiveUsers,
-    paginatedInactiveUsers,
-    paginatedDeletedUsers,
-    handleViewDetails,
-    handleRestoreUser,
-    handleActivateUser,
+
+    // Helpers
+    loading,
+    error,
+    restoreUser,
+    deactivateUser, // ✅ expose deactivate
   };
 }

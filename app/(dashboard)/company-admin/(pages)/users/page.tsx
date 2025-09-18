@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -6,13 +5,15 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Users, UserX, UserCheck, UserMinus } from 'lucide-react';
 import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
-import { useUsers } from '@/hooks/useUsers';
+import { useUsers, ActiveUser } from '@/hooks/useUsers';
 import { Filters } from './components/Filters';
 import { ActiveUsersTab } from './components/ActiveUsers';
 import { DeletedUsersTab } from './components/DeletedUsers';
 import { InactiveUsersTab } from './components/InactiveUsers';
 
 export default function UsersPage() {
+  const userState = useUsers();
+
   const {
     activeTab,
     setActiveTab,
@@ -25,16 +26,21 @@ export default function UsersPage() {
     usersPerPage,
     currentUsers,
     currentPage,
-  } = useUsers();
-
-  const userState = useUsers();
+  } = userState;
 
   type TabType = 'active' | 'inactive' | 'deleted';
+
+  // ✅ Add handleViewDetails here
+  const handleViewDetails = (user: ActiveUser) => {
+    console.log('Viewing details for:', user);
+    // You can replace with modal or router push
+    // router.push(`/users/${user.id}`)
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
       <PageHeader
-        title={'Users'}
+        title="Users"
         subtitle="Manage clients and drivers linked to your organization"
       />
 
@@ -85,10 +91,21 @@ export default function UsersPage() {
               <Filters {...userState} />
 
               {/* Active Users Tab */}
-              <ActiveUsersTab {...userState} />
+              <ActiveUsersTab
+                {...userState}
+                handleViewDetails={handleViewDetails}
+              />
 
               {/* Inactive Users Tab */}
-              <InactiveUsersTab {...userState} />
+              <InactiveUsersTab
+                handleViewDetails={() => {}}
+                handleActivateUser={() => {}}
+                isDetailsModalOpen={false}
+                setIsDetailsModalOpen={() => {}}
+                selectedUser={null}
+                paginatedInactiveUsers={[]}
+                {...userState}
+              />
 
               {/* Deleted Users Tab */}
               <DeletedUsersTab {...userState} />
@@ -131,8 +148,6 @@ export default function UsersPage() {
           </CardContent>
         </Card>
       </main>
-
-      {/* User Details Modal */}
     </div>
   );
 }

@@ -1,14 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+'use client';
 import { TabsContent } from '@radix-ui/react-tabs';
-import { useUsers } from '@/hooks/useUsers';
+import { useUsers, ActiveUser } from '@/hooks/useUsers';
 import {
   Calendar,
   Mail,
   Eye,
   User,
-  MapPin,
-  Clock,
-  Phone,
   UserMinus,
   MoreHorizontal,
   CheckCircle,
@@ -28,12 +25,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  formatDate,
-  formatDateTime,
-  getRoleBadge,
-  getStatusBadge,
-} from '../../utils';
+import { formatDate, getRoleBadge, getStatusBadge } from '../../utils';
 import {
   Dialog,
   DialogContent,
@@ -41,16 +33,23 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
 
-type InactiveUsersProps = ReturnType<typeof useUsers>;
+type InactiveUsersProps = ReturnType<typeof useUsers> & {
+  handleViewDetails: (user: ActiveUser) => void;
+  handleActivateUser: (user: ActiveUser) => void;
+  isDetailsModalOpen: boolean;
+  setIsDetailsModalOpen: (open: boolean) => void;
+  selectedUser: ActiveUser | null;
+  activeTab: string;
+  paginatedInactiveUsers: ActiveUser[];
+};
 
 export function InactiveUsersTab({
   filteredInactiveUsers,
+  paginatedInactiveUsers, // 👈 for pagination (preferred)
   searchTerm,
   roleFilter,
   statusFilter,
-  paginatedInactiveUsers,
   handleViewDetails,
   handleActivateUser,
   isDetailsModalOpen,
@@ -58,10 +57,12 @@ export function InactiveUsersTab({
   selectedUser,
   activeTab,
 }: InactiveUsersProps) {
+  const usersToDisplay = paginatedInactiveUsers ?? filteredInactiveUsers;
+
   return (
     <>
       <TabsContent value="inactive" className="p-0">
-        {filteredInactiveUsers.length === 0 ? (
+        {usersToDisplay.length === 0 ? (
           <div className="text-center py-12">
             <UserMinus className="h-12 w-12 text-gray-600 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-white mb-2">
@@ -88,7 +89,7 @@ export function InactiveUsersTab({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {paginatedInactiveUsers.map((user) => (
+                {usersToDisplay.map((user) => (
                   <TableRow
                     key={user.id}
                     className="border-gray-700 hover:bg-gray-800"
@@ -161,111 +162,7 @@ export function InactiveUsersTab({
                 : 'User information'}
             </DialogDescription>
           </DialogHeader>
-
-          {selectedUser && (
-            <div className="space-y-6 py-4 max-h-96 overflow-y-auto">
-              {/* Basic Information */}
-              <div className="grid grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-white border-b border-gray-700 pb-2">
-                    Basic Information
-                  </h3>
-                  <div className="space-y-3">
-                    <div>
-                      <Label className="text-gray-400 text-sm">User ID</Label>
-                      <p className="text-white font-medium">
-                        {selectedUser.id}
-                      </p>
-                    </div>
-                    <div>
-                      <Label className="text-gray-400 text-sm">Full Name</Label>
-                      <p className="text-white">{selectedUser.name}</p>
-                    </div>
-                    <div>
-                      <Label className="text-gray-400 text-sm">
-                        Email Address
-                      </Label>
-                      <p className="text-white flex items-center gap-2">
-                        <Mail className="h-4 w-4" />
-                        {selectedUser.email}
-                      </p>
-                    </div>
-                    <div>
-                      <Label className="text-gray-400 text-sm">
-                        Phone Number
-                      </Label>
-                      <p className="text-white flex items-center gap-2">
-                        <Phone className="h-4 w-4" />
-                        {selectedUser.phone}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-white border-b border-gray-700 pb-2">
-                    Account Details
-                  </h3>
-                  <div className="space-y-3">
-                    <div>
-                      <Label className="text-gray-400 text-sm">Role</Label>
-                      <div className="mt-1">
-                        {getRoleBadge(selectedUser.role)}
-                      </div>
-                    </div>
-                    <div>
-                      <Label className="text-gray-400 text-sm">Status</Label>
-                      <div className="mt-1">
-                        {getStatusBadge(selectedUser.status)}
-                      </div>
-                    </div>
-                    <div>
-                      <Label className="text-gray-400 text-sm">
-                        Organization
-                      </Label>
-                      <p className="text-white">{selectedUser.organization}</p>
-                    </div>
-                    <div>
-                      <Label className="text-gray-400 text-sm">Location</Label>
-                      <p className="text-white flex items-center gap-2">
-                        <MapPin className="h-4 w-4" />
-                        {selectedUser.location}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Activity Information */}
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-white border-b border-gray-700 pb-2">
-                  Activity
-                </h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
-                    <Label className="text-gray-400 text-sm">Date Joined</Label>
-                    <p className="text-white mt-1 flex items-center gap-2">
-                      <Calendar className="h-4 w-4" />
-                      {formatDate(selectedUser.dateJoined)}
-                    </p>
-                  </div>
-                  <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
-                    <Label className="text-gray-400 text-sm">Last Active</Label>
-                    <p className="text-white mt-1 flex items-center gap-2">
-                      <Clock className="h-4 w-4" />
-                      {formatDateTime(selectedUser.lastActive)}
-                    </p>
-                  </div>
-                  <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
-                    <Label className="text-gray-400 text-sm">Total Trips</Label>
-                    <p className="text-white mt-1 text-2xl font-bold">
-                      {selectedUser.totalTrips}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
+          {/* Add detail fields here */}
         </DialogContent>
       </Dialog>
     </>
