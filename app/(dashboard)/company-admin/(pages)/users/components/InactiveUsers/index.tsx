@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { TabsContent } from '@radix-ui/react-tabs';
 import { useUsers } from '@/hooks/useUsers';
 import {
@@ -51,12 +52,12 @@ export function InactiveUsersTab({
   statusFilter,
   paginatedInactiveUsers,
   handleViewDetails,
-  handleActivateUser, // <-- New handler for activating users
+  handleActivateUser,
   isDetailsModalOpen,
   setIsDetailsModalOpen,
   selectedUser,
   activeTab,
-}: InactiveUsersProps & { handleActivateUser: (user: any) => void }) {
+}: InactiveUsersProps) {
   return (
     <>
       <TabsContent value="inactive" className="p-0">

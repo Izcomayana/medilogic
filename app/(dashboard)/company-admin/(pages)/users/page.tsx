@@ -10,7 +10,7 @@ import { useUsers } from '@/hooks/useUsers';
 import { Filters } from './components/Filters';
 import { ActiveUsersTab } from './components/ActiveUsers';
 import { DeletedUsersTab } from './components/DeletedUsers';
-import { InactiveUsersTab } from './components/InactiveUsers'; // NEW TAB
+import { InactiveUsersTab } from './components/InactiveUsers';
 
 export default function UsersPage() {
   const {
@@ -18,7 +18,7 @@ export default function UsersPage() {
     setActiveTab,
     setCurrentPage,
     filteredActiveUsers,
-    filteredInactiveUsers, // <-- make sure your hook returns this
+    filteredInactiveUsers,
     filteredDeletedUsers,
     totalPages,
     startIndex,

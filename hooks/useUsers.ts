@@ -1,7 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
+import { useAuthorizedRequest } from './useRequest';
+import axios from 'axios';
 
 type ActiveUser = {
   id: string;
@@ -31,20 +33,14 @@ type InactiveUser = {
   totalTrips: number;
 };
 
-type DeletedUser = {
+interface DeletedUser {
   id: string;
+  code: string;
   name: string;
   email: string;
-  phone: string;
   role: string;
-  deletedAt: string;
-  deletedBy: string;
-  reason?: string;
-  organization: string;
-  location: string;
-  dateJoined: string;
-  totalTrips: number;
-};
+  deleted_at: string;
+}
 
 /* -----------------------
    Mock data (typed)
@@ -118,38 +114,8 @@ const inactiveUsers: InactiveUser[] = [
   },
 ];
 
-const deletedUsersData: DeletedUser[] = [
-  {
-    id: 'USR006',
-    name: 'Alex Chen',
-    email: 'alex.chen@deleted.com',
-    phone: '+234 222 345 6789',
-    role: 'Driver',
-    deletedAt: '2025-08-15 10:30',
-    deletedBy: 'Admin User',
-    reason: 'Policy violation - multiple missed trips',
-    organization: 'Logistics Corp',
-    location: 'Lagos, Nigeria',
-    dateJoined: '2024-12-01',
-    totalTrips: 22,
-  },
-  {
-    id: 'USR007',
-    name: 'Emma Rodriguez',
-    email: 'emma.rodriguez@deleted.com',
-    phone: '+234 111 234 5678',
-    role: 'Client',
-    deletedAt: '2025-08-10 14:20',
-    deletedBy: 'Admin User',
-    reason: 'Account closure requested by user',
-    organization: 'Healthcare Plus',
-    location: 'Abuja, Nigeria',
-    dateJoined: '2024-11-15',
-    totalTrips: 6,
-  },
-];
-
 export function useUsers() {
+  const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'active' | 'inactive' | 'deleted'>(
     'active'
   );
@@ -161,10 +127,10 @@ export function useUsers() {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isRestoreModalOpen, setIsRestoreModalOpen] = useState(false);
   const [userToRestore, setUserToRestore] = useState<string | null>(null);
-  const [deletedUsers, setDeletedUsers] =
-    useState<DeletedUser[]>(deletedUsersData);
+  const [deletedUsers, setDeletedUsers] = useState<DeletedUser[]>([]);
   const usersPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
+  const authorizedRequest = useAuthorizedRequest();
 
   /* -----------------------
      Filtering
@@ -198,7 +164,7 @@ export function useUsers() {
 
   const filteredDeletedUsers: DeletedUser[] = deletedUsers.filter((user) => {
     const matchesSearch =
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      // user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.id.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesRole =
@@ -234,27 +200,76 @@ export function useUsers() {
 
   const totalPages = Math.ceil(currentUsers.length / usersPerPage);
 
-  /* -----------------------
-     Handlers
-     ----------------------- */
+  const handleActivateUser = (user: any) => {
+    console.log('user activated');
+  };
+
   const handleViewDetails = (user: any) => {
     setSelectedUser(user);
     setIsDetailsModalOpen(true);
   };
 
-  const handleRestoreUser = (userId: string) => {
-    const userToRestore = deletedUsers.find((user) => user.id === userId);
-    if (userToRestore) {
-      setDeletedUsers((prev) => prev.filter((user) => user.id !== userId));
-      toast.success(
-        `User ${userToRestore.name} has been restored successfully`
+  // 🔹 Fetch deleted users
+  useEffect(() => {
+    let isMounted = true;
+    setLoading(true);
+
+    authorizedRequest(async (token) => {
+      const res = await axios.get<DeletedUser[]>(
+        'https://medilogic-backend.onrender.com/users/users/users/deleted',
+        { headers: { Authorization: `Bearer ${token}` } }
       );
+
+      const mapped = res.data.map((u: any) => ({
+        ...u,
+      }));
+
+      // mapped.sort((a, b) => a.name.localeCompare(b.name));
+      setDeletedUsers(mapped);
+    }, 'Failed to fetch deleted users').finally(() => {
+      if (isMounted) setLoading(false);
+
+      return () => {
+        isMounted = false;
+      };
+    });
+  }, [authorizedRequest]);
+
+  // 🔹 Restore user
+  const handleRestoreUser = async (uuid: string) => {
+    try {
+      await authorizedRequest(async (token) => {
+        const res = await axios.patch(
+          `https://medilogic-backend.onrender.com/users/users/users/${uuid}/restore`,
+          {},
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        if (res.status === 200) {
+          console.log('User restored successfully');
+          toast.success(`User has been restored successfully`);
+          setDeletedUsers((prev) => prev.filter((u) => u.id !== uuid));
+        }
+      }, 'Failed to restore user');
+    } catch (err: unknown) {
+      let message = 'Failed to restore user';
+      if (axios.isAxiosError(err)) {
+        message =
+          (err.response?.data as { msg?: string; detail?: string })?.msg ||
+          (err.response?.data as { msg?: string; detail?: string })?.detail ||
+          err.message ||
+          message;
+      } else if (err instanceof Error) {
+        message = err.message;
+      }
+      toast.error('Error restoring user:', { description: message });
+    } finally {
+      setIsRestoreModalOpen(false);
     }
-    setIsRestoreModalOpen(false);
-    setUserToRestore(null);
   };
 
   return {
+    loading,
     activeTab,
     setActiveTab,
     searchTerm,
@@ -272,6 +287,8 @@ export function useUsers() {
     setIsRestoreModalOpen,
     userToRestore,
     setUserToRestore,
+    deletedUsers,
+    setDeletedUsers,
     currentPage,
     setCurrentPage,
     usersPerPage,
@@ -286,5 +303,6 @@ export function useUsers() {
     paginatedDeletedUsers,
     handleViewDetails,
     handleRestoreUser,
+    handleActivateUser,
   };
 }

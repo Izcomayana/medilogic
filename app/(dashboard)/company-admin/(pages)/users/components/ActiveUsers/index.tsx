@@ -6,9 +6,6 @@ import {
   Users,
   Eye,
   User,
-  MapPin,
-  Clock,
-  Phone,
   MoreHorizontal,
   Power,
 } from 'lucide-react';
@@ -27,12 +24,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  formatDate,
-  formatDateTime,
-  getRoleBadge,
-  getStatusBadge,
-} from '../../utils';
+import { formatDate, getRoleBadge, getStatusBadge } from '../../utils';
 import {
   Dialog,
   DialogContent,
@@ -40,7 +32,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
 
 type ActiveUsersProps = ReturnType<typeof useUsers>;
 
@@ -127,8 +118,14 @@ export function ActiveUsersTab({
                             <Eye className="h-4 w-4 mr-2" />
                             View
                           </DropdownMenuItem>
-
-                          {user.status === 'active' ? (
+                          <DropdownMenuItem
+                            className="cursor-pointer text-red-400 hover:bg-gray-700"
+                            onClick={() => console.log('Deactivate', user.id)}
+                          >
+                            <Power className="h-4 w-4 mr-2" />
+                            Deactivate
+                          </DropdownMenuItem>
+                          {/* {user.status === 'active' ? (
                             <DropdownMenuItem
                               className="cursor-pointer text-red-400 hover:bg-gray-700"
                               onClick={() => console.log('Deactivate', user.id)}
@@ -144,7 +141,7 @@ export function ActiveUsersTab({
                               <Power className="h-4 w-4 mr-2" />
                               Activate
                             </DropdownMenuItem>
-                          )}
+                          )} */}
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>
@@ -155,8 +152,8 @@ export function ActiveUsersTab({
           </div>
         )}
       </TabsContent>
-
-      {/* Details Modal */}
+{/* 
+      // Details Modal
       <Dialog open={isDetailsModalOpen} onOpenChange={setIsDetailsModalOpen}>
         <DialogContent className="bg-gray-800 border-gray-700 text-white max-w-2xl">
           <DialogHeader>
@@ -171,9 +168,9 @@ export function ActiveUsersTab({
             </DialogDescription>
           </DialogHeader>
 
-          {/* (rest of your modal stays the same) */}
+          // (rest of your modal stays the same)
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
     </>
   );
 }
