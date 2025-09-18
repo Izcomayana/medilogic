@@ -33,7 +33,7 @@ export function ActiveUsersTab({
   roleFilter,
   statusFilter,
   paginatedActiveUsers,
-  handleViewDetails, 
+  handleViewDetails,
 }: ActiveUsersProps) {
   return (
     <>
@@ -139,7 +139,7 @@ export function ActiveUsersTab({
             </Table>
           </div>
         )}
-      </TabsContent> 
+      </TabsContent>
     </>
   );
 }
