@@ -8,8 +8,8 @@ import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 import { useUsers, ActiveUser } from '@/hooks/useUsers';
 import { Filters } from './components/Filters';
 import { ActiveUsersTab } from './components/ActiveUsers';
-import { DeletedUsersTab } from './components/DeletedUsers';
 import { InactiveUsersTab } from './components/InactiveUsers';
+import { DeletedUsersTab } from './components/DeletedUsers';
 
 export default function UsersPage() {
   const userState = useUsers();
@@ -28,14 +28,9 @@ export default function UsersPage() {
     currentPage,
   } = userState;
 
-  type TabType = 'active' | 'inactive' | 'deleted';
+  const handleViewDetails = (user: ActiveUser) => console.log('View:', user);
 
-  // ✅ Add handleViewDetails here
-  const handleViewDetails = (user: ActiveUser) => {
-    console.log('Viewing details for:', user);
-    // You can replace with modal or router push
-    // router.push(`/users/${user.id}`)
-  };
+  type TabType = 'active' | 'inactive' | 'deleted';
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
@@ -43,7 +38,6 @@ export default function UsersPage() {
         title="Users"
         subtitle="Manage clients and drivers linked to your organization"
       />
-
       <main className="flex-1 p-6">
         <Card className="dashboard-card">
           <CardHeader>
@@ -87,30 +81,20 @@ export default function UsersPage() {
                 </TabsList>
               </div>
 
-              {/* Filters */}
               <Filters {...userState} />
 
-              {/* Active Users Tab */}
               <ActiveUsersTab
                 {...userState}
                 handleViewDetails={handleViewDetails}
               />
 
-              {/* Inactive Users Tab */}
               <InactiveUsersTab
-                handleViewDetails={() => {}}
-                handleActivateUser={() => {}}
-                isDetailsModalOpen={false}
-                setIsDetailsModalOpen={() => {}}
-                selectedUser={null}
-                paginatedInactiveUsers={[]}
                 {...userState}
+                handleViewDetails={handleViewDetails}
               />
 
-              {/* Deleted Users Tab */}
               <DeletedUsersTab {...userState} />
 
-              {/* Pagination */}
               {totalPages > 1 && (
                 <div className="flex items-center justify-between p-6 border-t border-gray-700">
                   <div className="text-sm text-gray-400">

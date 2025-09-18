@@ -1,13 +1,8 @@
+'use client';
+
 import { TabsContent } from '@radix-ui/react-tabs';
-import { useUsers } from '@/hooks/useUsers';
-import {
-  Calendar,
-  Mail,
-  Users,
-  Eye,
-  MoreHorizontal,
-  Power,
-} from 'lucide-react';
+import { ActiveUser } from '@/hooks/useUsers';
+import { Calendar, Mail, Eye, MoreHorizontal, Power } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -25,38 +20,41 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { formatDate, getRoleBadge, getStatusBadge } from '../../utils';
 
-// ✅ define type properly
-type User = ReturnType<typeof useUsers>['activeUsers'][number];
-
 type ActiveUsersTabProps = {
-  filteredActiveUsers: User[];
-  currentUsers: User[];
+  currentUsers: ActiveUser[];
+  filteredActiveUsers: ActiveUser[];
   searchTerm: string;
   roleFilter: string;
   statusFilter: string;
-  handleViewDetails: (user: User) => void;
+  handleViewDetails: (user: ActiveUser) => void;
+  deactivateUser: (id: string) => void;
 };
 
 export function ActiveUsersTab({
+  currentUsers,
   filteredActiveUsers,
   searchTerm,
   roleFilter,
   statusFilter,
-  currentUsers,
   handleViewDetails,
+  deactivateUser,
 }: ActiveUsersTabProps) {
+  // Remove duplicates by id before rendering
+  const uniqueUsers = Array.from(
+    new Map(currentUsers.map((u) => [u.id, u])).values()
+  );
+
   return (
     <TabsContent value="active" className="p-0">
       {filteredActiveUsers.length === 0 ? (
         <div className="text-center py-12">
-          <Users className="h-12 w-12 text-gray-600 mx-auto mb-4" />
           <h3 className="text-lg font-medium text-white mb-2">
             No users found
           </h3>
           <p className="text-gray-400">
             {searchTerm || roleFilter !== 'all' || statusFilter !== 'all'
               ? 'No users match your current search and filter criteria.'
-              : 'No users found. Invite or onboard clients and drivers through Trips or Assignments.'}
+              : 'No users found. Invite or onboard clients and drivers.'}
           </p>
         </div>
       ) : (
@@ -74,9 +72,9 @@ export function ActiveUsersTab({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {currentUsers?.map((user) => (
+              {uniqueUsers.map((user, index) => (
                 <TableRow
-                  key={user.id}
+                  key={`${user.id}-${index}`}
                   className="border-gray-700 hover:bg-gray-800"
                 >
                   <TableCell className="font-medium text-white">
@@ -105,21 +103,21 @@ export function ActiveUsersTab({
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent
-                        className="bg-gray-800 border-gray-700 text-white"
                         align="end"
+                        className="bg-gray-800 border-gray-700 text-white"
                       >
                         <DropdownMenuItem
-                          className="cursor-pointer hover:bg-gray-700"
                           onClick={() => handleViewDetails(user)}
+                          className="flex items-center gap-2 cursor-pointer hover:bg-gray-700"
                         >
-                          <Eye className="h-4 w-4 mr-2" />
+                          <Eye className="h-4 w-4" />
                           View
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          className="cursor-pointer text-red-400 hover:bg-gray-700"
-                          onClick={() => console.log('Deactivate', user.id)}
+                          onClick={() => deactivateUser(user.id)}
+                          className="flex items-center gap-2 cursor-pointer hover:bg-gray-700 text-red-400"
                         >
-                          <Power className="h-4 w-4 mr-2" />
+                          <Power className="h-4 w-4" />
                           Deactivate
                         </DropdownMenuItem>
                       </DropdownMenuContent>
