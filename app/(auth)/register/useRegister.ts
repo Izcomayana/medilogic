@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export const useRegister = () => {
   const router = useRouter();
@@ -132,6 +133,7 @@ export const useRegister = () => {
           // Fallback general message (first error)
           if (errorData.detail.length > 0) {
             generalMessage = errorData.detail[0].msg;
+            toast.error(generalMessage);
           }
         } else if (typeof errorData.detail === 'string') {
           // Generic error from backend
@@ -149,9 +151,10 @@ export const useRegister = () => {
       }
 
       setSuccessMessage('Signup successful! Redirecting to verify prompt...');
+      toast.success('Signup successful! 🎉 Redirecting to verify prompt...');
       setTimeout(
         () => router.push(`/verifyprompt?email=${formData.email}`),
-        1500
+        1000
       );
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_error) {
