@@ -5,7 +5,6 @@ import {
   Mail,
   Users,
   Eye,
-  User,
   MoreHorizontal,
   Power,
 } from 'lucide-react';
@@ -25,13 +24,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { formatDate, getRoleBadge, getStatusBadge } from '../../utils';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
 
 type ActiveUsersProps = ReturnType<typeof useUsers>;
 
@@ -41,11 +33,7 @@ export function ActiveUsersTab({
   roleFilter,
   statusFilter,
   paginatedActiveUsers,
-  handleViewDetails,
-  isDetailsModalOpen,
-  setIsDetailsModalOpen,
-  selectedUser,
-  activeTab,
+  handleViewDetails, 
 }: ActiveUsersProps) {
   return (
     <>
@@ -151,26 +139,7 @@ export function ActiveUsersTab({
             </Table>
           </div>
         )}
-      </TabsContent>
-{/* 
-      // Details Modal
-      <Dialog open={isDetailsModalOpen} onOpenChange={setIsDetailsModalOpen}>
-        <DialogContent className="bg-gray-800 border-gray-700 text-white max-w-2xl">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <User className="h-5 w-5" />
-              User Details - {selectedUser?.id}
-            </DialogTitle>
-            <DialogDescription className="text-gray-400">
-              {activeTab === 'active'
-                ? 'Active user information'
-                : 'Deleted user information'}
-            </DialogDescription>
-          </DialogHeader>
-
-          // (rest of your modal stays the same)
-        </DialogContent>
-      </Dialog> */}
+      </TabsContent> 
     </>
   );
 }
