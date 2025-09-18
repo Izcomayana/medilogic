@@ -9,6 +9,7 @@ export type PendingApplication = {
   id: string;
   applicantName: string;
   email: string;
+  password: string;
   role: 'Admin' | 'Regulator';
   organizationName?: string | null;
   organizationType?: string | null;
@@ -53,7 +54,8 @@ export function usePendingApplications() {
           id: item.id,
           applicantName: item.full_name,
           email: item.email,
-          role: item.role === 'admin' ? 'Admin' : 'Regulator', // map backend role
+          password: item.password,
+          role: item.role === 'admin' ? 'Admin' : 'Regulator',
           organizationName: item.organization_name || null,
           organizationType: item.organization_type || null,
           country: item.regulated_country || null,

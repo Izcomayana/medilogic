@@ -13,6 +13,7 @@ import {
   Mail,
   MapPin,
   FileText,
+  KeyRound
 } from 'lucide-react';
 import { usePendingApplications } from '@/hooks/usePendingApplications';
 import {
@@ -62,6 +63,13 @@ export function DetailsModal({
                     <p className="text-white flex items-center gap-2">
                       <Mail className="h-4 w-4" />
                       {selectedApplication.email}
+                    </p>
+                  </div>
+                  <div>
+                    <Label className="text-gray-400 text-sm">Password</Label>
+                    <p className="text-white flex items-center gap-2 text-xs">
+                      <KeyRound className="h-4 w-4" />
+                      {selectedApplication.password}
                     </p>
                   </div>
                 </div>
