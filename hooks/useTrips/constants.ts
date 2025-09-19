@@ -15,7 +15,6 @@ export const drivers = [
   { id: '550e8400-e29b-41d4-a716-446655440005', name: 'Alex Chen' },
 ];
 
-
 // export const trips = [
 //   {
 //     id: 'TRP001',

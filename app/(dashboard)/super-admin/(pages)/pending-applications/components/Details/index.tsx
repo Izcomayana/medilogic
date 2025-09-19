@@ -13,7 +13,7 @@ import {
   Mail,
   MapPin,
   FileText,
-  KeyRound
+  KeyRound,
 } from 'lucide-react';
 import { usePendingApplications } from '@/hooks/usePendingApplications';
 import {

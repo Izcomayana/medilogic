@@ -2,6 +2,14 @@
 
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import {
   BarChart,
@@ -33,51 +41,68 @@ import {
   Target,
 } from 'lucide-react';
 import { useState } from 'react';
-import { useTripAnalytics } from '@/hooks/useTrips/useTripAnalytics';
-import KeyMetrics from './components/Key Metrics';
-import Filters from './components/Filters';
+
+// Mock data for analytics
+const keyMetrics = {
+  totalTrips: 34,
+  totalDistance: 1200,
+  totalCost: 560000,
+  averageCost: 16470,
+  commonDeliveryType: 'Express',
+};
+
+const aiPredictions = {
+  averagePredictedDuration: 65.4,
+  predictedDurations: [65, 65, 67, 65, 65, 63, 66, 65, 64, 67],
+  insight:
+    'Most trips are predicted to last around 65 minutes. Express deliveries dominate, indicating a trend toward faster service demand.',
+};
+
+const predictedDurationData = [
+  { trip: 'Trip 1', duration: 65 },
+  { trip: 'Trip 2', duration: 65 },
+  { trip: 'Trip 3', duration: 67 },
+  { trip: 'Trip 4', duration: 65 },
+  { trip: 'Trip 5', duration: 65 },
+  { trip: 'Trip 6', duration: 63 },
+  { trip: 'Trip 7', duration: 66 },
+  { trip: 'Trip 8', duration: 65 },
+  { trip: 'Trip 9', duration: 64 },
+  { trip: 'Trip 10', duration: 67 },
+];
+
+const deliveryTypeData = [
+  { name: 'Express', value: 18, percentage: 53 },
+  { name: 'Standard', value: 12, percentage: 35 },
+  { name: 'Scheduled', value: 4, percentage: 12 },
+];
+
+const costDistanceData = [
+  { distance: 15, cost: 12000 },
+  { distance: 25, cost: 18000 },
+  { distance: 35, cost: 24000 },
+  { distance: 45, cost: 28000 },
+  { distance: 55, cost: 35000 },
+  { distance: 65, cost: 42000 },
+  { distance: 75, cost: 48000 },
+];
 
 const COLORS = ['#15941f', '#3b82f6', '#eab308'];
+
+const drivers = [
+  'All Drivers',
+  'John Smith',
+  'Sarah Johnson',
+  'Mike Davis',
+  'Lisa Wilson',
+  'Tom Brown',
+];
+const deliveryTypes = ['All Types', 'Express', 'Standard', 'Scheduled'];
 
 export default function TripAnalyticsPage() {
   const [dateRange, setDateRange] = useState('7days');
   const [selectedDriver, setSelectedDriver] = useState('All Drivers');
   const [selectedDeliveryType, setSelectedDeliveryType] = useState('All Types');
-
-  // 🔥 Hook to fetch analytics
-  const { data, loading, error } = useTripAnalytics({
-    start_date: null,
-    end_date: null,
-    status: null,
-    driver_id: selectedDriver !== 'All Drivers' ? selectedDriver : null,
-    client_name: null,
-    delivery_type:
-      selectedDeliveryType !== 'All Types' ? selectedDeliveryType : null,
-  });
-
-  const predictedDurationData =
-    data?.ai_prediction?.predicted_durations_minutes.map((d, i) => ({
-      trip: `Trip ${i + 1}`,
-      duration: d,
-    })) || [];
-
-  // 2. Delivery Type Distribution → PieChart
-  // NOTE: Backend only gives `most_common_delivery_type`,
-  // so unless API changes, you might need to calculate distribution
-  // from trips endpoint instead. For now, let’s mock it:
-  const deliveryTypeData = [
-    { name: data?.analytics?.most_common_delivery_type || 'Unknown', value: 1 },
-  ];
-
-  // 3. Cost vs Distance → LineChart
-  // Same thing: backend only gives totals, not per-trip pairs.
-  // For demo, I’ll fabricate from totals until API adds breakdown.
-  const costDistanceData = [
-    {
-      distance: data?.analytics?.total_distance_km || 0,
-      cost: data?.analytics?.total_cost || 0,
-    },
-  ];
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-NG', {
@@ -107,20 +132,6 @@ export default function TripAnalyticsPage() {
       : 'Filters: None applied (showing all trips)';
   };
 
-  if (loading) {
-    return <p className="text-gray-400 p-6">Loading trip analytics...</p>;
-  }
-
-  if (error) {
-    return (
-      <p className="text-red-500 p-6">Failed to load analytics: {error}</p>
-    );
-  }
-
-  if (!data) {
-    return <p className="text-gray-400 p-6">No analytics data available</p>;
-  }
-
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
       <header className="flex h-16 items-center gap-4 border-b border-gray-700 bg-gray-900 px-6">
@@ -134,9 +145,162 @@ export default function TripAnalyticsPage() {
       </header>
 
       <main className="flex-1 p-6">
-        <Filters />
+        {/* Filters Section */}
+        <Card className="dashboard-card mb-6">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <Filter className="h-5 w-5" />
+              Filters
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex gap-4 items-end">
+              <div className="flex items-center gap-2">
+                <Calendar className="h-4 w-4 text-gray-400" />
+                <Select value={dateRange} onValueChange={setDateRange}>
+                  <SelectTrigger className="w-[150px] bg-gray-700 border-gray-600 text-white">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-700 border-gray-600">
+                    <SelectItem value="all">All Time</SelectItem>
+                    <SelectItem value="7days">Last 7 Days</SelectItem>
+                    <SelectItem value="30days">This Month</SelectItem>
+                    <SelectItem value="90days">Last 3 Months</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex items-center gap-2">
+                <Users className="h-4 w-4 text-gray-400" />
+                <Select
+                  value={selectedDriver}
+                  onValueChange={setSelectedDriver}
+                >
+                  <SelectTrigger className="w-[150px] bg-gray-700 border-gray-600 text-white">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-700 border-gray-600">
+                    {drivers.map((driver) => (
+                      <SelectItem key={driver} value={driver}>
+                        {driver}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex items-center gap-2">
+                <Package className="h-4 w-4 text-gray-400" />
+                <Select
+                  value={selectedDeliveryType}
+                  onValueChange={setSelectedDeliveryType}
+                >
+                  <SelectTrigger className="w-[150px] bg-gray-700 border-gray-600 text-white">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-700 border-gray-600">
+                    {deliveryTypes.map((type) => (
+                      <SelectItem key={type} value={type}>
+                        {type}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button className="primary-button">Apply Filters</Button>
+            </div>
+          </CardContent>
+        </Card>
 
-        <KeyMetrics />
+        {/* Key Metrics Cards */}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5 mb-8">
+          <Card className="dashboard-card">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-gray-300">
+                Total Trips
+              </CardTitle>
+              <Truck className="h-4 w-4 text-gray-400" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-white">
+                {keyMetrics.totalTrips}
+              </div>
+              <div className="text-xs text-[#15941f] flex items-center gap-1 mt-1">
+                <TrendingUp className="h-3 w-3" />
+                +12% from last period
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="dashboard-card">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-gray-300">
+                Total Distance
+              </CardTitle>
+              <MapPin className="h-4 w-4 text-gray-400" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-white">
+                {keyMetrics.totalDistance.toLocaleString()} km
+              </div>
+              <div className="text-xs text-[#15941f] flex items-center gap-1 mt-1">
+                <TrendingUp className="h-3 w-3" />
+                +8% from last period
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="dashboard-card">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-gray-300">
+                Total Cost
+              </CardTitle>
+              <DollarSign className="h-4 w-4 text-gray-400" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-white">
+                {formatCurrency(keyMetrics.totalCost)}
+              </div>
+              <div className="text-xs text-[#15941f] flex items-center gap-1 mt-1">
+                <TrendingUp className="h-3 w-3" />
+                +15% from last period
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="dashboard-card">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-gray-300">
+                Average Cost
+              </CardTitle>
+              <Target className="h-4 w-4 text-gray-400" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-white">
+                {formatCurrency(keyMetrics.averageCost)}
+              </div>
+              <div className="text-xs text-blue-500 flex items-center gap-1 mt-1">
+                <TrendingUp className="h-3 w-3" />
+                +3% from last period
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="dashboard-card">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-gray-300">
+                Common Type
+              </CardTitle>
+              <Package className="h-4 w-4 text-gray-400" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-white">
+                {keyMetrics.commonDeliveryType}
+              </div>
+              <div className="text-xs text-gray-400 mt-1">
+                53% of all deliveries
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* AI Predictions & Insights */}
         <Card className="dashboard-card mb-8">
@@ -157,7 +321,7 @@ export default function TripAnalyticsPage() {
                     </span>
                   </div>
                   <div className="text-3xl font-bold text-white">
-                    {data.ai_prediction.average_predicted_duration} mins
+                    {aiPredictions.averagePredictedDuration} mins
                   </div>
                   <div className="text-xs text-gray-400 mt-1">
                     Based on historical data and current conditions
@@ -172,28 +336,33 @@ export default function TripAnalyticsPage() {
                     </span>
                   </div>
                   <div className="flex gap-2 flex-wrap">
-                    {data.ai_prediction.predicted_durations_minutes.map(
-                      (duration: any, index: any) => (
-                        <Badge
-                          key={index}
-                          variant="secondary"
-                          className="bg-purple-600 text-white"
-                        >
-                          {duration}m
-                        </Badge>
-                      )
-                    )}
+                    {aiPredictions.predictedDurations.map((duration, index) => (
+                      <Badge
+                        key={index}
+                        variant="secondary"
+                        className="bg-purple-600 text-white"
+                      >
+                        {duration}m
+                      </Badge>
+                    ))}
                   </div>
                 </div>
               </div>
 
               <div className="bg-gradient-to-br from-purple-900/20 to-blue-900/20 rounded-lg p-4 border border-purple-500/20">
-                <h3 className="text-sm font-semibold text-white mb-2">
-                  AI Insight
-                </h3>
-                <p className="text-sm text-gray-300 leading-relaxed">
-                  {data.ai_insight}
-                </p>
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-8 h-8 bg-purple-600 rounded-full flex items-center justify-center">
+                    <Brain className="h-4 w-4 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-semibold text-white mb-2">
+                      AI Insight
+                    </h3>
+                    <p className="text-sm text-gray-300 leading-relaxed">
+                      {aiPredictions.insight}
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </CardContent>
@@ -296,9 +465,9 @@ export default function TripAnalyticsPage() {
                         <span className="text-sm text-white font-medium">
                           {item.value}
                         </span>
-                        {/* <span className="text-xs text-gray-400 ml-2">
+                        <span className="text-xs text-gray-400 ml-2">
                           ({item.percentage}%)
-                        </span> */}
+                        </span>
                       </div>
                     </div>
                   ))}
@@ -309,7 +478,7 @@ export default function TripAnalyticsPage() {
         </div>
 
         {/* Cost vs Distance Chart */}
-        <Card className="dashboard-card mb-6 gap-4">
+        <Card className="dashboard-card mb-6">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
               <TrendingUp className="h-5 w-5" />
