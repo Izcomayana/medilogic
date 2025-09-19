@@ -13,8 +13,7 @@ import {
   updateTripRequest,
 } from './api';
 import { formatDateTime } from './utils';
-import { clients, drivers, trips } from './constants';
-import axios from 'axios';
+import { clients, drivers } from './constants';
 
 export type DateRangeLocal = { from?: Date; to?: Date };
 
@@ -38,7 +37,7 @@ export function useTrips(tripsPerPage = 10) {
     pickupLocation: '',
     dropoffLocation: '',
     driverName: '',
-    driverAsigned: '',
+    // driverAsigned: '',
     driverId: '',
     dateTime: '',
     notes: '',
@@ -63,7 +62,7 @@ export function useTrips(tripsPerPage = 10) {
       pickupLocation: '',
       dropoffLocation: '',
       driverName: '',
-      driverAsigned: '',
+      // driverAsigned: '',
       driverId: '',
       dateTime: '',
       notes: '',
@@ -157,7 +156,7 @@ export function useTrips(tripsPerPage = 10) {
         organization_id: user.organization.id,
         status: formData.status || 'Pending',
         priority: formData.priority || 'normal',
-        driver_id: formData.driverAsigned || undefined,
+        driver_id: formData.driverId || undefined,
         driver_name: formData.driverName || undefined,
         scheduled_time: formData.dateTime
           ? new Date(formData.dateTime).toISOString()
@@ -305,7 +304,7 @@ export function useTrips(tripsPerPage = 10) {
       dropoffLocation: trip.dropoffLocation || '',
       driverName: trip.driverName || '',
       driverId: trip.driverId || '',
-      driverAsigned: trip.driverAssigned || '',
+      // driverAsigned: trip.driverAssigned || '',
       dateTime: trip.dateTime || '',
       notes: trip.statusHistory?.[0]?.note || '',
       status: trip.status || 'Pending',
