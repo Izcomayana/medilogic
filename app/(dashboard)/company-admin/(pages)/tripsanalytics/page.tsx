@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -19,23 +19,17 @@ import {
 } from 'recharts';
 import {
   TrendingUp,
-  Truck,
-  MapPin,
-  DollarSign,
   Clock,
-  Package,
-  Calendar,
   Filter,
   Brain,
   BarChart3,
   PieChartIcon,
-  Users,
-  Target,
 } from 'lucide-react';
 import { useState } from 'react';
 import { useTripAnalytics } from '@/hooks/useTrips/useTripAnalytics';
 import KeyMetrics from './components/Key Metrics';
 import Filters from './components/Filters';
+import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 
 const COLORS = ['#15941f', '#3b82f6', '#eab308'];
 
@@ -123,15 +117,10 @@ export default function TripAnalyticsPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
-      <header className="flex h-16 items-center gap-4 border-b border-gray-700 bg-gray-900 px-6">
-        <SidebarTrigger className="text-white hover:bg-gray-800" />
-        <div className="flex-1">
-          <h1 className="text-xl font-semibold text-white">Trip Analytics</h1>
-          <p className="text-sm text-gray-400">
-            Monitor insights, predictions, and trends across all trips
-          </p>
-        </div>
-      </header>
+      <PageHeader
+        title={'Trip Analytics'}
+        subtitle="Monitor insights, predictions, and trends across all trips"
+      />
 
       <main className="flex-1 p-6">
         <Filters />
