@@ -27,7 +27,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { useTripAnalytics } from '@/hooks/useTrips/useTripAnalytics';
-import KeyMetrics from './components/Key Metrics';
+import KeyMetrics from './components/KeyMetrics';
 import Filters from './components/Filters';
 import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 
