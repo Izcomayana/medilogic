@@ -93,7 +93,16 @@ export default function UsersPage() {
                 handleViewDetails={handleViewDetails}
               />
 
-              <DeletedUsersTab {...userState} />
+              
+              <DeletedUsersTab
+                handleViewDetails={function (): void {
+                  throw new Error('Function not implemented.');
+                }}
+                handleRestoreUser={function (): void {
+                  throw new Error('Function not implemented.');
+                }}
+                {...userState}
+              />
 
               {totalPages > 1 && (
                 <div className="flex items-center justify-between p-6 border-t border-gray-700">

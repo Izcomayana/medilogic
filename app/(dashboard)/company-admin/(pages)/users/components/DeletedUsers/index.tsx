@@ -1,3 +1,6 @@
+'use client';
+
+import { useState } from 'react';
 import { TabsContent } from '@radix-ui/react-tabs';
 import { Mail, Eye, UserX, Clock, RotateCcw } from 'lucide-react';
 import {
@@ -22,18 +25,22 @@ import {
 } from '@/components/ui/alert-dialog';
 import { useUsers } from '@/hooks/useUsers';
 
-type DeletedUserProps = ReturnType<typeof useUsers>;
+type DeletedUserProps = {
+  loading: boolean;
+  deletedUsers: ReturnType<typeof useUsers>['deletedUsers'];
+  handleViewDetails: (user: unknown) => void;
+  handleRestoreUser: (id: string) => void;
+};
 
 export function DeletedUsersTab({
   loading,
   deletedUsers,
   handleViewDetails,
-  userToRestore,
-  setUserToRestore,
-  isRestoreModalOpen,
-  setIsRestoreModalOpen,
   handleRestoreUser,
 }: DeletedUserProps) {
+  const [userToRestore, setUserToRestore] = useState<string | null>(null);
+  const [isRestoreModalOpen, setIsRestoreModalOpen] = useState(false);
+
   return (
     <>
       <TabsContent value="deleted" className="p-0">
@@ -54,7 +61,6 @@ export function DeletedUsersTab({
             <Table>
               <TableHeader>
                 <TableRow className="border-gray-700 hover:bg-gray-800">
-                  {/* <TableHead className="text-gray-300">User ID</TableHead> */}
                   <TableHead className="text-gray-300">Name</TableHead>
                   <TableHead className="text-gray-300">Email</TableHead>
                   <TableHead className="text-gray-300">Role</TableHead>
@@ -68,9 +74,6 @@ export function DeletedUsersTab({
                     key={user.id}
                     className="border-gray-700 hover:bg-gray-800"
                   >
-                    {/* <TableCell className="font-medium text-white">
-                      {user.code || user.id}
-                    </TableCell> */}
                     <TableCell className="text-gray-300">{user.name}</TableCell>
                     <TableCell className="text-gray-300 flex items-center gap-1">
                       <Mail className="h-3 w-3" />
@@ -79,7 +82,8 @@ export function DeletedUsersTab({
                     <TableCell>{getRoleBadge(user.role)}</TableCell>
                     <TableCell className="text-gray-300 flex items-center gap-1">
                       <Clock className="h-3 w-3" />
-                      {formatDateTime(user.deleted_at)}
+                      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                      {formatDateTime((user as any).deleted_at)}
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
@@ -87,7 +91,7 @@ export function DeletedUsersTab({
                           variant="outline"
                           size="sm"
                           onClick={() => handleViewDetails(user)}
-                          className="border-gray-600 text-gray-700 hover-text-gray-300 hover:bg-gray-700"
+                          className="border-gray-600 text-gray-300 hover:bg-gray-700"
                         >
                           <Eye className="h-3 w-3 mr-1" />
                           View
@@ -114,6 +118,7 @@ export function DeletedUsersTab({
         )}
       </TabsContent>
 
+      {/* Modal */}
       <AlertDialog
         open={isRestoreModalOpen}
         onOpenChange={setIsRestoreModalOpen}
@@ -130,16 +135,13 @@ export function DeletedUsersTab({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel className="border-gray-600 text-gray-700 hover:text-gray-300 hover:bg-gray-700">
+            <AlertDialogCancel className="border-gray-600 text-gray-300 hover:bg-gray-700">
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
-              onClick={() =>
-                userToRestore &&
-                handleRestoreUser(
-                  deletedUsers.find((u) => u.id === userToRestore)?.id || ''
-                )
-              }
+              onClick={() => {
+                if (userToRestore) handleRestoreUser(userToRestore);
+              }}
               className="bg-green-600 hover:bg-green-700 text-white"
             >
               <RotateCcw className="h-4 w-4 mr-2" />

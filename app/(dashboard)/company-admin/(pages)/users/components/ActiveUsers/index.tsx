@@ -62,7 +62,7 @@ export function ActiveUsersTab({
           <Table>
             <TableHeader>
               <TableRow className="border-gray-700 hover:bg-gray-800">
-                <TableHead className="text-gray-300">User ID</TableHead>
+                {/* Removed User ID */}
                 <TableHead className="text-gray-300">Name</TableHead>
                 <TableHead className="text-gray-300">Email</TableHead>
                 <TableHead className="text-gray-300">Role</TableHead>
@@ -72,14 +72,12 @@ export function ActiveUsersTab({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {uniqueUsers.map((user, index) => (
+              {uniqueUsers.map((user) => (
                 <TableRow
-                  key={`${user.id}-${index}`}
+                  key={user.id}
                   className="border-gray-700 hover:bg-gray-800"
                 >
-                  <TableCell className="font-medium text-white">
-                    {user.id}
-                  </TableCell>
+                  {/* Removed User ID cell */}
                   <TableCell className="text-gray-300">{user.name}</TableCell>
                   <TableCell className="text-gray-300 flex items-center gap-1">
                     <Mail className="h-3 w-3" />

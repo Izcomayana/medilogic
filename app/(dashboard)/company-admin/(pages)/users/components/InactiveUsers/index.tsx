@@ -34,7 +34,7 @@ type InactiveUsersProps = {
   roleFilter: string;
   statusFilter: string;
   handleViewDetails: (user: ActiveUser) => void;
-  activateUser: (userId: string) => void; // ✅ only ID now
+  activateUser: (userId: string) => void;
 };
 
 export function InactiveUsersTab({
@@ -70,7 +70,6 @@ export function InactiveUsersTab({
           <Table>
             <TableHeader>
               <TableRow className="border-gray-700 hover:bg-gray-800">
-                <TableHead className="text-gray-300">User ID</TableHead>
                 <TableHead className="text-gray-300">Name</TableHead>
                 <TableHead className="text-gray-300">Email</TableHead>
                 <TableHead className="text-gray-300">Role</TableHead>
@@ -80,14 +79,11 @@ export function InactiveUsersTab({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {uniqueUsers.map((user, index) => (
+              {uniqueUsers.map((user) => (
                 <TableRow
-                  key={`${user.id}-${index}`}
+                  key={user.id}
                   className="border-gray-700 hover:bg-gray-800"
                 >
-                  <TableCell className="font-medium text-white">
-                    {user.id}
-                  </TableCell>
                   <TableCell className="text-gray-300">{user.name}</TableCell>
                   <TableCell className="text-gray-300 flex items-center gap-1">
                     <Mail className="h-3 w-3" />
@@ -122,7 +118,7 @@ export function InactiveUsersTab({
                           View
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() => activateUser(user.id)} // ✅ pass only the ID
+                          onClick={() => activateUser(user.id)}
                           className="flex items-center gap-2 cursor-pointer hover:bg-gray-700 text-green-400"
                         >
                           <CheckCircle className="h-4 w-4" />
