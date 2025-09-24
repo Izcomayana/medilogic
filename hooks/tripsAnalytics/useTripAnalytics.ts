@@ -9,7 +9,10 @@ import {
   mapApiTripAnalyticsToUi,
 } from './mappers';
 import { fetchTripAnalyticsRequest } from './api';
-import { formatDateEnd, formatDateStart } from '../utils';
+import {
+  formatDateEnd,
+  formatDateStart,
+} from '../../app/(dashboard)/company-admin/(pages)/trips/components/Filters/dateRange';
 
 export type DateRangeLocal = { from?: Date; to?: Date };
 
@@ -42,9 +45,7 @@ export function useTripAnalytics(initialFilters: TripAnalyticsFilters = {}) {
             start_date: dateRange?.from
               ? formatDateStart(dateRange.from)
               : undefined,
-            end_date: dateRange?.from
-              ? formatDateEnd(dateRange.from)
-              : undefined,
+            end_date: dateRange?.to ? formatDateEnd(dateRange.to) : undefined,
           }),
         'Failed to fetch trips analytics'
       );
@@ -82,8 +83,6 @@ export function useTripAnalytics(initialFilters: TripAnalyticsFilters = {}) {
       duration: d,
     })) || [];
 
-  console.log('predictedDuration:', predictedDurationData);
-
   // 2. Delivery Type Distribution → PieChart
   // NOTE: Backend only gives `most_common_delivery_type`,
   // so unless API changes, you might need to calculate distribution
@@ -102,23 +101,35 @@ export function useTripAnalytics(initialFilters: TripAnalyticsFilters = {}) {
     },
   ];
 
-  // const getFiltersAppliedText = useCallback(() => {
-  //   const filtersText: string[] = [];
-  //   if (dateRange !== 'all') {
-  //     const dateLabels: Record<string, string> = {
-  //       '7days': 'Last 7 days',
-  //       '30days': 'Last 30 days',
-  //       '90days': 'Last 90 days',
-  //     };
-  //     filtersText.push(dateLabels[dateRange] || dateRange);
-  //   }
-  //   if (selectedDriver !== 'all') filtersText.push(`Driver: ${selectedDriver}`);
-  //   if (selectedDeliveryType !== 'all') filtersText.push(`Type: ${selectedDeliveryType}`);
+  const getFiltersAppliedText = useCallback(() => {
+    const filtersText: string[] = [];
 
-  //   return filtersText.length > 0
-  //     ? `Filters: ${filtersText.join(', ')}`
-  //     : 'Filters: None applied (showing all trips)';
-  // }, [dateRange, selectedDriver, selectedDeliveryType])
+    if (dateRange?.from || dateRange?.to) {
+      const fromText = dateRange.from
+        ? dateRange.from.toLocaleDateString('en-GB')
+        : '...';
+      const toText = dateRange.to
+        ? dateRange.to.toLocaleDateString('en-GB')
+        : '...';
+      filtersText.push(`Date: ${fromText} → ${toText}`);
+    }
+
+    if (status !== 'all') {
+      filtersText.push(`Status: ${status}`);
+    }
+
+    if (selectedDriver !== 'all') {
+      filtersText.push(`Driver: ${selectedDriver}`);
+    }
+
+    if (selectedDeliveryType !== 'all') {
+      filtersText.push(`Type: ${selectedDeliveryType}`);
+    }
+
+    return filtersText.length > 0
+      ? `Filters applied → ${filtersText.join(', ')}`
+      : 'Filters: None applied (showing all trips)';
+  }, [dateRange, status, selectedDriver, selectedDeliveryType]);
 
   return {
     analytics,
@@ -137,5 +148,6 @@ export function useTripAnalytics(initialFilters: TripAnalyticsFilters = {}) {
     predictedDurationData,
     deliveryTypeData,
     costDistanceData,
+    getFiltersAppliedText,
   };
 }
