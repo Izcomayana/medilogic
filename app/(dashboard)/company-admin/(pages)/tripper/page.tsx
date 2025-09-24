@@ -413,8 +413,8 @@ export default function TripAnalyticsPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="h-80 flex items-center">
-                <div className="w-1/2">
+              <div className="h-80 flex">
+                <div className="w-1/2 h-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie

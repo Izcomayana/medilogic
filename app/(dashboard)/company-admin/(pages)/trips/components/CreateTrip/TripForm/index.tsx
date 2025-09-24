@@ -10,7 +10,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { drivers } from '@/hooks/useTrips/constants';
+import { drivers } from '@/hooks/trips/constants';
 
 export default function TripForm({ formData, setFormData }: any) {
   return (

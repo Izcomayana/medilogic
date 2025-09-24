@@ -1,19 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Truck, MapPin, DollarSign, Package, Target } from 'lucide-react';
-import { useTripAnalytics } from '@/hooks/useTrips/useTripAnalytics';
+import { useTripAnalytics } from '@/hooks/tripsAnalytics/useTripAnalytics';
 
-export default function keyMetrics() {
-  const { data } = useTripAnalytics();
+type KeyMetricsProps = ReturnType<typeof useTripAnalytics>;
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-NG', {
-      style: 'currency',
-      currency: 'NGN',
-      minimumFractionDigits: 0,
-    }).format(amount);
-  };
-
-  if (!data) {
+export default function keyMetrics({
+  analytics,
+  formatCurrency,
+}: KeyMetricsProps) {
+  if (!analytics) {
     return <p className="text-gray-400 p-6">No analytics data available</p>;
   }
 
@@ -30,7 +25,7 @@ export default function keyMetrics() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-white">
-              {data.analytics.total_trips}
+              {analytics.totalTrips}
             </div>
             {/* <div className="text-xs text-[#15941f] flex items-center gap-1 mt-1">
                 <TrendingUp className="h-3 w-3" />
@@ -48,7 +43,7 @@ export default function keyMetrics() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-white">
-              {data.analytics.total_distance_km} km
+              {analytics.totalDistance} km
             </div>
             {/* <div className="text-xs text-[#15941f] flex items-center gap-1 mt-1">
                 <TrendingUp className="h-3 w-3" />
@@ -66,7 +61,7 @@ export default function keyMetrics() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-white">
-              {formatCurrency(data.analytics.total_cost)}
+              {formatCurrency(analytics.totalCost)}
             </div>
             {/* <div className="text-xs text-[#15941f] flex items-center gap-1 mt-1">
                 <TrendingUp className="h-3 w-3" />
@@ -84,7 +79,7 @@ export default function keyMetrics() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-white">
-              {formatCurrency(data.analytics.average_cost)}
+              {formatCurrency(analytics.averageCost)}
             </div>
             {/* <div className="text-xs text-blue-500 flex items-center gap-1 mt-1">
                 <TrendingUp className="h-3 w-3" />
@@ -102,7 +97,7 @@ export default function keyMetrics() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-white">
-              {data.analytics.most_common_delivery_type || 'N/A'}
+              {analytics.mostCommonDeliveryType || 'N/A'}
             </div>
             {/* <div className="text-xs text-gray-400 mt-1">
                 53% of all deliveries

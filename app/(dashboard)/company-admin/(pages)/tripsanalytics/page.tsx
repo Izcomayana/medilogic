@@ -25,8 +25,7 @@ import {
   BarChart3,
   PieChartIcon,
 } from 'lucide-react';
-import { useState } from 'react';
-import { useTripAnalytics } from '@/hooks/useTrips/useTripAnalytics';
+import { useTripAnalytics } from '@/hooks/tripsAnalytics/useTripAnalytics';
 import KeyMetrics from './components/KeyMetrics';
 import Filters from './components/Filters';
 import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
@@ -34,74 +33,19 @@ import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 const COLORS = ['#15941f', '#3b82f6', '#eab308'];
 
 export default function TripAnalyticsPage() {
-  const [dateRange, setDateRange] = useState('7days');
-  const [selectedDriver, setSelectedDriver] = useState('All Drivers');
-  const [selectedDeliveryType, setSelectedDeliveryType] = useState('All Types');
+  const tripsAnalyticState = useTripAnalytics();
+  const {
+    analytics,
+    loading,
+    error,
+    predictedDurationData,
+    deliveryTypeData,
+    costDistanceData,
+    formatCurrency,
+    // getFiltersAppliedText,
+  } = tripsAnalyticState;
 
-  // 🔥 Hook to fetch analytics
-  const { data, loading, error } = useTripAnalytics({
-    start_date: null,
-    end_date: null,
-    status: null,
-    driver_id: selectedDriver !== 'All Drivers' ? selectedDriver : null,
-    client_name: null,
-    delivery_type:
-      selectedDeliveryType !== 'All Types' ? selectedDeliveryType : null,
-  });
-
-  const predictedDurationData =
-    data?.ai_prediction?.predicted_durations_minutes.map((d, i) => ({
-      trip: `Trip ${i + 1}`,
-      duration: d,
-    })) || [];
-
-  // 2. Delivery Type Distribution → PieChart
-  // NOTE: Backend only gives `most_common_delivery_type`,
-  // so unless API changes, you might need to calculate distribution
-  // from trips endpoint instead. For now, let’s mock it:
-  const deliveryTypeData = [
-    { name: data?.analytics?.most_common_delivery_type || 'Unknown', value: 1 },
-  ];
-
-  // 3. Cost vs Distance → LineChart
-  // Same thing: backend only gives totals, not per-trip pairs.
-  // For demo, I’ll fabricate from totals until API adds breakdown.
-  const costDistanceData = [
-    {
-      distance: data?.analytics?.total_distance_km || 0,
-      cost: data?.analytics?.total_cost || 0,
-    },
-  ];
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-NG', {
-      style: 'currency',
-      currency: 'NGN',
-      minimumFractionDigits: 0,
-    }).format(amount);
-  };
-
-  const getFiltersAppliedText = () => {
-    const filters = [];
-    if (dateRange !== 'all') {
-      const dateLabels: { [key: string]: string } = {
-        '7days': 'Last 7 days',
-        '30days': 'Last 30 days',
-        '90days': 'Last 90 days',
-      };
-      filters.push(dateLabels[dateRange] || dateRange);
-    }
-    if (selectedDriver !== 'All Drivers')
-      filters.push(`Driver: ${selectedDriver}`);
-    if (selectedDeliveryType !== 'All Types')
-      filters.push(`Type: ${selectedDeliveryType}`);
-
-    return filters.length > 0
-      ? `Filters: ${filters.join(', ')}`
-      : 'Filters: None applied (showing all trips)';
-  };
-
-  if (loading) {
+  if (loading || !analytics) {
     return <p className="text-gray-400 p-6">Loading trip analytics...</p>;
   }
 
@@ -109,10 +53,6 @@ export default function TripAnalyticsPage() {
     return (
       <p className="text-red-500 p-6">Failed to load analytics: {error}</p>
     );
-  }
-
-  if (!data) {
-    return <p className="text-gray-400 p-6">No analytics data available</p>;
   }
 
   return (
@@ -123,9 +63,9 @@ export default function TripAnalyticsPage() {
       />
 
       <main className="flex-1 p-6">
-        <Filters />
+        <Filters {...tripsAnalyticState} />
 
-        <KeyMetrics />
+        <KeyMetrics {...tripsAnalyticState} />
 
         {/* AI Predictions & Insights */}
         <Card className="dashboard-card mb-8">
@@ -146,7 +86,7 @@ export default function TripAnalyticsPage() {
                     </span>
                   </div>
                   <div className="text-3xl font-bold text-white">
-                    {data.ai_prediction.average_predicted_duration} mins
+                    {analytics.aiPrediction.average_predicted_duration} mins
                   </div>
                   <div className="text-xs text-gray-400 mt-1">
                     Based on historical data and current conditions
@@ -161,7 +101,7 @@ export default function TripAnalyticsPage() {
                     </span>
                   </div>
                   <div className="flex gap-2 flex-wrap">
-                    {data.ai_prediction.predicted_durations_minutes.map(
+                    {analytics.aiPrediction.predicted_durations_minutes.map(
                       (duration: any, index: any) => (
                         <Badge
                           key={index}
@@ -181,7 +121,7 @@ export default function TripAnalyticsPage() {
                   AI Insight
                 </h3>
                 <p className="text-sm text-gray-300 leading-relaxed">
-                  {data.ai_insight}
+                  {analytics.aiInsight}
                 </p>
               </div>
             </div>
@@ -194,8 +134,7 @@ export default function TripAnalyticsPage() {
           <Card className="dashboard-card">
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
-                <BarChart3 className="h-5 w-5" />
-                Predicted Trip Durations
+                <BarChart3 className="h-5 w-5" /> Predicted Trip Durations
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -234,7 +173,7 @@ export default function TripAnalyticsPage() {
             </CardHeader>
             <CardContent>
               <div className="h-80 flex items-center">
-                <div className="w-1/2">
+                <div className="w-1/2 h-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie
@@ -285,9 +224,6 @@ export default function TripAnalyticsPage() {
                         <span className="text-sm text-white font-medium">
                           {item.value}
                         </span>
-                        {/* <span className="text-xs text-gray-400 ml-2">
-                          ({item.percentage}%)
-                        </span> */}
                       </div>
                     </div>
                   ))}
@@ -357,7 +293,7 @@ export default function TripAnalyticsPage() {
           <CardContent className="py-3">
             <div className="flex items-center gap-2 text-sm text-gray-400">
               <Filter className="h-4 w-4" />
-              <span>{getFiltersAppliedText()}</span>
+              {/* <span>{getFiltersAppliedText()}</span> */}
             </div>
           </CardContent>
         </Card>

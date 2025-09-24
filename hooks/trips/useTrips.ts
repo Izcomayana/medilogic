@@ -12,7 +12,7 @@ import {
   partialUpdateTripRequest,
   updateTripRequest,
 } from './api';
-import { formatDateTime } from './utils';
+import { formatDateTime } from '../utils';
 import { clients, drivers } from './constants';
 
 export type DateRangeLocal = { from?: Date; to?: Date };

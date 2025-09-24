@@ -9,7 +9,7 @@ import {
   AlertDialogTrigger,
   AlertDialogCancel,
 } from '@/components/ui/alert-dialog';
-import { useTrips } from '@/hooks/useTrips/useTrips';
+import { useTrips } from '@/hooks/trips/useTrips';
 import { Plus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import TripForm from './TripForm';
