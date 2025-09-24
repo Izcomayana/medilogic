@@ -9,10 +9,8 @@ import {
   mapApiTripAnalyticsToUi,
 } from './mappers';
 import { fetchTripAnalyticsRequest } from './api';
-import {
-  formatDateEnd,
-  formatDateStart,
-} from '../../app/(dashboard)/company-admin/(pages)/trips/components/Filters/dateRange';
+import { formatDateEnd, formatDateStart } from '../utils';
+// import { formatDateLocal } from '../utils';
 
 export type DateRangeLocal = { from?: Date; to?: Date };
 
@@ -76,30 +74,36 @@ export function useTripAnalytics(initialFilters: TripAnalyticsFilters = {}) {
     }).format(amount);
   }, []);
 
-  // 1. Predicted Durations → BarChart
+  // 2. Trips per Delivery Type → Bar & Pie Chart
+  // Format delivery types nicely (snake_case → Title Case)
+  function formatDeliveryType(type: string) {
+    return type
+      .split('_')
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+      .join(' ');
+  }
+
+  const deliveryTypeData = analytics?.tripsPerDeliveryType
+    ? Object.entries(analytics.tripsPerDeliveryType).map(([key, value]) => ({
+        name: formatDeliveryType(key),
+        value,
+      }))
+    : [];
+
+  const deliveryTypeColors: Record<string, string> = {
+    'Clinical Waste': '#ef4444', // red
+    Equipment: '#3b82f6', // blue
+    Documents: '#10b981', // green (example if added later)
+  };
+
+  // 4. Predicted Duration vs Trips → Line Chart
   const predictedDurationData =
-    analytics?.aiPrediction?.predicted_durations_minutes.map((d, i) => ({
-      trip: `Trip ${i + 1}`,
-      duration: d,
-    })) || [];
-
-  // 2. Delivery Type Distribution → PieChart
-  // NOTE: Backend only gives `most_common_delivery_type`,
-  // so unless API changes, you might need to calculate distribution
-  // from trips endpoint instead. For now, let’s mock it:
-  const deliveryTypeData = [
-    { name: analytics?.mostCommonDeliveryType || 'Unknown', value: 1 },
-  ];
-
-  // 3. Cost vs Distance → LineChart
-  // Same thing: backend only gives totals, not per-trip pairs.
-  // For demo, I’ll fabricate from totals until API adds breakdown.
-  const costDistanceData = [
-    {
-      distance: analytics?.totalDistance || 0,
-      cost: analytics?.totalCost || 0,
-    },
-  ];
+    analytics?.aiPrediction.predicted_durations_minutes?.map(
+      (duration, index) => ({
+        trip: index + 1, // Trip number
+        duration,
+      })
+    ) || [];
 
   const getFiltersAppliedText = useCallback(() => {
     const filtersText: string[] = [];
@@ -145,9 +149,9 @@ export function useTripAnalytics(initialFilters: TripAnalyticsFilters = {}) {
     setStatus,
     refetch: fetchAnalytics,
     formatCurrency,
-    predictedDurationData,
     deliveryTypeData,
-    costDistanceData,
+    deliveryTypeColors,
+    predictedDurationData,
     getFiltersAppliedText,
   };
 }
