@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { SidebarTrigger } from '@/components/ui/sidebar';

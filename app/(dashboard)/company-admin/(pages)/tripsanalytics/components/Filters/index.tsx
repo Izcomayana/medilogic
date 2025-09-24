@@ -19,8 +19,8 @@ export default function Filters({
   setSelectedDriver,
   selectedDeliveryType,
   setSelectedDeliveryType,
-  status,
-  setStatus,
+  // status,
+  // setStatus,
 }: FiltersProps) {
   return (
     <Card className="dashboard-card mb-6">
