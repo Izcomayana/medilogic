@@ -31,6 +31,7 @@ import Filters from './components/Filters';
 import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 
 const COLORS = ['#15941f', '#3b82f6', '#eab308'];
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function TripAnalyticsPage() {
   const tripsAnalyticState = useTripAnalytics();
@@ -42,19 +43,46 @@ export default function TripAnalyticsPage() {
     deliveryTypeData,
     costDistanceData,
     formatCurrency,
-    // getFiltersAppliedText,
+    getFiltersAppliedText,
   } = tripsAnalyticState;
 
-  if (loading || !analytics) {
-    return <p className="text-gray-400 p-6">Loading trip analytics...</p>;
-  }
-
-  if (error) {
+  function ChartWrapper({
+    title,
+    icon,
+    loading,
+    error,
+    children,
+  }: {
+    title: string;
+    icon: React.ReactNode;
+    loading: boolean;
+    error: string | null;
+    children: React.ReactNode;
+  }) {
     return (
-      <p className="text-red-500 p-6">Failed to load analytics: {error}</p>
+      <Card className="dashboard-card">
+        <CardHeader>
+          <CardTitle className="text-white flex items-center gap-2">
+            {icon} {title}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {loading ? (
+            <div className="h-80 flex items-center justify-center">
+              <Skeleton className="h-full w-full rounded-lg bg-gray-800" />
+            </div>
+          ) : error ? (
+            <div className="h-80 flex flex-col items-center justify-center text-center text-red-400 border border-red-500/30 rounded-lg bg-red-900/10 p-4">
+              <p className="font-medium">⚠️ Failed to load {title}</p>
+              <p className="text-xs text-red-300 mt-1">{error}</p>
+            </div>
+          ) : (
+            children
+          )}
+        </CardContent>
+      </Card>
     );
   }
-
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
       <PageHeader
@@ -86,7 +114,7 @@ export default function TripAnalyticsPage() {
                     </span>
                   </div>
                   <div className="text-3xl font-bold text-white">
-                    {analytics.aiPrediction.average_predicted_duration} mins
+                    {analytics?.aiPrediction.average_predicted_duration} mins
                   </div>
                   <div className="text-xs text-gray-400 mt-1">
                     Based on historical data and current conditions
@@ -101,7 +129,7 @@ export default function TripAnalyticsPage() {
                     </span>
                   </div>
                   <div className="flex gap-2 flex-wrap">
-                    {analytics.aiPrediction.predicted_durations_minutes.map(
+                    {analytics?.aiPrediction.predicted_durations_minutes.map(
                       (duration: any, index: any) => (
                         <Badge
                           key={index}
@@ -121,7 +149,7 @@ export default function TripAnalyticsPage() {
                   AI Insight
                 </h3>
                 <p className="text-sm text-gray-300 leading-relaxed">
-                  {analytics.aiInsight}
+                  {analytics?.aiInsight}
                 </p>
               </div>
             </div>
@@ -131,19 +159,63 @@ export default function TripAnalyticsPage() {
         {/* Charts Section */}
         <div className="grid gap-6 lg:grid-cols-2 mb-8">
           {/* Predicted Duration Chart */}
-          <Card className="dashboard-card">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <BarChart3 className="h-5 w-5" /> Predicted Trip Durations
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-80">
+          <ChartWrapper
+            title="Predicted Trip Durations"
+            icon={<BarChart3 className="h-5 w-5" />}
+            loading={loading}
+            error={error}
+          >
+            <div className="h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={predictedDurationData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                  <XAxis dataKey="trip" stroke="#9CA3AF" fontSize={12} />
+                  <YAxis stroke="#9CA3AF" fontSize={12} />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#1F2937',
+                      border: '1px solid #374151',
+                      borderRadius: '8px',
+                      color: '#F9FAFB',
+                    }}
+                  />
+                  <Bar
+                    dataKey="duration"
+                    fill="#15941f"
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </ChartWrapper>
+
+          {/* Delivery Type Distribution */}
+          <ChartWrapper
+            title="Delivery Type Distribution"
+            icon={<PieChartIcon className="h-5 w-5" />}
+            loading={loading}
+            error={error}
+          >
+            <div className="h-80 flex items-center">
+              <div className="w-1/2 h-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={predictedDurationData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                    <XAxis dataKey="trip" stroke="#9CA3AF" fontSize={12} />
-                    <YAxis stroke="#9CA3AF" fontSize={12} />
+                  <PieChart>
+                    <Pie
+                      data={deliveryTypeData}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={120}
+                      paddingAngle={5}
+                      dataKey="value"
+                    >
+                      {deliveryTypeData.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                        />
+                      ))}
+                    </Pie>
                     <Tooltip
                       contentStyle={{
                         backgroundColor: '#1F2937',
@@ -152,148 +224,94 @@ export default function TripAnalyticsPage() {
                         color: '#F9FAFB',
                       }}
                     />
-                    <Bar
-                      dataKey="duration"
-                      fill="#15941f"
-                      radius={[4, 4, 0, 0]}
-                    />
-                  </BarChart>
+                  </PieChart>
                 </ResponsiveContainer>
               </div>
-            </CardContent>
-          </Card>
-
-          {/* Delivery Type Distribution */}
-          <Card className="dashboard-card">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <PieChartIcon className="h-5 w-5" />
-                Delivery Type Distribution
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="h-80 flex items-center">
-                <div className="w-1/2 h-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={deliveryTypeData}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={60}
-                        outerRadius={120}
-                        paddingAngle={5}
-                        dataKey="value"
-                      >
-                        {deliveryTypeData.map((entry, index) => (
-                          <Cell
-                            key={`cell-${index}`}
-                            fill={COLORS[index % COLORS.length]}
-                          />
-                        ))}
-                      </Pie>
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: '#1F2937',
-                          border: '1px solid #374151',
-                          borderRadius: '8px',
-                          color: '#F9FAFB',
+              <div className="w-1/2 space-y-4">
+                {deliveryTypeData.map((item, index) => (
+                  <div
+                    key={item.name}
+                    className="flex items-center justify-between"
+                  >
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="w-3 h-3 rounded-full"
+                        style={{
+                          backgroundColor: COLORS[index % COLORS.length],
                         }}
-                      />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
-                <div className="w-1/2 space-y-4">
-                  {deliveryTypeData.map((item, index) => (
-                    <div
-                      key={item.name}
-                      className="flex items-center justify-between"
-                    >
-                      <div className="flex items-center gap-2">
-                        <div
-                          className="w-3 h-3 rounded-full"
-                          style={{
-                            backgroundColor: COLORS[index % COLORS.length],
-                          }}
-                        ></div>
-                        <span className="text-sm text-gray-300">
-                          {item.name}
-                        </span>
-                      </div>
-                      <div className="text-right">
-                        <span className="text-sm text-white font-medium">
-                          {item.value}
-                        </span>
-                      </div>
+                      ></div>
+                      <span className="text-sm text-gray-300">{item.name}</span>
                     </div>
-                  ))}
-                </div>
+                    <div className="text-right">
+                      <span className="text-sm text-white font-medium">
+                        {item.value}
+                      </span>
+                    </div>
+                  </div>
+                ))}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </ChartWrapper>
         </div>
 
         {/* Cost vs Distance Chart */}
-        <Card className="dashboard-card mb-6 gap-4">
-          <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
-              <TrendingUp className="h-5 w-5" />
-              Cost vs Distance Analysis
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="h-80">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={costDistanceData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                  <XAxis
-                    dataKey="distance"
-                    stroke="#9CA3AF"
-                    fontSize={12}
-                    label={{
-                      value: 'Distance (km)',
-                      position: 'insideBottom',
-                      offset: -10,
-                    }}
-                  />
-                  <YAxis
-                    stroke="#9CA3AF"
-                    fontSize={12}
-                    label={{
-                      value: 'Cost (₦)',
-                      angle: -90,
-                      position: 'insideLeft',
-                    }}
-                  />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: '#1F2937',
-                      border: '1px solid #374151',
-                      borderRadius: '8px',
-                      color: '#F9FAFB',
-                    }}
-                    formatter={(value: any) => [formatCurrency(value), 'Cost']}
-                    labelFormatter={(label: any) => `Distance: ${label} km`}
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="cost"
-                    stroke="#3b82f6"
-                    strokeWidth={3}
-                    dot={{ fill: '#3b82f6', strokeWidth: 2, r: 6 }}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
+        <ChartWrapper
+          title="Cost vs Distance Analysis"
+          icon={<TrendingUp className="h-5 w-5" />}
+          loading={loading}
+          error={error}
+        >
+          <div className="h-80">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={costDistanceData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <XAxis
+                  dataKey="distance"
+                  stroke="#9CA3AF"
+                  fontSize={12}
+                  label={{
+                    value: 'Distance (km)',
+                    position: 'insideBottom',
+                    offset: -10,
+                  }}
+                />
+                <YAxis
+                  stroke="#9CA3AF"
+                  fontSize={12}
+                  label={{
+                    value: 'Cost (₦)',
+                    angle: -90,
+                    position: 'insideLeft',
+                  }}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: '#1F2937',
+                    border: '1px solid #374151',
+                    borderRadius: '8px',
+                    color: '#F9FAFB',
+                  }}
+                  formatter={(value: any) => [formatCurrency(value), 'Cost']}
+                  labelFormatter={(label: any) => `Distance: ${label} km`}
+                />
+                <Line
+                  type="monotone"
+                  dataKey="cost"
+                  stroke="#3b82f6"
+                  strokeWidth={3}
+                  dot={{ fill: '#3b82f6', strokeWidth: 2, r: 6 }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </ChartWrapper>
 
         {/* Filters Applied Summary */}
         <Card className="dashboard-card">
           <CardContent className="py-3">
             <div className="flex items-center gap-2 text-sm text-gray-400">
               <Filter className="h-4 w-4" />
-              {/* <span>{getFiltersAppliedText()}</span> */}
+              <span>{getFiltersAppliedText()}</span>
             </div>
           </CardContent>
         </Card>
