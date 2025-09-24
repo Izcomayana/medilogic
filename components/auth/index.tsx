@@ -1,8 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import axios from 'axios';
+// import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
   user: any;
@@ -22,6 +29,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [refreshToken, setRefreshToken] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  // const router = useRouter();
 
   useEffect(() => {
     const _token = localStorage.getItem('authToken');
@@ -45,10 +53,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setTokenState(null);
     setRefreshToken(null);
     setRole(null);
+    // router.push('/login');
     window.location.href = '/login';
   };
 
-  const refreshAccessToken = async (): Promise<string | null> => {
+  const refreshAccessToken = useCallback(async (): Promise<string | null> => {
     if (!refreshToken) {
       logout();
       return null;
@@ -59,9 +68,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         'https://medilogic-backend.onrender.com/access/refresh-token',
         JSON.stringify(refreshToken),
         {
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
         }
       );
 
@@ -73,13 +80,46 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         localStorage.setItem('refreshToken', response.data.refresh_token);
       }
 
-      return newToken; // ✅ return token
+      return newToken;
     } catch (err) {
       console.error('Token refresh failed', err);
       logout();
       return null;
     }
-  };
+  }, [refreshToken, logout]); // ✅ stable deps
+
+  // const refreshAccessToken = async (): Promise<string | null> => {
+  //   if (!refreshToken) {
+  //     logout();
+  //     return null;
+  //   }
+
+  //   try {
+  //     const response = await axios.post(
+  //       'https://medilogic-backend.onrender.com/access/refresh-token',
+  //       JSON.stringify(refreshToken),
+  //       {
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //       }
+  //     );
+
+  //     const newToken = response.data.access_token;
+  //     setToken(newToken);
+
+  //     if (response.data.refresh_token) {
+  //       setRefreshToken(response.data.refresh_token);
+  //       localStorage.setItem('refreshToken', response.data.refresh_token);
+  //     }
+
+  //     return newToken; // ✅ return token
+  //   } catch (err) {
+  //     console.error('Token refresh failed', err);
+  //     logout();
+  //     return null;
+  //   }
+  // };
 
   useEffect(() => {
     console.log('AuthProvider mounted');

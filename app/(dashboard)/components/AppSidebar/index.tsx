@@ -6,7 +6,6 @@ import {
   Home,
   Shield,
   Users,
-  Truck,
   ClipboardList,
   FileText,
   Logs,
@@ -14,6 +13,8 @@ import {
   AppWindow,
   Route,
   Settings,
+  ChartNoAxesCombined,
+  Waypoints,
 } from 'lucide-react';
 import { useAuth } from '@/components/auth';
 import {
@@ -56,12 +57,21 @@ const sidebarLinksByRole: Record<
     { title: 'Dashboard', url: '/company-admin', icon: Home },
     { title: 'Trips', url: '/company-admin/trips', icon: Route },
     {
+      title: 'Trips Analytics',
+      url: '/company-admin/tripsanalytics',
+      icon: Waypoints,
+    },
+    {
       title: 'Assignments',
       url: '/company-admin/assignments',
       icon: ClipboardList,
     },
     { title: 'Users', url: '/company-admin/users', icon: Users },
-    { title: 'Charts', url: '/company-admin/charts', icon: Truck },
+    {
+      title: 'Charts',
+      url: '/company-admin/charts',
+      icon: ChartNoAxesCombined,
+    },
     { title: 'Exports', url: '/company-admin/exports', icon: FileText },
     { title: 'Settings', url: '/company-admin/settings', icon: Settings },
   ],

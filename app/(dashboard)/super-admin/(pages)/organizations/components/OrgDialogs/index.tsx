@@ -58,6 +58,15 @@ export function ViewOrganizationDialog({
               </p>
             </div>
 
+            <div className="col-span-1 sm:col-span-2 lg:col-span-3">
+              <Label className="text-xs uppercase text-gray-400">
+                Organization ID
+              </Label>
+              <div className="mt-1 flex items-center gap-2 text-base text-gray-200">
+                <Hash className="h-4 w-4" /> {org.id}
+              </div>
+            </div>
+
             <div>
               <Label className="text-xs uppercase text-gray-400">Status</Label>
               <div className="mt-1">
@@ -107,6 +116,17 @@ export function ViewOrganizationDialog({
               </div>
             </div>
 
+            {org.ico_registered && (
+              <div>
+                <Label className="text-xs uppercase text-gray-400">
+                  ICO Registered Number
+                </Label>
+                <p className="mt-1 text-base text-gray-200">
+                  {org.ico_registration_number}
+                </p>
+              </div>
+            )}
+
             <div>
               <Label className="text-xs uppercase text-gray-400">
                 License Expiry
@@ -146,15 +166,6 @@ export function ViewOrganizationDialog({
             <div className="col-span-1 sm:col-span-2 lg:col-span-3">
               <Label className="text-xs uppercase text-gray-400">Address</Label>
               <p className="mt-1 text-base text-gray-200">{org.address}</p>
-            </div>
-
-            <div className="col-span-1 sm:col-span-2 lg:col-span-3">
-              <Label className="text-xs uppercase text-gray-400">
-                Organization ID
-              </Label>
-              <div className="mt-1 flex items-center gap-2 text-base text-gray-200">
-                <Hash className="h-4 w-4" /> {org.id}
-              </div>
             </div>
 
             <div className="col-span-1 sm:col-span-2 lg:col-span-3">

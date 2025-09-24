@@ -20,7 +20,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { useTrips } from '@/hooks/useTrips/useTrips';
+import { useTrips } from '@/hooks/trips/useTrips';
 import { X } from 'lucide-react';
 
 type EditTripProps = ReturnType<typeof useTrips>;

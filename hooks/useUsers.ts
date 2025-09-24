@@ -224,7 +224,7 @@ export function useUsers() {
         ...u,
       }));
 
-      // mapped.sort((a, b) => a.name.localeCompare(b.name));
+      mapped.sort((a, b) => a.name.localeCompare(b.name));
       setDeletedUsers(mapped);
     }, 'Failed to fetch deleted users').finally(() => {
       if (isMounted) setLoading(false);

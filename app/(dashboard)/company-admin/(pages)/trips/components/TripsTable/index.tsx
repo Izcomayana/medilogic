@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Card, CardContent } from '@/components/ui/card';
-import { useTrips } from '@/hooks/useTrips/useTrips';
+import { useTrips } from '@/hooks/trips/useTrips';
 import {
   MapPin,
   Eye,
