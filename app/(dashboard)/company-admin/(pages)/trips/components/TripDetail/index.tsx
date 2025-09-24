@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { useTrips } from '@/hooks/useTrips/useTrips';
+import { useTrips } from '@/hooks/trips/useTrips';
 import {
   MapPin,
   Calendar,

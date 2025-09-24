@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin, Search, Filter } from 'lucide-react';
-import { useTrips } from '@/hooks/useTrips/useTrips';
+import { useTrips } from '@/hooks/trips/useTrips';
 import {
   Select,
   SelectContent,
