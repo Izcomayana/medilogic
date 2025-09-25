@@ -2,7 +2,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Truck, MapPin, DollarSign, Package, Target } from 'lucide-react';
 import { useTripAnalytics } from '@/hooks/tripsAnalytics/useTripAnalytics';
 import { formatDeliveryType } from '@/hooks/utils';
-import { KeyMetricsSkeleton } from './keyMetricsSkeleton';
 
 type KeyMetricsProps = ReturnType<typeof useTripAnalytics>;
 

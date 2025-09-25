@@ -15,10 +15,7 @@ import {
   LineChart,
   Line,
 } from 'recharts';
-import {
-  BarChart3,
-  PieChartIcon,
-} from 'lucide-react';
+import { BarChart3, PieChartIcon } from 'lucide-react';
 
 type ChartsProps = ReturnType<typeof useTripAnalytics>;
 
