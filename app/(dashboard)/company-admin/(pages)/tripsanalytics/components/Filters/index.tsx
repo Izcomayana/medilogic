@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Package, Filter, Users } from 'lucide-react';
+import { Package, Filter } from 'lucide-react';
 import DateRangeFilter from '../../../trips/components/Filters/dateRange';
 import { useTripAnalytics } from '@/hooks/tripsAnalytics/useTripAnalytics';
 
@@ -15,15 +15,15 @@ type FiltersProps = ReturnType<typeof useTripAnalytics>;
 export default function Filters({
   dateRange,
   setDateRange,
-  selectedDriver,
-  setSelectedDriver,
+  // selectedDriver,
+  // setSelectedDriver,
   selectedDeliveryType,
   setSelectedDeliveryType,
   // status,
   // setStatus,
 }: FiltersProps) {
   return (
-    <Card className="dashboard-card mb-6">
+    <Card className="dashboard-card mb-6 flex flex-row items-center justify-between">
       <CardHeader>
         <CardTitle className="text-white flex items-center gap-2">
           <Filter className="h-5 w-5" />
@@ -36,7 +36,7 @@ export default function Filters({
           <DateRangeFilter value={dateRange} onChange={setDateRange} />
 
           {/* Driver */}
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <Users className="h-4 w-4 text-gray-400" />
             <Select value={selectedDriver} onValueChange={setSelectedDriver}>
               <SelectTrigger className="w-[150px] bg-gray-700 border-gray-600 text-white">
@@ -44,10 +44,10 @@ export default function Filters({
               </SelectTrigger>
               <SelectContent className="bg-gray-700 border-gray-600">
                 <SelectItem value="all">All Drivers</SelectItem>
-                {/* TODO: populate with real drivers list */}
+                // TODO: populate with real drivers list
               </SelectContent>
             </Select>
-          </div>
+          </div> */}
 
           {/* Delivery Type */}
           <div className="flex items-center gap-2">
@@ -63,9 +63,9 @@ export default function Filters({
                 <SelectItem value="all">All Types</SelectItem>
                 <SelectItem value="clinical_waste">Clinical Waste</SelectItem>
                 <SelectItem value="equipment">Equipment</SelectItem>
-                {/* <SelectItem value="documents">Documents</SelectItem>
+                <SelectItem value="documents">Documents</SelectItem>
                 <SelectItem value="samples">Samples</SelectItem>
-                <SelectItem value="other">Other</SelectItem> */}
+                <SelectItem value="other">Other</SelectItem>
               </SelectContent>
             </Select>
           </div>

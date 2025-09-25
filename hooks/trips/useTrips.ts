@@ -113,6 +113,13 @@ export function useTrips(tripsPerPage = 10) {
         total = data.total ?? data.items.length;
       }
 
+      // ✅ Enforce frontend sorting as fallback
+      items.sort((a, b) => {
+        const dateA = new Date(a.created_at).getTime();
+        const dateB = new Date(b.created_at).getTime();
+        return dateB - dateA;
+      });
+
       const mapped: UiTrip[] = items.map(mapApiTripToUiTrip);
       setTripsList(mapped);
       setTotalTrips(total);
@@ -128,7 +135,6 @@ export function useTrips(tripsPerPage = 10) {
 
   useEffect(() => {
     fetchTrips();
-    console.log('totalTrips:', totalTrips);
   }, [statusFilter, searchTerm, dateRange, currentPage]);
 
   const filteredTrips = tripsList;
@@ -306,13 +312,15 @@ export function useTrips(tripsPerPage = 10) {
       driverId: trip.driverId || '',
       // driverAsigned: trip.driverAssigned || '',
       dateTime: trip.dateTime || '',
-      notes: trip.statusHistory?.[0]?.note || '',
+      notes: trip.notes || '',
+      // notes: trip.statusHistory?.[0]?.note || '',
       status: trip.status || 'Pending',
       priority: trip.priority || 'normal',
       deliveryType: trip.deliveryType || 'clinical_waste',
-      customDeliveryDescription: trip.statusHistory?.[0]?.note || '',
-      cost: '0',
-      distanceKm: '0',
+      customDeliveryDescription: trip.customDeliveryDescription || '',
+      // customDeliveryDescription: trip.statusHistory?.[0]?.note || '',
+      cost: '',
+      distanceKm: '',
       vehicleType: '',
       locationZone: '',
       shiftWindow: '',

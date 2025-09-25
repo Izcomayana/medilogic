@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Truck, Package, FileText, Calendar, Clock } from 'lucide-react';
+import { Truck, Package, FileText, Calendar, Users } from 'lucide-react';
 import { useAuthorizedRequest } from '@/hooks/useRequest';
 import axios from 'axios';
 import { PageHeader } from '../components/PageHeader';
@@ -23,6 +23,40 @@ const DashboardSkeleton = () => (
           </CardHeader>
           <CardContent>
             <div className="h-8 w-16 bg-gray-700 rounded"></div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+
+    {/* Skeleton Tops */}
+    <div className="grid gap-6 md:grid-cols-2 mb-8">
+      {[1, 2].map((i) => (
+        <Card
+          key={i}
+          className="dashboard-card animate-pulse bg-gray-800/50 border border-gray-700"
+        >
+          <CardHeader>
+            <div className="h-5 w-32 bg-gray-700 rounded mb-2"></div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {[1, 2, 3].map((j) => (
+                <div key={j} className="space-y-1">
+                  {/* Rank + Name + Trips */}
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <div className="h-5 w-8 bg-gray-700 rounded-full"></div>
+                      <div className="h-4 w-24 bg-gray-700 rounded"></div>
+                    </div>
+                    <div className="h-4 w-12 bg-gray-700 rounded"></div>
+                  </div>
+                  {/* Progress bar */}
+                  <div className="w-full bg-gray-700 rounded-full h-2">
+                    <div className="bg-gray-600 h-2 rounded-full w-1/2"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
       ))}
@@ -73,6 +107,8 @@ type DashboardResponse = {
     completed_time?: string;
     estimated_completion?: string;
   }[];
+  top_drivers: { driver_name: string; trip_count: number }[];
+  top_clients: { client_name: string; trip_count: number }[];
 };
 
 export const AdminDashboard = () => {
@@ -186,8 +222,104 @@ export const AdminDashboard = () => {
             </Card>
           </div>
 
+          <div className="grid gap-6 md:grid-cols-2 my-8">
+            {/* Top Clients */}
+            <Card className="dashboard-card">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center gap-2">
+                  <Users className="h-5 w-5" />
+                  Top Clients
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {data.top_clients.length === 0 ? (
+                  <p className="text-gray-400 text-sm">
+                    No client data available
+                  </p>
+                ) : (
+                  <div className="space-y-4">
+                    {data.top_clients.map((client, i) => {
+                      const maxTrips = data.top_clients[0].trip_count;
+                      const percentage = Math.round(
+                        (client.trip_count / maxTrips) * 100
+                      );
+                      return (
+                        <div key={i} className="space-y-1">
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-white flex items-center gap-2">
+                              <span className="text-xs bg-gray-700 px-2 py-0.5 rounded-full">
+                                {i + 1}
+                              </span>
+                              {client.client_name}
+                            </span>
+                            <span className="text-xs font-medium text-gray-300">
+                              {client.trip_count} trips
+                            </span>
+                          </div>
+                          <div className="w-full bg-gray-700 rounded-full h-2">
+                            <div
+                              className="bg-blue-600 h-2 rounded-full"
+                              style={{ width: `${percentage}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Top Drivers */}
+            <Card className="dashboard-card">
+              <CardHeader>
+                <CardTitle className="text-white flex items-center gap-2">
+                  <Truck className="h-5 w-5" />
+                  Top Drivers
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {data.top_drivers.length === 0 ? (
+                  <p className="text-gray-400 text-sm">
+                    No driver data available
+                  </p>
+                ) : (
+                  <div className="space-y-4">
+                    {data.top_drivers.map((driver, i) => {
+                      const maxTrips = data.top_drivers[0].trip_count;
+                      const percentage = Math.round(
+                        (driver.trip_count / maxTrips) * 100
+                      );
+                      return (
+                        <div key={i} className="space-y-1">
+                          <div className="flex justify-between items-center">
+                            <span className="text-sm text-white flex items-center gap-2">
+                              <span className="text-xs bg-gray-700 px-2 py-0.5 rounded-full">
+                                {i + 1}
+                              </span>
+                              {driver.driver_name}
+                            </span>
+                            <span className="text-xs font-medium text-gray-300">
+                              {driver.trip_count} trips
+                            </span>
+                          </div>
+                          <div className="w-full bg-gray-700 rounded-full h-2">
+                            <div
+                              className="bg-green-600 h-2 rounded-full"
+                              style={{ width: `${percentage}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
           {/* Recent Trips */}
-          <Card className="dashboard-card">
+          {/* <Card className="dashboard-card">
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
                 <Truck className="h-5 w-5" />
@@ -238,7 +370,7 @@ export const AdminDashboard = () => {
                 </div>
               )}
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
       )}
     </div>
