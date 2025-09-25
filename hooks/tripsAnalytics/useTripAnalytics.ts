@@ -67,9 +67,9 @@ export function useTripAnalytics(initialFilters: TripAnalyticsFilters = {}) {
   }, [dateRange, selectedDriver, selectedDeliveryType, status]);
 
   const formatCurrency = useCallback((amount: number) => {
-    return new Intl.NumberFormat('en-NG', {
+    return new Intl.NumberFormat('en-GB', {
       style: 'currency',
-      currency: 'NGN',
+      currency: 'GBP',
       minimumFractionDigits: 0,
     }).format(amount);
   }, []);
