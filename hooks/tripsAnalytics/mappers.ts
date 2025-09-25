@@ -23,11 +23,6 @@ export interface TripAnalyticsResponse {
     average_predicted_duration: number;
   };
 
-  // ai_prediction: {
-  //   average_predicted_duration: number;
-  //   min_predicted_duration: number;
-  //   max_predicted_duration: number;
-  // };
   ai_insight: string;
   chart?: string; // optional backend chart HTML
 }

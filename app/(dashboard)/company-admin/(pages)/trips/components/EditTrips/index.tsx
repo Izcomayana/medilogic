@@ -247,7 +247,7 @@ export function EditTripModal({
                 type="number"
                 value={formData.distanceKm}
                 onChange={(e) =>
-                  setFormData({ ...formData, cost: e.target.value })
+                  setFormData({ ...formData, distanceKm: e.target.value })
                 }
                 placeholder="Enter distance in km"
                 className="bg-gray-700 border-gray-600 text-white mt-2"
