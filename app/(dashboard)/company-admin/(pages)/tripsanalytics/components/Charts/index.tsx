@@ -16,10 +16,6 @@ import {
   Line,
 } from 'recharts';
 import {
-  TrendingUp,
-  Clock,
-  Filter,
-  Brain,
   BarChart3,
   PieChartIcon,
 } from 'lucide-react';

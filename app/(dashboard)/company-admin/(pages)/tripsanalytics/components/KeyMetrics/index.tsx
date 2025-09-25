@@ -11,7 +11,7 @@ export default function keyMetrics({
   formatCurrency,
   loading,
 }: KeyMetricsProps) {
-  function KeyMetricsSkeleton() {
+  if (loading)
     return (
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5 mb-8">
         {Array.from({ length: 5 }).map((_, i) => (
@@ -28,8 +28,6 @@ export default function keyMetrics({
         ))}
       </div>
     );
-  }
-  if (loading) return <KeyMetricsSkeleton />;
 
   if (!analytics) {
     return <p className="text-gray-400 p-6">No analytics data available</p>;
