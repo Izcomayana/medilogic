@@ -15,7 +15,6 @@ import {
   Clock,
   Navigation,
   Car,
-  DollarSign,
   Gauge,
   ShieldCheck,
   Flag,

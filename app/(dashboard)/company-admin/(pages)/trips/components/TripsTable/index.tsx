@@ -12,8 +12,6 @@ import {
   Clock,
   Navigation,
   CheckCircle,
-  Loader,
-  AlertCircle,
   XCircle,
 } from 'lucide-react';
 import {

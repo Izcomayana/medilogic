@@ -6,7 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Package, Filter, Users } from 'lucide-react';
+import { Package, Filter } from 'lucide-react';
 import DateRangeFilter from '../../../trips/components/Filters/dateRange';
 import { useTripAnalytics } from '@/hooks/tripsAnalytics/useTripAnalytics';
 

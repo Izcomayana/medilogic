@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Truck, Package, FileText, Calendar, Clock, Users } from 'lucide-react';
+import { Truck, Package, FileText, Calendar, Users } from 'lucide-react';
 import { useAuthorizedRequest } from '@/hooks/useRequest';
 import axios from 'axios';
 import { PageHeader } from '../components/PageHeader';
