@@ -7,14 +7,14 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Package, Filter, Users } from 'lucide-react';
-// import DateRangeFilter from '../../../trips/components/Filters/dateRange';
+import DateRangeFilter from '../../../trips/components/Filters/dateRange';
 import { useTripAnalytics } from '@/hooks/tripsAnalytics/useTripAnalytics';
 
 type FiltersProps = ReturnType<typeof useTripAnalytics>;
 
 export default function Filters({
-  // dateRange,
-  // setDateRange,
+  dateRange,
+  setDateRange,
   // selectedDriver,
   // setSelectedDriver,
   selectedDeliveryType,
@@ -23,7 +23,7 @@ export default function Filters({
   // setStatus,
 }: FiltersProps) {
   return (
-    <Card className="dashboard-card mb-6">
+    <Card className="dashboard-card mb-6 flex flex-row items-center justify-between">
       <CardHeader>
         <CardTitle className="text-white flex items-center gap-2">
           <Filter className="h-5 w-5" />
@@ -33,7 +33,7 @@ export default function Filters({
       <CardContent>
         <div className="flex gap-4 items-end flex-wrap">
           {/* Date Range */}
-          {/* <DateRangeFilter value={dateRange} onChange={setDateRange} /> */}
+          <DateRangeFilter value={dateRange} onChange={setDateRange} />
 
           {/* Driver */}
           {/* <div className="flex items-center gap-2">

@@ -74,7 +74,7 @@ export default function TripAnalyticsPage() {
                 {/* AI Insight */}
                 <div className="bg-gradient-to-br from-purple-900/20 to-blue-900/20 rounded-lg p-4 border border-purple-500/20">
                   <div className="flex items-center gap-2 mb-2">
-                    <Lightbulb className="h-4 w-4 text-purple-400" />
+                    <Lightbulb className="h-5 w-5" color="#f7fb04" />
                     <h3 className="text-sm font-semibold text-white">
                       AI Insight
                     </h3>
@@ -135,7 +135,7 @@ export default function TripAnalyticsPage() {
 
                 <div className="bg-gradient-to-br from-purple-900/20 to-blue-900/20 rounded-lg p-4 border border-purple-500/20">
                   <div className="flex items-center gap-2 mb-2">
-                    <Lightbulb className="h-6 w-6" color="#f7fb04" />
+                    <Lightbulb className="h-5 w-5" color="#f7fb04" />
                     <h3 className="text-sm font-semibold text-white">
                       AI Insight
                     </h3>

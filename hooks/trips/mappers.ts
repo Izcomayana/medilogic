@@ -20,6 +20,7 @@ export type Trip = {
   custom_delivery_description: string | null;
   id: string;
   created_at: string;
+  notes: string;
 };
 
 export function mapApiTripToUiTrip(apiTrip: Trip) {
@@ -43,13 +44,14 @@ export function mapApiTripToUiTrip(apiTrip: Trip) {
     locationZone: apiTrip.location_zone,
     complianceFlag: apiTrip.compliance_flag,
     recurrenceRule: apiTrip.recurrence_rule,
-    // notes: apiTrip.custom_delivery_description,
+    notes: apiTrip.notes,
     createdDate: apiTrip.created_at,
+    customDeliveryDescription: apiTrip.custom_delivery_description,
     statusHistory: [
       {
         status: apiTrip.status,
         timestamp: apiTrip.created_at,
-        note: apiTrip.custom_delivery_description || '',
+        note: apiTrip.notes || '',
       },
     ],
   };

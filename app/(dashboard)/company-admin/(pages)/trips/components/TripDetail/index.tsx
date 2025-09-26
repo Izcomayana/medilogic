@@ -20,9 +20,12 @@ import {
   ShieldCheck,
   Flag,
   Repeat,
+  PoundSterling,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { formatDateTime } from '@/hooks/utils';
+import { getStatusBadge } from '../../badge';
 
 type TripsDetailsProps = ReturnType<typeof useTrips>;
 
@@ -162,7 +165,7 @@ export function TripsDetailModal({
                 <span>{selectedTrip.vehicleType || 'N/A'}</span>
               </div>
               <div className="flex items-center gap-2 bg-gray-800 p-3 rounded-lg">
-                <DollarSign className="h-5 w-5 text-green-400" />
+                <PoundSterling className="h-5 w-5 text-green-400" />
                 <span>{selectedTrip.cost || '0'}</span>
               </div>
               <div className="flex items-center gap-2 bg-gray-800 p-3 rounded-lg">
@@ -196,14 +199,14 @@ export function TripsDetailModal({
                 {selectedTrip.statusHistory.map((entry, index) => (
                   <div
                     key={index}
-                    className="flex items-center gap-3 p-3 bg-gray-800 rounded-lg border border-gray-700"
+                    className="flex flex-col gap-3 p-3 bg-gray-800 rounded-lg border border-gray-700"
                   >
-                    <Badge variant="outline" className="capitalize">
-                      {entry.status}
-                    </Badge>
-                    <div className="flex-1">
+                    {getStatusBadge(entry.status)}
+                    <div className="flex flex-col gap-3">
                       <p className="text-white text-sm">{entry.note}</p>
-                      <p className="text-gray-400 text-xs">{entry.timestamp}</p>
+                      <p className="text-gray-400 text-xs">
+                        {formatDateTime(entry.timestamp)}
+                      </p>
                     </div>
                   </div>
                 ))}
