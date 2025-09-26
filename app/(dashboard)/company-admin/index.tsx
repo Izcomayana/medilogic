@@ -319,7 +319,7 @@ export const AdminDashboard = () => {
           </div>
 
           {/* Recent Trips */}
-          <Card className="dashboard-card">
+          {/* <Card className="dashboard-card">
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
                 <Truck className="h-5 w-5" />
@@ -370,7 +370,7 @@ export const AdminDashboard = () => {
                 </div>
               )}
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
       )}
     </div>
