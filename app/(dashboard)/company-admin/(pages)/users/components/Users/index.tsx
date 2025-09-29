@@ -27,18 +27,18 @@ import { formatDate, getRoleBadge, getStatusBadge } from '../../utils';
 
 type ActiveUsersProps = ReturnType<typeof useUsers>;
 
-export function ActiveUsersTab({
-  filteredActiveUsers,
+export function UsersTab({
+  filteredUsers,
   searchTerm,
   roleFilter,
   statusFilter,
-  paginatedActiveUsers,
+  paginatedUsers,
   handleViewDetails,
 }: ActiveUsersProps) {
   return (
     <>
-      <TabsContent value="active" className="p-0">
-        {filteredActiveUsers.length === 0 ? (
+      <TabsContent value="users" className="p-0">
+        {filteredUsers.length === 0 ? (
           <div className="text-center py-12">
             <Users className="h-12 w-12 text-gray-600 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-white mb-2">
@@ -65,7 +65,7 @@ export function ActiveUsersTab({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {paginatedActiveUsers.map((user) => (
+                {paginatedUsers.map((user) => (
                   <TableRow
                     key={user.id}
                     className="border-gray-700 hover:bg-gray-800"

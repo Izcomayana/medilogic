@@ -10,9 +10,11 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { drivers } from '@/hooks/trips/constants';
+import { useDrivers } from './useDrivers';
 
 export default function TripForm({ formData, setFormData }: any) {
+  const { drivers, loading } = useDrivers();
+
   return (
     <>
       {/* 🔽 Scrollable form section */}
@@ -94,7 +96,9 @@ export default function TripForm({ formData, setFormData }: any) {
               }}
             >
               <SelectTrigger className="bg-gray-700 border-gray-600 text-white mt-2">
-                <SelectValue placeholder="Select driver" />
+                <SelectValue
+                  placeholder={loading ? 'Loading drivers...' : 'Select driver'}
+                />
               </SelectTrigger>
               <SelectContent className="bg-gray-700 border-gray-600">
                 {drivers.map((driver) => (
