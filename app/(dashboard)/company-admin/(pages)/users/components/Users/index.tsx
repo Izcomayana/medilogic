@@ -24,21 +24,39 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { formatDate, getRoleBadge, getStatusBadge } from '../../utils';
+import { UsersTableSkeleton } from './userSekeleton';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
 
 type ActiveUsersProps = ReturnType<typeof useUsers>;
 
 export function UsersTab({
+  loading,
   filteredUsers,
   searchTerm,
   roleFilter,
   statusFilter,
   paginatedUsers,
   handleViewDetails,
+  handleDeactivateUser,
+  handleActivateUser,
+  isDetailsModalOpen,
+  setIsDetailsModalOpen,
+  selectedUser,
 }: ActiveUsersProps) {
   return (
     <>
       <TabsContent value="users" className="p-0">
-        {filteredUsers.length === 0 ? (
+        {loading ? (
+          <UsersTableSkeleton />
+        ) : filteredUsers.length === 0 ? (
           <div className="text-center py-12">
             <Users className="h-12 w-12 text-gray-600 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-white mb-2">
@@ -55,7 +73,6 @@ export function UsersTab({
             <Table>
               <TableHeader>
                 <TableRow className="border-gray-700 hover:bg-gray-800">
-                  <TableHead className="text-gray-300">User ID</TableHead>
                   <TableHead className="text-gray-300">Name</TableHead>
                   <TableHead className="text-gray-300">Email</TableHead>
                   <TableHead className="text-gray-300">Role</TableHead>
@@ -70,9 +87,6 @@ export function UsersTab({
                     key={user.id}
                     className="border-gray-700 hover:bg-gray-800"
                   >
-                    <TableCell className="font-medium text-white">
-                      {user.id}
-                    </TableCell>
                     <TableCell className="text-gray-300">{user.name}</TableCell>
                     <TableCell className="text-gray-300 flex items-center gap-1">
                       <Mail className="h-3 w-3" />
@@ -106,17 +120,10 @@ export function UsersTab({
                             <Eye className="h-4 w-4 mr-2" />
                             View
                           </DropdownMenuItem>
-                          <DropdownMenuItem
-                            className="cursor-pointer text-red-400 hover:bg-gray-700"
-                            onClick={() => console.log('Deactivate', user.id)}
-                          >
-                            <Power className="h-4 w-4 mr-2" />
-                            Deactivate
-                          </DropdownMenuItem>
-                          {/* {user.status === 'active' ? (
+                          {user.status === 'active' ? (
                             <DropdownMenuItem
                               className="cursor-pointer text-red-400 hover:bg-gray-700"
-                              onClick={() => console.log('Deactivate', user.id)}
+                              onClick={() => handleDeactivateUser(user.id)}
                             >
                               <Power className="h-4 w-4 mr-2" />
                               Deactivate
@@ -124,12 +131,12 @@ export function UsersTab({
                           ) : (
                             <DropdownMenuItem
                               className="cursor-pointer text-green-400 hover:bg-gray-700"
-                              onClick={() => console.log('Activate', user.id)}
+                              onClick={() => handleActivateUser(user.id)}
                             >
                               <Power className="h-4 w-4 mr-2" />
                               Activate
                             </DropdownMenuItem>
-                          )} */}
+                          )}
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>
@@ -140,6 +147,70 @@ export function UsersTab({
           </div>
         )}
       </TabsContent>
+
+      {/* User Details Modal */}
+      <Dialog open={isDetailsModalOpen} onOpenChange={setIsDetailsModalOpen}>
+        <DialogContent className="bg-gray-800 border border-gray-700 text-white max-w-lg">
+          <DialogHeader>
+            <DialogTitle>User Details</DialogTitle>
+            <DialogDescription className="text-gray-400">
+              Information about the selected user
+            </DialogDescription>
+          </DialogHeader>
+
+          {selectedUser ? (
+            <div className="space-y-4">
+              <div>
+                <p className="text-sm text-gray-400">Name</p>
+                <p className="text-base font-medium">{selectedUser.name}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-400">Email</p>
+                <p className="text-base font-medium flex items-center gap-1">
+                  <Mail className="h-4 w-4" />
+                  {selectedUser.email}
+                </p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-400">Role</p>
+                {getRoleBadge(selectedUser.role)}
+              </div>
+              <div>
+                <p className="text-sm text-gray-400">Status</p>
+                {getStatusBadge(selectedUser.status)}
+              </div>
+              <div>
+                <p className="text-sm text-gray-400">Date Joined</p>
+                <p>{formatDate(selectedUser.dateJoined)}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-400">Location</p>
+                <p>{selectedUser.location || 'N/A'}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-400">Last Active</p>
+                <p>{selectedUser.lastActive || 'N/A'}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-400">Total Trips</p>
+                <Badge>{selectedUser.totalTrips ?? 0}</Badge>
+              </div>
+            </div>
+          ) : (
+            <p className="text-gray-400">No user selected</p>
+          )}
+
+          <DialogFooter>
+            <Button
+              variant="secondary"
+              onClick={() => setIsDetailsModalOpen(false)}
+              className="bg-gray-700 hover:bg-gray-600"
+            >
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

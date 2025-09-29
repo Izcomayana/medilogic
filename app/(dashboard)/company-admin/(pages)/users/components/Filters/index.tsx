@@ -51,7 +51,7 @@ export function Filters({
           <SelectContent className="bg-gray-700 border-gray-600">
             <SelectItem value="all">All Status</SelectItem>
             <SelectItem value="active">Active</SelectItem>
-            <SelectItem value="suspended">Suspended</SelectItem>
+            <SelectItem value="inactive">Suspended</SelectItem>
           </SelectContent>
         </Select>
         <Select value={dateFilter} onValueChange={setDateFilter}>
