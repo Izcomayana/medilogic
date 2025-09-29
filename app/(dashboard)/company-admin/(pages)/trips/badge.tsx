@@ -12,7 +12,7 @@ export function getStatusBadge(status: string | null) {
           Completed
         </Badge>
       );
-    case 'in progress':
+    case 'in_progress':
       return (
         <Badge variant="secondary" className="bg-blue-600 text-white">
           <Loader className="h-3 w-3 mr-1" />

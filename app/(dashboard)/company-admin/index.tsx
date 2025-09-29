@@ -124,7 +124,7 @@ export const AdminDashboard = () => {
         setLoading(true);
         const dashboard = await authorizedRequest(async (token) => {
           const res = await axios.get<DashboardResponse>(
-            'https://medilogic-backend.onrender.com/admin-dashboard/admin-dashboard/',
+            'https://medilogic-backend.onrender.com/admin-dashboard/',
             {
               headers: { Authorization: `Bearer ${token}` },
             }
