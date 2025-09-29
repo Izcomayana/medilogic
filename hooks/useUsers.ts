@@ -5,31 +5,17 @@ import { toast } from 'sonner';
 import { useAuthorizedRequest } from './useRequest';
 import axios from 'axios';
 
-type ActiveUser = {
+type User = {
   id: string;
   name: string;
   email: string;
   phone: string;
   role: string;
-  status: 'Active' | 'Suspended';
+  status: 'active' | 'inactive';
   dateJoined: string;
   organization: string;
   location: string;
   lastActive: string;
-  totalTrips: number;
-};
-
-type InactiveUser = {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  role: string;
-  status: 'Inactive';
-  dateJoined: string;
-  organization: string;
-  location: string;
-  lastActive?: string;
   totalTrips: number;
 };
 
@@ -45,14 +31,14 @@ interface DeletedUser {
 /* -----------------------
    Mock data (typed)
    ----------------------- */
-const activeUsers: ActiveUser[] = [
+const Users: User[] = [
   {
     id: 'USR001',
     name: 'John Smith',
     email: 'john.smith@clinic.com',
     phone: '+234 123 456 7890',
     role: 'Client',
-    status: 'Active',
+    status: 'active',
     dateJoined: '2025-01-15',
     organization: 'Clinic ABC',
     location: 'Lagos, Nigeria',
@@ -65,7 +51,7 @@ const activeUsers: ActiveUser[] = [
     email: 'sarah.johnson@driver.com',
     phone: '+234 987 654 3210',
     role: 'Driver',
-    status: 'Active',
+    status: 'inactive',
     dateJoined: '2025-02-20',
     organization: 'Logistics Corp',
     location: 'Abuja, Nigeria',
@@ -78,26 +64,24 @@ const activeUsers: ActiveUser[] = [
     email: 'mike.davis@pharma.com',
     phone: '+234 555 123 4567',
     role: 'Client',
-    status: 'Suspended',
+    status: 'active',
     dateJoined: '2025-03-10',
     organization: 'PharmaCare Industries',
     location: 'Port Harcourt, Nigeria',
     lastActive: '2025-08-20 09:15',
     totalTrips: 8,
   },
-];
-
-const inactiveUsers: InactiveUser[] = [
   {
     id: 'USR009',
     name: 'Grace Lee',
     email: 'grace.lee@inactive.com',
     phone: '+234 777 123 4567',
     role: 'Client',
-    status: 'Inactive',
+    status: 'inactive',
     dateJoined: '2025-01-10',
     organization: 'MediHealth',
     location: 'Kano, Nigeria',
+    lastActive: '2025-08-20 09:15',
     totalTrips: 0,
   },
   {
@@ -106,19 +90,18 @@ const inactiveUsers: InactiveUser[] = [
     email: 'james.bond@inactive.com',
     phone: '+234 888 654 3210',
     role: 'Driver',
-    status: 'Inactive',
+    status: 'inactive',
     dateJoined: '2025-03-05',
     organization: 'TransportX',
     location: 'Ibadan, Nigeria',
+    lastActive: '2025-08-20 09:55',
     totalTrips: 12,
   },
 ];
 
 export function useUsers() {
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'active' | 'inactive' | 'deleted'>(
-    'active'
-  );
+  const [activeTab, setActiveTab] = useState<'users' | 'deleted'>('users');
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -132,10 +115,7 @@ export function useUsers() {
   const [currentPage, setCurrentPage] = useState(1);
   const authorizedRequest = useAuthorizedRequest();
 
-  /* -----------------------
-     Filtering
-     ----------------------- */
-  const filteredActiveUsers: ActiveUser[] = activeUsers.filter((user) => {
+  const filteredUsers: User[] = Users.filter((user) => {
     const matchesSearch =
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -151,17 +131,6 @@ export function useUsers() {
     return matchesSearch && matchesRole && matchesStatus && matchesDate;
   });
 
-  const filteredInactiveUsers: InactiveUser[] = inactiveUsers.filter((user) => {
-    const matchesSearch =
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.id.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesRole =
-      roleFilter === 'all' ||
-      user.role.toLowerCase() === roleFilter.toLowerCase();
-    return matchesSearch && matchesRole;
-  });
-
   const filteredDeletedUsers: DeletedUser[] = deletedUsers.filter((user) => {
     const matchesSearch =
       // user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -173,16 +142,9 @@ export function useUsers() {
     return matchesSearch && matchesRole;
   });
 
-  /* -----------------------
-     Pagination
-     ----------------------- */
   const startIndex = (currentPage - 1) * usersPerPage;
 
-  const paginatedActiveUsers = filteredActiveUsers.slice(
-    startIndex,
-    startIndex + usersPerPage
-  );
-  const paginatedInactiveUsers = filteredInactiveUsers.slice(
+  const paginatedUsers = filteredUsers.slice(
     startIndex,
     startIndex + usersPerPage
   );
@@ -192,11 +154,7 @@ export function useUsers() {
   );
 
   const currentUsers =
-    activeTab === 'active'
-      ? filteredActiveUsers
-      : activeTab === 'inactive'
-        ? filteredInactiveUsers
-        : filteredDeletedUsers;
+    activeTab === 'users' ? filteredUsers : filteredDeletedUsers;
 
   const totalPages = Math.ceil(currentUsers.length / usersPerPage);
 
@@ -292,14 +250,12 @@ export function useUsers() {
     currentPage,
     setCurrentPage,
     usersPerPage,
-    filteredActiveUsers,
-    filteredInactiveUsers,
+    filteredUsers,
     filteredDeletedUsers,
     currentUsers,
     totalPages,
     startIndex,
-    paginatedActiveUsers,
-    paginatedInactiveUsers,
+    paginatedUsers,
     paginatedDeletedUsers,
     handleViewDetails,
     handleRestoreUser,
