@@ -110,15 +110,15 @@ export default function Charts({
           error={error}
         >
           <div className="h-80 flex flex-col lg:flex-row items-center">
-            <div className="w-full lg:w-1/2 h-full">
-              <ResponsiveContainer width="100%" height="100%">
+            <div className="w-full lg:w-2/3 h-full">
+              <ResponsiveContainer width="80%" height="80%">
                 <PieChart>
                   <Pie
                     data={deliveryTypeData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={60}
-                    outerRadius={120}
+                    innerRadius={50}
+                    outerRadius={100}
                     paddingAngle={5}
                     dataKey="value"
                   >
@@ -140,7 +140,7 @@ export default function Charts({
                 </PieChart>
               </ResponsiveContainer>
             </div>
-            <div className="w-full lg:w-1/2 space-y-4 hidden lg:block">
+            <div className="w-full lg:w-1/3 space-y-4 hidden lg:block">
               {deliveryTypeData.map((item, index) => (
                 <div
                   key={item.name}
