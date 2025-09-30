@@ -10,9 +10,11 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { drivers } from '@/hooks/trips/constants';
+import { useDrivers } from './useDrivers';
 
 export default function TripForm({ formData, setFormData }: any) {
+  const { drivers, loading } = useDrivers();
+
   return (
     <>
       {/* 🔽 Scrollable form section */}
