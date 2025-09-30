@@ -13,7 +13,6 @@ type User = {
   role: string;
   status: 'active' | 'inactive';
   dateJoined: string;
-  organization: string;
   location: string;
   lastActive: string;
   totalTrips: number;
@@ -26,6 +25,7 @@ interface DeletedUser {
   email: string;
   role: string;
   deleted_at: string;
+  deletion_reason: string;
 }
 
 export function useUsers() {
@@ -88,7 +88,6 @@ export function useUsers() {
           role: u.role,
           status: u.is_active ? 'active' : 'inactive',
           dateJoined: u.created_at ? u.created_at.split('T')[0] : '',
-          organization: u.organization_name || '',
           location: u.address || '',
           lastActive: '-',
           totalTrips: 0,
