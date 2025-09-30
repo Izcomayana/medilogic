@@ -45,8 +45,6 @@ export function Filters({
             <SelectItem value="driver">Driver</SelectItem>
           </SelectContent>
         </Select>
-        {activeTab === 'active' && (
-          <>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-[150px] bg-gray-700 border-gray-600 text-white">
                 <SelectValue placeholder="Status" />
@@ -69,8 +67,6 @@ export function Filters({
                 <SelectItem value="2025">This Year</SelectItem>
               </SelectContent>
             </Select>
-          </>
-        )}
       </div>
     </div>
   );
