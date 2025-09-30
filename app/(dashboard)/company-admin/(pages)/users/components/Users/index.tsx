@@ -175,14 +175,34 @@ export function UsersTab({
                 <p className="text-sm text-gray-400">Role</p>
                 {getRoleBadge(selectedUser.role)}
               </div>
-              <div>
-                <p className="text-sm text-gray-400">Status</p>
-                {getStatusBadge(selectedUser.status)}
-              </div>
-              <div>
-                <p className="text-sm text-gray-400">Date Joined</p>
-                <p>{formatDate(selectedUser.dateJoined)}</p>
-              </div>
+              {selectedUser.status && (
+                <div>
+                  <p className="text-sm text-gray-400">Status</p>
+                  {getStatusBadge(selectedUser.status)}
+                </div>
+              )}
+
+              {selectedUser.dateJoined && (
+                <div>
+                  <p className="text-sm text-gray-400">Date Joined</p>
+                  <p>{formatDate(selectedUser.dateJoined)}</p>
+                </div>
+              )}
+
+              {selectedUser.deleted_at && (
+                <div>
+                  <p className="text-sm text-gray-400">Deleted Date</p>
+                  <p>{formatDate(selectedUser.deleted_at)}</p>
+                </div>
+              )}
+
+              {selectedUser.deletion_reason && (
+                <div>
+                  <p className="text-sm text-gray-400">Deletion Reason</p>
+                  <p>{selectedUser.deletion_reason}</p>
+                </div>
+              )}
+
               <div>
                 <p className="text-sm text-gray-400">Location</p>
                 <p>{selectedUser.location || 'N/A'}</p>
@@ -204,7 +224,7 @@ export function UsersTab({
             <Button
               variant="secondary"
               onClick={() => setIsDetailsModalOpen(false)}
-              className="bg-gray-700 hover:bg-gray-600"
+              className="bg-gray-700 text-gray-300 hover:bg-gray-600"
             >
               Close
             </Button>

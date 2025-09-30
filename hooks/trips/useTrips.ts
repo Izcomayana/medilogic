@@ -79,6 +79,14 @@ export function useTrips(tripsPerPage = 10) {
     setSelectedTrip(null);
   };
 
+  const [filters, setFilters] = useState({
+    status: 'all',
+    search: '',
+    dateRange: undefined as { from?: Date; to?: Date } | undefined,
+    deliveryType: '',
+    driverId: '',
+  });
+
   const fetchTrips = async () => {
     try {
       setLoading(true);
@@ -86,12 +94,13 @@ export function useTrips(tripsPerPage = 10) {
       const data = await authorizedRequest<any>(
         (token) =>
           fetchTripsRequest(token, {
-            statusFilter,
-            searchTerm,
-            dateRange,
+            statusFilter: filters.status,
+            searchTerm: filters.search,
+            dateRange: filters.dateRange,
             currentPage,
             tripsPerPage,
           }),
+
         'Failed to fetch trips'
       );
 
@@ -134,6 +143,56 @@ export function useTrips(tripsPerPage = 10) {
   useEffect(() => {
     fetchTrips();
   }, [statusFilter, searchTerm, dateRange, currentPage]);
+
+  const handleExport = async (format: 'csv' | 'pdf') => {
+    try {
+      toast('Preparing your export...');
+
+      await authorizedRequest<void>(async (token) => {
+        const params = new URLSearchParams({
+          format,
+          ...(filters.dateRange?.from && {
+            start_date: filters.dateRange.from.toISOString().split('T')[0],
+          }),
+          ...(filters.dateRange?.to && {
+            end_date: filters.dateRange.to.toISOString().split('T')[0],
+          }),
+          ...(filters.status !== 'all' && { status: filters.status }),
+          ...(filters.search && { search: filters.search }),
+          ...(filters.deliveryType && { delivery_type: filters.deliveryType }),
+          ...(filters.driverId && { driver_id: filters.driverId }),
+        });
+
+        const res = await fetch(
+          `https://medilogic-backend.onrender.com/export/trips/export?${params.toString()}`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!res.ok) {
+          throw new Error('Export request failed');
+        }
+
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `trips.${format}`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      }, 'Failed to export trips');
+
+      toast.success('Export ready!');
+    } catch (err) {
+      console.error('Export error:', err);
+      toast.error('Export failed');
+    }
+  };
 
   const filteredTrips = tripsList;
   const paginatedTrips = tripsList;
@@ -414,6 +473,7 @@ export function useTrips(tripsPerPage = 10) {
     currentPage,
     selectedTrip,
     isEditModalOpen,
+    handleExport,
     fetchTrips,
     setTripsList,
     setSearchTerm,

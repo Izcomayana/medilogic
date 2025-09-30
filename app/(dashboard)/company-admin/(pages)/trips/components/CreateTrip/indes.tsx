@@ -10,9 +10,15 @@ import {
   AlertDialogCancel,
 } from '@/components/ui/alert-dialog';
 import { useTrips } from '@/hooks/trips/useTrips';
-import { Plus, X } from 'lucide-react';
+import { Download, Plus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import TripForm from './TripForm';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu';
 
 type CreateTripProps = ReturnType<typeof useTrips>;
 
@@ -25,31 +31,31 @@ export function CreateTrips({
   drivers,
   handleCreateTrip,
   loading,
+  handleExport,
 }: CreateTripProps) {
-  // const handleExport = (type: 'csv' | 'pdf') => {
-  //   toast.success(
-  //     `${type.toUpperCase()} export started for ${filteredTrips.length} trips`
-  //   );
-  // };
-
   return (
     <AlertDialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
       <div className="flex flex-col md:flex-row mt-4 lg:mt-0 gap-2">
-        {/* <Button
-          onClick={() => handleExport('csv')}
-          variant="outline"
-          className="border-gray-600 text-gray-700 hover:text-gray-300 hover:bg-gray-700"
-        >
-          <Download className="h-4 w-4 mr-2" />
-          Export CSV
-        </Button>
-        <Button onClick={() => handleExport('pdf')} className="primary-button">
-          <Download className="h-4 w-4 mr-2" />
-          Export PDF
-        </Button> */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button className="text-gray-700" variant="outline">
+              Export Trips
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem onClick={() => handleExport('csv')}>
+              <Download className="h-4 w-4" />
+              CSV
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => handleExport('pdf')}>
+              <Download className="h-4 w-4" />
+              PDF
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
         <AlertDialogTrigger asChild>
           <Button className="primary-button">
-            <Plus className="h-4 w-4 mr-2" />
+            <Plus className="h-4 w-4" />
             New Trip{' '}
           </Button>
         </AlertDialogTrigger>
