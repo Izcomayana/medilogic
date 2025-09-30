@@ -314,13 +314,13 @@ export function useTrips(tripsPerPage = 10) {
       priority: trip.priority || 'normal',
       deliveryType: trip.deliveryType || 'clinical_waste',
       customDeliveryDescription: trip.customDeliveryDescription || '',
-      cost: '',
-      distanceKm: '',
-      vehicleType: '',
-      locationZone: '',
-      shiftWindow: '',
-      complianceFlag: false,
-      recurrenceRule: 'none',
+      cost: trip.cost || '',
+      distanceKm: trip.distance || '',
+      vehicleType: trip.vehicleType || '',
+      locationZone: trip.locationZone || '',
+      shiftWindow: trip.shiftWindow || '',
+      complianceFlag: trip.complianceFlag || false,
+      recurrenceRule: trip.recurrenceRule || 'none',
     });
     setIsEditModalOpen(true);
   };

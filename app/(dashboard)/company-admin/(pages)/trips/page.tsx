@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-import { toast } from 'sonner';
 import { useTrips } from '@/hooks/trips/useTrips';
 import { Filters } from './components/Filters';
 import { TripsTable } from './components/TripsTable';

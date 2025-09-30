@@ -96,7 +96,9 @@ export default function TripForm({ formData, setFormData }: any) {
               }}
             >
               <SelectTrigger className="bg-gray-700 border-gray-600 text-white mt-2">
-                <SelectValue placeholder="Select driver" />
+                <SelectValue
+                  placeholder={loading ? 'Loading drivers...' : 'Select driver'}
+                />
               </SelectTrigger>
               <SelectContent className="bg-gray-700 border-gray-600">
                 {drivers.map((driver) => (
