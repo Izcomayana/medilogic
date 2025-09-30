@@ -119,8 +119,6 @@ export default function UsersPage() {
           </CardContent>
         </Card>
       </main>
-
-      {/* User Details Modal */}
     </div>
   );
 }
