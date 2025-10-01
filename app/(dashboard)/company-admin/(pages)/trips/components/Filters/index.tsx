@@ -22,7 +22,6 @@ export function Filters({
   statusFilter,
   setStatusFilter,
   setDateRange,
-  handleExport,
 }: FiltersProps) {
   const tripState = useTrips();
 
