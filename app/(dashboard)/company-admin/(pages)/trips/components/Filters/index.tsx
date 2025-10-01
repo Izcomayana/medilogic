@@ -22,6 +22,7 @@ export function Filters({
   statusFilter,
   setStatusFilter,
   setDateRange,
+  handleExport,
 }: FiltersProps) {
   const tripState = useTrips();
 
@@ -33,6 +34,7 @@ export function Filters({
             <MapPin className="h-5 w-5" />
             Trips Management ({filteredTrips.length})
           </CardTitle>
+
           <CreateTrips {...tripState} />
         </div>
       </CardHeader>

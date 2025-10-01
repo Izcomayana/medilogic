@@ -25,6 +25,7 @@ interface DeletedUser {
   email: string;
   role: string;
   deleted_at: string;
+  deletion_reason: string;
 }
 
 export function useUsers() {
