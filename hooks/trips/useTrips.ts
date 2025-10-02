@@ -12,7 +12,7 @@ import {
   partialUpdateTripRequest,
   updateTripRequest,
 } from './api';
-import { formatDateTime } from '../utils';
+// import { formatDateTime } from '../utils';
 import { clients, drivers } from './constants';
 
 export type DateRangeLocal = { from?: Date; to?: Date };
@@ -149,7 +149,6 @@ export function useTrips(tripsPerPage = 10) {
           }),
           ...(statusFilter !== 'all' && { status: statusFilter }),
           ...(searchTerm && { search: searchTerm }),
-          // add deliveryType, driverId later if needed
         });
 
         const res = await fetch(
@@ -474,7 +473,7 @@ export function useTrips(tripsPerPage = 10) {
     setTripToDelete,
     setCurrentPage,
     handleCreateTrip,
-    formatDateTime,
+    // formatDateTime,
     handleViewDetails,
     handleEdit,
     handleDeleteTrip,

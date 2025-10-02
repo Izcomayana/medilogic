@@ -1,3 +1,5 @@
+import { formatDateTime } from '@/utils/datetime';
+
 export type Trip = {
   driver_id: string;
   driver_name: string | null;
@@ -36,7 +38,7 @@ export function mapApiTripToUiTrip(apiTrip: Trip) {
     // driverAssigned: apiTrip.driver_assigned,
     status: apiTrip.status,
     priority: apiTrip.priority,
-    dateTime: apiTrip.scheduled_time,
+    dateTime: formatDateTime(apiTrip.scheduled_time || '-'),
     vehicleType: apiTrip.vehicle_type,
     shiftWindow: apiTrip.shift_window,
     cost: apiTrip.cost,

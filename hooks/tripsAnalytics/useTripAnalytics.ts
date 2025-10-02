@@ -9,7 +9,7 @@ import {
   mapApiTripAnalyticsToUi,
 } from './mappers';
 import { fetchTripAnalyticsRequest } from './api';
-import { formatDateEnd, formatDateStart } from '../utils';
+import { formatDateStartUtc, formatDateEndUtc } from '@/utils/datetime';
 // import { formatDateLocal } from '../utils';
 
 export type DateRangeLocal = { from?: Date; to?: Date };
@@ -41,9 +41,11 @@ export function useTripAnalytics(initialFilters: TripAnalyticsFilters = {}) {
             delivery_type:
               selectedDeliveryType !== 'all' ? selectedDeliveryType : null,
             start_date: dateRange?.from
-              ? formatDateStart(dateRange.from)
+              ? formatDateStartUtc(dateRange.from)
               : undefined,
-            end_date: dateRange?.to ? formatDateEnd(dateRange.to) : undefined,
+            end_date: dateRange?.to
+              ? formatDateEndUtc(dateRange.to)
+              : undefined,
           }),
         'Failed to fetch trips analytics'
       );
