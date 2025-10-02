@@ -49,7 +49,6 @@ type TableProps = ReturnType<typeof useTrips>;
 export function TripsTable({
   filteredTrips,
   paginatedTrips,
-  formatDateTime,
   handleViewDetails,
   handleEdit,
   handleQuickStatusUpdate,
@@ -165,7 +164,7 @@ export function TripsTable({
                         <TableCell className="text-gray-300">
                           <div className="flex items-center gap-1">
                             <Clock className="h-3 w-3" />
-                            {formatDateTime(trip.dateTime)}
+                            {trip.dateTime}
                           </div>
                         </TableCell>
                         <TableCell>{getStatusBadge(trip.status)}</TableCell>
