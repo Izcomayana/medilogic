@@ -79,14 +79,6 @@ export function useTrips(tripsPerPage = 10) {
     setSelectedTrip(null);
   };
 
-  const [filters, setFilters] = useState({
-    status: 'all',
-    search: '',
-    dateRange: undefined as { from?: Date; to?: Date } | undefined,
-    deliveryType: '',
-    driverId: '',
-  });
-
   const fetchTrips = async () => {
     try {
       setLoading(true);
@@ -94,13 +86,12 @@ export function useTrips(tripsPerPage = 10) {
       const data = await authorizedRequest<any>(
         (token) =>
           fetchTripsRequest(token, {
-            statusFilter: filters.status,
-            searchTerm: filters.search,
-            dateRange: filters.dateRange,
+            statusFilter,
+            searchTerm,
+            dateRange,
             currentPage,
             tripsPerPage,
           }),
-
         'Failed to fetch trips'
       );
 
@@ -130,7 +121,6 @@ export function useTrips(tripsPerPage = 10) {
       const mapped: UiTrip[] = items.map(mapApiTripToUiTrip);
       setTripsList(mapped);
       setTotalTrips(total);
-      console.log('total:', totalTrips);
     } catch (err) {
       console.error('fetchTrips error', err);
       setTripsList([]);
@@ -151,16 +141,15 @@ export function useTrips(tripsPerPage = 10) {
       await authorizedRequest<void>(async (token) => {
         const params = new URLSearchParams({
           format,
-          ...(filters.dateRange?.from && {
-            start_date: filters.dateRange.from.toISOString().split('T')[0],
+          ...(dateRange?.from && {
+            start_date: dateRange.from.toISOString().split('T')[0],
           }),
-          ...(filters.dateRange?.to && {
-            end_date: filters.dateRange.to.toISOString().split('T')[0],
+          ...(dateRange?.to && {
+            end_date: dateRange.to.toISOString().split('T')[0],
           }),
-          ...(filters.status !== 'all' && { status: filters.status }),
-          ...(filters.search && { search: filters.search }),
-          ...(filters.deliveryType && { delivery_type: filters.deliveryType }),
-          ...(filters.driverId && { driver_id: filters.driverId }),
+          ...(statusFilter !== 'all' && { status: statusFilter }),
+          ...(searchTerm && { search: searchTerm }),
+          // add deliveryType, driverId later if needed
         });
 
         const res = await fetch(
@@ -173,9 +162,7 @@ export function useTrips(tripsPerPage = 10) {
           }
         );
 
-        if (!res.ok) {
-          throw new Error('Export request failed');
-        }
+        if (!res.ok) throw new Error('Export request failed');
 
         const blob = await res.blob();
         const url = window.URL.createObjectURL(blob);
