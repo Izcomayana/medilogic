@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { mapApiTripToUiTrip, Trip, UiTrip } from './mappers';
-import { formatDateStart, formatDateEnd } from './utils';
+import { formatDateStart, formatDateEnd } from '../utils';
 
 export async function fetchTripsRequest(
   token: string,

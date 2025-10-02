@@ -1,7 +1,7 @@
 export type Trip = {
   driver_id: string;
   driver_name: string | null;
-  driver_assigned: string | null;
+  // driver_assigned: string | null;
   delivery_type: string;
   scheduled_time: string | null;
   cost: string | null;
@@ -20,6 +20,7 @@ export type Trip = {
   custom_delivery_description: string | null;
   id: string;
   created_at: string;
+  notes: string;
 };
 
 export function mapApiTripToUiTrip(apiTrip: Trip) {
@@ -32,7 +33,7 @@ export function mapApiTripToUiTrip(apiTrip: Trip) {
     dropoffLocation: apiTrip.dropoff_location,
     driverId: apiTrip.driver_id,
     driverName: apiTrip.driver_name,
-    driverAssigned: apiTrip.driver_assigned,
+    // driverAssigned: apiTrip.driver_assigned,
     status: apiTrip.status,
     priority: apiTrip.priority,
     dateTime: apiTrip.scheduled_time,
@@ -43,13 +44,14 @@ export function mapApiTripToUiTrip(apiTrip: Trip) {
     locationZone: apiTrip.location_zone,
     complianceFlag: apiTrip.compliance_flag,
     recurrenceRule: apiTrip.recurrence_rule,
-    // notes: apiTrip.custom_delivery_description,
+    notes: apiTrip.notes,
     createdDate: apiTrip.created_at,
+    customDeliveryDescription: apiTrip.custom_delivery_description,
     statusHistory: [
       {
         status: apiTrip.status,
         timestamp: apiTrip.created_at,
-        note: apiTrip.custom_delivery_description || '',
+        note: apiTrip.notes || '',
       },
     ],
   };

@@ -14,6 +14,7 @@ import {
   Route,
   Settings,
   ChartNoAxesCombined,
+  Waypoints,
 } from 'lucide-react';
 import { useAuth } from '@/components/auth';
 import {
@@ -54,13 +55,18 @@ const sidebarLinksByRole: Record<
   ],
   admin: [
     { title: 'Dashboard', url: '/company-admin', icon: Home },
+    { title: 'Users', url: '/company-admin/users', icon: Users },
     { title: 'Trips', url: '/company-admin/trips', icon: Route },
+    {
+      title: 'Trips Analytics',
+      url: '/company-admin/tripsanalytics',
+      icon: Waypoints,
+    },
     {
       title: 'Assignments',
       url: '/company-admin/assignments',
       icon: ClipboardList,
     },
-    { title: 'Users', url: '/company-admin/users', icon: Users },
     {
       title: 'Charts',
       url: '/company-admin/charts',

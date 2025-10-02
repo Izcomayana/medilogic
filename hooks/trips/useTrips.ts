@@ -12,9 +12,8 @@ import {
   partialUpdateTripRequest,
   updateTripRequest,
 } from './api';
-import { formatDateTime } from './utils';
-import { clients, drivers, trips } from './constants';
-import axios from 'axios';
+import { formatDateTime } from '../utils';
+import { clients, drivers } from './constants';
 
 export type DateRangeLocal = { from?: Date; to?: Date };
 
@@ -38,11 +37,10 @@ export function useTrips(tripsPerPage = 10) {
     pickupLocation: '',
     dropoffLocation: '',
     driverName: '',
-    driverAsigned: '',
     driverId: '',
     dateTime: '',
     notes: '',
-    status: 'Pending',
+    status: 'pending',
     priority: 'normal',
     deliveryType: 'clinical_waste',
     customDeliveryDescription: '',
@@ -63,11 +61,10 @@ export function useTrips(tripsPerPage = 10) {
       pickupLocation: '',
       dropoffLocation: '',
       driverName: '',
-      driverAsigned: '',
       driverId: '',
       dateTime: '',
       notes: '',
-      status: 'Pending',
+      status: 'pending',
       priority: 'normal',
       deliveryType: 'clinical_waste',
       customDeliveryDescription: '',
@@ -114,10 +111,16 @@ export function useTrips(tripsPerPage = 10) {
         total = data.total ?? data.items.length;
       }
 
+      // ✅ Enforce frontend sorting as fallback
+      items.sort((a, b) => {
+        const dateA = new Date(a.created_at).getTime();
+        const dateB = new Date(b.created_at).getTime();
+        return dateB - dateA;
+      });
+
       const mapped: UiTrip[] = items.map(mapApiTripToUiTrip);
       setTripsList(mapped);
       setTotalTrips(total);
-      console.log('total:', totalTrips);
     } catch (err) {
       console.error('fetchTrips error', err);
       setTripsList([]);
@@ -129,8 +132,54 @@ export function useTrips(tripsPerPage = 10) {
 
   useEffect(() => {
     fetchTrips();
-    console.log('totalTrips:', totalTrips);
   }, [statusFilter, searchTerm, dateRange, currentPage]);
+
+  const handleExport = async (format: 'csv' | 'pdf') => {
+    try {
+      toast('Preparing your export...');
+
+      await authorizedRequest<void>(async (token) => {
+        const params = new URLSearchParams({
+          format,
+          ...(dateRange?.from && {
+            start_date: dateRange.from.toISOString().split('T')[0],
+          }),
+          ...(dateRange?.to && {
+            end_date: dateRange.to.toISOString().split('T')[0],
+          }),
+          ...(statusFilter !== 'all' && { status: statusFilter }),
+          ...(searchTerm && { search: searchTerm }),
+          // add deliveryType, driverId later if needed
+        });
+
+        const res = await fetch(
+          `https://medilogic-backend.onrender.com/export/trips/export?${params.toString()}`,
+          {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!res.ok) throw new Error('Export request failed');
+
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `trips.${format}`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      }, 'Failed to export trips');
+
+      toast.success('Export ready!');
+    } catch (err) {
+      console.error('Export error:', err);
+      toast.error('Export failed');
+    }
+  };
 
   const filteredTrips = tripsList;
   const paginatedTrips = tripsList;
@@ -155,9 +204,9 @@ export function useTrips(tripsPerPage = 10) {
       const payload = {
         delivery_type: formData.deliveryType,
         organization_id: user.organization.id,
-        status: formData.status || 'Pending',
+        status: formData.status || 'pending',
         priority: formData.priority || 'normal',
-        driver_id: formData.driverAsigned || undefined,
+        driver_id: formData.driverId || undefined,
         driver_name: formData.driverName || undefined,
         scheduled_time: formData.dateTime
           ? new Date(formData.dateTime).toISOString()
@@ -305,20 +354,19 @@ export function useTrips(tripsPerPage = 10) {
       dropoffLocation: trip.dropoffLocation || '',
       driverName: trip.driverName || '',
       driverId: trip.driverId || '',
-      driverAsigned: trip.driverAssigned || '',
       dateTime: trip.dateTime || '',
-      notes: trip.statusHistory?.[0]?.note || '',
-      status: trip.status || 'Pending',
+      notes: trip.notes || '',
+      status: trip.status || 'pending',
       priority: trip.priority || 'normal',
       deliveryType: trip.deliveryType || 'clinical_waste',
-      customDeliveryDescription: trip.statusHistory?.[0]?.note || '',
-      cost: '0',
-      distanceKm: '0',
-      vehicleType: '',
-      locationZone: '',
-      shiftWindow: '',
-      complianceFlag: false,
-      recurrenceRule: 'none',
+      customDeliveryDescription: trip.customDeliveryDescription || '',
+      cost: trip.cost || '',
+      distanceKm: trip.distance || '',
+      vehicleType: trip.vehicleType || '',
+      locationZone: trip.locationZone || '',
+      shiftWindow: trip.shiftWindow || '',
+      complianceFlag: trip.complianceFlag || false,
+      recurrenceRule: trip.recurrenceRule || 'none',
     });
     setIsEditModalOpen(true);
   };
@@ -412,6 +460,7 @@ export function useTrips(tripsPerPage = 10) {
     currentPage,
     selectedTrip,
     isEditModalOpen,
+    handleExport,
     fetchTrips,
     setTripsList,
     setSearchTerm,

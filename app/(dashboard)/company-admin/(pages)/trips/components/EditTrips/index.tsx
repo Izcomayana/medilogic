@@ -20,7 +20,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { useTrips } from '@/hooks/useTrips/useTrips';
+import { useTrips } from '@/hooks/trips/useTrips';
 import { X } from 'lucide-react';
 
 type EditTripProps = ReturnType<typeof useTrips>;
@@ -212,10 +212,10 @@ export function EditTripModal({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent className="bg-gray-700 border-gray-600">
-                  <SelectItem value="Pending">Pending</SelectItem>
-                  <SelectItem value="In Progress">In Progress</SelectItem>
-                  <SelectItem value="Completed">Completed</SelectItem>
-                  <SelectItem value="Cancelled">Canceled</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="in_progress">In Progress</SelectItem>
+                  <SelectItem value="completed">Completed</SelectItem>
+                  <SelectItem value="cancelled">Canceled</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -247,7 +247,7 @@ export function EditTripModal({
                 type="number"
                 value={formData.distanceKm}
                 onChange={(e) =>
-                  setFormData({ ...formData, cost: e.target.value })
+                  setFormData({ ...formData, distanceKm: e.target.value })
                 }
                 placeholder="Enter distance in km"
                 className="bg-gray-700 border-gray-600 text-white mt-2"
