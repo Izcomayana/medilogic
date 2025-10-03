@@ -23,8 +23,9 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { formatDateTime } from '@/hooks/utils';
+// import { formatDateTime } from '@/hooks/utils';
 import { getStatusBadge } from '../../badge';
+import { formatDateTime } from '@/utils/datetime';
 
 type TripsDetailsProps = ReturnType<typeof useTrips>;
 
@@ -32,6 +33,7 @@ export function TripsDetailModal({
   isDetailsModalOpen,
   setIsDetailsModalOpen,
   selectedTrip,
+  // formatDateTime,
 }: TripsDetailsProps) {
   if (!selectedTrip) return null;
 
@@ -106,14 +108,19 @@ export function TripsDetailModal({
                   </Label>
                   <p className="text-white flex items-center gap-2">
                     <Clock className="h-4 w-4" />
-                    {selectedTrip.dateTime || 'Not scheduled'}
+                    {selectedTrip.dateTime
+                      ? formatDateTime(selectedTrip.dateTime)
+                      : 'Not scheduled'}
                   </p>
                 </div>
+
                 <div>
                   <Label className="text-gray-400 text-sm">Created Date</Label>
                   <p className="text-white flex items-center gap-2">
                     <Calendar className="h-4 w-4" />
-                    {selectedTrip.createdDate || '—'}
+                    {selectedTrip.createdDate
+                      ? formatDateTime(selectedTrip.createdDate)
+                      : '—'}
                   </p>
                 </div>
                 <div>
