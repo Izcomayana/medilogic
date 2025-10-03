@@ -12,10 +12,10 @@
 //   });
 // };
 
-// export function formatDeliveryType(type?: string) {
-//   if (!type) return 'N/A';
-//   return type
-//     .split('_')
-//     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-//     .join(' ');
-// }
+export function formatDeliveryType(type?: string) {
+  if (!type) return 'N/A';
+  return type
+    .split('_')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}
