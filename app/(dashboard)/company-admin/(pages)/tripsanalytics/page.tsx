@@ -13,6 +13,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export default function TripAnalyticsPage() {
   const tripsAnalyticState = useTripAnalytics();
+  
   const { analytics, getFiltersAppliedText, loading, error } =
     tripsAnalyticState;
 
