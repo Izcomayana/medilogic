@@ -43,7 +43,9 @@ export function useTripAnalytics(initialFilters: TripAnalyticsFilters = {}) {
             start_date: dateRange?.from
               ? formatDateStartUtc(dateRange.from)
               : undefined,
-            end_date: dateRange?.to ? formatDateEndUtc(dateRange.to) : undefined,
+            end_date: dateRange?.to
+              ? formatDateEndUtc(dateRange.to)
+              : undefined,
           }),
         'Failed to fetch trips analytics'
       );
