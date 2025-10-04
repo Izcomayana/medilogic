@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { useAuthorizedRequest } from '@/hooks/useRequest';
 import { useProfile } from '../useProfile';
@@ -14,6 +14,7 @@ import {
 } from './api';
 // import { formatDateTime } from '../utils';
 import { clients, drivers } from './constants';
+import { formatDateEnd, formatDateStart } from '@/utils/datetime';
 
 export type DateRangeLocal = { from?: Date; to?: Date };
 
@@ -134,35 +135,43 @@ export function useTrips(tripsPerPage = 10) {
     fetchTrips();
   }, [statusFilter, searchTerm, dateRange, currentPage]);
 
-  const handleExport = async (format: 'csv' | 'pdf') => {
-    try {
+  console.log('DEBUG dateRange on export:', dateRange);
+
+  const handleExport = useCallback(
+    async (format: 'csv' | 'pdf') => {
+      console.log('DEBUG exporting range:', dateRange);
+
       toast('Preparing your export...');
 
       await authorizedRequest<void>(async (token) => {
         const params = new URLSearchParams({
           format,
-          ...(dateRange?.from && {
-            start_date: dateRange.from.toISOString().split('T')[0],
-          }),
-          ...(dateRange?.to && {
-            end_date: dateRange.to.toISOString().split('T')[0],
-          }),
           ...(statusFilter !== 'all' && { status: statusFilter }),
-          ...(searchTerm && { search: searchTerm }),
+          ...(searchTerm && {
+            driver_name: searchTerm,
+            client_name: searchTerm,
+          }),
+          ...(dateRange?.from && {
+            start_date: formatDateStart(dateRange.from),
+          }),
+          ...(dateRange?.to
+            ? { end_date: formatDateEnd(dateRange.to) }
+            : dateRange?.from
+              ? { end_date: formatDateEnd(dateRange.from) }
+              : {}),
         });
+
+        console.log('FINAL EXPORT URL:', params.toString());
 
         const res = await fetch(
           `https://medilogic-backend.onrender.com/export/trips/export?${params.toString()}`,
           {
             method: 'GET',
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: `Bearer ${token}` },
           }
         );
 
         if (!res.ok) throw new Error('Export request failed');
-
         const blob = await res.blob();
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -174,11 +183,9 @@ export function useTrips(tripsPerPage = 10) {
       }, 'Failed to export trips');
 
       toast.success('Export ready!');
-    } catch (err) {
-      console.error('Export error:', err);
-      toast.error('Export failed');
-    }
-  };
+    },
+    [authorizedRequest, statusFilter, searchTerm, dateRange]
+  );
 
   const filteredTrips = tripsList;
   const paginatedTrips = tripsList;
