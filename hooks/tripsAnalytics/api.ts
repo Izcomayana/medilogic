@@ -1,7 +1,7 @@
 // tripAnalytics/api.ts
 import axios from 'axios';
 import { TripAnalyticsFilters, TripAnalyticsResponse } from './mappers';
-import { formatDateStartUtc, formatDateEndUtc } from '@/utils/datetime';
+import { formatDateStart, formatDateEnd } from '@/utils/datetime';
 
 export async function fetchTripAnalyticsRequest(
   token: string,
@@ -17,10 +17,10 @@ export async function fetchTripAnalyticsRequest(
         client_name: filters.client_name || undefined,
         status: filters.status || undefined,
         start_date: filters.start_date
-          ? formatDateStartUtc(new Date(filters.start_date))
+          ? formatDateStart(new Date(filters.start_date))
           : undefined,
         end_date: filters.end_date
-          ? formatDateEndUtc(new Date(filters.end_date))
+          ? formatDateEnd(new Date(filters.end_date))
           : undefined,
       },
     }
