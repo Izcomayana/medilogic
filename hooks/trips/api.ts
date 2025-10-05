@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { mapApiTripToUiTrip, Trip, UiTrip } from './mappers';
-import { formatDateStartUtc, formatDateEndUtc } from '@/utils/datetime';
+import { formatDateStart, formatDateEnd } from '@/utils/datetime';
 
 export async function fetchTripsRequest(
   token: string,
@@ -26,16 +26,14 @@ export async function fetchTripsRequest(
       client_name: searchTerm || undefined,
       skip: (currentPage - 1) * tripsPerPage,
       limit: tripsPerPage,
-      from_date: dateRange?.from
-        ? formatDateStartUtc(dateRange.from)
-        : undefined,
+      from_date: dateRange?.from ? formatDateStart(dateRange.from) : undefined,
       to_date: dateRange?.to
-        ? formatDateEndUtc(dateRange.to)
+        ? formatDateEnd(dateRange.to)
         : dateRange?.from
-          ? formatDateEndUtc(dateRange.from)
+          ? formatDateEnd(dateRange.from)
           : undefined,
       sort_by: 'scheduled_time',
-      sort_order: 'asc',
+      sort_order: 'desc',
     },
   });
 

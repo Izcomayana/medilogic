@@ -72,7 +72,6 @@ const sidebarLinksByRole: Record<
       url: '/company-admin/charts',
       icon: ChartNoAxesCombined,
     },
-    { title: 'Exports', url: '/company-admin/exports', icon: FileText },
     { title: 'Settings', url: '/company-admin/settings', icon: Settings },
   ],
   regulator: [
