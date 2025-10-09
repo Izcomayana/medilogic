@@ -248,7 +248,7 @@ export const AdminDashboard = () => {
                           <div className="flex justify-between items-center">
                             <span className="text-sm text-white flex items-center gap-2">
                               <span className="text-xs bg-gray-700 px-2 py-0.5 rounded-full">
-                                {i + 1}
+                                #{i + 1}
                               </span>
                               {client.client_name}
                             </span>
@@ -295,7 +295,7 @@ export const AdminDashboard = () => {
                           <div className="flex justify-between items-center">
                             <span className="text-sm text-white flex items-center gap-2">
                               <span className="text-xs bg-gray-700 px-2 py-0.5 rounded-full">
-                                {i + 1}
+                                #{i + 1}
                               </span>
                               {driver.driver_name}
                             </span>
