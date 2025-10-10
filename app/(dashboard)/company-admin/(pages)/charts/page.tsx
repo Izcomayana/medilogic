@@ -43,7 +43,6 @@ export default function AdminCharts() {
     setLoading(true);
     setError(null);
 
-
     authorizedRequest(async (token) => {
       const res = await axios.get(
         'https://medilogic-backend.onrender.com/admin-dashboard/admin-dashboard/charts',
@@ -51,10 +50,10 @@ export default function AdminCharts() {
           headers: { Authorization: `Bearer ${token}` },
           params: {
             start_date: dateRange?.from
-                          ? formatDateStart(dateRange.from)
-                          : undefined,
-                        end_date: dateRange?.to ? formatDateEnd(dateRange.to) : undefined,
-          }
+              ? formatDateStart(dateRange.from)
+              : undefined,
+            end_date: dateRange?.to ? formatDateEnd(dateRange.to) : undefined,
+          },
         }
       );
 
@@ -150,7 +149,7 @@ export default function AdminCharts() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-             <DateRangeFilter value={dateRange} onChange={setDateRange} />
+              <DateRangeFilter value={dateRange} onChange={setDateRange} />
             </CardContent>
           </Card>
 
@@ -174,9 +173,14 @@ export default function AdminCharts() {
                         paddingAngle={5}
                         dataKey="value"
                       >
-                        {(data?.deliveryTypeData || []).map((entry: any, index: number) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                        ))}
+                        {(data?.deliveryTypeData || []).map(
+                          (entry: any, index: number) => (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={COLORS[index % COLORS.length]}
+                            />
+                          )
+                        )}
                       </Pie>
                       <Tooltip
                         contentStyle={{
@@ -205,7 +209,9 @@ export default function AdminCharts() {
                               backgroundColor: COLORS[index % COLORS.length],
                             }}
                           ></div>
-                          <span className="text-sm text-gray-300">{item.name}</span>
+                          <span className="text-sm text-gray-300">
+                            {item.name}
+                          </span>
                         </div>
                         <div className="text-right">
                           <span className="text-sm text-white font-medium">
@@ -230,8 +236,25 @@ export default function AdminCharts() {
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={data?.monthlyTripData || []}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                    <XAxis dataKey="month" stroke="#9CA3AF" fontSize={12} label={{ value: 'Months', position: 'insideBottom', offset: -5 }} />
-                    <YAxis stroke="#9CA3AF" fontSize={12} label={{ value: 'Trips', angle: -90, position: 'insideLeft' }} />
+                    <XAxis
+                      dataKey="month"
+                      stroke="#9CA3AF"
+                      fontSize={12}
+                      label={{
+                        value: 'Months',
+                        position: 'insideBottom',
+                        offset: -5,
+                      }}
+                    />
+                    <YAxis
+                      stroke="#9CA3AF"
+                      fontSize={12}
+                      label={{
+                        value: 'Trips',
+                        angle: -90,
+                        position: 'insideLeft',
+                      }}
+                    />
                     <Tooltip
                       contentStyle={{
                         backgroundColor: '#1F2937',
