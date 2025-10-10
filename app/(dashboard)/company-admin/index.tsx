@@ -2,10 +2,21 @@
 
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Truck, Package, FileText, Calendar, Users } from 'lucide-react';
+import {
+  Truck,
+  Package,
+  FileText,
+  Calendar,
+  Users,
+  Clock,
+  MapPin,
+} from 'lucide-react';
 import { useAuthorizedRequest } from '@/hooks/useRequest';
 import axios from 'axios';
 import { PageHeader } from '../components/PageHeader';
+import { Button } from '@/components/ui/button';
+import { getStatusBadge } from './(pages)/trips/badge';
+import Link from 'next/link';
 
 // Skeleton component for dashboard cards
 const DashboardSkeleton = () => (
@@ -100,12 +111,15 @@ type DashboardResponse = {
   };
   trips: {
     id: string;
+    delivery_type: string;
     driver_name: string;
-    route: string;
-    status: 'Completed' | 'In Progress' | 'Pending' | 'Cancelled';
-    start_time: string;
-    completed_time?: string;
-    estimated_completion?: string;
+    client_name: string;
+    location_zone: string;
+    pickup_location: string;
+    dropoff_location: string;
+    status: string;
+    scheduled_time: string;
+    cost: string;
   }[];
   top_drivers: { driver_name: string; trip_count: number }[];
   top_clients: { client_name: string; trip_count: number }[];
@@ -319,58 +333,93 @@ export const AdminDashboard = () => {
           </div>
 
           {/* Recent Trips */}
-          {/* <Card className="dashboard-card">
+          <Card className="dashboard-card">
             <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <Truck className="h-5 w-5" />
-                Recent Trips
-              </CardTitle>
+              <div className="flex flex-col justify-between items-center md:flex-row">
+                <CardTitle className="text-white flex items-center gap-2">
+                  <Truck className="h-5 w-5" />
+                  Recent Trips
+                </CardTitle>
+                <div className="">
+                  <Button
+                    variant="outline"
+                    className="text-gray-700 hover:text-gray-300 border-gray-600 hover:bg-gray-700"
+                  >
+                    <Link href={'/company-admin/trips'}>View All Trips</Link>
+                  </Button>
+                </div>
+              </div>
             </CardHeader>
+
             <CardContent>
-              {data.trips.length === 0 ? (
-                <p className="text-gray-400 text-sm">No trips available</p>
+              {!data?.trips || data.trips.length === 0 ? (
+                <p className="text-gray-400 text-sm">
+                  No recent trips available
+                </p>
               ) : (
                 <div className="space-y-4">
-                  {data.trips.map((trip) => (
+                  {data.trips.slice(0, 9).map((trip) => (
                     <div
                       key={trip.id}
-                      className="flex items-center justify-between p-3 bg-gray-800 rounded-lg"
+                      className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 bg-gray-800/80 rounded-lg border border-gray-700/60 hover:bg-gray-800 transition-all"
                     >
-                      <div>
-                        <span className="text-sm font-medium text-white">
-                          {trip.driver_name}
+                      {/* Left Section */}
+                      <div className="flex flex-col space-y-1">
+                        <span className="text-sm font-semibold text-white">
+                          {trip.driver_name || 'Unknown Driver'}
                         </span>
-                        <span className="block text-xs text-gray-400">
-                          {trip.route}
+
+                        {/* Route or Location */}
+                        <span className="text-xs text-gray-400 flex items-center gap-1">
+                          <MapPin className="h-3 w-3 text-gray-500" />
+                          {trip.pickup_location && trip.dropoff_location
+                            ? `${trip.pickup_location} → ${trip.dropoff_location}`
+                            : trip.location_zone || '—'}
+                        </span>
+
+                        {/* Client & Delivery type */}
+                        <span className="text-xs text-gray-400">
+                          {trip.client_name || 'Unknown Client'} •{' '}
+                          {trip.delivery_type}
                         </span>
                       </div>
-                      <div className="flex flex-col items-end">
-                        <span
-                          className={`text-xs px-2 py-1 rounded-full ${
-                            trip.status === 'Completed'
-                              ? 'bg-[#15941f] text-white'
-                              : trip.status === 'In Progress'
-                                ? 'bg-blue-600 text-white'
-                                : trip.status === 'Pending'
-                                  ? 'bg-yellow-600 text-white'
-                                  : 'bg-red-600 text-white'
-                          }`}
-                        >
-                          {trip.status}
+
+                      {/* Right Section */}
+                      <div className="mt-3 sm:mt-0 flex flex-col items-start sm:items-end">
+                        {/* Status Badge */}
+                        <span className="text-xs px-2 py-1 rounded-full font-medium">
+                          {getStatusBadge(trip.status || 'Unknown')}
                         </span>
+
+                        {/* Time */}
                         <span className="text-xs text-gray-400 mt-1 flex items-center gap-1">
-                          <Clock className="h-3 w-3" />
-                          {trip.status === 'Completed'
-                            ? trip.completed_time
-                            : (trip.estimated_completion ?? '—')}
+                          <Clock className="h-3 w-3 text-gray-500" />
+                          {trip.scheduled_time
+                            ? new Date(trip.scheduled_time).toLocaleString(
+                                'en-GB',
+                                {
+                                  hour: '2-digit',
+                                  minute: '2-digit',
+                                  day: '2-digit',
+                                  month: 'short',
+                                }
+                              )
+                            : '—'}
                         </span>
+
+                        {/* Cost */}
+                        {trip.cost && (
+                          <span className="text-xs text-gray-400 mt-1">
+                            £{Number(trip.cost).toFixed(2)}
+                          </span>
+                        )}
                       </div>
                     </div>
                   ))}
                 </div>
               )}
             </CardContent>
-          </Card> */}
+          </Card>
         </div>
       )}
     </div>
