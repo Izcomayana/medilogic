@@ -1,16 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Button } from '@/components/ui/button';
 import { TabsContent } from '@radix-ui/react-tabs';
 import { useSettings } from '@/hooks/useSettings';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import axios from 'axios';
+import { toast } from 'sonner';
 import {
   AlertDialog,
   // AlertDialogTrigger,
@@ -23,6 +19,8 @@ import {
   AlertDialogAction,
 } from '@/components/ui/alert-dialog';
 import { Trash2, Eye, EyeOff, AlertTriangle } from 'lucide-react';
+import { useState } from 'react';
+import { useAuthorizedRequest } from '@/hooks/useRequest';
 
 type AccountProps = ReturnType<typeof useSettings>;
 
@@ -38,7 +36,7 @@ export function AccountsTab({
   setShowNewPassword,
   showConfirmPassword,
   setShowConfirmPassword,
-  handleChangePassword,
+  // handleChangePassword,
   isDeleteModalOpen,
   deleteReason,
   setDeleteReason,
@@ -47,6 +45,107 @@ export function AccountsTab({
   handleDeleteAccount,
   isDeleting,
 }: AccountProps) {
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const authorizedRequest = useAuthorizedRequest();
+
+  const handleChangePassword = async () => {
+    // Client-side validation
+    if (
+      !passwordData.currentPassword ||
+      !passwordData.newPassword ||
+      !passwordData.confirmPassword
+    ) {
+      toast.error('Please fill in all fields.');
+      return;
+    }
+
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      toast.error('New passwords do not match.');
+      return;
+    }
+
+    setIsChangingPassword(true);
+
+    try {
+      // Use authorizedRequest to guarantee a valid token and automatic refresh
+      await authorizedRequest(async (token) => {
+        const res = await axios.post(
+          'https://medilogic-backend.onrender.com/access/change-password',
+          {
+            current_password: passwordData.currentPassword,
+            new_password: passwordData.newPassword,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+
+        // Use the response so the linter doesn't flag an unused var
+        if (res.status === 200) {
+          toast.success('Password changed successfully!');
+          setIsChangePasswordModalOpen(false);
+          setPasswordData({
+            currentPassword: '',
+            newPassword: '',
+            confirmPassword: '',
+          });
+        } else {
+          // unexpected but handle gracefully
+          toast.error('Failed to change password. Please try again.');
+        }
+      }, 'Failed to change password');
+    } catch (err: unknown) {
+      // More precise error handling
+      if (axios.isAxiosError(err)) {
+        const status = err.response?.status;
+        const detail = err.response?.data?.detail ?? err.response?.data;
+
+        // If the API returned an auth error message from token validation
+        if (status === 401) {
+          // backend sometimes returns: { "detail": "Could not validate credentials" }
+          const detailStr =
+            typeof detail === 'string'
+              ? detail
+              : Array.isArray(detail)
+                ? detail.map((d: any) => d.msg).join(', ')
+                : JSON.stringify(detail);
+
+          if (
+            typeof detailStr === 'string' &&
+            detailStr.toLowerCase().includes('could not validate')
+          ) {
+            toast.error('Authentication failed — please log in again.');
+            // optional: trigger logout / redirect here if you have that logic
+          } else {
+            // 401 could also mean wrong current password depending on backend behavior
+            toast.error('Incorrect current password.');
+          }
+        } else if (status === 422) {
+          // Validation errors (Pydantic style)
+          if (Array.isArray(detail)) {
+            const msgs = detail.map((d: any) => d.msg).join('; ');
+            toast.error(msgs || 'Validation error changing password.');
+          } else {
+            toast.error(
+              String(detail) || 'Validation error changing password.'
+            );
+          }
+        } else {
+          toast.error(err.message || 'Something went wrong. Please try again.');
+        }
+      } else if (err instanceof Error) {
+        toast.error(err.message || 'Something went wrong. Please try again.');
+      } else {
+        toast.error('An unknown error occurred.');
+      }
+    } finally {
+      setIsChangingPassword(false);
+    }
+  };
+
   return (
     <>
       <TabsContent value="account" className="p-6 space-y-6">
@@ -101,23 +200,23 @@ export function AccountsTab({
       </TabsContent>
 
       {/* Change Password Modal */}
-      <Dialog
+      <AlertDialog
         open={isChangePasswordModalOpen}
         onOpenChange={setIsChangePasswordModalOpen}
       >
-        <DialogContent className="bg-gray-800 border-gray-700 text-white">
-          <DialogHeader>
-            <DialogTitle>Change Password</DialogTitle>
-            <DialogDescription className="text-gray-400">
+        <AlertDialogContent className="bg-gray-800 border-gray-700 text-white">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Change Password</AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-400">
               Enter your current password and choose a new one.
-            </DialogDescription>
-          </DialogHeader>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
           <div className="space-y-4 py-4">
             <div>
               <Label htmlFor="currentPassword" className="text-gray-300">
                 Current Password
               </Label>
-              <div className="relative">
+              <div className="relative mt-2">
                 <Input
                   id="currentPassword"
                   type={showCurrentPassword ? 'text' : 'password'}
@@ -149,7 +248,7 @@ export function AccountsTab({
               <Label htmlFor="newPassword" className="text-gray-300">
                 New Password
               </Label>
-              <div className="relative">
+              <div className="relative mt-2">
                 <Input
                   id="newPassword"
                   type={showNewPassword ? 'text' : 'password'}
@@ -181,7 +280,7 @@ export function AccountsTab({
               <Label htmlFor="confirmPassword" className="text-gray-300">
                 Confirm New Password
               </Label>
-              <div className="relative">
+              <div className="relative mt-2">
                 <Input
                   id="confirmPassword"
                   type={showConfirmPassword ? 'text' : 'password'}
@@ -210,19 +309,28 @@ export function AccountsTab({
               </div>
             </div>
           </div>
-          <DialogFooter>
+          <AlertDialogFooter>
             <Button
               variant="outline"
               onClick={() => setIsChangePasswordModalOpen(false)}
+              className="text-gray-700 hover:text-gray-400"
             >
               Cancel
             </Button>
-            <Button onClick={handleChangePassword} className="primary-button">
-              Change Password
+            <Button
+              onClick={handleChangePassword}
+              disabled={isChangingPassword}
+              className="primary-button"
+            >
+              {isChangingPassword ? (
+                <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mx-12"></span>
+              ) : (
+                'Change Password'
+              )}
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Delete Account Confirmation */}
       <AlertDialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>

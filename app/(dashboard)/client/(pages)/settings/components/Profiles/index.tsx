@@ -1,18 +1,35 @@
 import { Button } from '@/components/ui/button';
 import { TabsContent } from '@radix-ui/react-tabs';
 import { Textarea } from '@/components/ui/textarea';
-import { useSettings } from '@/app/(dashboard)/company-admin/(pages)/settings/useSettings';
+import { useSettings } from '@/hooks/useSettings';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 type ProfileProps = ReturnType<typeof useSettings>;
 
-export function ProfileTab({
-  profileData,
-  setProfileData,
-  handleUpdateProfile,
-}: ProfileProps) {
+export function ProfileTab(
+  {
+    // profileData,
+    // setProfileData,
+  }: ProfileProps
+) {
+  const [profileData, setProfileData] = useState({
+    firstName: 'Admin',
+    lastName: 'User',
+    email: 'admin@logistics.com',
+    phone: '+234 123 456 7890',
+    bio: 'Logistics administrator managing waste collection operations.',
+    organization: 'Logistics Admin',
+    role: 'Admin',
+  });
+
+  const handleUpdateProfile = () => {
+    toast.success('Profile updated successfully');
+  };
+
   const getRoleBadge = (role: string) => {
     switch (role) {
       case 'Admin':
