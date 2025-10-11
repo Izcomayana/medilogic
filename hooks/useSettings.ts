@@ -1,12 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { useAuthorizedRequest } from '@/hooks/useRequest';
 import axios from 'axios';
 import { useAuth } from '@/components/auth';
+import { useProfile } from './useProfile';
 
-// Mock data for login sessions
+const API_BASE_URL = 'https://medilogic-backend.onrender.com';
+
 const loginSessions = [
   {
     id: 'SES001',
@@ -38,27 +40,44 @@ export function useSettings() {
   const [deleteReason, setDeleteReason] = useState('');
   const [deletePassword, setDeletePassword] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
-  const { logout } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
 
+  const { user, loading: userLoading } = useProfile();
+  const { logout } = useAuth();
   const authorizedRequest = useAuthorizedRequest();
 
-  // Profile form state
-  const [profileData, setProfileData] = useState({
-    firstName: 'Admin',
-    lastName: 'User',
-    email: 'admin@logistics.com',
-    phone: '+234 123 456 7890',
-    bio: 'Logistics administrator managing waste collection operations.',
-    organization: 'Logistics Admin',
-    role: 'Admin',
+  const [userProfileData, setUserProfileData] = useState({
+    name: '',
+    email: '',
   });
 
-  // Password form state
-  const [passwordData, setPasswordData] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: '',
+  const [orgProfileData, setOrgProfileData] = useState({
+    id: '',
+    name: '',
+    is_active: true,
+    invite_code: '',
+    ico_registered: true,
+    email: '',
+    phone_number: '',
+    address_line: '',
+    postal_code: '',
+    license_number: '',
+    data_retention_years: '',
+    ico_registration_number: '',
+    license_expiry: '',
+    supported_waste_types: [] as string[],
+    user_count: '',
+    trip_count: '',
+    waste_processing_capability: '',
+    delivery_capacity: 0,
+    contact_person_name: '',
+    contact_person_role: '',
+    latitude: 0,
+    longitude: 0,
   });
+
+  const [initialUserProfile, setInitialUserProfile] = useState(userProfileData);
+  const [initialOrgProfile, setInitialOrgProfile] = useState(orgProfileData);
 
   // Notification settings
   const [notificationSettings, setNotificationSettings] = useState({
@@ -70,9 +89,147 @@ export function useSettings() {
     systemUpdates: false,
   });
 
-  const handleUpdateProfile = () => {
-    toast.success('Profile updated successfully');
+  useEffect(() => {
+    setIsLoading(true);
+    if (user && !userLoading) {
+      const profile = { name: user.name || '', email: user.email || '' };
+      setUserProfileData(profile);
+      setInitialUserProfile(profile);
+    }
+    setIsLoading(false);
+  }, [user, userLoading]);
+
+  useEffect(() => {
+    // Only run once when we have a valid org ID and not already loaded
+    if (userLoading || !user?.organization?.id) return;
+
+    let isFetched = false;
+
+    const fetchOrganizationDetails = async () => {
+      if (isFetched) return;
+      isFetched = true;
+
+      toast('Loading organization info.');
+      setIsLoading(true);
+      try {
+        await authorizedRequest(async (token) => {
+          const res = await axios.get(
+            `${API_BASE_URL}/super/${user.organization.id}`,
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
+
+          const org = res.data.organization;
+          const orgData = {
+            id: org.id || '',
+            name: org.name || '',
+            invite_code: org.invite_code || '',
+            is_active: org.is_active ?? true,
+            email: org.email || '',
+            phone_number: org.phone_number || '',
+            address_line: org.address_line || '',
+            postal_code: org.postal_code || '',
+            license_number: org.license_number || '',
+            ico_registered: org.ico_registered ?? false,
+            data_retention_years: org.data_retention_years?.toString() || '',
+            license_expiry: org.license_expiry || '',
+            supported_waste_types: org.supported_waste_types || [],
+            ico_registration_number: org.ico_registration_number || '',
+            user_count: res.data.user_count?.toString() || '',
+            trip_count: res.data.trip_count?.toString() || '',
+            waste_processing_capability:
+              res.data.waste_processing_capability || '',
+            delivery_capacity: res.data.delivery_capacity || 0,
+            contact_person_name: res.data.contact_person_name || '',
+            contact_person_role: res.data.contact_person_role || '',
+            latitude: res.data.latitude || 0,
+            longitude: res.data.longitude || 0,
+          };
+
+          setOrgProfileData(orgData);
+          setInitialOrgProfile(orgData);
+        }, 'Failed to fetch organization details');
+      } catch (err) {
+        console.error('Failed to fetch organization details:', err);
+        toast.error('Unable to load organization info.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchOrganizationDetails();
+
+    // ✅ Cleanup function ensures no re-runs
+    return () => {
+      isFetched = true;
+    };
+  }, [user?.organization?.id]); // only depend on org ID
+
+  const isUserProfileChanged =
+    JSON.stringify(userProfileData) !== JSON.stringify(initialUserProfile);
+  const isOrgProfileChanged =
+    JSON.stringify(orgProfileData) !== JSON.stringify(initialOrgProfile);
+
+  const handleUpdateUserProfile = async () => {
+    setIsLoading(true);
+    try {
+      await authorizedRequest(async (token) => {
+        const payload = {
+          email: userProfileData.email,
+          name: userProfileData.name,
+        };
+
+        await axios.put(`${API_BASE_URL}/users/users/update`, payload, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        toast.success('Personal account updated successfully');
+      }, 'Failed to update user profile');
+    } catch (error: any) {
+      console.error('Error updating user profile:', error);
+      if (error.response?.data?.detail) {
+        toast.error(
+          `Update failed: ${JSON.stringify(error.response.data.detail)}`
+        );
+      } else {
+        toast.error('Failed to update account.');
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
+
+  const handleUpdateOrgProfile = async () => {
+    if (!user?.organization?.id) {
+      toast.error('Organization ID not found.');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await authorizedRequest(async (token) => {
+        await axios.patch(
+          `${API_BASE_URL}/super/${user.organization.id}`,
+          orgProfileData,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        toast.success('Organization profile updated successfully');
+      }, 'Failed to update organization profile');
+    } catch (error) {
+      console.error('Error updating organization profile:', error);
+      toast.error('Failed to update organization profile.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  });
 
   const handleChangePassword = () => {
     if (passwordData.newPassword !== passwordData.confirmPassword) {
@@ -96,25 +253,15 @@ export function useSettings() {
     try {
       setIsDeleting(true);
       await authorizedRequest(async (validToken) => {
-        const res = await axios.delete(
-          'https://medilogic-backend.onrender.com/users/users/users/me',
-          {
-            headers: { Authorization: `Bearer ${validToken}` },
-            data: {
-              reason: deleteReason,
-              password: deletePassword,
-            },
-          }
-        );
-
-        console.log('Account deleted successfully');
-        toast.success(
-          'Account deletion request submitted. You will be logged out shortly.'
-        );
+        await axios.delete(`${API_BASE_URL}/users/users/users/me`, {
+          headers: { Authorization: `Bearer ${validToken}` },
+          data: { reason: deleteReason, password: deletePassword },
+        });
+        toast.success('Account deletion request submitted.');
         setIsDeleteModalOpen(false);
         logout();
       }, 'Failed to delete account');
-    } catch (error: unknown) {
+    } catch (error) {
       console.error('Error deleting account:', error);
     } finally {
       setIsDeleting(false);
@@ -150,16 +297,27 @@ export function useSettings() {
     setShowNewPassword,
     showConfirmPassword,
     setShowConfirmPassword,
-    profileData,
-    setProfileData,
     passwordData,
     setPasswordData,
-    notificationSettings,
-    setNotificationSettings,
-    handleUpdateProfile,
     handleChangePassword,
     handleDeleteAccount,
     handleTerminateSession,
     handleToggle2FA,
+    notificationSettings,
+    setNotificationSettings,
+
+    // Profiles
+    userProfileData,
+    setUserProfileData,
+    orgProfileData,
+    setOrgProfileData,
+    isUserProfileChanged,
+    isOrgProfileChanged,
+
+    // Update handlers
+    handleUpdateUserProfile,
+    handleUpdateOrgProfile,
+
+    isLoading,
   };
 }
