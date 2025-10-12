@@ -3,14 +3,8 @@ import { TabsContent } from '@radix-ui/react-tabs';
 import { useSettings } from '@/hooks/useSettings';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import axios from 'axios';
+import { toast } from 'sonner';
 import {
   AlertDialog,
   // AlertDialogTrigger,
@@ -23,6 +17,7 @@ import {
   AlertDialogAction,
 } from '@/components/ui/alert-dialog';
 import { Trash2, Eye, EyeOff, AlertTriangle } from 'lucide-react';
+import { useState } from 'react';
 
 type AccountProps = ReturnType<typeof useSettings>;
 
@@ -38,7 +33,7 @@ export function AccountsTab({
   setShowNewPassword,
   showConfirmPassword,
   setShowConfirmPassword,
-  handleChangePassword,
+  // handleChangePassword,
   isDeleteModalOpen,
   deleteReason,
   setDeleteReason,
@@ -47,6 +42,66 @@ export function AccountsTab({
   handleDeleteAccount,
   isDeleting,
 }: AccountProps) {
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+
+  const handleChangePassword = async () => {
+    // Step 1: Client-side validation
+    if (
+      !passwordData.currentPassword ||
+      !passwordData.newPassword ||
+      !passwordData.confirmPassword
+    ) {
+      toast.error('Please fill in all fields.');
+      return;
+    }
+
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      toast.error('New passwords do not match.');
+      return;
+    }
+
+    setIsChangingPassword(true);
+    try {
+      // Step 2: Make API call
+      const token = localStorage.getItem('token'); // adjust if stored differently
+
+      const response = await axios.post(
+        'https://medilogic-backend.onrender.com/access/change-password',
+        {
+          current_password: passwordData.currentPassword,
+          new_password: passwordData.newPassword,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      // Step 3: Handle success
+      toast.success('Password changed successfully!');
+      setIsChangePasswordModalOpen(false);
+      setPasswordData({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+      });
+    } catch (error: any) {
+      console.error('Password change error:', error);
+
+      if (error.response?.status === 401) {
+        toast.error('Incorrect current password.');
+      } else if (error.response?.data?.detail) {
+        toast.error(
+          error.response.data.detail[0]?.msg || 'Error changing password.'
+        );
+      } else {
+        toast.error('Something went wrong. Please try again.');
+      }
+    }
+  };
+
   return (
     <>
       <TabsContent value="account" className="p-6 space-y-6">
@@ -101,23 +156,23 @@ export function AccountsTab({
       </TabsContent>
 
       {/* Change Password Modal */}
-      <Dialog
+      <AlertDialog
         open={isChangePasswordModalOpen}
         onOpenChange={setIsChangePasswordModalOpen}
       >
-        <DialogContent className="bg-gray-800 border-gray-700 text-white">
-          <DialogHeader>
-            <DialogTitle>Change Password</DialogTitle>
-            <DialogDescription className="text-gray-400">
+        <AlertDialogContent className="bg-gray-800 border-gray-700 text-white">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Change Password</AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-400">
               Enter your current password and choose a new one.
-            </DialogDescription>
-          </DialogHeader>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
           <div className="space-y-4 py-4">
             <div>
               <Label htmlFor="currentPassword" className="text-gray-300">
                 Current Password
               </Label>
-              <div className="relative">
+              <div className="relative mt-2">
                 <Input
                   id="currentPassword"
                   type={showCurrentPassword ? 'text' : 'password'}
@@ -149,7 +204,7 @@ export function AccountsTab({
               <Label htmlFor="newPassword" className="text-gray-300">
                 New Password
               </Label>
-              <div className="relative">
+              <div className="relative mt-2">
                 <Input
                   id="newPassword"
                   type={showNewPassword ? 'text' : 'password'}
@@ -181,7 +236,7 @@ export function AccountsTab({
               <Label htmlFor="confirmPassword" className="text-gray-300">
                 Confirm New Password
               </Label>
-              <div className="relative">
+              <div className="relative mt-2">
                 <Input
                   id="confirmPassword"
                   type={showConfirmPassword ? 'text' : 'password'}
@@ -210,19 +265,24 @@ export function AccountsTab({
               </div>
             </div>
           </div>
-          <DialogFooter>
+          <AlertDialogFooter>
             <Button
               variant="outline"
               onClick={() => setIsChangePasswordModalOpen(false)}
+              className="text-gray-700 hover:text-gray-400"
             >
               Cancel
             </Button>
-            <Button onClick={handleChangePassword} className="primary-button">
-              Change Password
+            <Button
+              onClick={handleChangePassword}
+              disabled={isChangingPassword}
+              className="primary-button"
+            >
+              {isChangingPassword ? 'Changing...' : 'Change Password'}
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {/* Delete Account Confirmation */}
       <AlertDialog open={isDeleteModalOpen} onOpenChange={setIsDeleteModalOpen}>

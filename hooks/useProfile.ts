@@ -1,4 +1,3 @@
-// hooks/useOrganization.ts
 'use client';
 
 import { useEffect, useState } from 'react';
