@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Button } from '@/components/ui/button';
 import { TabsContent } from '@radix-ui/react-tabs';
 import { useSettings } from '@/hooks/useSettings';
@@ -18,6 +20,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Trash2, Eye, EyeOff, AlertTriangle } from 'lucide-react';
 import { useState } from 'react';
+import { useAuthorizedRequest } from '@/hooks/useRequest';
 
 type AccountProps = ReturnType<typeof useSettings>;
 
@@ -43,9 +46,10 @@ export function AccountsTab({
   isDeleting,
 }: AccountProps) {
   const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const authorizedRequest = useAuthorizedRequest();
 
   const handleChangePassword = async () => {
-    // Step 1: Client-side validation
+    // Client-side validation
     if (
       !passwordData.currentPassword ||
       !passwordData.newPassword ||
@@ -61,44 +65,84 @@ export function AccountsTab({
     }
 
     setIsChangingPassword(true);
+
     try {
-      // Step 2: Make API call
-      const token = localStorage.getItem('token'); // adjust if stored differently
-
-      const response = await axios.post(
-        'https://medilogic-backend.onrender.com/access/change-password',
-        {
-          current_password: passwordData.currentPassword,
-          new_password: passwordData.newPassword,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
+      // Use authorizedRequest to guarantee a valid token and automatic refresh
+      await authorizedRequest(async (token) => {
+        const res = await axios.post(
+          'https://medilogic-backend.onrender.com/access/change-password',
+          {
+            current_password: passwordData.currentPassword,
+            new_password: passwordData.newPassword,
           },
-        }
-      );
-
-      // Step 3: Handle success
-      toast.success('Password changed successfully!');
-      setIsChangePasswordModalOpen(false);
-      setPasswordData({
-        currentPassword: '',
-        newPassword: '',
-        confirmPassword: '',
-      });
-    } catch (error: any) {
-      console.error('Password change error:', error);
-
-      if (error.response?.status === 401) {
-        toast.error('Incorrect current password.');
-      } else if (error.response?.data?.detail) {
-        toast.error(
-          error.response.data.detail[0]?.msg || 'Error changing password.'
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
         );
+
+        // Use the response so the linter doesn't flag an unused var
+        if (res.status === 200) {
+          toast.success('Password changed successfully!');
+          setIsChangePasswordModalOpen(false);
+          setPasswordData({
+            currentPassword: '',
+            newPassword: '',
+            confirmPassword: '',
+          });
+        } else {
+          // unexpected but handle gracefully
+          toast.error('Failed to change password. Please try again.');
+        }
+      }, 'Failed to change password');
+    } catch (err: unknown) {
+      // More precise error handling
+      if (axios.isAxiosError(err)) {
+        const status = err.response?.status;
+        const detail = err.response?.data?.detail ?? err.response?.data;
+
+        // If the API returned an auth error message from token validation
+        if (status === 401) {
+          // backend sometimes returns: { "detail": "Could not validate credentials" }
+          const detailStr =
+            typeof detail === 'string'
+              ? detail
+              : Array.isArray(detail)
+                ? detail.map((d: any) => d.msg).join(', ')
+                : JSON.stringify(detail);
+
+          if (
+            typeof detailStr === 'string' &&
+            detailStr.toLowerCase().includes('could not validate')
+          ) {
+            toast.error('Authentication failed — please log in again.');
+            // optional: trigger logout / redirect here if you have that logic
+          } else {
+            // 401 could also mean wrong current password depending on backend behavior
+            toast.error('Incorrect current password.');
+          }
+        } else if (status === 422) {
+          // Validation errors (Pydantic style)
+          if (Array.isArray(detail)) {
+            const msgs = detail.map((d: any) => d.msg).join('; ');
+            toast.error(msgs || 'Validation error changing password.');
+          } else {
+            toast.error(
+              String(detail) || 'Validation error changing password.'
+            );
+          }
+        } else {
+          toast.error(err.message || 'Something went wrong. Please try again.');
+        }
+      } else if (err instanceof Error) {
+        toast.error(err.message || 'Something went wrong. Please try again.');
       } else {
-        toast.error('Something went wrong. Please try again.');
+        toast.error('An unknown error occurred.');
       }
+    } finally {
+      setIsChangingPassword(false);
     }
   };
 
@@ -278,7 +322,11 @@ export function AccountsTab({
               disabled={isChangingPassword}
               className="primary-button"
             >
-              {isChangingPassword ? 'Changing...' : 'Change Password'}
+              {isChangingPassword ? (
+                <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mx-12"></span>
+              ) : (
+                'Change Password'
+              )}
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
