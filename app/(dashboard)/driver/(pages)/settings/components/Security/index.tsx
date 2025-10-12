@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
-import { useSettings } from '@/app/(dashboard)/company-admin/(pages)/settings/useSettings';
+import { useSettings } from '@/hooks/useSettings';
 import { TabsContent } from '@radix-ui/react-tabs';
 import { Monitor, Smartphone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
