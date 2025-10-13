@@ -80,7 +80,7 @@ const DashboardSkeleton = () => (
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {[1, 2, 3].map((i) => (
+          {[1, 2, 3, 4, 5].map((i) => (
             <div
               key={i}
               className="flex items-center justify-between p-3 bg-gray-800 rounded-lg"
@@ -120,6 +120,7 @@ type DashboardResponse = {
     status: string;
     scheduled_time: string;
     cost: string;
+    created_at: string;
   }[];
   top_drivers: { driver_name: string; trip_count: number }[];
   top_clients: { client_name: string; trip_count: number }[];
@@ -146,8 +147,17 @@ export const AdminDashboard = () => {
           return res.data;
         }, 'Failed to load admin dashboard');
 
+        // if (isMounted && dashboard) {
+        //   setData(dashboard);
+        // }
         if (isMounted && dashboard) {
-          setData(dashboard);
+          const sortedTrips = [...(dashboard.trips || [])].sort(
+            (a, b) =>
+              new Date(b.created_at || '').getTime() -
+              new Date(a.created_at || '').getTime()
+          );
+
+          setData({ ...dashboard, trips: sortedTrips });
         }
       } catch (err) {
         console.error(err);
@@ -358,7 +368,7 @@ export const AdminDashboard = () => {
                 </p>
               ) : (
                 <div className="space-y-4">
-                  {data.trips.slice(0, 9).map((trip) => (
+                  {data.trips.slice(0, 5).map((trip) => (
                     <div
                       key={trip.id}
                       className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-4 bg-gray-800/80 rounded-lg border border-gray-700/60 hover:bg-gray-800 transition-all"

@@ -2,16 +2,16 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { useSettings } from '@/hooks/useSettings';
 import { TabsContent } from '@radix-ui/react-tabs';
-import { Monitor, Smartphone } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Smartphone } from 'lucide-react';
+// import { Button } from '@/components/ui/button';
 
 type SecurityProps = ReturnType<typeof useSettings>;
 
 export function SecurityTab({
   is2FAEnabled,
   handleToggle2FA,
-  loginSessions,
-  handleTerminateSession,
+  // loginSessions,
+  // handleTerminateSession,
 }: SecurityProps) {
   return (
     <TabsContent value="security" className="p-6 space-y-6">
@@ -51,7 +51,7 @@ export function SecurityTab({
           </div>
 
           {/* Login Sessions */}
-          <div className="space-y-4">
+          {/* <div className="space-y-4">
             <h4 className="text-white font-medium">Active Login Sessions</h4>
             <div className="space-y-3">
               {loginSessions.map((session) => (
@@ -93,7 +93,7 @@ export function SecurityTab({
                 </div>
               ))}
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </TabsContent>
