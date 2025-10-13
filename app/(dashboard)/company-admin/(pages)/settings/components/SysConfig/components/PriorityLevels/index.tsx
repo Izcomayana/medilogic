@@ -1,7 +1,7 @@
 import { TabsContent } from '@radix-ui/react-tabs';
 import { Button } from '@/components/ui/button';
 import { useSysConfig } from '@/hooks/settings/useSysConfg';
-import { Trash2, Plus, Flag } from 'lucide-react';
+import { Trash2, Plus, Flag, AlertTriangle } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -10,7 +10,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
 import {
   Dialog,
   DialogContent,
@@ -21,14 +20,16 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from '@/components/ui/alert-dialog';
 
 type PriorityLevelProps = ReturnType<typeof useSysConfig>;
 
@@ -40,11 +41,13 @@ export function PriorityLevelsTab({
   newPriority,
   setNewPriority,
   handleAddPriority,
+  deleteConfirmDialog,
+  handleDeleteConfig,
 }: PriorityLevelProps) {
   return (
     <>
       <TabsContent value="priority-levels" className="mt-6 space-y-4">
-        <div className="flex items-center justify-between border-b border-gray-700 pb-1">
+        <div className="flex flex-col md:flex-row items-start lg:items-center gap-4 lg:gap-0 justify-between border-b border-gray-700 pb-1">
           <div>
             <h4 className="text-white font-medium">Priority Levels</h4>
             <p className="text-sm text-gray-400">
@@ -65,8 +68,6 @@ export function PriorityLevelsTab({
             <TableHeader>
               <TableRow className="bg-gray-800 hover:bg-gray-800 border-gray-700">
                 <TableHead className="text-gray-300">Name</TableHead>
-                <TableHead className="text-gray-300">Color</TableHead>
-                <TableHead className="text-gray-300">Description</TableHead>
                 <TableHead className="text-gray-300 text-right">
                   Actions
                 </TableHead>
@@ -77,14 +78,6 @@ export function PriorityLevelsTab({
                 <TableRow key={priority.id} className="border-gray-700">
                   <TableCell className="font-medium text-white">
                     {priority.name}
-                  </TableCell>
-                  <TableCell>
-                    <Badge className={`${priority.color} text-white`}>
-                      {priority.name}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-gray-400">
-                    {priority.description}
                   </TableCell>
                   <TableCell className="text-right">
                     <Button
@@ -137,74 +130,6 @@ export function PriorityLevelsTab({
                 className="bg-gray-700 border-gray-600 text-white"
               />
             </div>
-            <div>
-              <Label htmlFor="priorityColor" className="text-gray-300 mb-2">
-                Color *
-              </Label>
-              <Select
-                value={newPriority.color}
-                onValueChange={(value) =>
-                  setNewPriority({ ...newPriority, color: value })
-                }
-              >
-                <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-800 border-gray-700">
-                  <SelectItem value="bg-gray-500">
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 rounded bg-gray-500" />
-                      Gray
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="bg-blue-500">
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 rounded bg-blue-500" />
-                      Blue
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="bg-yellow-500">
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 rounded bg-yellow-500" />
-                      Yellow
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="bg-orange-500">
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 rounded bg-orange-500" />
-                      Orange
-                    </div>
-                  </SelectItem>
-                  <SelectItem value="bg-red-500">
-                    <div className="flex items-center gap-2">
-                      <div className="w-4 h-4 rounded bg-red-500" />
-                      Red
-                    </div>
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label
-                htmlFor="priorityDescription"
-                className="text-gray-300 mb-2"
-              >
-                Description *
-              </Label>
-              <Textarea
-                id="priorityDescription"
-                value={newPriority.description}
-                onChange={(e) =>
-                  setNewPriority({
-                    ...newPriority,
-                    description: e.target.value,
-                  })
-                }
-                placeholder="Brief description of the priority level"
-                className="bg-gray-700 border-gray-600 text-white"
-                rows={3}
-              />
-            </div>
           </div>
           <DialogFooter>
             <Button
@@ -213,21 +138,58 @@ export function PriorityLevelsTab({
                 setIsPriorityModalOpen(false);
                 setNewPriority({
                   name: '',
-                  color: 'bg-gray-500',
-                  description: '',
                 });
               }}
               className="border-gray-600 text-gray-700 hover:text-gray-300 hover:bg-gray-700"
             >
               Cancel
             </Button>
-            <Button onClick={handleAddPriority} className="primary-button">
+            <Button
+              onClick={handleAddPriority}
+              className="primary-button"
+              disabled={!newPriority.name}
+            >
               <Plus className="h-4 w-4 mr-2" />
               Add Priority Level
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Delete Configuration Confirmation */}
+      <AlertDialog
+        open={deleteConfirmDialog.open}
+        onOpenChange={(open) =>
+          !open &&
+          setDeleteConfirmDialog({ open: false, type: '', id: '', name: '' })
+        }
+      >
+        <AlertDialogContent className="bg-gray-800 border-gray-700 text-white">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2 text-red-400">
+              <AlertTriangle className="h-5 w-5" />
+              Delete Configuration
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-400">
+              Are you sure you want to delete{' '}
+              <strong className="text-white">{deleteConfirmDialog.name}</strong>
+              ? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="border-gray-600 text-gray-700 hover:text-gray-300 hover:bg-gray-700">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfig}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }
