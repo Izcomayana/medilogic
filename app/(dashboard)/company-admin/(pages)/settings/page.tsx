@@ -3,12 +3,13 @@
 import { useSettings } from '@/hooks/useSettings';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Settings, User, Shield, Bell } from 'lucide-react';
+import { Settings, User, Shield, Bell, UserCog } from 'lucide-react';
 import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 import { AccountsTab } from '../../../components/Settings/Accounts';
 import { ProfileTab } from './components/Profiles';
 import { SecurityTab } from './components/Security';
 import { NotificationsTab } from './components/Notifications';
+import { SystemConfigTab } from './components/SysConfig';
 
 export default function AdminSettingsPage() {
   const settingState = useSettings();
@@ -30,22 +31,20 @@ export default function AdminSettingsPage() {
               className="w-full"
             >
               <div className="border-b border-gray-700">
-                <TabsList className="grid w-full grid-cols-4 bg-transparent h-auto p-0">
+                <TabsList className="grid w-full grid-cols-5 bg-transparent h-auto p-0">
                   <TabsTrigger
                     value="profile"
                     className="flex items-center gap-2 py-4 px-6 data-[state=active]:bg-gray-800 data-[state=active]:text-white text-gray-400 hover:text-white border-b-2 border-transparent data-[state=active]:border-b-[#15941f] rounded-none"
                   >
                     <User className="h-4 w-4" />
                     <span className="hidden md:block">Profile</span>
-                    {/* Profile */}
                   </TabsTrigger>
                   <TabsTrigger
                     value="account"
                     className="flex items-center gap-2 py-4 px-6 data-[state=active]:bg-gray-800 data-[state=active]:text-white text-gray-400 hover:text-white border-b-2 border-transparent data-[state=active]:border-b-[#15941f] rounded-none"
                   >
-                    <Settings className="h-4 w-4" />
+                    <UserCog className="h-4 w-4" />
                     <span className="hidden md:block">Account</span>
-                    {/* Account */}
                   </TabsTrigger>
                   <TabsTrigger
                     value="security"
@@ -53,7 +52,6 @@ export default function AdminSettingsPage() {
                   >
                     <Shield className="h-4 w-4" />
                     <span className="hidden md:block">Security</span>
-                    {/* Security */}
                   </TabsTrigger>
                   <TabsTrigger
                     value="notifications"
@@ -61,7 +59,13 @@ export default function AdminSettingsPage() {
                   >
                     <Bell className="h-4 w-4" />
                     <span className="hidden md:block">Notifications</span>
-                    {/* Notifications */}
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="system"
+                    className="flex items-center gap-2 py-4 px-6 data-[state=active]:bg-gray-800 data-[state=active]:text-white text-gray-400 hover:text-white border-b-2 border-transparent data-[state=active]:border-[#15941f] rounded-none"
+                  >
+                    <Settings className="h-4 w-4" />
+                    System
                   </TabsTrigger>
                 </TabsList>
               </div>
@@ -77,6 +81,8 @@ export default function AdminSettingsPage() {
 
               {/* Notifications Tab */}
               <NotificationsTab {...settingState} />
+
+              <SystemConfigTab />
             </Tabs>
           </CardContent>
         </Card>
