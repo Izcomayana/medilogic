@@ -1,6 +1,14 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs';
 import { useState } from 'react';
-import { Trash2, Plus, Truck, Flag, Clock, MapPin } from 'lucide-react';
+import {
+  Trash2,
+  Plus,
+  Truck,
+  Flag,
+  Clock,
+  MapPin,
+  AlertTriangle,
+} from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -30,6 +38,16 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { toast } from 'sonner';
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from '@/components/ui/alert-dialog';
 
 // Mock data for system configurations
 const initialVehicleTypes = [
@@ -139,7 +157,6 @@ const initialZones = [
 
 export function SystemConfigTab() {
   const [configTab, setConfigTab] = useState('vehicle-types');
-
   const [isVehicleModalOpen, setIsVehicleModalOpen] = useState(false);
   const [isPriorityModalOpen, setIsPriorityModalOpen] = useState(false);
   const [isShiftModalOpen, setIsShiftModalOpen] = useState(false);
@@ -633,7 +650,10 @@ export function SystemConfigTab() {
               />
             </div>
             <div>
-              <Label htmlFor="vehicleDescription" className="text-gray-300 mb-2">
+              <Label
+                htmlFor="vehicleDescription"
+                className="text-gray-300 mb-2"
+              >
                 Description *
               </Label>
               <Textarea
@@ -756,7 +776,10 @@ export function SystemConfigTab() {
               </Select>
             </div>
             <div>
-              <Label htmlFor="priorityDescription" className="text-gray-300 mb-2">
+              <Label
+                htmlFor="priorityDescription"
+                className="text-gray-300 mb-2"
+              >
                 Description *
               </Label>
               <Textarea
@@ -963,6 +986,41 @@ export function SystemConfigTab() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Delete Configuration Confirmation */}
+      <AlertDialog
+        open={deleteConfirmDialog.open}
+        onOpenChange={(open) =>
+          !open &&
+          setDeleteConfirmDialog({ open: false, type: '', id: '', name: '' })
+        }
+      >
+        <AlertDialogContent className="bg-gray-800 border-gray-700 text-white">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2 text-red-400">
+              <AlertTriangle className="h-5 w-5" />
+              Delete Configuration
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-400">
+              Are you sure you want to delete{' '}
+              <strong className="text-white">{deleteConfirmDialog.name}</strong>
+              ? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="border-gray-600 text-gray-700 hover:text-gray-300 hover:bg-gray-700">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfig}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }
