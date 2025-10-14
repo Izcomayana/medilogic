@@ -122,9 +122,9 @@ export function ViewProfileDropdown() {
                       </div>
                     )}
                     {user.organization.license_number && (
-                      <div className="flex items-center gap-2 pl-6 text-gray-400">
+                      <div className="flex items-center gap-2 text-gray-100">
                         <Tally4 className="h-4 w-4" />
-                        <span>{user.organization.license_number}</span>
+                        <span>LIC No: {user.organization.license_number}</span>
                       </div>
                     )}
                     {user.organization.data_retention_years && (
@@ -142,7 +142,7 @@ export function ViewProfileDropdown() {
                         <CheckCircle2 className="h-5 w-5 text-green-500" />
                       </div>
                     ) : (
-                      <div title="Not Verified">
+                      <div title="Not Verified" className="flex items-center">
                         <span className="mr-2">Ico registered:</span>
                         <XCircle className="h-5 w-5 text-red-500" />
                       </div>

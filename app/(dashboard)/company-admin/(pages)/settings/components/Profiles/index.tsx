@@ -101,6 +101,8 @@ export function ProfileTab({
             <Label className="text-gray-300">Email</Label>
             <Input
               type="email"
+              required
+              placeholder="An email is compulsory"
               value={orgProfileData.email}
               onChange={(e) =>
                 setOrgProfileData({ ...orgProfileData, email: e.target.value })
@@ -268,7 +270,12 @@ export function ProfileTab({
           <Button
             onClick={handleUpdateOrgProfile}
             className="primary-button"
-            disabled={!isOrgProfileChanged || isLoading}
+            disabled={
+              !isOrgProfileChanged ||
+              isLoading ||
+              !orgProfileData.email ||
+              !orgProfileData.email.includes('@')
+            }
           >
             {isLoading ? (
               <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mx-12"></span>
