@@ -1,7 +1,7 @@
 import { TabsContent } from '@radix-ui/react-tabs';
 import { Button } from '@/components/ui/button';
 import { useSysConfig } from '@/hooks/settings/useSysConfg';
-import { Trash2, Plus, Truck } from 'lucide-react';
+import { Trash2, Plus, Truck, AlertTriangle } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -20,11 +20,21 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from '@/components/ui/alert-dialog';
 
 type VehicleTypeProps = ReturnType<typeof useSysConfig>;
 
 export function VehicleTypeTab({
+  // isLoadingVehicleTypes,
   setIsVehicleModalOpen,
   vehicleTypes,
   setDeleteConfirmDialog,
@@ -32,11 +42,13 @@ export function VehicleTypeTab({
   newVehicle,
   setNewVehicle,
   handleAddVehicle,
+  deleteConfirmDialog,
+  handleDeleteConfig,
 }: VehicleTypeProps) {
   return (
     <>
       <TabsContent value="vehicle-types" className="mt-6 space-y-4">
-        <div className="flex items-center justify-between border-b border-gray-700 pb-1">
+        <div className="flex flex-col md:flex-row items-start lg:items-center gap-4 lg:gap-0 justify-between border-b border-gray-700 pb-1">
           <div>
             <h4 className="text-white font-medium">Vehicle Types</h4>
             <p className="text-sm text-gray-400">
@@ -57,8 +69,6 @@ export function VehicleTypeTab({
             <TableHeader>
               <TableRow className="bg-gray-800 hover:bg-gray-800 border-gray-700">
                 <TableHead className="text-gray-300">Name</TableHead>
-                <TableHead className="text-gray-300">Description</TableHead>
-                <TableHead className="text-gray-300">Capacity</TableHead>
                 <TableHead className="text-gray-300 text-right">
                   Actions
                 </TableHead>
@@ -69,12 +79,6 @@ export function VehicleTypeTab({
                 <TableRow key={vehicle.id} className="border-gray-700">
                   <TableCell className="font-medium text-white">
                     {vehicle.name}
-                  </TableCell>
-                  <TableCell className="text-gray-400">
-                    {vehicle.description}
-                  </TableCell>
-                  <TableCell className="text-gray-400">
-                    {vehicle.capacity}
                   </TableCell>
                   <TableCell className="text-right">
                     <Button
@@ -127,57 +131,64 @@ export function VehicleTypeTab({
                 className="bg-gray-700 border-gray-600 text-white"
               />
             </div>
-            <div>
-              <Label
-                htmlFor="vehicleDescription"
-                className="text-gray-300 mb-2"
-              >
-                Description *
-              </Label>
-              <Textarea
-                id="vehicleDescription"
-                value={newVehicle.description}
-                onChange={(e) =>
-                  setNewVehicle({ ...newVehicle, description: e.target.value })
-                }
-                placeholder="Brief description of the vehicle type"
-                className="bg-gray-700 border-gray-600 text-white"
-                rows={3}
-              />
-            </div>
-            <div>
-              <Label htmlFor="vehicleCapacity" className="text-gray-300 mb-2">
-                Capacity
-              </Label>
-              <Input
-                id="vehicleCapacity"
-                value={newVehicle.capacity}
-                onChange={(e) =>
-                  setNewVehicle({ ...newVehicle, capacity: e.target.value })
-                }
-                placeholder="e.g., 1500 kg"
-                className="bg-gray-700 border-gray-600 text-white"
-              />
-            </div>
           </div>
           <DialogFooter>
             <Button
               variant="outline"
               onClick={() => {
                 setIsVehicleModalOpen(false);
-                setNewVehicle({ name: '', description: '', capacity: '' });
+                setNewVehicle({ name: '' });
               }}
               className="border-gray-600 text-gray-700 hover:text-gray-300 hover:bg-gray-700"
             >
               Cancel
             </Button>
-            <Button onClick={handleAddVehicle} className="primary-button">
+            <Button
+              onClick={handleAddVehicle}
+              className="primary-button"
+              disabled={!newVehicle.name}
+            >
               <Plus className="h-4 w-4 mr-2" />
               Add Vehicle Type
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Delete Configuration Confirmation */}
+      <AlertDialog
+        open={deleteConfirmDialog.open}
+        onOpenChange={(open) =>
+          !open &&
+          setDeleteConfirmDialog({ open: false, type: '', id: '', name: '' })
+        }
+      >
+        <AlertDialogContent className="bg-gray-800 border-gray-700 text-white">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2 text-red-400">
+              <AlertTriangle className="h-5 w-5" />
+              Delete Configuration
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-400">
+              Are you sure you want to delete{' '}
+              <strong className="text-white">{deleteConfirmDialog.name}</strong>
+              ? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="border-gray-600 text-gray-700 hover:text-gray-300 hover:bg-gray-700">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfig}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

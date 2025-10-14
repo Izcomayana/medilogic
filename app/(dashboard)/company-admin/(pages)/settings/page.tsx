@@ -67,7 +67,7 @@ export default function AdminSettingsPage() {
                     className="flex items-center gap-2 py-4 px-6 data-[state=active]:bg-gray-800 data-[state=active]:text-white text-gray-400 hover:text-white border-b-2 border-transparent data-[state=active]:border-[#15941f] rounded-none"
                   >
                     <Settings className="h-4 w-4" />
-                    System
+                    <span className="hidden md:block">System</span>
                   </TabsTrigger>
                 </TabsList>
               </div>

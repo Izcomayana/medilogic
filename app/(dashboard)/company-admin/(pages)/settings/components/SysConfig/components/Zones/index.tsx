@@ -1,7 +1,7 @@
 import { TabsContent } from '@radix-ui/react-tabs';
 import { Button } from '@/components/ui/button';
 import { useSysConfig } from '@/hooks/settings/useSysConfg';
-import { Trash2, Plus, MapPin } from 'lucide-react';
+import { Trash2, Plus, MapPin, AlertTriangle } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -20,7 +20,16 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from '@/components/ui/alert-dialog';
 
 type ZonesProps = ReturnType<typeof useSysConfig>;
 
@@ -32,11 +41,13 @@ export function ZonesTab({
   newZone,
   setNewZone,
   handleAddZone,
+  deleteConfirmDialog,
+  handleDeleteConfig,
 }: ZonesProps) {
   return (
     <>
       <TabsContent value="zones" className="mt-6 space-y-4">
-        <div className="flex items-center justify-between border-b border-gray-700 pb-1">
+        <div className="flex flex-col md:flex-row items-start lg:items-center gap-4 lg:gap-0 justify-between border-b border-gray-700 pb-1">
           <div>
             <h4 className="text-white font-medium">Zones</h4>
             <p className="text-sm text-gray-400">
@@ -57,8 +68,6 @@ export function ZonesTab({
             <TableHeader>
               <TableRow className="bg-gray-800 hover:bg-gray-800 border-gray-700">
                 <TableHead className="text-gray-300">Name</TableHead>
-                <TableHead className="text-gray-300">Description</TableHead>
-                <TableHead className="text-gray-300">Region</TableHead>
                 <TableHead className="text-gray-300 text-right">
                   Actions
                 </TableHead>
@@ -70,10 +79,6 @@ export function ZonesTab({
                   <TableCell className="font-medium text-white">
                     {zone.name}
                   </TableCell>
-                  <TableCell className="text-gray-400">
-                    {zone.description}
-                  </TableCell>
-                  <TableCell className="text-gray-400">{zone.region}</TableCell>
                   <TableCell className="text-right">
                     <Button
                       variant="ghost"
@@ -125,54 +130,64 @@ export function ZonesTab({
                 className="bg-gray-700 border-gray-600 text-white"
               />
             </div>
-            <div>
-              <Label htmlFor="zoneDescription" className="text-gray-300 mb-2">
-                Description *
-              </Label>
-              <Textarea
-                id="zoneDescription"
-                value={newZone.description}
-                onChange={(e) =>
-                  setNewZone({ ...newZone, description: e.target.value })
-                }
-                placeholder="Brief description of the zone"
-                className="bg-gray-700 border-gray-600 text-white"
-                rows={3}
-              />
-            </div>
-            <div>
-              <Label htmlFor="zoneRegion" className="text-gray-300 mb-2">
-                Region *
-              </Label>
-              <Input
-                id="zoneRegion"
-                value={newZone.region}
-                onChange={(e) =>
-                  setNewZone({ ...newZone, region: e.target.value })
-                }
-                placeholder="e.g., Lagos Mainland, Lagos Island"
-                className="bg-gray-700 border-gray-600 text-white"
-              />
-            </div>
           </div>
           <DialogFooter>
             <Button
               variant="outline"
               onClick={() => {
                 setIsZoneModalOpen(false);
-                setNewZone({ name: '', description: '', region: '' });
+                setNewZone({ name: '' });
               }}
               className="border-gray-600 text-gray-700 hover:text-gray-300 hover:bg-gray-700"
             >
               Cancel
             </Button>
-            <Button onClick={handleAddZone} className="primary-button">
+            <Button
+              onClick={handleAddZone}
+              className="primary-button"
+              disabled={!newZone.name}
+            >
               <Plus className="h-4 w-4 mr-2" />
               Add Zone
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Delete Configuration Confirmation */}
+      <AlertDialog
+        open={deleteConfirmDialog.open}
+        onOpenChange={(open) =>
+          !open &&
+          setDeleteConfirmDialog({ open: false, type: '', id: '', name: '' })
+        }
+      >
+        <AlertDialogContent className="bg-gray-800 border-gray-700 text-white">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2 text-red-400">
+              <AlertTriangle className="h-5 w-5" />
+              Delete Configuration
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-400">
+              Are you sure you want to delete{' '}
+              <strong className="text-white">{deleteConfirmDialog.name}</strong>
+              ? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="border-gray-600 text-gray-700 hover:text-gray-300 hover:bg-gray-700">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfig}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

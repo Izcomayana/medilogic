@@ -1,7 +1,7 @@
 import { TabsContent } from '@radix-ui/react-tabs';
 import { Button } from '@/components/ui/button';
 import { useSysConfig } from '@/hooks/settings/useSysConfg';
-import { Trash2, Plus, Clock } from 'lucide-react';
+import { Trash2, Plus, Clock, AlertTriangle } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -20,6 +20,16 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogFooter,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from '@/components/ui/alert-dialog';
 
 type ShiftWindowProps = ReturnType<typeof useSysConfig>;
 
@@ -31,11 +41,13 @@ export function ShiftWindowsTab({
   newShift,
   setNewShift,
   handleAddShift,
+  deleteConfirmDialog,
+  handleDeleteConfig,
 }: ShiftWindowProps) {
   return (
     <>
       <TabsContent value="shift-windows" className="mt-6 space-y-4">
-        <div className="flex items-center justify-between border-b border-gray-700 pb-1">
+        <div className="flex flex-col md:flex-row items-start lg:items-center gap-4 lg:gap-0 justify-between border-b border-gray-700 pb-1">
           <div>
             <h4 className="text-white font-medium">Shift Windows</h4>
             <p className="text-sm text-gray-400">
@@ -56,9 +68,6 @@ export function ShiftWindowsTab({
             <TableHeader>
               <TableRow className="bg-gray-800 hover:bg-gray-800 border-gray-700">
                 <TableHead className="text-gray-300">Name</TableHead>
-                <TableHead className="text-gray-300">Start Time</TableHead>
-                <TableHead className="text-gray-300">End Time</TableHead>
-                <TableHead className="text-gray-300">Zone</TableHead>
                 <TableHead className="text-gray-300 text-right">
                   Actions
                 </TableHead>
@@ -70,13 +79,6 @@ export function ShiftWindowsTab({
                   <TableCell className="font-medium text-white">
                     {shift.name}
                   </TableCell>
-                  <TableCell className="text-gray-400">
-                    {shift.startTime}
-                  </TableCell>
-                  <TableCell className="text-gray-400">
-                    {shift.endTime}
-                  </TableCell>
-                  <TableCell className="text-gray-400">{shift.zone}</TableCell>
                   <TableCell className="text-right">
                     <Button
                       variant="ghost"
@@ -128,69 +130,64 @@ export function ShiftWindowsTab({
                 className="bg-gray-700 border-gray-600 text-white"
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="startTime" className="text-gray-300 mb-2">
-                  Start Time *
-                </Label>
-                <Input
-                  id="startTime"
-                  type="time"
-                  value={newShift.startTime}
-                  onChange={(e) =>
-                    setNewShift({ ...newShift, startTime: e.target.value })
-                  }
-                  className="bg-gray-700 border-gray-600 text-white"
-                />
-              </div>
-              <div>
-                <Label htmlFor="endTime" className="text-gray-300 mb-2">
-                  End Time *
-                </Label>
-                <Input
-                  id="endTime"
-                  type="time"
-                  value={newShift.endTime}
-                  onChange={(e) =>
-                    setNewShift({ ...newShift, endTime: e.target.value })
-                  }
-                  className="bg-gray-700 border-gray-600 text-white"
-                />
-              </div>
-            </div>
-            <div>
-              <Label htmlFor="shiftZone" className="text-gray-300 mb-2">
-                Zone (Optional)
-              </Label>
-              <Input
-                id="shiftZone"
-                value={newShift.zone}
-                onChange={(e) =>
-                  setNewShift({ ...newShift, zone: e.target.value })
-                }
-                placeholder="e.g., Central Lagos, All Zones"
-                className="bg-gray-700 border-gray-600 text-white"
-              />
-            </div>
           </div>
           <DialogFooter>
             <Button
               variant="outline"
               onClick={() => {
                 setIsShiftModalOpen(false);
-                setNewShift({ name: '', startTime: '', endTime: '', zone: '' });
+                setNewShift({ name: '' });
               }}
               className="border-gray-600 text-gray-700 hover:text-gray-300 hover:bg-gray-700"
             >
               Cancel
             </Button>
-            <Button onClick={handleAddShift} className="primary-button">
+            <Button
+              onClick={handleAddShift}
+              className="primary-button"
+              disabled={!newShift.name}
+            >
               <Plus className="h-4 w-4 mr-2" />
               Add Shift Window
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Delete Configuration Confirmation */}
+      <AlertDialog
+        open={deleteConfirmDialog.open}
+        onOpenChange={(open) =>
+          !open &&
+          setDeleteConfirmDialog({ open: false, type: '', id: '', name: '' })
+        }
+      >
+        <AlertDialogContent className="bg-gray-800 border-gray-700 text-white">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2 text-red-400">
+              <AlertTriangle className="h-5 w-5" />
+              Delete Configuration
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-400">
+              Are you sure you want to delete{' '}
+              <strong className="text-white">{deleteConfirmDialog.name}</strong>
+              ? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="border-gray-600 text-gray-700 hover:text-gray-300 hover:bg-gray-700">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteConfig}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }
