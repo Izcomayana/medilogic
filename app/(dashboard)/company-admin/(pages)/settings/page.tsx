@@ -10,10 +10,12 @@ import { ProfileTab } from './components/Profiles';
 import { SecurityTab } from './components/Security';
 import { NotificationsTab } from './components/Notifications';
 import { SystemConfigTab } from './components/SysConfig';
+import { useSysConfig } from '@/hooks/settings/useSysConfg';
 
 export default function AdminSettingsPage() {
   const settingState = useSettings();
   const { activeTab, setActiveTab } = useSettings();
+  const sysConfigState = useSysConfig();
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
@@ -82,7 +84,7 @@ export default function AdminSettingsPage() {
               {/* Notifications Tab */}
               <NotificationsTab {...settingState} />
 
-              <SystemConfigTab />
+              <SystemConfigTab {...sysConfigState} />
             </Tabs>
           </CardContent>
         </Card>
