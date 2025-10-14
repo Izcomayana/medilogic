@@ -3,7 +3,7 @@ import { Switch } from '@/components/ui/switch';
 import { useSettings } from '@/hooks/useSettings';
 import { TabsContent } from '@radix-ui/react-tabs';
 import { Smartphone } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+// import { Button } from '@/components/ui/button';
 
 type SecurityProps = ReturnType<typeof useSettings>;
 
