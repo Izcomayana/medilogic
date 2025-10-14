@@ -1,23 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@radix-ui/react-tabs';
-import {
-  Trash2,
-  Truck,
-  Flag,
-  Clock,
-  MapPin,
-  AlertTriangle,
-} from 'lucide-react';
+import { Truck, Flag, Clock, MapPin } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogFooter,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogCancel,
-  AlertDialogAction,
-} from '@/components/ui/alert-dialog';
 import { useSysConfig } from '@/hooks/settings/useSysConfg';
 import { VehicleTypeTab } from './components/VehicleTypes';
 import { PriorityLevelsTab } from './components/PriorityLevels';
@@ -29,13 +12,10 @@ type SysConfigProps = ReturnType<typeof useSysConfig>;
 export function SystemConfigTab({
   configTab,
   setConfigTab,
-  deleteConfirmDialog,
-  setDeleteConfirmDialog,
   vehicleTypes,
   priorityLevels,
   shiftWindows,
   zones,
-  handleDeleteConfig,
 }: SysConfigProps) {
   const sysConfigState = useSysConfig();
 

@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { useAuthorizedRequest } from '@/hooks/useRequest';
 import axios from 'axios';
-import { useAuth } from '@/components/auth';
 
 const API_BASE_URL = 'https://medilogic-backend.onrender.com';
 
