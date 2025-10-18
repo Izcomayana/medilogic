@@ -29,6 +29,33 @@ import { formatDateTime } from '@/utils/datetime';
 
 type TripsDetailsProps = ReturnType<typeof useTrips>;
 
+function getPriorityBadge(priority?: string | null) {
+  if (!priority) {
+    return (
+      <Badge variant="outline" className="text-gray-400 border-gray-600">
+        N/A
+      </Badge>
+    );
+  }
+
+  switch (priority.toLowerCase()) {
+    case 'urgent':
+      return <Badge className="bg-red-600 text-white">Urgent</Badge>;
+    case 'high':
+      return <Badge className="bg-orange-500 text-white">High</Badge>;
+    case 'normal':
+      return <Badge className="bg-green-600 text-white">Normal</Badge>;
+    case 'low':
+      return <Badge className="bg-blue-600 text-white">Low</Badge>;
+    default:
+      return (
+        <Badge variant="outline" className="text-gray-300 border-gray-600">
+          {priority}
+        </Badge>
+      );
+  }
+}
+
 export function TripsDetailModal({
   isDetailsModalOpen,
   setIsDetailsModalOpen,
@@ -76,17 +103,7 @@ export function TripsDetailModal({
                 </div>
                 <div>
                   <Label className="text-gray-400 text-sm">Priority</Label>
-                  <Badge
-                    className={
-                      selectedTrip.priority === 'high'
-                        ? 'bg-red-600'
-                        : selectedTrip.priority === 'normal'
-                          ? 'bg-blue-600'
-                          : 'bg-gray-600'
-                    }
-                  >
-                    {selectedTrip.priority || 'normal'}
-                  </Badge>
+                  {getPriorityBadge(selectedTrip.priority)}
                 </div>
                 <div>
                   <Label className="text-gray-400 text-sm">Status</Label>
