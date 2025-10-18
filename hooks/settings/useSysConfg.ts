@@ -52,6 +52,7 @@ export function useSysConfig() {
   useEffect(() => {
     const fetchVehicleTypes = async () => {
       setIsLoadingVehicleTypes(true);
+
       try {
         await authorizedRequest(async (token) => {
           const response = await axios.get(
@@ -119,6 +120,7 @@ export function useSysConfig() {
   useEffect(() => {
     const fetchPriorityLevels = async () => {
       setIsLoadingPriorityLevels(true);
+
       try {
         await authorizedRequest(async (token) => {
           const response = await axios.get(
@@ -384,6 +386,7 @@ export function useSysConfig() {
     isLoadingVehicleTypes,
     isLoadingPriorityLevels,
     isLoadingShiftWindows,
+    isLoadingZones,
     setConfigTab,
     isVehicleModalOpen,
     setIsVehicleModalOpen,

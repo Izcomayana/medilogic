@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { useTrips } from '@/hooks/trips/useTrips';
 import { X } from 'lucide-react';
+import { useSysConfig } from '@/hooks/settings/useSysConfg';
 
 type EditTripProps = ReturnType<typeof useTrips>;
 
@@ -35,6 +36,17 @@ export function EditTripModal({
   resetForm,
   handleUpdateTrip,
 }: EditTripProps) {
+  const {
+    isLoadingPriorityLevels,
+    priorityLevels,
+    isLoadingVehicleTypes,
+    vehicleTypes,
+    shiftWindows,
+    isLoadingShiftWindows,
+    isLoadingZones,
+    zones,
+  } = useSysConfig();
+
   return (
     <AlertDialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
       <AlertDialogContent className="bg-gray-800 border-gray-700 text-white !max-w-2xl max-h-[80vh] overflow-y-auto">
@@ -136,17 +148,44 @@ export function EditTripModal({
               </Label>
               <Select
                 value={formData.priority}
-                onValueChange={(value) =>
-                  setFormData({ ...formData, priority: value })
-                }
+                onValueChange={(value) => {
+                  const selectedPriority = priorityLevels.find(
+                    (d) => d.name.toLowerCase() === value.toLowerCase()
+                  );
+
+                  setFormData({
+                    ...formData,
+                    priority: value.toLowerCase(), // ensure backend receives lowercase
+                    // priorityName: selectedPriority ? selectedPriority.name : '',
+                  });
+                }}
               >
                 <SelectTrigger className="bg-gray-700 border-gray-600 text-white mt-2">
-                  <SelectValue placeholder="Select priority" />
+                  <SelectValue
+                    placeholder={
+                      isLoadingPriorityLevels
+                        ? 'Loading priorities...'
+                        : 'Select priority'
+                    }
+                  />
                 </SelectTrigger>
+
                 <SelectContent className="bg-gray-700 border-gray-600">
-                  <SelectItem value="urgent">Urgent</SelectItem>
-                  <SelectItem value="normal">Normal</SelectItem>
-                  <SelectItem value="stat">Stat</SelectItem>
+                  {priorityLevels.length > 0 ? (
+                    priorityLevels.map((priority) => (
+                      <SelectItem
+                        key={priority.id}
+                        value={priority.name.toLowerCase()}
+                      >
+                        {priority.name}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <div className="text-gray-400 text-sm p-2 italic">
+                      No priority levels found <br /> add one in your System
+                      Config.
+                    </div>
+                  )}
                 </SelectContent>
               </Select>
             </div>
@@ -238,6 +277,7 @@ export function EditTripModal({
                 className="bg-gray-700 border-gray-600 text-white mt-2"
               />
             </div>
+
             <div>
               <Label htmlFor="distanceKm" className="text-gray-300">
                 Distance (km)
@@ -257,52 +297,148 @@ export function EditTripModal({
 
           {/* Vehicle + Zone */}
           <div className="grid grid-cols-2 gap-4">
+            {/* Vehicle Type */}
             <div>
               <Label htmlFor="vehicleType" className="text-gray-300">
                 Vehicle Type
               </Label>
-              <Input
-                id="vehicleType"
+              <Select
                 value={formData.vehicleType}
-                onChange={(e) =>
-                  setFormData({ ...formData, vehicleType: e.target.value })
-                }
-                placeholder="Enter vehicle type"
-                className="bg-gray-700 border-gray-600 text-white mt-2"
-              />
+                onValueChange={(value) => {
+                  const selectedVehicle = vehicleTypes.find(
+                    (v) => v.name.toLowerCase() === value.toLowerCase()
+                  );
+
+                  setFormData({
+                    ...formData,
+                    vehicleType: value.toLowerCase(), // ensure backend receives lowercase
+                    // vehicleType: selectedVehicle ? selectedVehicle.name : '',
+                  });
+                }}
+              >
+                <SelectTrigger className="bg-gray-700 border-gray-600 text-white mt-2">
+                  <SelectValue
+                    placeholder={
+                      isLoadingVehicleTypes
+                        ? 'Loading vehicles...'
+                        : 'Select vehicle'
+                    }
+                  />
+                </SelectTrigger>
+
+                <SelectContent className="bg-gray-700 border-gray-600">
+                  {vehicleTypes.length > 0 ? (
+                    vehicleTypes.map((vehicle) => (
+                      <SelectItem
+                        key={vehicle.id}
+                        value={vehicle.name.toLowerCase()}
+                      >
+                        {vehicle.name}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <div className="text-gray-400 text-sm p-2 italic">
+                      No vehicle types found <br /> add one in your System
+                      Config.
+                    </div>
+                  )}
+                </SelectContent>
+              </Select>
             </div>
+
+            {/* Location Zone */}
             <div>
               <Label htmlFor="locationZone" className="text-gray-300">
                 Location Zone
               </Label>
-              <Input
-                id="locationZone"
+              <Select
                 value={formData.locationZone}
-                onChange={(e) =>
-                  setFormData({ ...formData, locationZone: e.target.value })
-                }
-                placeholder="Enter location zone"
-                className="bg-gray-700 border-gray-600 text-white mt-2"
-              />
+                onValueChange={(value) => {
+                  const selectedZone = zones.find(
+                    (z) => z.name.toLowerCase() === value
+                  );
+                  setFormData({
+                    ...formData,
+                    locationZone: value, // lowercase for backend
+                    // locationZoneName: selectedZone ? selectedZone.name : '',
+                  });
+                }}
+              >
+                <SelectTrigger className="bg-gray-700 border-gray-600 text-white mt-2">
+                  <SelectValue
+                    placeholder={
+                      isLoadingZones
+                        ? 'Loading zones...'
+                        : 'Select location zone'
+                    }
+                  />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-700 border-gray-600">
+                  {zones.length > 0 ? (
+                    zones.map((zone) => (
+                      <SelectItem key={zone.id} value={zone.name.toLowerCase()}>
+                        {zone.name}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <div className="text-gray-400 text-sm p-2 italic">
+                      No zones found <br /> add one in your System Config.
+                    </div>
+                  )}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
           {/* Shift + Compliance + Recurrence */}
           <div className="grid grid-cols-3 gap-4">
+            {/* Shift Window */}
             <div>
               <Label htmlFor="shiftWindow" className="text-gray-300">
                 Shift Window
               </Label>
-              <Input
-                id="shiftWindow"
+              <Select
                 value={formData.shiftWindow}
-                onChange={(e) =>
-                  setFormData({ ...formData, shiftWindow: e.target.value })
-                }
-                placeholder="Enter shift window"
-                className="bg-gray-700 border-gray-600 text-white mt-2"
-              />
+                onValueChange={(value) => {
+                  const selectedShift = shiftWindows.find(
+                    (s) => s.name.toLowerCase() === value
+                  );
+                  setFormData({
+                    ...formData,
+                    shiftWindow: value, // lowercase for backend
+                    // shiftWindowName: selectedShift ? selectedShift.name : '',
+                  });
+                }}
+              >
+                <SelectTrigger className="bg-gray-700 border-gray-600 text-white mt-2">
+                  <SelectValue
+                    placeholder={
+                      isLoadingShiftWindows
+                        ? 'Loading shift windows...'
+                        : 'Select shift window'
+                    }
+                  />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-700 border-gray-600">
+                  {shiftWindows.length > 0 ? (
+                    shiftWindows.map((window) => (
+                      <SelectItem
+                        key={window.id}
+                        value={window.name.toLowerCase()}
+                      >
+                        {window.name}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <div className="text-gray-400 text-sm p-2 italic">
+                      No shift windows found <br /> add one in your System
+                      Config.
+                    </div>
+                  )}
+                </SelectContent>
+              </Select>
             </div>
+
             <div>
               <Label htmlFor="complianceFlag" className="text-gray-300">
                 Compliance

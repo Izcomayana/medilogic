@@ -11,9 +11,20 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useDrivers } from './useDrivers';
+import { useSysConfig } from '@/hooks/settings/useSysConfg';
 
 export default function TripForm({ formData, setFormData }: any) {
   const { drivers, loading } = useDrivers();
+  const {
+    isLoadingPriorityLevels,
+    priorityLevels,
+    isLoadingVehicleTypes,
+    vehicleTypes,
+    isLoadingShiftWindows,
+    shiftWindows,
+    isLoadingZones,
+    zones,
+  } = useSysConfig();
 
   return (
     <>
@@ -101,11 +112,17 @@ export default function TripForm({ formData, setFormData }: any) {
                 />
               </SelectTrigger>
               <SelectContent className="bg-gray-700 border-gray-600">
-                {drivers.map((driver) => (
-                  <SelectItem key={driver.id} value={driver.id}>
-                    {driver.name}
-                  </SelectItem>
-                ))}
+                {drivers.length > 0 ? (
+                  drivers.map((driver) => (
+                    <SelectItem key={driver.id} value={driver.id}>
+                      {driver.name}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <div className="text-gray-400 text-sm p-2 italic">
+                    No drivers found <br /> kindly register a driver first.
+                  </div>
+                )}
               </SelectContent>
             </Select>
           </div>
@@ -133,17 +150,46 @@ export default function TripForm({ formData, setFormData }: any) {
             </Label>
             <Select
               value={formData.priority}
-              onValueChange={(value) =>
-                setFormData({ ...formData, priority: value })
-              }
+              onValueChange={(value) => {
+                const selectedPriority = priorityLevels.find(
+                  (d) => d.name === value
+                );
+
+                setFormData({
+                  ...formData,
+                  // convert to lowercase for the backend
+                  priority: value,
+                  // keep the display name (capitalized, etc.)
+                  priorityName: selectedPriority ? selectedPriority.name : '',
+                });
+              }}
             >
               <SelectTrigger className="bg-gray-700 border-gray-600 text-white mt-2">
-                <SelectValue placeholder="Select priority" />
+                <SelectValue
+                  placeholder={
+                    isLoadingPriorityLevels
+                      ? 'Loading priorities...'
+                      : 'Select priority'
+                  }
+                />
               </SelectTrigger>
+
               <SelectContent className="bg-gray-700 border-gray-600">
-                <SelectItem value="urgent">Urgent</SelectItem>
-                <SelectItem value="normal">Normal</SelectItem>
-                <SelectItem value="stat">Stat</SelectItem>
+                {priorityLevels.length > 0 ? (
+                  priorityLevels.map((priority) => (
+                    <SelectItem
+                      key={priority.id}
+                      value={priority.name.toLowerCase()}
+                    >
+                      {priority.name}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <div className="text-gray-400 text-sm p-2 italic">
+                    No priority levels found <br /> add one in your System
+                    Config.
+                  </div>
+                )}
               </SelectContent>
             </Select>
           </div>
@@ -241,7 +287,7 @@ export default function TripForm({ formData, setFormData }: any) {
             </Label>
             <Input
               id="distanceKm"
-              type="number"
+              type="text"
               value={formData.distanceKm}
               onChange={(e) =>
                 setFormData({
@@ -261,21 +307,85 @@ export default function TripForm({ formData, setFormData }: any) {
             <Label htmlFor="vehicleType" className="text-gray-300">
               Vehicle Type
             </Label>
-            <Input
-              id="vehicleType"
+            <Select
               value={formData.vehicleType}
-              onChange={(e) =>
-                setFormData({ ...formData, vehicleType: e.target.value })
-              }
-              placeholder="Enter vehicle type"
-              className="bg-gray-700 border-gray-600 text-white mt-2"
-            />
+              onValueChange={(value) => {
+                const selectedVehicle = vehicleTypes.find(
+                  (v) => v.name === value
+                );
+                setFormData({
+                  ...formData,
+                  vehicleType: value,
+                  vehicleTypeName: selectedVehicle ? selectedVehicle.name : '',
+                });
+              }}
+            >
+              <SelectTrigger className="bg-gray-700 border-gray-600 text-white mt-2">
+                <SelectValue
+                  placeholder={
+                    isLoadingVehicleTypes
+                      ? 'Loading vehicles...'
+                      : 'Select vehicle'
+                  }
+                />
+              </SelectTrigger>
+              <SelectContent className="bg-gray-700 border-gray-600">
+                {vehicleTypes.length > 0 ? (
+                  vehicleTypes.map((vehicle) => (
+                    <SelectItem
+                      key={vehicle.id}
+                      value={vehicle.name.toLowerCase()}
+                    >
+                      {vehicle.name}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <div className="text-gray-400 text-sm p-2 italic">
+                    No vehicle levels found <br /> add one in your System
+                    Config.
+                  </div>
+                )}
+              </SelectContent>
+            </Select>
           </div>
+
           <div>
             <Label htmlFor="locationZone" className="text-gray-300">
               Location Zone
             </Label>
-            <Input
+            <Select
+              value={formData.locationZone}
+              onValueChange={(value) => {
+                const selectedZones = zones.find((z) => z.name === value);
+                setFormData({
+                  ...formData,
+                  zone: value,
+                  zoneName: selectedZones ? selectedZones.name : '',
+                });
+              }}
+            >
+              <SelectTrigger className="bg-gray-700 border-gray-600 text-white mt-2">
+                <SelectValue
+                  placeholder={
+                    isLoadingZones ? 'Loading zones...' : 'Select zone'
+                  }
+                />
+              </SelectTrigger>
+              <SelectContent className="bg-gray-700 border-gray-600">
+                {zones.length > 0 ? (
+                  zones.map((zone) => (
+                    <SelectItem key={zone.id} value={zone.name.toLowerCase()}>
+                      {zone.name}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <div className="text-gray-400 text-sm p-2 italic">
+                    No zone found <br /> add one in your System Config.
+                  </div>
+                )}
+              </SelectContent>
+            </Select>
+            {/* <Input
               id="locationZone"
               value={formData.locationZone}
               onChange={(e) =>
@@ -283,7 +393,7 @@ export default function TripForm({ formData, setFormData }: any) {
               }
               placeholder="Enter location zone"
               className="bg-gray-700 border-gray-600 text-white mt-2"
-            />
+            /> */}
           </div>
         </div>
 
@@ -293,15 +403,40 @@ export default function TripForm({ formData, setFormData }: any) {
             <Label htmlFor="shiftWindow" className="text-gray-300">
               Shift Window
             </Label>
-            <Input
-              id="shiftWindow"
+            <Select
               value={formData.shiftWindow}
-              onChange={(e) =>
-                setFormData({ ...formData, shiftWindow: e.target.value })
-              }
-              placeholder="Enter shift window"
-              className="bg-gray-700 border-gray-600 text-white mt-2"
-            />
+              onValueChange={(value) => {
+                const selectedVehicle = shiftWindows.find(
+                  (s) => s.name === value
+                );
+                setFormData({
+                  ...formData,
+                  shiftWindow: value,
+                  shiftWindowName: selectedVehicle ? selectedVehicle.name : '',
+                });
+              }}
+            >
+              <SelectTrigger className="bg-gray-700 border-gray-600 text-white mt-2">
+                <SelectValue
+                  placeholder={
+                    isLoadingShiftWindows ? 'Loading shifts...' : 'Select shift'
+                  }
+                />
+              </SelectTrigger>
+              <SelectContent className="bg-gray-700 border-gray-600">
+                {shiftWindows.length > 0 ? (
+                  shiftWindows.map((shift) => (
+                    <SelectItem key={shift.id} value={shift.name.toLowerCase()}>
+                      {shift.name}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <div className="text-gray-400 text-sm p-2 italic">
+                    No shift windows found <br /> add one in your System Config.
+                  </div>
+                )}
+              </SelectContent>
+            </Select>
           </div>
           <div>
             <Label htmlFor="complianceFlag" className="text-gray-300">
