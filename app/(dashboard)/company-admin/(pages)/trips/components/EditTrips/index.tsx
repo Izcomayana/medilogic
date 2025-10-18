@@ -149,14 +149,9 @@ export function EditTripModal({
               <Select
                 value={formData.priority}
                 onValueChange={(value) => {
-                  const selectedPriority = priorityLevels.find(
-                    (d) => d.name.toLowerCase() === value.toLowerCase()
-                  );
-
                   setFormData({
                     ...formData,
-                    priority: value.toLowerCase(), // ensure backend receives lowercase
-                    // priorityName: selectedPriority ? selectedPriority.name : '',
+                    priority: value.toLowerCase(),
                   });
                 }}
               >
