@@ -305,14 +305,9 @@ export function EditTripModal({
               <Select
                 value={formData.vehicleType}
                 onValueChange={(value) => {
-                  const selectedVehicle = vehicleTypes.find(
-                    (v) => v.name.toLowerCase() === value.toLowerCase()
-                  );
-
                   setFormData({
                     ...formData,
-                    vehicleType: value.toLowerCase(), // ensure backend receives lowercase
-                    // vehicleType: selectedVehicle ? selectedVehicle.name : '',
+                    vehicleType: value.toLowerCase(),
                   });
                 }}
               >
@@ -354,13 +349,9 @@ export function EditTripModal({
               <Select
                 value={formData.locationZone}
                 onValueChange={(value) => {
-                  const selectedZone = zones.find(
-                    (z) => z.name.toLowerCase() === value
-                  );
                   setFormData({
                     ...formData,
-                    locationZone: value, // lowercase for backend
-                    // locationZoneName: selectedZone ? selectedZone.name : '',
+                    locationZone: value,
                   });
                 }}
               >
@@ -400,13 +391,9 @@ export function EditTripModal({
               <Select
                 value={formData.shiftWindow}
                 onValueChange={(value) => {
-                  const selectedShift = shiftWindows.find(
-                    (s) => s.name.toLowerCase() === value
-                  );
                   setFormData({
                     ...formData,
-                    shiftWindow: value, // lowercase for backend
-                    // shiftWindowName: selectedShift ? selectedShift.name : '',
+                    shiftWindow: value,
                   });
                 }}
               >
