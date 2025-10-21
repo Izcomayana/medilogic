@@ -77,11 +77,13 @@ export default function ProofOfDeliveriesPage() {
                   </SelectTrigger>
                   <SelectContent className="bg-gray-700 border-gray-600">
                     <SelectItem value="all">All Clients</SelectItem>
-                    {uniqueClients.map((client) => (
-                      <SelectItem key={client} value={client}>
-                        {client}
-                      </SelectItem>
-                    ))}
+                    {uniqueClients
+                      .filter((client): client is string => Boolean(client))
+                      .map((client, index) => (
+                        <SelectItem key={`${client}-${index}`} value={client}>
+                          {client}
+                        </SelectItem>
+                      ))}
                   </SelectContent>
                 </Select>
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
