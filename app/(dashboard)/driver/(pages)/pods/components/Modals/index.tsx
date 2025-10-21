@@ -262,7 +262,8 @@ export function CreatePOD({
             onClick={() => {
               setIsCreateModalOpen(false);
               setFormData({
-                id: driverID,
+                id: '',
+                driver_id: driverID,
                 tripId: '',
                 signature: '',
                 notes: '',

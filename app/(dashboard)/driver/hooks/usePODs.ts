@@ -64,7 +64,8 @@ const completedTrips = [
 ];
 
 export function usePods() {
-  const [podsList, setPodsList] = useState(initialPods);
+  const [loadingPods, setLoadingPods] = useState(false);
+  const [podsList, setPodsList] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [clientFilter, setClientFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -87,8 +88,8 @@ export function usePods() {
 
   // Form state for new POD
   const [formData, setFormData] = useState({
-    id: driverID,
-    // driver_id: '',
+    id: '',
+    driver_id: driverID,
     tripId: '',
     signature: '',
     notes: '',
@@ -148,19 +149,28 @@ export function usePods() {
       toast.error('Trip ID is required');
       return;
     }
+    if (!formData.deliveredTo) {
+      toast.error('Delivered To is required');
+      return;
+    }
 
     try {
       await authorizedRequest(async (token) => {
-        const payload = {
-          trip_id: formData.tripId,
-          signature: formData.signature || '',
-          notes: formData.notes || '',
-          delivered_to: formData.deliveredTo || '',
-        };
+        const formDataToSend = new FormData();
+        formDataToSend.append('trip_id', formData.tripId);
+        formDataToSend.append('delivered_to', formData.deliveredTo);
+        formDataToSend.append('notes', formData.notes || '');
+        formDataToSend.append('signature', formData.signature || '');
 
-        // Use centralized axios instance
-        const res = await api.post('/pods/pods/', payload, {
-          headers: { Authorization: `Bearer ${token}` },
+        if (formData.files) {
+          formDataToSend.append('file', formData.files);
+        }
+
+        const res = await api.post('/pods/pods/upload', formDataToSend, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
         });
 
         const newPod = res.data;
@@ -169,6 +179,7 @@ export function usePods() {
         // Reset form
         setFormData({
           id: '',
+          driver_id: '',
           tripId: '',
           signature: '',
           notes: '',
@@ -181,9 +192,45 @@ export function usePods() {
       }, 'Failed to create POD');
     } catch (error: any) {
       console.error('Error creating POD:', error);
-      toast.error('Failed to create POD — using mock fallback');
+      toast.error('Failed to create POD');
+    }
+
+    await fetchPods();
+  };
+
+  const fetchPods = async () => {
+    try {
+      setLoadingPods(true);
+      await authorizedRequest(async (token) => {
+        const res = await api.get('/pods/pods/', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        // Transform the data slightly for display
+        const formattedPods = res.data.map((pod: any) => ({
+          id: pod.id,
+          tripId: pod.trip_id,
+          deliveredTo: pod.delivered_to,
+          notes: pod.notes,
+          driverId: pod.driver_id,
+          createdAt: pod.created_at,
+          signature: pod.signature,
+          files: pod.files || [],
+        }));
+
+        setPodsList(formattedPods);
+      }, 'Failed to fetch PODs');
+    } catch (error) {
+      console.error('Error fetching PODs:', error);
+      toast.error('Failed to load PODs');
+    } finally {
+      setLoadingPods(false);
     }
   };
+
+  useEffect(() => {
+    fetchPods();
+  }, [driverID]);
 
   const handleViewDetails = (pod: (typeof initialPods)[0]) => {
     setSelectedPod(pod);
@@ -240,6 +287,7 @@ export function usePods() {
   return {
     initialPods,
     completedTrips,
+    loadingPods,
     podsList,
     setPodsList,
     searchTerm,
@@ -272,6 +320,7 @@ export function usePods() {
     paginatedPods,
     fetchDriverTrips,
     handleCreatePod,
+    fetchPods,
     handleViewDetails,
     handleViewFiles,
     handleDownloadFile,
