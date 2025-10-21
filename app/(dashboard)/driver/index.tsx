@@ -147,7 +147,7 @@ export const Driver = () => {
           {/* Quick Stats */}
           <Card className="dashboard-card">
             <CardHeader>
-              <CardTitle className="text-white">Today's Summary</CardTitle>
+              <CardTitle className="text-white">Today&apos;s Summary</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">

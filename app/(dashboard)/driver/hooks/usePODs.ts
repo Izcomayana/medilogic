@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -5,7 +6,6 @@ import { toast } from 'sonner';
 import { useAuthorizedRequest } from '@/hooks/useRequest';
 import { useProfile } from '@/hooks/useProfile';
 import { api } from '@/lib/api';
-import { fetchTripsRequest } from '@/hooks/trips/api';
 
 // Mock data for PODs
 const initialPods = [
@@ -78,11 +78,11 @@ export function usePods() {
   const [currentPage, setCurrentPage] = useState(1);
   const podsPerPage = 10;
   const authorizedRequest = useAuthorizedRequest();
-  const { user, loading } = useProfile();
+  const { user } = useProfile();
   const [driverTrips, setDriverTrips] = useState<any[]>([]);
   const [loadingTrips, setLoadingTrips] = useState(false);
 
-  const driverName = user?.name ?? '';
+  // const driverName = user?.name ?? '';
   const driverID = user?.user_id ?? '';
 
   // Form state for new POD
@@ -215,23 +215,23 @@ export function usePods() {
     return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
   };
 
-  const getFileType = (fileName: string) => {
-    const ext = fileName.split('.').pop()?.toUpperCase();
-    switch (ext) {
-      case 'PDF':
-        return 'PDF';
-      case 'JPG':
-      case 'JPEG':
-      case 'PNG':
-      case 'GIF':
-        return 'Image';
-      case 'DOC':
-      case 'DOCX':
-        return 'Document';
-      default:
-        return 'File';
-    }
-  };
+  // const getFileType = (fileName: string) => {
+  //   const ext = fileName.split('.').pop()?.toUpperCase();
+  //   switch (ext) {
+  //     case 'PDF':
+  //       return 'PDF';
+  //     case 'JPG':
+  //     case 'JPEG':
+  //     case 'PNG':
+  //     case 'GIF':
+  //       return 'Image';
+  //     case 'DOC':
+  //     case 'DOCX':
+  //       return 'Document';
+  //     default:
+  //       return 'File';
+  //   }
+  // };
 
   const handleOpenCreateModal = () => {
     setIsCreateModalOpen(true);
