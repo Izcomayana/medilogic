@@ -15,6 +15,7 @@ import {
   Settings,
   ChartNoAxesCombined,
   Waypoints,
+  Package,
 } from 'lucide-react';
 import { useAuth } from '@/components/auth';
 import {
@@ -91,7 +92,8 @@ const sidebarLinksByRole: Record<
   ],
   driver: [
     { title: 'Dashboard', url: '/driver', icon: Home },
-    { title: 'My Trips', url: '/client/#', icon: ClipboardList },
+    { title: 'PODs', url: '/driver/pods', icon: Package },
+    { title: 'My Trips', url: '/driver/#', icon: ClipboardList },
     { title: 'Settings', url: '/driver/settings', icon: Settings },
   ],
 };

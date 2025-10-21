@@ -17,7 +17,7 @@ import {
   CheckCircle2,
   XCircle,
   Phone,
-  MapPin,
+  // MapPin,
   IdCard,
   Tally4,
   Code,
@@ -109,14 +109,14 @@ export function ViewProfileDropdown() {
                         )}
                       </div>
                     )}
-                    {user.organization.address && (
+                    {/* {user.organization.address && (
                       <div className="flex items-center gap-2">
                         <MapPin className="h-4 w-4" />
                         <span>{user.organization.address}</span>
                       </div>
-                    )}
+                    )} */}
                     {user.organization.phone_number && (
-                      <div className="flex items-center gap-2 pl-6 text-gray-400">
+                      <div className="flex items-center gap-2">
                         <Phone className="h-4 w-4" />
                         <span>{user.organization.phone_number}</span>
                       </div>

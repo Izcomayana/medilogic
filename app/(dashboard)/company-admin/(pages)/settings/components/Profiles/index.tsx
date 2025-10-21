@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { useSettings } from '@/hooks/useSettings';
+import { useSettings } from '@/hooks/settings/useSettings';
 
 type ProfileProps = ReturnType<typeof useSettings>;
 

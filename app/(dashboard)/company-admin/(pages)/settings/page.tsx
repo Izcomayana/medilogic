@@ -1,6 +1,6 @@
 'use client';
 
-import { useSettings } from '@/hooks/useSettings';
+import { useSettings } from '@/hooks/settings/useSettings';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Settings, User, Shield, Bell, UserCog } from 'lucide-react';

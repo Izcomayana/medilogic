@@ -9,6 +9,7 @@ type UserProfile = {
   email: string;
   role: string;
   is_verified: boolean;
+  user_id: string;
   organization: {
     id: string | null;
     name: string | null;

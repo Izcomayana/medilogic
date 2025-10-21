@@ -1,7 +1,7 @@
 'use client';
 
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { ViewProfileDropdown } from '@/components/ui/view-profile';
+import { ViewProfileDropdown } from '@/app/(dashboard)/components/ViewProfile';
 import { NotificationsDropdown } from '@/components/ui/notifications-dropdown';
 
 type PageHeaderProps = {

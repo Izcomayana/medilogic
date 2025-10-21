@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { TabsContent } from '@radix-ui/react-tabs';
-import { useSettings } from '@/hooks/useSettings';
+import { useSettings } from '@/hooks/settings/useSettings';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import axios from 'axios';
