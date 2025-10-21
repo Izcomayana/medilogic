@@ -100,13 +100,32 @@ export function CreatePOD({
 
                   <SelectContent className="bg-gray-700 border-gray-600 text-white">
                     {driverTrips.length > 0 ? (
-                      driverTrips.map((trip) => (
-                        <SelectItem key={trip.trip_id} value={trip.trip_id}>
-                          {trip.client_name
-                            ? `${trip.client_name} — ${trip.delivery_type.replaceAll('_', ' ')}`
-                            : `Trip ${trip.trip_id}`}
-                        </SelectItem>
-                      ))
+                      driverTrips.map((trip) => {
+                        const formattedType =
+                          trip.delivery_type
+                            ?.replaceAll('_', ' ')
+                            .replace(/\b\w/g, (l: string) => l.toUpperCase()) ||
+                          'Unknown Type';
+
+                        const formattedTime = trip.scheduled_time
+                          ? new Date(trip.scheduled_time).toLocaleString(
+                              'en-US',
+                              {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric',
+                                hour: 'numeric',
+                                minute: '2-digit',
+                              }
+                            )
+                          : 'No time set';
+
+                        return (
+                          <SelectItem key={trip.trip_id} value={trip.trip_id}>
+                            {`${trip.client_name || 'Unknown Client'} — ${formattedType} — ${formattedTime}`}
+                          </SelectItem>
+                        );
+                      })
                     ) : (
                       <div className="text-gray-400 text-sm p-2">
                         No trips assigned yet
