@@ -8,10 +8,11 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { usePods } from '@/app/(dashboard)/driver/hooks/usePODs';
-import { FileText, File, Eye, CheckCircle, Clock } from 'lucide-react';
+import { FileText, File, Eye } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import Image from 'next/image';
 
 type PodsTableProps = ReturnType<typeof usePods>;
 
@@ -140,7 +141,7 @@ export function PodsTable({
                                 window.open(pod.signature, '_blank')
                               }
                             >
-                              <img
+                              <Image
                                 src={pod.signature}
                                 alt="Signature"
                                 className="h-10 w-auto rounded border border-gray-600 hover:opacity-80"
