@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
-import { useSettings } from '@/hooks/useSettings';
+import { useSettings } from '@/hooks/settings/useSettings';
 import { TabsContent } from '@radix-ui/react-tabs';
 import { Smartphone } from 'lucide-react';
 // import { Button } from '@/components/ui/button';

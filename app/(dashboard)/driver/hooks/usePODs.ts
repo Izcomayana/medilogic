@@ -1,7 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { useAuthorizedRequest } from '@/hooks/useRequest';
+import { useProfile } from '@/hooks/useProfile';
+import { api } from '@/lib/api';
+import { fetchTripsRequest } from '@/hooks/trips/api';
 
 // Mock data for PODs
 const initialPods = [
@@ -73,14 +77,23 @@ export function usePods() {
   const [isFilesModalOpen, setIsFilesModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const podsPerPage = 10;
+  const authorizedRequest = useAuthorizedRequest();
+  const { user, loading } = useProfile();
+  const [driverTrips, setDriverTrips] = useState<any[]>([]);
+  const [loadingTrips, setLoadingTrips] = useState(false);
+
+  const driverName = user?.name ?? '';
+  const driverID = user?.user_id ?? '';
 
   // Form state for new POD
   const [formData, setFormData] = useState({
+    id: driverID,
+    // driver_id: '',
     tripId: '',
-    client: '',
-    deliveryDate: new Date().toISOString().split('T')[0],
+    signature: '',
     notes: '',
-    file: null as File | null,
+    deliveredTo: '',
+    files: null as File | null,
   });
 
   // Filter PODs
@@ -105,50 +118,71 @@ export function usePods() {
     startIndex + podsPerPage
   );
 
-  const handleCreatePod = () => {
-    if (!formData.tripId || !formData.deliveryDate) {
-      toast.error('Please fill in all required fields');
+  const fetchDriverTrips = async () => {
+    if (!driverID) return;
+
+    try {
+      setLoadingTrips(true);
+      await authorizedRequest(async (token) => {
+        const res = await api.get(`/drivers/driver/${driverID}/trips`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        setDriverTrips(res.data.assigned_trips);
+      }, 'Failed to fetch driver trips');
+    } catch (error) {
+      console.error('Error fetching driver trips:', error);
+      toast.error('Failed to fetch driver trips');
+    } finally {
+      setLoadingTrips(false);
+    }
+  };
+
+  // Call once on mount (if driverId exists)
+  useEffect(() => {
+    fetchDriverTrips();
+  }, [driverID]);
+
+  const handleCreatePod = async () => {
+    if (!formData.tripId) {
+      toast.error('Trip ID is required');
       return;
     }
 
-    const newPod = {
-      id: `POD${String(podsList.length + 1).padStart(3, '0')}`,
-      tripId: formData.tripId,
-      client:
-        completedTrips.find((t) => t.id === formData.tripId)?.client ||
-        formData.client ||
-        'Unknown',
-      deliveryDate: formData.deliveryDate,
-      uploadedAt: new Date().toLocaleString('en-US', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-      }),
-      status: 'Delivered',
-      files: formData.file
-        ? [
-            {
-              name: formData.file.name,
-              size: formatFileSize(formData.file.size),
-              type: getFileType(formData.file.name),
-            },
-          ]
-        : [],
-      notes: formData.notes,
-    };
+    try {
+      await authorizedRequest(async (token) => {
+        const payload = {
+          trip_id: formData.tripId,
+          signature: formData.signature || '',
+          notes: formData.notes || '',
+          delivered_to: formData.deliveredTo || '',
+        };
 
-    setPodsList([newPod, ...podsList]);
-    setIsCreateModalOpen(false);
-    setFormData({
-      tripId: '',
-      client: '',
-      deliveryDate: new Date().toISOString().split('T')[0],
-      notes: '',
-      file: null,
-    });
-    toast.success('POD uploaded successfully');
+        // Use centralized axios instance
+        const res = await api.post('/pods/pods/', payload, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const newPod = res.data;
+        setPodsList((prev) => [newPod, ...prev]);
+
+        // Reset form
+        setFormData({
+          id: '',
+          tripId: '',
+          signature: '',
+          notes: '',
+          deliveredTo: '',
+          files: null,
+        });
+
+        toast.success('POD created successfully ✅');
+        setIsCreateModalOpen(false);
+      }, 'Failed to create POD');
+    } catch (error: any) {
+      console.error('Error creating POD:', error);
+      toast.error('Failed to create POD — using mock fallback');
+    }
   };
 
   const handleViewDetails = (pod: (typeof initialPods)[0]) => {
@@ -227,12 +261,16 @@ export function usePods() {
     currentPage,
     setCurrentPage,
     podsPerPage,
+    loadingTrips,
+    driverTrips,
     formData,
     setFormData,
+    driverID,
     filteredPods,
     totalPages,
     startIndex,
     paginatedPods,
+    fetchDriverTrips,
     handleCreatePod,
     handleViewDetails,
     handleViewFiles,

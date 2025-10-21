@@ -36,6 +36,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import SignatureCanvas from 'react-signature-canvas';
+import { useRef } from 'react';
 
 type PODialogsProps = ReturnType<typeof usePods>;
 
@@ -50,7 +52,12 @@ export function CreatePOD({
   completedTrips,
   formatFileSize,
   handleCreatePod,
+  loadingTrips,
+  driverTrips,
+  driverID,
 }: PODialogsProps) {
+  const sigCanvas = useRef<SignatureCanvas | null>(null);
+
   return (
     <AlertDialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
       <AlertDialogContent className="bg-gray-800 border-gray-700 text-white lg:max-w-2xl">
@@ -63,7 +70,9 @@ export function CreatePOD({
             Upload a new proof of delivery for a completed trip.
           </AlertDialogDescription>
         </AlertDialogHeader>
+
         <div className="space-y-4 py-4">
+          {/* Trip Selection */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="tripId" className="text-gray-300 mb-2">
@@ -72,54 +81,99 @@ export function CreatePOD({
               <Select
                 value={formData.tripId}
                 onValueChange={(value) => {
-                  const trip = completedTrips.find((t) => t.id === value);
                   setFormData({
                     ...formData,
                     tripId: value,
-                    client: trip?.client || '',
                   });
                 }}
               >
                 <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
-                  <SelectValue placeholder="Select completed trip" />
+                  <SelectValue
+                    placeholder={
+                      loadingTrips
+                        ? 'Loading trips...'
+                        : 'Select completed trip'
+                    }
+                  />
                 </SelectTrigger>
-                <SelectContent className="bg-gray-700 border-gray-600">
-                  {completedTrips.map((trip) => (
-                    <SelectItem key={trip.id} value={trip.id}>
-                      {trip.id} - {trip.client}
-                    </SelectItem>
-                  ))}
+
+                <SelectContent className="bg-gray-700 border-gray-600 text-white">
+                  {driverTrips.length > 0 ? (
+                    driverTrips.map((trip) => (
+                      <SelectItem key={trip.trip_id} value={trip.trip_id}>
+                        {trip.client_name
+                          ? `${trip.client_name} — ${trip.delivery_type.replaceAll('_', ' ')}`
+                          : `Trip ${trip.trip_id}`}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <div className="text-gray-400 text-sm p-2">
+                      No trips assigned yet
+                    </div>
+                  )}
                 </SelectContent>
               </Select>
             </div>
-            <div>
-              <Label htmlFor="deliveryDate" className="text-gray-300 mb-2">
-                Delivery Date *
-              </Label>
-              <Input
-                id="deliveryDate"
-                type="date"
-                value={formData.deliveryDate}
-                onChange={(e) =>
-                  setFormData({ ...formData, deliveryDate: e.target.value })
-                }
-                className="bg-gray-700 border-gray-600 text-white"
-              />
-            </div>
           </div>
 
+          {/* Delivered To */}
           <div>
-            <Label htmlFor="client" className="text-gray-300 mb-2">
-              Client / Organization
+            <Label htmlFor="deliveredTo" className="text-gray-300 mb-2">
+              Delivered To *
             </Label>
             <Input
-              id="client"
-              value={formData.client}
-              disabled
-              className="bg-gray-700 border-gray-600 text-gray-400"
+              id="deliveredTo"
+              value={formData.deliveredTo}
+              onChange={(e) =>
+                setFormData({ ...formData, deliveredTo: e.target.value })
+              }
+              placeholder="Enter recipient name or department"
+              className="bg-gray-700 border-gray-600 text-white"
             />
           </div>
 
+          {/* Signature */}
+          <div>
+            <Label htmlFor="signature" className="text-gray-300 mb-2">
+              Signature (Drawn) *
+            </Label>
+
+            <div className="border border-gray-600 bg-gray-700 rounded-lg p-2">
+              <SignatureCanvas
+                ref={sigCanvas}
+                penColor="white"
+                backgroundColor="#374151" // matches gray-700
+                canvasProps={{
+                  className: 'rounded-lg w-full h-40', // adjustable height
+                }}
+                onEnd={() => {
+                  const data = sigCanvas.current?.toDataURL() || '';
+                  setFormData({ ...formData, signature: data });
+                }}
+              />
+            </div>
+
+            <div className="flex justify-between mt-2">
+              <Button
+                type="button"
+                variant="outline"
+                className="text-gray-700 hover:text-gray-300 border-gray-600 hover:bg-gray-700 hover:text-white text-sm"
+                onClick={() => {
+                  sigCanvas.current?.clear();
+                  setFormData({ ...formData, signature: '' });
+                }}
+              >
+                Clear Signature
+              </Button>
+              {formData.signature && (
+                <span className="text-xs text-green-400">
+                  Signature captured ✓
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Notes */}
           <div>
             <Label htmlFor="notes" className="text-gray-300 mb-2">
               Delivery Notes (Optional)
@@ -136,6 +190,7 @@ export function CreatePOD({
             />
           </div>
 
+          {/* File Upload */}
           <div>
             <Label htmlFor="file" className="text-gray-300 mb-2">
               Upload File (PDF, Image, or Document) *
@@ -148,20 +203,20 @@ export function CreatePOD({
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    file: e.target.files?.[0] || null,
+                    files: e.target.files?.[0] || null,
                   })
                 }
                 className="absolute inset-0 opacity-0 cursor-pointer"
               />
               <div>
                 <File className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                {formData.file ? (
+                {formData.files ? (
                   <>
                     <p className="text-sm text-white font-medium">
-                      {formData.file.name}
+                      {formData.files.name}
                     </p>
                     <p className="text-xs text-gray-400 mt-1">
-                      {formatFileSize(formData.file.size)}
+                      {formatFileSize(formData.files.size)}
                     </p>
                   </>
                 ) : (
@@ -178,24 +233,30 @@ export function CreatePOD({
             </div>
           </div>
         </div>
+
         <AlertDialogFooter>
           <Button
             variant="outline"
             onClick={() => {
               setIsCreateModalOpen(false);
               setFormData({
+                id: driverID,
                 tripId: '',
-                client: '',
-                deliveryDate: new Date().toISOString().split('T')[0],
+                signature: '',
                 notes: '',
-                file: null,
+                deliveredTo: '',
+                files: null,
               });
             }}
             className="border-gray-600 text-gray-700 hover:text-gray-300 hover:bg-gray-700"
           >
             Cancel
           </Button>
-          <Button onClick={handleCreatePod} className="primary-button">
+          <Button
+            onClick={handleCreatePod}
+            className="primary-button"
+            disabled={!formData.tripId || !formData.signature}
+          >
             <Plus className="h-4 w-4 mr-2" />
             Upload POD
           </Button>
