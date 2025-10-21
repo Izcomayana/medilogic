@@ -165,3 +165,9 @@ p {
 .bg-auth {
   background: ('');
 }
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

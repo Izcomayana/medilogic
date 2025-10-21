@@ -8,9 +8,11 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { usePods } from '@/app/(dashboard)/driver/hooks/usePODs';
-import { FileText, File, Eye, CheckCircle, Clock } from 'lucide-react';
+import { FileText, File, Eye } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import Image from 'next/image';
 
 type PodsTableProps = ReturnType<typeof usePods>;
 
@@ -29,33 +31,59 @@ export function PodsTable({
   podsPerPage,
   setCurrentPage,
   currentPage,
+  loadingPods,
 }: PodsTableProps) {
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'Delivered':
-        return (
-          <Badge className="bg-[#15941f] text-white">
-            <CheckCircle className="h-3 w-3 mr-1" />
-            Delivered
-          </Badge>
-        );
-      case 'Pending':
-        return (
-          <Badge variant="secondary" className="bg-yellow-600 text-white">
-            <Clock className="h-3 w-3 mr-1" />
-            Pending
-          </Badge>
-        );
-      default:
-        return <Badge variant="outline">{status}</Badge>;
-    }
-  };
-
   return (
     <>
       <Card className="dashboard-card">
         <CardContent className="p-0">
-          {filteredPods.length === 0 ? (
+          {/* ✅ Show Skeletons while loading */}
+          {loadingPods ? (
+            <div className="p-6">
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-gray-700 bg-gray-800">
+                    <TableHead className="text-gray-300">
+                      Delivered To
+                    </TableHead>
+                    <TableHead className="text-gray-300">Notes</TableHead>
+                    <TableHead className="text-gray-300">Signature</TableHead>
+                    <TableHead className="text-gray-300">Uploaded On</TableHead>
+                    <TableHead className="text-gray-300">Files</TableHead>
+                    <TableHead className="text-gray-300">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <TableRow
+                      key={i}
+                      className="border-gray-700 hover:bg-gray-800 transition"
+                    >
+                      <TableCell>
+                        <Skeleton className="h-4 w-32 bg-gray-700" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-64 bg-gray-700" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-10 w-20 rounded bg-gray-700" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-24 bg-gray-700" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-4 w-16 bg-gray-700" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-8 w-20 rounded bg-gray-700" />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          ) : filteredPods.length === 0 ? (
+            // ✅ Your existing empty state
             <div className="text-center py-12">
               <FileText className="h-12 w-12 text-gray-600 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-white mb-2">
@@ -71,19 +99,21 @@ export function PodsTable({
               </p>
             </div>
           ) : (
+            // ✅ Your existing table content
             <>
               <div className="rounded-md border border-gray-700 overflow-hidden">
                 <Table>
                   <TableHeader>
                     <TableRow className="border-gray-700 hover:bg-gray-800 bg-gray-800">
-                      <TableHead className="text-gray-300">POD ID</TableHead>
-                      <TableHead className="text-gray-300">Trip ID</TableHead>
-                      <TableHead className="text-gray-300">Client</TableHead>
                       <TableHead className="text-gray-300">
-                        Delivery Date
+                        Delivered To
+                      </TableHead>
+                      <TableHead className="text-gray-300">Notes</TableHead>
+                      <TableHead className="text-gray-300">Signature</TableHead>
+                      <TableHead className="text-gray-300">
+                        Uploaded On
                       </TableHead>
                       <TableHead className="text-gray-300">Files</TableHead>
-                      <TableHead className="text-gray-300">Status</TableHead>
                       <TableHead className="text-gray-300">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -91,19 +121,40 @@ export function PodsTable({
                     {paginatedPods.map((pod) => (
                       <TableRow
                         key={pod.id}
-                        className="border-gray-700 hover:bg-gray-800"
+                        className="border-gray-700 hover:bg-gray-800 transition"
                       >
-                        <TableCell className="font-medium text-white">
-                          {pod.id}
+                        <TableCell className="text-gray-300 font-medium">
+                          {pod.deliveredTo || '—'}
+                        </TableCell>
+                        <TableCell className="text-gray-400 truncate max-w-xs">
+                          {pod.notes || (
+                            <span className="italic text-gray-500">
+                              No notes
+                            </span>
+                          )}
                         </TableCell>
                         <TableCell className="text-gray-300">
-                          {pod.tripId}
+                          {pod.signature ? (
+                            <div
+                              className="cursor-pointer"
+                              onClick={() =>
+                                window.open(pod.signature, '_blank')
+                              }
+                            >
+                              <Image
+                                src={pod.signature}
+                                alt="Signature"
+                                className="h-10 w-auto rounded border border-gray-600 hover:opacity-80"
+                              />
+                            </div>
+                          ) : (
+                            <span className="text-gray-500 text-sm italic">
+                              No signature
+                            </span>
+                          )}
                         </TableCell>
                         <TableCell className="text-gray-300">
-                          {pod.client}
-                        </TableCell>
-                        <TableCell className="text-gray-300">
-                          {formatDate(pod.deliveryDate)}
+                          {formatDate(pod.createdAt)}
                         </TableCell>
                         <TableCell className="text-gray-300">
                           <Badge
@@ -112,18 +163,17 @@ export function PodsTable({
                             onClick={() => handleViewFiles(pod)}
                           >
                             <File className="h-3 w-3 mr-1" />
-                            {pod.files.length} file
-                            {pod.files.length !== 1 ? 's' : ''}
+                            {pod.files?.length || 0} file
+                            {pod.files?.length !== 1 ? 's' : ''}
                           </Badge>
                         </TableCell>
-                        <TableCell>{getStatusBadge(pod.status)}</TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
                             <Button
                               variant="outline"
                               size="sm"
                               onClick={() => handleViewDetails(pod)}
-                              className="border-gray-600 text-gray-700 hover:text-gray-300 hover:bg-gray-700"
+                              className="border-gray-600 text-gray-700 hover:text-gray-300 hover:text-white hover:bg-gray-700"
                             >
                               <Eye className="h-3 w-3 mr-1" />
                               View
