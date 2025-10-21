@@ -59,7 +59,7 @@ export function CreatePOD({
 
   return (
     <AlertDialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
-      <AlertDialogContent className="bg-gray-800 border-gray-700 text-white lg:max-w-2xl">
+      <AlertDialogContent className="bg-gray-800 border-gray-700 text-white lg:max-w-2xl max-h-[90vh] flex flex-col">
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-2">
             <Plus className="h-5 w-5 text-[#15941f]" />
@@ -70,170 +70,174 @@ export function CreatePOD({
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        <div className="space-y-4 py-4">
-          {/* Trip Selection */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="tripId" className="text-gray-300 mb-2">
-                Trip ID *
-              </Label>
-              <Select
-                value={formData.tripId}
-                onValueChange={(value) => {
-                  setFormData({
-                    ...formData,
-                    tripId: value,
-                  });
-                }}
-              >
-                <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
-                  <SelectValue
-                    placeholder={
-                      loadingTrips
-                        ? 'Loading trips...'
-                        : 'Select completed trip'
-                    }
-                  />
-                </SelectTrigger>
-
-                <SelectContent className="bg-gray-700 border-gray-600 text-white">
-                  {driverTrips.length > 0 ? (
-                    driverTrips.map((trip) => (
-                      <SelectItem key={trip.trip_id} value={trip.trip_id}>
-                        {trip.client_name
-                          ? `${trip.client_name} — ${trip.delivery_type.replaceAll('_', ' ')}`
-                          : `Trip ${trip.trip_id}`}
-                      </SelectItem>
-                    ))
-                  ) : (
-                    <div className="text-gray-400 text-sm p-2">
-                      No trips assigned yet
-                    </div>
-                  )}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          {/* Delivered To */}
-          <div>
-            <Label htmlFor="deliveredTo" className="text-gray-300 mb-2">
-              Delivered To *
-            </Label>
-            <Input
-              id="deliveredTo"
-              value={formData.deliveredTo}
-              onChange={(e) =>
-                setFormData({ ...formData, deliveredTo: e.target.value })
-              }
-              placeholder="Enter recipient name or department"
-              className="bg-gray-700 border-gray-600 text-white"
-            />
-          </div>
-
-          {/* Signature */}
-          <div>
-            <Label htmlFor="signature" className="text-gray-300 mb-2">
-              Signature (Drawn) *
-            </Label>
-
-            <div className="border border-gray-600 bg-gray-700 rounded-lg p-2">
-              <SignatureCanvas
-                ref={sigCanvas}
-                penColor="white"
-                backgroundColor="#374151" // matches gray-700
-                canvasProps={{
-                  className: 'rounded-lg w-full h-40', // adjustable height
-                }}
-                onEnd={() => {
-                  const data = sigCanvas.current?.toDataURL() || '';
-                  setFormData({ ...formData, signature: data });
-                }}
-              />
-            </div>
-
-            <div className="flex justify-between mt-2">
-              <Button
-                type="button"
-                variant="outline"
-                className="text-gray-700 hover:text-gray-300 border-gray-600 hover:bg-gray-700 hover:text-white text-sm"
-                onClick={() => {
-                  sigCanvas.current?.clear();
-                  setFormData({ ...formData, signature: '' });
-                }}
-              >
-                Clear Signature
-              </Button>
-              {formData.signature && (
-                <span className="text-xs text-green-400">
-                  Signature captured ✓
-                </span>
-              )}
-            </div>
-          </div>
-
-          {/* Notes */}
-          <div>
-            <Label htmlFor="notes" className="text-gray-300 mb-2">
-              Delivery Notes (Optional)
-            </Label>
-            <Textarea
-              id="notes"
-              value={formData.notes}
-              onChange={(e) =>
-                setFormData({ ...formData, notes: e.target.value })
-              }
-              placeholder="Any additional notes about the delivery..."
-              className="bg-gray-700 border-gray-600 text-white"
-              rows={3}
-            />
-          </div>
-
-          {/* File Upload */}
-          <div>
-            <Label htmlFor="file" className="text-gray-300 mb-2">
-              Upload File (PDF, Image, or Document) *
-            </Label>
-            <div className="relative border-2 border-dashed border-gray-600 rounded-lg p-6 text-center bg-gray-700/50 hover:bg-gray-700 transition">
-              <input
-                id="file"
-                type="file"
-                accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    files: e.target.files?.[0] || null,
-                  })
-                }
-                className="absolute inset-0 opacity-0 cursor-pointer"
-              />
+        {/* Scrollable content */}
+        <div className="space-y-4 py-4 pr-2 overflow-y-auto flex-1">
+          <div className="space-y-4 py-4">
+            {/* Trip Selection */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <File className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                {formData.files ? (
-                  <>
-                    <p className="text-sm text-white font-medium">
-                      {formData.files.name}
-                    </p>
-                    <p className="text-xs text-gray-400 mt-1">
-                      {formatFileSize(formData.files.size)}
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <p className="text-sm text-gray-300">
-                      Click or drag to upload file
-                    </p>
-                    <p className="text-xs text-gray-400 mt-1">
-                      PDF, JPG, PNG, DOC up to 10MB
-                    </p>
-                  </>
+                <Label htmlFor="tripId" className="text-gray-300 mb-2">
+                  Trip ID *
+                </Label>
+                <Select
+                  value={formData.tripId}
+                  onValueChange={(value) => {
+                    setFormData({
+                      ...formData,
+                      tripId: value,
+                    });
+                  }}
+                >
+                  <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                    <SelectValue
+                      placeholder={
+                        loadingTrips
+                          ? 'Loading trips...'
+                          : 'Select completed trip'
+                      }
+                    />
+                  </SelectTrigger>
+
+                  <SelectContent className="bg-gray-700 border-gray-600 text-white">
+                    {driverTrips.length > 0 ? (
+                      driverTrips.map((trip) => (
+                        <SelectItem key={trip.trip_id} value={trip.trip_id}>
+                          {trip.client_name
+                            ? `${trip.client_name} — ${trip.delivery_type.replaceAll('_', ' ')}`
+                            : `Trip ${trip.trip_id}`}
+                        </SelectItem>
+                      ))
+                    ) : (
+                      <div className="text-gray-400 text-sm p-2">
+                        No trips assigned yet
+                      </div>
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            {/* Delivered To */}
+            <div>
+              <Label htmlFor="deliveredTo" className="text-gray-300 mb-2">
+                Delivered To *
+              </Label>
+              <Input
+                id="deliveredTo"
+                value={formData.deliveredTo}
+                onChange={(e) =>
+                  setFormData({ ...formData, deliveredTo: e.target.value })
+                }
+                placeholder="Enter recipient name or department"
+                className="bg-gray-700 border-gray-600 text-white"
+              />
+            </div>
+
+            {/* Signature */}
+            <div>
+              <Label htmlFor="signature" className="text-gray-300 mb-2">
+                Signature (Drawn) *
+              </Label>
+
+              <div className="border border-gray-600 bg-gray-700 rounded-lg p-2">
+                <SignatureCanvas
+                  ref={sigCanvas}
+                  penColor="white"
+                  backgroundColor="#374151" // matches gray-700
+                  canvasProps={{
+                    className: 'rounded-lg w-full h-40', // adjustable height
+                  }}
+                  onEnd={() => {
+                    const data = sigCanvas.current?.toDataURL() || '';
+                    setFormData({ ...formData, signature: data });
+                  }}
+                />
+              </div>
+
+              <div className="flex justify-between mt-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="text-gray-700 hover:text-gray-300 border-gray-600 hover:bg-gray-700 hover:text-white text-sm"
+                  onClick={() => {
+                    sigCanvas.current?.clear();
+                    setFormData({ ...formData, signature: '' });
+                  }}
+                >
+                  Clear Signature
+                </Button>
+                {formData.signature && (
+                  <span className="text-xs text-green-400">
+                    Signature captured ✓
+                  </span>
                 )}
+              </div>
+            </div>
+
+            {/* Notes */}
+            <div>
+              <Label htmlFor="notes" className="text-gray-300 mb-2">
+                Delivery Notes (Optional)
+              </Label>
+              <Textarea
+                id="notes"
+                value={formData.notes}
+                onChange={(e) =>
+                  setFormData({ ...formData, notes: e.target.value })
+                }
+                placeholder="Any additional notes about the delivery..."
+                className="bg-gray-700 border-gray-600 text-white"
+                rows={3}
+              />
+            </div>
+
+            {/* File Upload */}
+            <div>
+              <Label htmlFor="file" className="text-gray-300 mb-2">
+                Upload File (PDF, Image, or Document) *
+              </Label>
+              <div className="relative border-2 border-dashed border-gray-600 rounded-lg p-6 text-center bg-gray-700/50 hover:bg-gray-700 transition">
+                <input
+                  id="file"
+                  type="file"
+                  accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      files: e.target.files?.[0] || null,
+                    })
+                  }
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                />
+                <div>
+                  <File className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                  {formData.files ? (
+                    <>
+                      <p className="text-sm text-white font-medium">
+                        {formData.files.name}
+                      </p>
+                      <p className="text-xs text-gray-400 mt-1">
+                        {formatFileSize(formData.files.size)}
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-sm text-gray-300">
+                        Click or drag to upload file
+                      </p>
+                      <p className="text-xs text-gray-400 mt-1">
+                        PDF, JPG, PNG, DOC up to 10MB
+                      </p>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <AlertDialogFooter>
+        {/* Fixed footer */}
+        <AlertDialogFooter className="border-t border-gray-700 mt-2 pt-4 bg-gray-800 sticky">
           <Button
             variant="outline"
             onClick={() => {
