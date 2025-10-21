@@ -49,7 +49,6 @@ export function CreatePOD({
   setIsCreateModalOpen,
   formData,
   setFormData,
-  completedTrips,
   formatFileSize,
   handleCreatePod,
   loadingTrips,

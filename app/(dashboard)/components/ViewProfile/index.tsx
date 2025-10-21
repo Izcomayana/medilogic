@@ -17,7 +17,7 @@ import {
   CheckCircle2,
   XCircle,
   Phone,
-  MapPin,
+  // MapPin,
   IdCard,
   Tally4,
   Code,
