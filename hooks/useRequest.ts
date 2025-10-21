@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 
 export const useAuthorizedRequest = () => {
   const { token, refreshAccessToken } = useAuth();
+  // console.log('token:', token);
 
   return useCallback(
     async <T>(
@@ -20,6 +21,7 @@ export const useAuthorizedRequest = () => {
             return null;
           }
           validToken = refreshed;
+          console.log('token:', refreshAccessToken);
         }
         return await requestFn(validToken);
       } catch (err: any) {

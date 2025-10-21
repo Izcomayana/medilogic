@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { mapApiTripToUiTrip, Trip, UiTrip } from './mappers';
+import { Trip } from './mappers';
 import { formatDateStart, formatDateEnd } from '@/utils/datetime';
 
 export async function fetchTripsRequest(
@@ -11,7 +11,7 @@ export async function fetchTripsRequest(
     currentPage,
     tripsPerPage,
   }: {
-    statusFilter: string;
+    statusFilter?: string;
     searchTerm: string;
     dateRange?: { from?: Date; to?: Date };
     currentPage: number;
@@ -23,7 +23,7 @@ export async function fetchTripsRequest(
     params: {
       status: statusFilter !== 'all' ? statusFilter : undefined,
       driver_name: searchTerm || undefined,
-      client_name: searchTerm || undefined,
+      // client_name: searchTerm || undefined,
       skip: (currentPage - 1) * tripsPerPage,
       limit: tripsPerPage,
       from_date: dateRange?.from ? formatDateStart(dateRange.from) : undefined,

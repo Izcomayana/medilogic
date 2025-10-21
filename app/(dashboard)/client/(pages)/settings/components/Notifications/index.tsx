@@ -1,5 +1,5 @@
 import { Switch } from '@/components/ui/switch';
-import { useSettings } from '@/hooks/useSettings';
+import { useSettings } from '@/hooks/settings/useSettings';
 import { TabsContent } from '@radix-ui/react-tabs';
 import { Bell, Mail, Phone } from 'lucide-react';
 
