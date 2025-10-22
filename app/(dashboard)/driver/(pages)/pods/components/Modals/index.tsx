@@ -22,6 +22,7 @@ import {
   Download,
   AlertCircle,
   Loader2,
+  Eye,
 } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -37,6 +38,7 @@ import { Input } from '@/components/ui/input';
 import SignatureCanvas from 'react-signature-canvas';
 import { useRef } from 'react';
 import Image from 'next/image';
+import { PodFile } from '@/app/(dashboard)/driver/hooks/typePod';
 
 type PODialogsProps = ReturnType<typeof usePods>;
 
@@ -303,12 +305,13 @@ export function ViewPOD({
   setIsDetailsModalOpen,
   selectedPod,
   formatDate,
-  handleDownloadFile,
+  handleOpenFile,
   loadingPods,
+  handleDownloadFile,
 }: PODialogsProps) {
   return (
     <Dialog open={isDetailsModalOpen} onOpenChange={setIsDetailsModalOpen}>
-      <DialogContent className="bg-gray-800 border-gray-700 text-white max-w-[90vh] max-h-[80vh] overflow-y-auto">
+      <DialogContent className="bg-gray-800 border-gray-700 text-white lg:max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-[#15941f]" />
@@ -395,32 +398,53 @@ export function ViewPOD({
               <Label className="text-gray-400 text-sm mb-2 block">
                 Files Attached
               </Label>
+
               {selectedPod.files && selectedPod.files.length > 0 ? (
                 <div className="space-y-2">
-                  {selectedPod.files.map((file, idx) => (
+                  {selectedPod.files.map((file: PodFile, idx: number) => (
                     <div
-                      key={idx}
+                      key={file.id ?? idx}
                       className="flex items-center justify-between p-3 bg-gray-700 rounded-lg border border-gray-600"
                     >
                       <div className="flex items-center gap-3">
                         <File className="h-4 w-4 text-[#15941f]" />
                         <div>
                           <p className="text-white text-sm font-medium">
-                            {file.name || `File ${idx + 1}`}
+                            {`File ${idx + 1}`}
                           </p>
-                          {file.size && (
-                            <p className="text-gray-400 text-xs">{file.size}</p>
-                          )}
+                          <p className="text-gray-400 text-xs">
+                            {file.type ? (
+                              <span className="">
+                                {file.type.replaceAll('_', ' ')}
+                              </span>
+                            ) : (
+                              <span className="italic">Unknown type</span>
+                            )}
+                          </p>
                         </div>
                       </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDownloadFile(file)}
-                        className="text-[#15941f] hover:text-[#15941f]/80"
-                      >
-                        <Download className="h-4 w-4" />
-                      </Button>
+
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDownloadFile(file)}
+                          className="text-[#15941f] hover:text-[#15941f]/80"
+                        >
+                          <Download className="h-4 w-4" />
+                        </Button>
+                        {/* optional: preview inline for images/PDFs */}
+                        {file.url && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => window.open(file.url, '_blank')}
+                            className="border-gray-600 text-gray-300"
+                          >
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -455,7 +479,7 @@ export function ViewPOD({
 export function ViewPODFile({
   isFilesModalOpen,
   setIsFilesModalOpen,
-  handleDownloadFile,
+  handleOpenFile,
   selectedPod,
   loadingFiles,
   podFiles,
@@ -488,14 +512,12 @@ export function ViewPODFile({
                   <File className="h-5 w-5 text-[#15941f]" />
                   <div>
                     <p className="text-gray-300 font-medium">{`File ${idx + 1}`}</p>
-                    <p className="text-gray-100 text-xs">
-                      {file.type ? file.type.toUpperCase() : 'Unknown'}
-                    </p>
+                    <p className="text-gray-100 text-xs">{file.type}</p>
                   </div>
                 </div>
                 <Button
                   size="sm"
-                  onClick={() => handleDownloadFile(file)}
+                  onClick={() => handleOpenFile(file)}
                   className="bg-[#15941f] hover:bg-[#15941f]/80 text-white"
                 >
                   <Download className="h-4 w-4 mr-1" />

@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { CreateTrips } from '../CreateTrip/indes';
-import DateRangeFilter from './dateRange';
+import DateRangeFilter from '../../../../../components/DateRange';
 
 type FiltersProps = ReturnType<typeof useTrips>;
 
@@ -49,6 +49,7 @@ export function Filters({
               className="pl-10 bg-gray-700 border-gray-600 text-white placeholder-gray-400"
             />
           </div>
+
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="w-[150px] bg-gray-700 border-gray-600 text-white">
               <Filter className="h-4 w-4 mr-2" />
@@ -62,6 +63,7 @@ export function Filters({
               <SelectItem value="cancelled">Cancelled</SelectItem>
             </SelectContent>
           </Select>
+
           <DateRangeFilter value={dateRange} onChange={setDateRange} />
         </div>
       </CardContent>
