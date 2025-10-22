@@ -6,62 +6,7 @@ import { toast } from 'sonner';
 import { useAuthorizedRequest } from '@/hooks/useRequest';
 import { useProfile } from '@/hooks/useProfile';
 import { api } from '@/lib/api';
-
-// Mock data for PODs
-const initialPods = [
-  {
-    id: 'POD001',
-    tripId: 'TRIP001',
-    client: 'Clinic ABC',
-    deliveryDate: '2025-08-23',
-    uploadedAt: '2025-08-23 14:35',
-    status: 'Delivered',
-    files: [{ name: 'delivery_receipt_001.pdf', size: '245 KB', type: 'PDF' }],
-    notes: 'Delivered to reception desk, signed by Dr. Johnson',
-  },
-  {
-    id: 'POD002',
-    tripId: 'TRIP002',
-    client: 'TechCorp Solutions',
-    deliveryDate: '2025-08-22',
-    uploadedAt: '2025-08-22 16:20',
-    status: 'Delivered',
-    files: [
-      { name: 'proof_delivery_002.jpg', size: '1.2 MB', type: 'Image' },
-      { name: 'receipt_002.pdf', size: '156 KB', type: 'PDF' },
-    ],
-    notes: 'Delivered at main office entrance',
-  },
-  {
-    id: 'POD003',
-    tripId: 'TRIP003',
-    client: 'PharmaCare Industries',
-    deliveryDate: '2025-08-21',
-    uploadedAt: '2025-08-21 11:45',
-    status: 'Delivered',
-    files: [{ name: 'pod_003_signature.jpg', size: '890 KB', type: 'Image' }],
-    notes: 'Hazmat delivery received and signed',
-  },
-  {
-    id: 'POD004',
-    tripId: 'TRIP004',
-    client: 'WasteTech Solutions',
-    deliveryDate: '2025-08-20',
-    uploadedAt: '2025-08-20 13:10',
-    status: 'Pending',
-    files: [],
-    notes: 'Waiting for file upload',
-  },
-];
-
-// Mock completed trips for dropdown
-const completedTrips = [
-  { id: 'TRIP001', client: 'Clinic ABC' },
-  { id: 'TRIP002', client: 'TechCorp Solutions' },
-  { id: 'TRIP003', client: 'PharmaCare Industries' },
-  { id: 'TRIP004', client: 'WasteTech Solutions' },
-  { id: 'TRIP005', client: 'Healthcare Plus' },
-];
+import { Pod, PodFile } from './typePod';
 
 export function usePods() {
   const [loadingPods, setLoadingPods] = useState(false);
@@ -70,11 +15,11 @@ export function usePods() {
   const [clientFilter, setClientFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [dateFilter, setDateFilter] = useState('all');
-  const [selectedPod, setSelectedPod] = useState<
-    (typeof initialPods)[0] | null
-  >(null);
+  const [selectedPod, setSelectedPod] = useState<Pod | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const [podFiles, setPodFiles] = useState<PodFile[]>([]);
+  const [loadingFiles, setLoadingFiles] = useState(false);
   const [isFilesModalOpen, setIsFilesModalOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const podsPerPage = 10;
@@ -173,9 +118,6 @@ export function usePods() {
           },
         });
 
-        const newPod = res.data;
-        setPodsList((prev) => [newPod, ...prev]);
-
         // Reset form
         setFormData({
           id: '',
@@ -186,9 +128,12 @@ export function usePods() {
           deliveredTo: '',
           files: null,
         });
+        setIsCreateModalOpen(false);
+
+        const newPod = res.data;
+        setPodsList((prev) => [newPod, ...prev]);
 
         toast.success('POD created successfully ✅');
-        setIsCreateModalOpen(false);
       }, 'Failed to create POD');
     } catch (error: any) {
       console.error('Error creating POD:', error);
@@ -232,18 +177,95 @@ export function usePods() {
     fetchPods();
   }, [driverID]);
 
-  const handleViewDetails = (pod: (typeof initialPods)[0]) => {
-    setSelectedPod(pod);
+  const fetchPodById = async (podId: string) => {
+    if (!podId) return null;
+    try {
+      setLoadingPods(true);
+      let fetchedPod = null;
+      await authorizedRequest(async (token) => {
+        const res = await api.get(`/pods/pods/pods/${podId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const pod = res.data;
+        fetchedPod = {
+          id: pod.id,
+          tripId: pod.trip_id,
+          deliveredTo: pod.delivered_to,
+          notes: pod.notes,
+          driverId: pod.driver_id,
+          createdAt: pod.created_at,
+          signature: pod.signature,
+          files: pod.files || [],
+        };
+      }, 'Failed to fetch POD details');
+      return fetchedPod;
+    } catch (error) {
+      console.error('Error fetching single POD:', error);
+      toast.error('Failed to load POD details');
+      return null;
+    } finally {
+      setLoadingPods(false);
+    }
+  };
+
+  const handleViewDetails = async (pod: any) => {
+    const fetched = await fetchPodById(pod.id);
+    if (fetched) setSelectedPod(fetched);
     setIsDetailsModalOpen(true);
   };
 
-  const handleViewFiles = (pod: (typeof initialPods)[0]) => {
+  const fetchPodFiles = async (podId: string) => {
+    try {
+      setLoadingFiles(true);
+
+      await authorizedRequest(async (token) => {
+        const res = await api.get(`/pods/pods/${podId}/files`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const data = res.data;
+
+        const files: PodFile[] = Array.isArray(data)
+          ? data.map((file) =>
+              typeof file === 'string'
+                ? {
+                    name: file.split('/').pop()?.split('?')[0],
+                    url: file,
+                  }
+                : {
+                    name: file.s3_key.split('/').pop(),
+                    url: file.url,
+                    type: file.file_type,
+                  }
+            )
+          : [];
+
+        setPodFiles(files);
+      }, 'Failed to get files');
+    } catch (err: any) {
+      console.error('Error fetching pod files:', err);
+      toast.error('Failed to load files for this POD.');
+    } finally {
+      setLoadingFiles(false);
+    }
+  };
+
+  // ✅ Open modal and fetch files
+  const handleViewFiles = async (pod: any) => {
     setSelectedPod(pod);
+    await fetchPodFiles(pod.id);
     setIsFilesModalOpen(true);
   };
 
-  const handleDownloadFile = (fileName: string) => {
-    toast.success(`Downloading ${fileName}...`);
+  const handleDownloadFile = (file: PodFile) => {
+    if (!file.url) {
+      toast.error('File URL not found.');
+      return;
+    }
+
+    window.open(file.url, '_blank'); // opens in new tab
+    toast.success(`Opened ${file.name}`);
   };
 
   const formatDate = (dateString: string) => {
@@ -285,8 +307,6 @@ export function usePods() {
   };
 
   return {
-    initialPods,
-    completedTrips,
     loadingPods,
     podsList,
     setPodsList,
@@ -321,9 +341,12 @@ export function usePods() {
     fetchDriverTrips,
     handleCreatePod,
     fetchPods,
+    fetchPodById,
     handleViewDetails,
-    handleViewFiles,
+    podFiles,
+    loadingFiles,
     handleDownloadFile,
+    handleViewFiles,
     formatDate,
     formatFileSize,
     handleOpenCreateModal,

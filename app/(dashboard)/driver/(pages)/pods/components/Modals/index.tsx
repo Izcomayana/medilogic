@@ -20,9 +20,8 @@ import {
   File,
   FileText,
   Download,
-  CheckCircle,
-  Clock,
   AlertCircle,
+  Loader2,
 } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -38,6 +37,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import SignatureCanvas from 'react-signature-canvas';
 import { useRef } from 'react';
+import Image from 'next/image';
 
 type PODialogsProps = ReturnType<typeof usePods>;
 
@@ -54,6 +54,7 @@ export function CreatePOD({
   loadingTrips,
   driverTrips,
   driverID,
+  loadingPods,
 }: PODialogsProps) {
   const sigCanvas = useRef<SignatureCanvas | null>(null);
 
@@ -280,8 +281,14 @@ export function CreatePOD({
             className="primary-button"
             disabled={!formData.tripId || !formData.signature}
           >
-            <Plus className="h-4 w-4 mr-2" />
-            Upload POD
+            {loadingPods ? (
+              <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></span>
+            ) : (
+              <span className="flex items-center gap-3">
+                <Plus className="h-4 w-4 mr-2" />
+                Upload POD
+              </span>
+            )}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -298,40 +305,26 @@ export function ViewPOD({
   selectedPod,
   formatDate,
   handleDownloadFile,
+  loadingPods,
 }: PODialogsProps) {
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'Delivered':
-        return (
-          <Badge className="bg-[#15941f] text-white">
-            <CheckCircle className="h-3 w-3 mr-1" />
-            Delivered
-          </Badge>
-        );
-      case 'Pending':
-        return (
-          <Badge variant="secondary" className="bg-yellow-600 text-white">
-            <Clock className="h-3 w-3 mr-1" />
-            Pending
-          </Badge>
-        );
-      default:
-        return <Badge variant="outline">{status}</Badge>;
-    }
-  };
-
   return (
     <Dialog open={isDetailsModalOpen} onOpenChange={setIsDetailsModalOpen}>
       <DialogContent className="bg-gray-800 border-gray-700 text-white max-w-[90vh] max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-[#15941f]" />
-            POD Details - {selectedPod?.id}
+            POD Details
           </DialogTitle>
         </DialogHeader>
 
-        {selectedPod && (
+        {loadingPods ? (
+          <div className="flex items-center justify-center py-10">
+            <Loader2 className="h-6 w-6 text-[#15941f] animate-spin" />
+            <p className="ml-3 text-gray-400">Loading POD details...</p>
+          </div>
+        ) : selectedPod ? (
           <div className="space-y-6 py-4">
+            {/* POD Info Grid */}
             <div className="grid grid-cols-2 gap-6">
               <div className="space-y-3">
                 <div>
@@ -342,34 +335,33 @@ export function ViewPOD({
                 </div>
                 <div>
                   <Label className="text-gray-400 text-sm">Trip ID</Label>
-                  <p className="text-white mt-1">{selectedPod.tripId}</p>
+                  <p className="text-white mt-1">
+                    {selectedPod.tripId || null}
+                  </p>
                 </div>
                 <div>
-                  <Label className="text-gray-400 text-sm">Client</Label>
-                  <p className="text-white mt-1">{selectedPod.client}</p>
+                  <Label className="text-gray-400 text-sm">Delivered To</Label>
+                  <p className="text-white mt-1">
+                    {selectedPod.deliveredTo || '—'}
+                  </p>
                 </div>
               </div>
 
               <div className="space-y-3">
                 <div>
-                  <Label className="text-gray-400 text-sm">Delivery Date</Label>
+                  <Label className="text-gray-400 text-sm">Driver ID</Label>
+                  <p className="text-white mt-1">{selectedPod.driverId}</p>
+                </div>
+                <div>
+                  <Label className="text-gray-400 text-sm">Created At</Label>
                   <p className="text-white mt-1">
-                    {formatDate(selectedPod.deliveryDate)}
+                    {formatDate(selectedPod.createdAt)}
                   </p>
-                </div>
-                <div>
-                  <Label className="text-gray-400 text-sm">Uploaded At</Label>
-                  <p className="text-white mt-1">{selectedPod.uploadedAt}</p>
-                </div>
-                <div>
-                  <Label className="text-gray-400 text-sm">Status</Label>
-                  <div className="mt-1">
-                    {getStatusBadge(selectedPod.status)}
-                  </div>
                 </div>
               </div>
             </div>
 
+            {/* Notes */}
             {selectedPod.notes && (
               <div>
                 <Label className="text-gray-400 text-sm">Delivery Notes</Label>
@@ -379,11 +371,32 @@ export function ViewPOD({
               </div>
             )}
 
+            {/* Signature */}
+            <div>
+              <Label className="text-gray-400 text-sm mb-2 block">
+                Signature
+              </Label>
+              {selectedPod.signature ? (
+                <div className="bg-gray-700 p-3 rounded-lg border border-gray-600 flex justify-center">
+                  <Image
+                    src={selectedPod.signature}
+                    alt="Signature"
+                    width={300}
+                    height={150}
+                    className="rounded-md object-contain border border-gray-600"
+                  />
+                </div>
+              ) : (
+                <p className="text-gray-400 text-sm italic">No signature</p>
+              )}
+            </div>
+
+            {/* Files */}
             <div>
               <Label className="text-gray-400 text-sm mb-2 block">
                 Files Attached
               </Label>
-              {selectedPod.files.length > 0 ? (
+              {selectedPod.files && selectedPod.files.length > 0 ? (
                 <div className="space-y-2">
                   {selectedPod.files.map((file, idx) => (
                     <div
@@ -394,15 +407,17 @@ export function ViewPOD({
                         <File className="h-4 w-4 text-[#15941f]" />
                         <div>
                           <p className="text-white text-sm font-medium">
-                            {file.name}
+                            {file.name || `File ${idx + 1}`}
                           </p>
-                          <p className="text-gray-400 text-xs">{file.size}</p>
+                          {file.size && (
+                            <p className="text-gray-400 text-xs">{file.size}</p>
+                          )}
                         </div>
                       </div>
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleDownloadFile(file.name)}
+                        onClick={() => handleDownloadFile(file)}
                         className="text-[#15941f] hover:text-[#15941f]/80"
                       >
                         <Download className="h-4 w-4" />
@@ -415,13 +430,17 @@ export function ViewPOD({
               )}
             </div>
           </div>
+        ) : (
+          <p className="text-gray-400 text-center py-6">
+            No POD details found.
+          </p>
         )}
 
-        <DialogFooter>
+        <DialogFooter className='border-t border-gray-700 mt-2 pt-4 bg-gray-800 sticky"'>
           <Button
             variant="outline"
             onClick={() => setIsDetailsModalOpen(false)}
-            className="border-gray-600 text-gray-700 hover:text-gray-300 hover:bg-gray-700"
+            className="border-gray-600 text-gray-700 hover:text-gray-300 hover:text-white hover:bg-gray-700"
           >
             Close
           </Button>
@@ -439,6 +458,8 @@ export function ViewPODFile({
   setIsFilesModalOpen,
   handleDownloadFile,
   selectedPod,
+  loadingFiles,
+  podFiles,
 }: PODialogsProps) {
   return (
     <Dialog open={isFilesModalOpen} onOpenChange={setIsFilesModalOpen}>
@@ -446,52 +467,55 @@ export function ViewPODFile({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <File className="h-5 w-5 text-[#15941f]" />
-            Files - {selectedPod?.id}
+            Files – <span className="text-xs">{selectedPod?.id}</span>
           </DialogTitle>
           <DialogDescription className="text-gray-400">
             All files attached to this proof of delivery
           </DialogDescription>
         </DialogHeader>
-
-        {selectedPod && (
+        {loadingFiles ? (
+          <div className="flex flex-col items-center justify-center py-10">
+            <Loader2 className="h-6 w-6 text-[#15941f] animate-spin mb-3" />
+            <p className="text-gray-400">Loading files...</p>
+          </div>
+        ) : podFiles.length > 0 ? (
           <div className="space-y-3 py-4">
-            {selectedPod.files.length > 0 ? (
-              selectedPod.files.map((file, idx) => (
-                <div
-                  key={idx}
-                  className="flex items-center justify-between p-4 bg-gray-700 rounded-lg border border-gray-600 hover:border-gray-500 transition"
-                >
-                  <div className="flex items-center gap-3">
-                    <File className="h-5 w-5 text-[#15941f]" />
-                    <div>
-                      <p className="text-white font-medium">{file.name}</p>
-                      <p className="text-gray-400 text-xs">{file.size}</p>
-                    </div>
+            {podFiles.map((file, idx) => (
+              <div
+                key={idx}
+                className="flex items-center justify-between p-4 bg-gray-700 rounded-lg border border-gray-600 hover:border-gray-500 transition"
+              >
+                <div className="flex items-center gap-3">
+                  <File className="h-5 w-5 text-[#15941f]" />
+                  <div>
+                    <p className="text-gray-300 font-medium">{`File ${idx + 1}`}</p>
+                    <p className="text-gray-100 text-xs">
+                      {file.type ? file.type.toUpperCase() : 'Unknown'}
+                    </p>
                   </div>
-                  <Button
-                    size="sm"
-                    onClick={() => handleDownloadFile(file.name)}
-                    className="bg-[#15941f] hover:bg-[#15941f]/80 text-white"
-                  >
-                    <Download className="h-4 w-4 mr-1" />
-                    Download
-                  </Button>
                 </div>
-              ))
-            ) : (
-              <div className="text-center py-8">
-                <AlertCircle className="h-8 w-8 text-gray-600 mx-auto mb-2" />
-                <p className="text-gray-400">No files attached to this POD</p>
+                <Button
+                  size="sm"
+                  onClick={() => handleDownloadFile(file)}
+                  className="bg-[#15941f] hover:bg-[#15941f]/80 text-white"
+                >
+                  <Download className="h-4 w-4 mr-1" />
+                  Open
+                </Button>
               </div>
-            )}
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-8">
+            <AlertCircle className="h-8 w-8 text-gray-600 mx-auto mb-2" />
+            <p className="text-gray-400">No files attached to this POD</p>
           </div>
         )}
-
         <DialogFooter>
           <Button
             variant="outline"
             onClick={() => setIsFilesModalOpen(false)}
-            className="border-gray-600 text-gray-700 hover:text-gray-300 hover:bg-gray-700"
+            className="border-gray-600 text-gray-700 hover:text-gray-300 hover:text-white hover:bg-gray-700"
           >
             Close
           </Button>
