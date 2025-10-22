@@ -45,8 +45,17 @@ export function usePods() {
     signature: '',
     notes: '',
     deliveredTo: '',
-    files: null as File | null,
+    files: [] as File[] | null, // 👈 array of files
   });
+  // const [formData, setFormData] = useState({
+  //   id: '',
+  //   driver_id: driverID,
+  //   tripId: '',
+  //   signature: '',
+  //   notes: '',
+  //   deliveredTo: '',
+  //   files: null as File | null,
+  // });
 
   const fetchDriverTrips = async () => {
     if (!driverID) return;
@@ -91,16 +100,11 @@ export function usePods() {
         formDataToSend.append('notes', formData.notes || '');
         formDataToSend.append('signature', formData.signature || '');
 
-        if (formData.files) {
-          formDataToSend.append('file', formData.files);
+        if (formData.files && formData.files.length > 0) {
+          formData.files.forEach((file) => {
+            formDataToSend.append('files', file); // 👈 use plural key if your backend expects that
+          });
         }
-
-        const res = await api.post('/pods/pods/upload', formDataToSend, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data',
-          },
-        });
 
         // Reset form
         setFormData({
@@ -110,8 +114,16 @@ export function usePods() {
           signature: '',
           notes: '',
           deliveredTo: '',
-          files: null,
+          files: [],
         });
+
+        const res = await api.post('/pods/pods/upload', formDataToSend, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
         setIsCreateModalOpen(false);
 
         const newPod = res.data;
@@ -310,17 +322,21 @@ export function usePods() {
   };
 
   const handleDownloadFile = async (file: PodFile) => {
-    if (!file?.s3_key) return toast.error('File key missing');
+    const s3Key = file?.s3_key || file?.url?.split('/pods/')[1]?.split('?')[0];
+    if (!s3Key) return toast.error('File key missing');
+
+    const filename = s3Key.split('/').pop();
+    if (!filename) return toast.error('Invalid file key');
 
     try {
-      const filename = file.s3_key.split('/').pop();
-      if (!filename) return toast.error('Invalid file key');
-
       await authorizedRequest(async (token) => {
-        const res = await api.get(`/pods/pods/download/${filename}`, {
-          responseType: 'arraybuffer', // ✅ more reliable for binary
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await api.get(
+          `/pods/pods/download/${encodeURIComponent(filename)}`,
+          {
+            responseType: 'arraybuffer',
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
 
         const blob = new Blob([res.data], { type: 'application/pdf' });
         const link = document.createElement('a');
@@ -329,7 +345,6 @@ export function usePods() {
         link.click();
         URL.revokeObjectURL(link.href);
       }, 'Failed to download');
-
       toast.success('Download started');
     } catch (err) {
       console.error(err);
@@ -385,24 +400,6 @@ export function usePods() {
     setDeleting(false);
     setOpen(false);
   };
-
-  // const getFileType = (fileName: string) => {
-  //   const ext = fileName.split('.').pop()?.toUpperCase();
-  //   switch (ext) {
-  //     case 'PDF':
-  //       return 'PDF';
-  //     case 'JPG':
-  //     case 'JPEG':
-  //     case 'PNG':
-  //     case 'GIF':
-  //       return 'Image';
-  //     case 'DOC':
-  //     case 'DOCX':
-  //       return 'Document';
-  //     default:
-  //       return 'File';
-  //   }
-  // };
 
   return {
     loadingPods,

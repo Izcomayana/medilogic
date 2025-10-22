@@ -219,37 +219,50 @@ export function CreatePOD({
               </Label>
               <div className="relative border-2 border-dashed border-gray-600 rounded-lg p-6 text-center bg-gray-700/50 hover:bg-gray-700 transition">
                 <input
-                  id="file"
                   type="file"
-                  accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      files: e.target.files?.[0] || null,
-                    })
-                  }
+                  multiple
+                  onChange={(e) => {
+                    const files = Array.from(e.target.files || []);
+                    setFormData((prev) => ({
+                      ...prev,
+                      files,
+                    }));
+                  }}
                   className="absolute inset-0 opacity-0 cursor-pointer"
                 />
                 <div>
                   <File className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                  {formData.files ? (
-                    <>
-                      <p className="text-sm text-white font-medium">
-                        {formData.files.name}
-                      </p>
-                      <p className="text-xs text-gray-400 mt-1">
-                        {formatFileSize(formData.files.size)}
-                      </p>
-                    </>
+                  {formData.files && formData.files.length > 0 ? (
+                    <div className="space-y-1">
+                      {formData.files.map((file, i) => (
+                        <div key={i} className="text-sm text-white font-medium">
+                          <p>{file.name}</p>
+                          <p className="text-xs text-gray-400">
+                            {formatFileSize(file.size)}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
                   ) : (
                     <>
                       <p className="text-sm text-gray-300">
-                        Click or drag to upload file
+                        Click or drag to upload files
                       </p>
                       <p className="text-xs text-gray-400 mt-1">
-                        PDF, JPG, PNG, DOC up to 10MB
+                        PDF, JPG, PNG, DOC up to 10MB each
                       </p>
                     </>
+                  )}
+
+                  {formData.files && formData.files.length > 0 && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setFormData({ ...formData, files: [] })}
+                      className="mt-3 text-gray-700"
+                    >
+                      Clear files
+                    </Button>
                   )}
                 </div>
               </div>
@@ -270,7 +283,7 @@ export function CreatePOD({
                 signature: '',
                 notes: '',
                 deliveredTo: '',
-                files: null,
+                files: [],
               });
             }}
             className="border-gray-600 text-gray-700 hover:text-gray-300 hover:bg-gray-700"
@@ -305,7 +318,6 @@ export function ViewPOD({
   setIsDetailsModalOpen,
   selectedPod,
   formatDate,
-  handleOpenFile,
   loadingPods,
   handleDownloadFile,
 }: PODialogsProps) {
@@ -479,7 +491,7 @@ export function ViewPOD({
 export function ViewPODFile({
   isFilesModalOpen,
   setIsFilesModalOpen,
-  handleOpenFile,
+  handleDownloadFile,
   selectedPod,
   loadingFiles,
   podFiles,
@@ -515,14 +527,27 @@ export function ViewPODFile({
                     <p className="text-gray-100 text-xs">{file.type}</p>
                   </div>
                 </div>
-                <Button
-                  size="sm"
-                  onClick={() => handleOpenFile(file)}
-                  className="bg-[#15941f] hover:bg-[#15941f]/80 text-white"
-                >
-                  <Download className="h-4 w-4 mr-1" />
-                  Open
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleDownloadFile(file)}
+                    className="text-[#15941f] hover:text-[#15941f]/80"
+                  >
+                    <Download className="h-4 w-4" />
+                  </Button>
+                  {/* optional: preview inline for images/PDFs */}
+                  {file.url && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => window.open(file.url, '_blank')}
+                      className="border-gray-600 text-gray-300"
+                    >
+                      <Eye className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
               </div>
             ))}
           </div>

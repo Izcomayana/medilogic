@@ -2,8 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { FileText, Plus, Search, Filter, Calendar } from 'lucide-react';
+import { FileText, Plus } from 'lucide-react';
 import { PageHeader } from '../../../components/PageHeader';
 import { usePods } from '../../hooks/usePODs';
 import { PodsTable } from './components/PODsTable';
