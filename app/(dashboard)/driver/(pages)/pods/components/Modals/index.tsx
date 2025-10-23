@@ -339,7 +339,7 @@ export function ViewPOD({
         ) : selectedPod ? (
           <div className="space-y-6 py-4">
             {/* POD Info Grid */}
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-6">
               <div className="space-y-3">
                 <div>
                   <Label className="text-gray-400 text-sm">POD ID</Label>
