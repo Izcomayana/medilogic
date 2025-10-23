@@ -10,7 +10,7 @@ import {
   AlertDialogCancel,
 } from '@/components/ui/alert-dialog';
 import { useTrips } from '@/hooks/trips/useTrips';
-import { Download, Plus, X } from 'lucide-react';
+import { Download, Plus, X, Package } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import TripForm from './TripForm';
 import {
@@ -19,6 +19,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
+import Link from 'next/link';
 
 type CreateTripProps = ReturnType<typeof useTrips>;
 
@@ -36,6 +37,12 @@ export function CreateTrips({
   return (
     <AlertDialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
       <div className="flex flex-col md:flex-row mt-4 lg:mt-0 gap-2">
+        <Link href={'/company-admin/pods'} className="cursor-pointer">
+          <Button className="text-gray-700" variant="outline">
+            <Package className="h-4 w-4" />
+            PODs{' '}
+          </Button>
+        </Link>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button className="text-gray-700" variant="outline">

@@ -385,15 +385,6 @@ export default function TripForm({ formData, setFormData }: any) {
                 )}
               </SelectContent>
             </Select>
-            {/* <Input
-              id="locationZone"
-              value={formData.locationZone}
-              onChange={(e) =>
-                setFormData({ ...formData, locationZone: e.target.value })
-              }
-              placeholder="Enter location zone"
-              className="bg-gray-700 border-gray-600 text-white mt-2"
-            /> */}
           </div>
         </div>
 
