@@ -1,8 +1,7 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { FileText, Plus } from 'lucide-react';
+import { FileText } from 'lucide-react';
 import { PageHeader } from '../../../components/PageHeader';
 import { usePods } from '@/app/(dashboard)/driver/hooks/usePODs';
 import { PodsTable } from '@/app/(dashboard)/driver/(pages)/pods/components/PODsTable';
