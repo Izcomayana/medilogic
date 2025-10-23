@@ -22,6 +22,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { useAuth } from '@/components/auth';
 
 type PodsTableProps = ReturnType<typeof usePods>;
 
@@ -45,6 +46,8 @@ export function PodsTable({
   selectedPod,
   setSelectedPod,
 }: PodsTableProps) {
+  const { role } = useAuth();
+
   return (
     <>
       {dateFilter?.from && (
@@ -170,18 +173,21 @@ export function PodsTable({
                           </Badge>
                         </TableCell>
                         <TableCell>
-                          <div className="flex items-center gap-2">
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => {
-                                setSelectedPod(pod); // ✅ store the pod to delete
-                                setOpen(true); // ✅ open confirmation dialog
-                              }}
-                              className="text-red-500 hover:text-red-600"
-                            >
-                              <Trash2 className="mr-2 h-4 w-4" />
-                            </Button>
+                          <div className="flex items-center">
+                            {role === 'driver' && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => {
+                                  setSelectedPod(pod); // ✅ store the pod to delete
+                                  setOpen(true); // ✅ open confirmation dialog
+                                }}
+                                className="text-red-500 hover:text-red-600"
+                              >
+                                <Trash2 className="mr-2 h-4 w-4" />
+                              </Button>
+                            )}
+
                             <Button
                               variant="outline"
                               size="sm"

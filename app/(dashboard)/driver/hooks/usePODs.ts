@@ -19,6 +19,7 @@ export function usePods() {
   const [dateFilter, setDateFilter] = useState<DateRangeLocal | undefined>(
     undefined
   );
+  const [driverFilter, setDriverFilter] = useState<string | null>(null);
   const [selectedPod, setSelectedPod] = useState<Pod | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
@@ -34,7 +35,6 @@ export function usePods() {
   const [open, setOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  // const driverName = user?.name ?? '';
   const driverID = user?.user_id ?? '';
 
   // Form state for new POD
@@ -45,17 +45,8 @@ export function usePods() {
     signature: '',
     notes: '',
     deliveredTo: '',
-    files: [] as File[] | null, // 👈 array of files
+    files: [] as File[] | null,
   });
-  // const [formData, setFormData] = useState({
-  //   id: '',
-  //   driver_id: driverID,
-  //   tripId: '',
-  //   signature: '',
-  //   notes: '',
-  //   deliveredTo: '',
-  //   files: null as File | null,
-  // });
 
   const fetchDriverTrips = async () => {
     if (!driverID) return;
@@ -148,11 +139,15 @@ export function usePods() {
       setLoadingPods(true);
 
       await authorizedRequest(async (token) => {
-        // build query params based on selected date range
+        // build query params based on selected date range and driver
         const params: Record<string, string> = {};
+
         if (dateFilter?.from)
           params.start_date = formatDateStart(dateFilter.from);
         if (dateFilter?.to) params.end_date = formatDateEnd(dateFilter.to);
+
+        // 🧩 add driver filter if driverID is selected
+        if (driverFilter) params.driver_id = driverFilter;
 
         const res = await api.get('/pods/pods/', {
           headers: { Authorization: `Bearer ${token}` },
@@ -184,7 +179,50 @@ export function usePods() {
   // refetch when date filter or driver changes
   useEffect(() => {
     fetchPods();
-  }, [driverID, dateFilter]);
+  }, [driverFilter, dateFilter]);
+
+  // const fetchPods = async () => {
+  //   try {
+  //     setLoadingPods(true);
+
+  //     await authorizedRequest(async (token) => {
+  //       // build query params based on selected date range
+  //       const params: Record<string, string> = {};
+  //       if (dateFilter?.from)
+  //         params.start_date = formatDateStart(dateFilter.from);
+  //       if (dateFilter?.to) params.end_date = formatDateEnd(dateFilter.to);
+
+  //       const res = await api.get('/pods/pods/', {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //         params,
+  //       });
+
+  //       // normalize the response
+  //       const formattedPods = res.data.map((pod: any) => ({
+  //         id: pod.id,
+  //         tripId: pod.trip_id,
+  //         deliveredTo: pod.delivered_to,
+  //         notes: pod.notes,
+  //         driverId: pod.driver_id,
+  //         createdAt: pod.created_at,
+  //         signature: pod.signature,
+  //         files: pod.files || [],
+  //       }));
+
+  //       setPodsList(formattedPods);
+  //     }, 'Failed to fetch PODs');
+  //   } catch (error) {
+  //     console.error('Error fetching PODs:', error);
+  //     toast.error('Failed to load PODs');
+  //   } finally {
+  //     setLoadingPods(false);
+  //   }
+  // };
+
+  // // refetch when date filter or driver changes
+  // useEffect(() => {
+  //   fetchPods();
+  // }, [driverID, dateFilter]);
 
   const filteredPods = podsList.filter((pod) => {
     // 3) Date range filtering (NEW) — use createdAt (ISO) field:
@@ -407,6 +445,8 @@ export function usePods() {
     setPodsList,
     dateFilter,
     setDateFilter,
+    driverFilter,
+    setDriverFilter,
     selectedPod,
     setSelectedPod,
     isCreateModalOpen,
