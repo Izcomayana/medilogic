@@ -7,7 +7,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Package, Filter } from 'lucide-react';
-import DateRangeFilter from '../../../trips/components/Filters/dateRange';
+import DateRangeFilter from '../../../../../components/DateRange';
 import { useTripAnalytics } from '@/hooks/tripsAnalytics/useTripAnalytics';
 
 type FiltersProps = ReturnType<typeof useTripAnalytics>;

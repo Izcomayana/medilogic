@@ -1,4 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface PodFile {
+  s3_key?: any;
+  id?: string;
   name?: string;
   size?: string;
   url?: string;
@@ -14,15 +17,5 @@ export interface Pod {
   createdAt: string;
   signature: string | null;
   files: PodFile[];
+  type?: string;
 }
-
-// export interface Pod {
-//   id: string;
-//   tripId: string;
-//   deliveredTo: string;
-//   notes: string;
-//   driverId: string;
-//   createdAt: string;
-//   signature: string | null;
-//   files: any[]; // or more specific if your backend defines a structure
-// }

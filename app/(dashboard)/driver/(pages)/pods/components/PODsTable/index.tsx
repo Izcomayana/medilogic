@@ -8,19 +8,26 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { usePods } from '@/app/(dashboard)/driver/hooks/usePODs';
-import { FileText, File, Eye } from 'lucide-react';
+import { FileText, File, Eye, Trash2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 type PodsTableProps = ReturnType<typeof usePods>;
 
 export function PodsTable({
   filteredPods,
-  searchTerm,
   paginatedPods,
-  clientFilter,
-  statusFilter,
   dateFilter,
   formatDate,
   handleViewFiles,
@@ -31,9 +38,21 @@ export function PodsTable({
   setCurrentPage,
   currentPage,
   loadingPods,
+  handleDeletePod,
+  open,
+  setOpen,
+  deleting,
+  selectedPod,
+  setSelectedPod,
 }: PodsTableProps) {
   return (
     <>
+      {dateFilter?.from && (
+        <p className="text-xs text-gray-400">
+          Showing PODs from {dateFilter.from.toLocaleDateString()}
+          {dateFilter.to && ` to ${dateFilter.to.toLocaleDateString()}`}
+        </p>
+      )}
       <Card className="dashboard-card">
         <CardContent className="p-0">
           {/* ✅ Show Skeletons while loading */}
@@ -89,10 +108,7 @@ export function PodsTable({
                 No proofs of delivery yet
               </h3>
               <p className="text-gray-400">
-                {searchTerm ||
-                clientFilter !== 'all' ||
-                statusFilter !== 'all' ||
-                dateFilter !== 'all'
+                {dateFilter
                   ? 'No PODs match your current filters.'
                   : 'Upload a POD after completing your first trip.'}
               </p>
@@ -107,7 +123,6 @@ export function PodsTable({
                       <TableHead className="text-gray-300">
                         Delivered To
                       </TableHead>
-                      <TableHead className="text-gray-300">Notes</TableHead>
                       <TableHead className="text-gray-300">Signature</TableHead>
                       <TableHead className="text-gray-300">
                         Uploaded On
@@ -125,21 +140,9 @@ export function PodsTable({
                         <TableCell className="text-gray-300 font-medium">
                           {pod.deliveredTo || '—'}
                         </TableCell>
-                        <TableCell className="text-gray-400 truncate max-w-xs">
-                          {pod.notes || (
-                            <span className="italic text-gray-500">
-                              No notes
-                            </span>
-                          )}
-                        </TableCell>
                         <TableCell className="text-gray-300">
                           {pod.signature ? (
-                            <div
-                              className="cursor-pointer"
-                              onClick={() =>
-                                window.open(pod.signature, '_blank')
-                              }
-                            >
+                            <div className="cursor-pointer">
                               <img
                                 src={pod.signature}
                                 alt="Signature"
@@ -168,6 +171,17 @@ export function PodsTable({
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => {
+                                setSelectedPod(pod); // ✅ store the pod to delete
+                                setOpen(true); // ✅ open confirmation dialog
+                              }}
+                              className="text-red-500 hover:text-red-600"
+                            >
+                              <Trash2 className="mr-2 h-4 w-4" />
+                            </Button>
                             <Button
                               variant="outline"
                               size="sm"
@@ -201,7 +215,7 @@ export function PodsTable({
                         setCurrentPage(Math.max(1, currentPage - 1))
                       }
                       disabled={currentPage === 1}
-                      className="border-gray-600 text-gray-300 hover:bg-gray-700 disabled:opacity-50"
+                      className="border-gray-600 text-gray-700 hover:text-gray-300 hover:bg-gray-700 disabled:opacity-50"
                     >
                       Previous
                     </Button>
@@ -212,7 +226,7 @@ export function PodsTable({
                         setCurrentPage(Math.min(totalPages, currentPage + 1))
                       }
                       disabled={currentPage === totalPages}
-                      className="border-gray-600 text-gray-300 hover:bg-gray-700 disabled:opacity-50"
+                      className="border-gray-600 text-gray-700 hover:text-gray-300 hover:bg-gray-700 disabled:opacity-50"
                     >
                       Next
                     </Button>
@@ -223,6 +237,36 @@ export function PodsTable({
           )}
         </CardContent>
       </Card>
+
+      <AlertDialog open={open} onOpenChange={setOpen}>
+        <AlertDialogContent className="bg-gray-800 border-gray-700 text-white">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete POD</AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-400">
+              Are you sure you want to delete this POD? This action cannot be
+              undone and will permanently remove all attached files.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              disabled={deleting}
+              className="border-gray-600 text-gray-700 hover:text-gray-300 hover:text-gray-300 hover:bg-gray-700"
+            >
+              Cancel
+            </AlertDialogCancel>
+
+            {/* ✅ FIX HERE: call handleDeletePod with selected pod id */}
+            <AlertDialogAction
+              onClick={() => handleDeletePod(selectedPod?.id || '')}
+              disabled={deleting}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              {deleting ? 'Deleting...' : 'Delete POD'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }
