@@ -23,7 +23,7 @@ import { PieChartIcon, BarChart3, TrendingUp, Filter } from 'lucide-react';
 import { useAuthorizedRequest } from '@/hooks/useRequest';
 import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 import { formatDateStart, formatDateEnd } from '@/utils/datetime';
-import DateRangeFilter from '../trips/components/Filters/dateRange';
+import DateRangeFilter from '../../../components/DateRange';
 
 const COLORS = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6'];
 

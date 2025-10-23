@@ -7,14 +7,18 @@ import { useAuthorizedRequest } from '@/hooks/useRequest';
 import { useProfile } from '@/hooks/useProfile';
 import { api } from '@/lib/api';
 import { Pod, PodFile } from './typePod';
+import {
+  formatDateStart,
+  formatDateEnd,
+  DateRangeLocal,
+} from '@/app/(dashboard)/components/DateRange';
 
 export function usePods() {
   const [loadingPods, setLoadingPods] = useState(false);
   const [podsList, setPodsList] = useState<any[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [clientFilter, setClientFilter] = useState('all');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [dateFilter, setDateFilter] = useState('all');
+  const [dateFilter, setDateFilter] = useState<DateRangeLocal | undefined>(
+    undefined
+  );
   const [selectedPod, setSelectedPod] = useState<Pod | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
@@ -27,6 +31,8 @@ export function usePods() {
   const { user } = useProfile();
   const [driverTrips, setDriverTrips] = useState<any[]>([]);
   const [loadingTrips, setLoadingTrips] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   // const driverName = user?.name ?? '';
   const driverID = user?.user_id ?? '';
@@ -39,30 +45,17 @@ export function usePods() {
     signature: '',
     notes: '',
     deliveredTo: '',
-    files: null as File | null,
+    files: [] as File[] | null, // 👈 array of files
   });
-
-  // Filter PODs
-  const filteredPods = podsList.filter((pod) => {
-    const matchesSearch =
-      pod.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      pod.tripId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      pod.client.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const matchesClient = clientFilter === 'all' || pod.client === clientFilter;
-    const matchesStatus = statusFilter === 'all' || pod.status === statusFilter;
-    const matchesDate =
-      dateFilter === 'all' || pod.deliveryDate.startsWith(dateFilter);
-
-    return matchesSearch && matchesClient && matchesStatus && matchesDate;
-  });
-
-  const totalPages = Math.ceil(filteredPods.length / podsPerPage);
-  const startIndex = (currentPage - 1) * podsPerPage;
-  const paginatedPods = filteredPods.slice(
-    startIndex,
-    startIndex + podsPerPage
-  );
+  // const [formData, setFormData] = useState({
+  //   id: '',
+  //   driver_id: driverID,
+  //   tripId: '',
+  //   signature: '',
+  //   notes: '',
+  //   deliveredTo: '',
+  //   files: null as File | null,
+  // });
 
   const fetchDriverTrips = async () => {
     if (!driverID) return;
@@ -107,16 +100,11 @@ export function usePods() {
         formDataToSend.append('notes', formData.notes || '');
         formDataToSend.append('signature', formData.signature || '');
 
-        if (formData.files) {
-          formDataToSend.append('file', formData.files);
+        if (formData.files && formData.files.length > 0) {
+          formData.files.forEach((file) => {
+            formDataToSend.append('files', file); // 👈 use plural key if your backend expects that
+          });
         }
-
-        const res = await api.post('/pods/pods/upload', formDataToSend, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data',
-          },
-        });
 
         // Reset form
         setFormData({
@@ -126,8 +114,16 @@ export function usePods() {
           signature: '',
           notes: '',
           deliveredTo: '',
-          files: null,
+          files: [],
         });
+
+        const res = await api.post('/pods/pods/upload', formDataToSend, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
         setIsCreateModalOpen(false);
 
         const newPod = res.data;
@@ -143,15 +139,27 @@ export function usePods() {
     await fetchPods();
   };
 
+  const handleOpenCreateModal = () => {
+    setIsCreateModalOpen(true);
+  };
+
   const fetchPods = async () => {
     try {
       setLoadingPods(true);
+
       await authorizedRequest(async (token) => {
+        // build query params based on selected date range
+        const params: Record<string, string> = {};
+        if (dateFilter?.from)
+          params.start_date = formatDateStart(dateFilter.from);
+        if (dateFilter?.to) params.end_date = formatDateEnd(dateFilter.to);
+
         const res = await api.get('/pods/pods/', {
           headers: { Authorization: `Bearer ${token}` },
+          params,
         });
 
-        // Transform the data slightly for display
+        // normalize the response
         const formattedPods = res.data.map((pod: any) => ({
           id: pod.id,
           tripId: pod.trip_id,
@@ -173,9 +181,37 @@ export function usePods() {
     }
   };
 
+  // refetch when date filter or driver changes
   useEffect(() => {
     fetchPods();
-  }, [driverID]);
+  }, [driverID, dateFilter]);
+
+  const filteredPods = podsList.filter((pod) => {
+    // 3) Date range filtering (NEW) — use createdAt (ISO) field:
+    let matchesDate = true;
+    if (dateFilter?.from) {
+      // from start of day
+      const fromDate = new Date(dateFilter.from);
+      fromDate.setHours(0, 0, 0, 0);
+
+      // to end of day (if to not provided, use same day as from)
+      const toDate = new Date(dateFilter.to ?? dateFilter.from);
+      toDate.setHours(23, 59, 59, 999);
+
+      const podDate = new Date(pod.createdAt); // createdAt should be ISO string from backend
+
+      matchesDate = podDate >= fromDate && podDate <= toDate;
+    }
+
+    return matchesDate;
+  });
+
+  const totalPages = Math.ceil(filteredPods.length / podsPerPage);
+  const startIndex = (currentPage - 1) * podsPerPage;
+  const paginatedPods = filteredPods.slice(
+    startIndex,
+    startIndex + podsPerPage
+  );
 
   const fetchPodById = async (podId: string) => {
     if (!podId) return null;
@@ -188,6 +224,23 @@ export function usePods() {
         });
 
         const pod = res.data;
+
+        // Normalize files array to PodFile[]
+        const files: PodFile[] = Array.isArray(pod.files)
+          ? pod.files.map((f: any) => ({
+              id: f.id,
+              s3_key: f.s3_key,
+              name:
+                // prefer explicit filename if provided, otherwise derive from s3_key
+                (f.name as string) ??
+                (f.s3_key
+                  ? f.s3_key.split('/').pop()?.split('?')[0]
+                  : undefined),
+              url: f.url,
+              type: f.file_type ?? undefined,
+            }))
+          : [];
+
         fetchedPod = {
           id: pod.id,
           tripId: pod.trip_id,
@@ -196,7 +249,7 @@ export function usePods() {
           driverId: pod.driver_id,
           createdAt: pod.created_at,
           signature: pod.signature,
-          files: pod.files || [],
+          files,
         };
       }, 'Failed to fetch POD details');
       return fetchedPod;
@@ -258,7 +311,7 @@ export function usePods() {
     setIsFilesModalOpen(true);
   };
 
-  const handleDownloadFile = (file: PodFile) => {
+  const handleOpenFile = (file: PodFile) => {
     if (!file.url) {
       toast.error('File URL not found.');
       return;
@@ -266,6 +319,37 @@ export function usePods() {
 
     window.open(file.url, '_blank'); // opens in new tab
     toast.success(`Opened ${file.name}`);
+  };
+
+  const handleDownloadFile = async (file: PodFile) => {
+    const s3Key = file?.s3_key || file?.url?.split('/pods/')[1]?.split('?')[0];
+    if (!s3Key) return toast.error('File key missing');
+
+    const filename = s3Key.split('/').pop();
+    if (!filename) return toast.error('Invalid file key');
+
+    try {
+      await authorizedRequest(async (token) => {
+        const res = await api.get(
+          `/pods/pods/download/${encodeURIComponent(filename)}`,
+          {
+            responseType: 'arraybuffer',
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        const blob = new Blob([res.data], { type: 'application/pdf' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = file.name ?? filename;
+        link.click();
+        URL.revokeObjectURL(link.href);
+      }, 'Failed to download');
+      toast.success('Download started');
+    } catch (err) {
+      console.error(err);
+      toast.error('Failed to download file');
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -284,38 +368,43 @@ export function usePods() {
     return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
   };
 
-  // const getFileType = (fileName: string) => {
-  //   const ext = fileName.split('.').pop()?.toUpperCase();
-  //   switch (ext) {
-  //     case 'PDF':
-  //       return 'PDF';
-  //     case 'JPG':
-  //     case 'JPEG':
-  //     case 'PNG':
-  //     case 'GIF':
-  //       return 'Image';
-  //     case 'DOC':
-  //     case 'DOCX':
-  //       return 'Document';
-  //     default:
-  //       return 'File';
-  //   }
-  // };
+  const deletePod = async (podId: string) => {
+    console.log('delete pod');
+    if (!podId) {
+      toast.error('Invalid POD ID');
+      return;
+    }
 
-  const handleOpenCreateModal = () => {
-    setIsCreateModalOpen(true);
+    try {
+      await authorizedRequest(async (token) => {
+        await api.delete(`/pods/pods/pods/${podId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      }, 'Failed to delete POD');
+
+      // remove from local state
+      setPodsList((prev) => prev.filter((pod) => pod.id !== podId));
+
+      toast.success('POD deleted successfully');
+    } catch (error: any) {
+      console.error('Error deleting POD:', error);
+      toast.error(
+        error?.response?.data?.detail?.[0]?.msg || 'Failed to delete POD'
+      );
+    }
+  };
+
+  const handleDeletePod = async (podId: string) => {
+    setDeleting(true);
+    await deletePod(podId);
+    setDeleting(false);
+    setOpen(false);
   };
 
   return {
     loadingPods,
     podsList,
     setPodsList,
-    searchTerm,
-    setSearchTerm,
-    clientFilter,
-    setClientFilter,
-    statusFilter,
-    setStatusFilter,
     dateFilter,
     setDateFilter,
     selectedPod,
@@ -330,6 +419,9 @@ export function usePods() {
     setCurrentPage,
     podsPerPage,
     loadingTrips,
+    open,
+    setOpen,
+    deleting,
     driverTrips,
     formData,
     setFormData,
@@ -345,10 +437,13 @@ export function usePods() {
     handleViewDetails,
     podFiles,
     loadingFiles,
+    handleOpenFile,
     handleDownloadFile,
     handleViewFiles,
     formatDate,
     formatFileSize,
     handleOpenCreateModal,
+    deletePod,
+    handleDeletePod,
   };
 }
