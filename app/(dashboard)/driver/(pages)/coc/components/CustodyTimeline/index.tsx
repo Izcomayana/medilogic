@@ -18,7 +18,8 @@ export function CustodyTimeline({ tripEvents }: CustodyTimelineProps) {
         <CardContent>
           <div className="text-center py-12">
             <p className="text-gray-400">
-              No custody events logged yet. Click 'Log Event' to get started.
+              No custody events logged yet. Click{' '}
+              <span className="underline">Log Event</span> to get started.
             </p>
           </div>
         </CardContent>
