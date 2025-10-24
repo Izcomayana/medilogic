@@ -342,6 +342,19 @@ export function ViewPOD({
             <div className="grid grid-cols-1 gap-6">
               <div className="space-y-3">
                 <div>
+                  <Label className="text-gray-400 text-sm">Trip</Label>
+                  <p className="text-white mt-1">
+                    {selectedPod.tripName || '—'}
+                  </p>
+                </div>
+
+                <div>
+                  <Label className="text-gray-400 text-sm">Driver</Label>
+                  <p className="text-white mt-1">
+                    {selectedPod.driverName || '—'}
+                  </p>
+                </div>
+                <div>
                   <Label className="text-gray-400 text-sm">POD ID</Label>
                   <p className="text-white font-medium mt-1">
                     {selectedPod.id}
