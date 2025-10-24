@@ -181,49 +181,6 @@ export function usePods() {
     fetchPods();
   }, [driverFilter, dateFilter]);
 
-  // const fetchPods = async () => {
-  //   try {
-  //     setLoadingPods(true);
-
-  //     await authorizedRequest(async (token) => {
-  //       // build query params based on selected date range
-  //       const params: Record<string, string> = {};
-  //       if (dateFilter?.from)
-  //         params.start_date = formatDateStart(dateFilter.from);
-  //       if (dateFilter?.to) params.end_date = formatDateEnd(dateFilter.to);
-
-  //       const res = await api.get('/pods/pods/', {
-  //         headers: { Authorization: `Bearer ${token}` },
-  //         params,
-  //       });
-
-  //       // normalize the response
-  //       const formattedPods = res.data.map((pod: any) => ({
-  //         id: pod.id,
-  //         tripId: pod.trip_id,
-  //         deliveredTo: pod.delivered_to,
-  //         notes: pod.notes,
-  //         driverId: pod.driver_id,
-  //         createdAt: pod.created_at,
-  //         signature: pod.signature,
-  //         files: pod.files || [],
-  //       }));
-
-  //       setPodsList(formattedPods);
-  //     }, 'Failed to fetch PODs');
-  //   } catch (error) {
-  //     console.error('Error fetching PODs:', error);
-  //     toast.error('Failed to load PODs');
-  //   } finally {
-  //     setLoadingPods(false);
-  //   }
-  // };
-
-  // // refetch when date filter or driver changes
-  // useEffect(() => {
-  //   fetchPods();
-  // }, [driverID, dateFilter]);
-
   const filteredPods = podsList.filter((pod) => {
     // 3) Date range filtering (NEW) — use createdAt (ISO) field:
     let matchesDate = true;
@@ -256,6 +213,7 @@ export function usePods() {
     try {
       setLoadingPods(true);
       let fetchedPod = null;
+
       await authorizedRequest(async (token) => {
         const res = await api.get(`/pods/pods/pods/${podId}`, {
           headers: { Authorization: `Bearer ${token}` },
@@ -263,13 +221,46 @@ export function usePods() {
 
         const pod = res.data;
 
-        // Normalize files array to PodFile[]
+        // fetch the trip details
+        const [tripRes] = await Promise.allSettled([
+          api.get(`/trips/trips/${pod.trip_id}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
+
+        // ✅ Format trip name like in your driverTrips
+        let tripName = 'Unknown Trip';
+        let driverName = 'Unknown Driver';
+
+        if (tripRes.status === 'fulfilled') {
+          const tripData = tripRes.value.data;
+
+          const formattedType =
+            tripData.delivery_type
+              ?.replaceAll('_', ' ')
+              .replace(/\b\w/g, (l: string) => l.toUpperCase()) ||
+            'Unknown Type';
+
+          const formattedTime = tripData.scheduled_time
+            ? new Date(tripData.scheduled_time).toLocaleString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+              })
+            : 'No time set';
+
+          tripName = `${tripData.client_name || 'Unknown Client'} — ${formattedType} — ${formattedTime}`;
+
+          driverName = tripData.driver_name || 'Unknown Driver';
+        }
+
         const files: PodFile[] = Array.isArray(pod.files)
           ? pod.files.map((f: any) => ({
               id: f.id,
               s3_key: f.s3_key,
               name:
-                // prefer explicit filename if provided, otherwise derive from s3_key
                 (f.name as string) ??
                 (f.s3_key
                   ? f.s3_key.split('/').pop()?.split('?')[0]
@@ -288,8 +279,11 @@ export function usePods() {
           createdAt: pod.created_at,
           signature: pod.signature,
           files,
+          tripName,
+          driverName,
         };
       }, 'Failed to fetch POD details');
+
       return fetchedPod;
     } catch (error) {
       console.error('Error fetching single POD:', error);
