@@ -99,16 +99,6 @@ const mockCustodyEvents: CustodyEvent[] = [
     notes: 'Delivered intact, signed by facility manager',
     status: 'completed',
   },
-  {
-    id: 'COC-001',
-    tripId: 'TRIP-003',
-    eventType: 'Pickup',
-    handler: 'John Driver',
-    timestamp: '2025-10-24 10:30',
-    location: 'London Clinic',
-    notes: 'Package sealed and labeled',
-    status: 'completed',
-  },
 ];
 
 /* ───────────────────────────────
