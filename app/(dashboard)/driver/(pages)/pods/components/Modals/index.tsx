@@ -39,6 +39,7 @@ import SignatureCanvas from 'react-signature-canvas';
 import { useRef } from 'react';
 import Image from 'next/image';
 import { PodFile } from '@/app/(dashboard)/driver/hooks/typePod';
+import { useAuth } from '@/components/auth';
 
 type PODialogsProps = ReturnType<typeof usePods>;
 
@@ -321,6 +322,8 @@ export function ViewPOD({
   loadingPods,
   handleDownloadFile,
 }: PODialogsProps) {
+  const { role } = useAuth();
+
   return (
     <Dialog open={isDetailsModalOpen} onOpenChange={setIsDetailsModalOpen}>
       <DialogContent className="bg-gray-800 border-gray-700 text-white lg:max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -341,29 +344,28 @@ export function ViewPOD({
             {/* POD Info Grid */}
             <div className="grid grid-cols-1 gap-6">
               <div className="space-y-3">
-                <div>
-                  <Label className="text-gray-400 text-sm">Trip</Label>
-                  <p className="text-white mt-1">
-                    {selectedPod.tripName || '—'}
-                  </p>
-                </div>
+                {role === 'admin' && (
+                  <>
+                    <div>
+                      <Label className="text-gray-400 text-sm">Trip</Label>
+                      <p className="text-white mt-1">
+                        {selectedPod.tripName || '—'}
+                      </p>
+                    </div>
 
-                <div>
-                  <Label className="text-gray-400 text-sm">Driver</Label>
-                  <p className="text-white mt-1">
-                    {selectedPod.driverName || '—'}
-                  </p>
-                </div>
+                    <div>
+                      <Label className="text-gray-400 text-sm">Driver</Label>
+                      <p className="text-white mt-1">
+                        {selectedPod.driverName || '—'}
+                      </p>
+                    </div>
+                  </>
+                )}
+
                 <div>
                   <Label className="text-gray-400 text-sm">POD ID</Label>
                   <p className="text-white font-medium mt-1">
                     {selectedPod.id}
-                  </p>
-                </div>
-                <div>
-                  <Label className="text-gray-400 text-sm">Trip ID</Label>
-                  <p className="text-white mt-1">
-                    {selectedPod.tripId || null}
                   </p>
                 </div>
                 <div>
