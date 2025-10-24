@@ -59,7 +59,7 @@ export default function ProofOfDeliveriesPage() {
                       setDriverFilter(value === 'all' ? null : value)
                     }
                   >
-                    <SelectTrigger className="bg-gray-700 border-gray-600 text-white mt-2">
+                    <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
                       <SelectValue
                         placeholder={
                           loading ? 'Loading drivers...' : 'Select driver'

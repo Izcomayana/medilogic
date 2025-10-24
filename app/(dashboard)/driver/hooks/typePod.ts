@@ -18,4 +18,6 @@ export interface Pod {
   signature: string | null;
   files: PodFile[];
   type?: string;
+  tripName?: string;
+  driverName?: string;
 }
