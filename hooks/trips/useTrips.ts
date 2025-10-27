@@ -135,12 +135,8 @@ export function useTrips(tripsPerPage = 10) {
     fetchTrips();
   }, [statusFilter, searchTerm, dateRange, currentPage]);
 
-  console.log('DEBUG dateRange on export:', dateRange);
-
   const handleExport = useCallback(
     async (format: 'csv' | 'pdf') => {
-      console.log('DEBUG exporting range:', dateRange);
-
       toast('Preparing your export...');
 
       await authorizedRequest<void>(async (token) => {
@@ -160,8 +156,6 @@ export function useTrips(tripsPerPage = 10) {
               ? { end_date: formatDateEnd(dateRange.from) }
               : {}),
         });
-
-        console.log('FINAL EXPORT URL:', params.toString());
 
         const res = await fetch(
           `https://medilogic-backend.onrender.com/export/trips/export?${params.toString()}`,

@@ -1,7 +1,7 @@
 'use client';
 
 import { Plus, Download, RefreshCw } from 'lucide-react';
-// import { DriverSidebar } from "@/components/driver-sidebar"
+import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
@@ -22,12 +22,12 @@ import { CustodyTimeline } from './components/CustodyTimeline';
 import { CustodyAnalytics } from './components/CustomAnalytics';
 import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 import { useCOC } from '../../hooks/useCoc';
+import { formatDateTime } from '@/utils/datetime';
 
 export default function ChainOfCustodyPage() {
   const cocState = useCOC();
 
   const {
-    mockTrips,
     selectedTrip,
     setShowLogModal,
     setSelectedTrip,
@@ -36,6 +36,9 @@ export default function ChainOfCustodyPage() {
     handleRefresh,
     selectedTripData,
     handleExport,
+    loadingTrips,
+    driverTrips,
+    loadingEvents,
   } = cocState;
 
   return (
@@ -50,25 +53,46 @@ export default function ChainOfCustodyPage() {
           {/* Trip Selection & Actions */}
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
             <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-300 mb-2">
+              <Label className="block text-sm font-medium text-gray-300 mb-2">
                 Select Trip
-              </label>
-              <Select value={selectedTrip} onValueChange={setSelectedTrip}>
-                <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-800 border-gray-700">
-                  {mockTrips.map((trip) => (
-                    <SelectItem
-                      key={trip.id}
-                      value={trip.id}
-                      className="text-white"
-                    >
-                      {trip.id} - {trip.client}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              </Label>
+              <div>
+                <Select value={selectedTrip} onValueChange={setSelectedTrip}>
+                  <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
+                    <SelectValue
+                      placeholder={
+                        loadingTrips ? 'Loading trips...' : 'Select a trip'
+                      }
+                    />
+                  </SelectTrigger>
+
+                  <SelectContent className="bg-gray-800 border-gray-700 text-gray-300">
+                    {loadingTrips && driverTrips.length === 0 ? (
+                      <div className="text-gray-400 text-sm p-2">
+                        Loading trips...
+                      </div>
+                    ) : driverTrips.length > 0 ? (
+                      driverTrips.map((trip) => {
+                        const formattedType =
+                          trip.delivery_type
+                            ?.replaceAll('_', ' ')
+                            .replace(/\b\w/g, (l: string) => l.toUpperCase()) ||
+                          'Unknown Type';
+
+                        return (
+                          <SelectItem key={trip.trip_id} value={trip.trip_id}>
+                            {`${trip.client_name || 'Unknown Client'} — ${formattedType}`}
+                          </SelectItem>
+                        );
+                      })
+                    ) : (
+                      <div className="text-gray-400 text-sm p-2">
+                        No trips assigned yet
+                      </div>
+                    )}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             <div className="flex gap-2 items-end">
@@ -123,29 +147,32 @@ export default function ChainOfCustodyPage() {
           {selectedTripData && (
             <Card className="bg-gray-800 border-gray-700 mb-6">
               <CardContent className="pt-6">
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                  <div>
-                    <p className="text-xs uppercase text-gray-400 font-semibold">
-                      Trip ID
-                    </p>
-                    <p className="text-lg font-bold text-white">
-                      {selectedTripData.id}
-                    </p>
-                  </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div>
                     <p className="text-xs uppercase text-gray-400 font-semibold">
                       Client
                     </p>
-                    <p className="text-lg font-bold text-white">
-                      {selectedTripData.client}
+                    <p className="text-base font-bold text-white">
+                      {selectedTripData.client_name || 'Unknown'}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs uppercase text-gray-400 font-semibold">
+                      Type
+                    </p>
+                    <p className="text-base font-bold text-white">
+                      {selectedTripData.delivery_type
+                        ?.replaceAll('_', ' ')
+                        .replace(/\b\w/g, (l: string) => l.toUpperCase()) ||
+                        'Unknown Type'}
                     </p>
                   </div>
                   <div>
                     <p className="text-xs uppercase text-gray-400 font-semibold">
                       Date
                     </p>
-                    <p className="text-lg font-bold text-white">
-                      {selectedTripData.date}
+                    <p className="text-base font-bold text-white">
+                      {formatDateTime(selectedTripData.scheduled_time)}
                     </p>
                   </div>
                   <div>
@@ -164,12 +191,14 @@ export default function ChainOfCustodyPage() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Timeline Section */}
             <div className="lg:col-span-2">
-              <CustodyTimeline {...cocState} />
+              <CustodyTimeline
+                tripEvents={tripEvents}
+                loadingEvents={loadingEvents}
+              />
             </div>
 
             {/* Analytics Section */}
             <div className="lg:col-span-1">
-              {/* <CustodyAnalytics events={tripEvents} tripId={selectedTrip} /> */}
               <CustodyAnalytics {...cocState} />
             </div>
           </div>
@@ -178,12 +207,6 @@ export default function ChainOfCustodyPage() {
 
       {/* Log Event Modal */}
       <LogCustodyEventModal {...cocState} />
-      {/* <LogCustodyEventModal
-        isOpen={showLogModal}
-        onClose={() => setShowLogModal(false)}
-        onSubmit={handleAddEvent}
-        tripId={selectedTrip}
-      /> */}
     </div>
   );
 }
