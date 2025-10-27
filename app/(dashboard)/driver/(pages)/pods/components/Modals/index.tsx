@@ -40,12 +40,10 @@ import { useRef } from 'react';
 import Image from 'next/image';
 import { PodFile } from '@/app/(dashboard)/driver/hooks/typePod';
 import { useAuth } from '@/components/auth';
+import { formatDateTime } from '@/utils/datetime';
 
 type PODialogsProps = ReturnType<typeof usePods>;
 
-{
-  /* Create POD Modal */
-}
 export function CreatePOD({
   isCreateModalOpen,
   setIsCreateModalOpen,
@@ -110,22 +108,9 @@ export function CreatePOD({
                             .replace(/\b\w/g, (l: string) => l.toUpperCase()) ||
                           'Unknown Type';
 
-                        const formattedTime = trip.scheduled_time
-                          ? new Date(trip.scheduled_time).toLocaleString(
-                              'en-US',
-                              {
-                                month: 'short',
-                                day: 'numeric',
-                                year: 'numeric',
-                                hour: 'numeric',
-                                minute: '2-digit',
-                              }
-                            )
-                          : 'No time set';
-
                         return (
                           <SelectItem key={trip.trip_id} value={trip.trip_id}>
-                            {`${trip.client_name || 'Unknown Client'} — ${formattedType} — ${formattedTime}`}
+                            {`${trip.client_name || 'Unknown Client'} — ${formattedType} — ${formatDateTime(trip.scheduled_time)}`}
                           </SelectItem>
                         );
                       })

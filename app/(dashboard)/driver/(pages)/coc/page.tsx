@@ -36,6 +36,8 @@ export default function ChainOfCustodyPage() {
     handleRefresh,
     selectedTripData,
     handleExport,
+    loadingTrips,
+    driverTrips,
   } = cocState;
 
   return (
@@ -178,12 +180,6 @@ export default function ChainOfCustodyPage() {
 
       {/* Log Event Modal */}
       <LogCustodyEventModal {...cocState} />
-      {/* <LogCustodyEventModal
-        isOpen={showLogModal}
-        onClose={() => setShowLogModal(false)}
-        onSubmit={handleAddEvent}
-        tripId={selectedTrip}
-      /> */}
     </div>
   );
 }
