@@ -42,6 +42,12 @@ export interface CustodyEventFormData {
   witnessName: string;
 }
 
+export interface CustodyAnalyticsPoint {
+  timestamp: string;
+  stage: string;
+  duration?: number; // optional depending on backend
+}
+
 export const eventTypes = [
   'pickup_confirmed',
   'in_transit',
@@ -59,7 +65,12 @@ export function useCOC() {
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user } = useProfile();
-  const { loadingTrips, driverTrips } = usePods();
+  const { loadingTrips, driverTrips, loadingPods } = usePods();
+  const [analyticsData, setAnalyticsData] = useState<CustodyAnalyticsPoint[]>(
+    []
+  );
+  const [loadingAnalytics, setLoadingAnalytics] = useState(false);
+  const [analyticsError, setAnalyticsError] = useState<string | null>(null);
 
   const [formData, setFormData] = useState<CustodyEventFormData>({
     tripId: '',
@@ -114,11 +125,57 @@ export function useCOC() {
     }
   }, []);
 
+  const fetchCustodyAnalytics = useCallback(
+    async (tripId: string) => {
+      if (!tripId) return;
+      setLoadingAnalytics(true);
+      setAnalyticsError(null);
+
+      try {
+        await authorizedRequest(async (token) => {
+          const response = await api.get(`/custody/analytics/${tripId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          const payload = response.data;
+
+          // Check if structure matches what we expect
+          if (
+            !payload ||
+            !Array.isArray(payload.data) ||
+            payload.data.length === 0
+          ) {
+            setAnalyticsData([]);
+            return;
+          }
+
+          const trace = payload.data[0]; // use first Plotly trace
+
+          const formattedData = trace.x.map((timestamp: string, i: number) => ({
+            timestamp,
+            stage: trace.y?.[i] || 'unknown',
+            info: trace.text?.[i] || '',
+          }));
+
+          setAnalyticsData(formattedData);
+        }, 'failed to get analytics');
+      } catch (err: any) {
+        console.error('Error fetching custody analytics:', err);
+        setAnalyticsError(err.message || 'Failed to load analytics');
+        toast.error('Failed to load custody chart');
+      } finally {
+        setLoadingAnalytics(false);
+      }
+    },
+    [authorizedRequest]
+  );
+
   useEffect(() => {
     if (selectedTrip) {
       fetchCustodyEvents(selectedTrip);
+      fetchCustodyAnalytics(selectedTrip);
     }
-  }, [selectedTrip, fetchCustodyEvents]);
+  }, [selectedTrip]);
 
   const handleRefresh = async () => {
     if (!selectedTrip) return;
@@ -128,39 +185,47 @@ export function useCOC() {
   };
 
   const selectedTripData = driverTrips.find((t) => t.trip_id === selectedTrip);
-  console.log(selectedTripData);
 
-  const handleExport = (format: 'csv' | 'pdf') => {
-    const eventsToExport = tripEvents;
-
-    if (format === 'csv') {
-      const csvContent = [
-        ['Stage', 'Handler', 'Timestamp', 'Location', 'Notes'],
-        ...eventsToExport.map((e) => [
-          e.eventType,
-          e.handler,
-          e.timestamp,
-          e.location,
-          e.notes,
-        ]),
-      ]
-        .map((row) => row.map((cell) => `"${cell}"`).join(','))
-        .join('\n');
-
-      const link = document.createElement('a');
-      link.setAttribute(
-        'href',
-        'data:text/csv;charset=utf-8,' + encodeURIComponent(csvContent)
-      );
-      link.setAttribute('download', `custody-${selectedTrip}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } else if (format === 'pdf') {
-      toast('PDF export would be generated here with pdfkit library');
+  const handleExport = async (format: 'csv' | 'pdf') => {
+    if (!selectedTrip) {
+      toast.error('Please select a trip first');
+      return;
     }
 
-    toast.success(`Custody log exported as ${format.toUpperCase()}`);
+    try {
+      toast.loading('Preparing export...', { id: 'export' });
+
+      await authorizedRequest(async (token) => {
+        const response = await api.get(`/custody/export/${selectedTrip}`, {
+          params: { format },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          responseType: 'blob', // Important for downloading files
+        });
+
+        // Create a blob and trigger download
+        const blob = new Blob([response.data], {
+          type: format === 'csv' ? 'text/csv' : 'application/pdf',
+        });
+
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `custody-log-${selectedTrip}.${format}`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      }, 'Failed to export');
+
+      toast.success(`Custody log exported as ${format.toUpperCase()}`, {
+        id: 'export',
+      });
+    } catch (error) {
+      console.error('Export failed:', error);
+      toast.error('Failed to export custody log', { id: 'export' });
+    }
   };
 
   const analytics = useMemo(() => {
@@ -384,6 +449,7 @@ export function useCOC() {
     handleExport,
     eventTypes,
     driverTrips,
+    loadingPods,
     loadingTrips,
     formData,
     setFormData,
@@ -392,5 +458,9 @@ export function useCOC() {
     handleSubmitEvent,
     isLoadingLocation,
     isSubmitting,
+    analyticsData,
+    loadingAnalytics,
+    analyticsError,
+    fetchCustodyAnalytics,
   };
 }
