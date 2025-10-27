@@ -23,6 +23,7 @@ import { CustodyAnalytics } from './components/CustomAnalytics';
 import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 import { useCOC } from '../../hooks/useCoc';
 import { formatDateTime } from '@/utils/datetime';
+import { CustodyTimelineChart } from './components/CustodyChart';
 
 export default function ChainOfCustodyPage() {
   const cocState = useCOC();
@@ -36,16 +37,19 @@ export default function ChainOfCustodyPage() {
     handleRefresh,
     selectedTripData,
     handleExport,
-    loadingTrips,
+    loadingPods,
     driverTrips,
     loadingEvents,
+    loadingAnalytics,
+    analyticsData,
+    analyticsError,
   } = cocState;
 
   return (
     <div className="flex flex-col h-screen bg-gray-900">
       <PageHeader
         title="Chain of Custody"
-        subtitle="Create, view, and manage your delivery proofs"
+        subtitle="Track and log custody transfers for your deliveries."
       />
 
       <main className="flex-1 overflow-auto">
@@ -61,13 +65,13 @@ export default function ChainOfCustodyPage() {
                   <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
                     <SelectValue
                       placeholder={
-                        loadingTrips ? 'Loading trips...' : 'Select a trip'
+                        loadingPods ? 'Loading trips...' : 'Select a trip'
                       }
                     />
                   </SelectTrigger>
 
                   <SelectContent className="bg-gray-800 border-gray-700 text-gray-300">
-                    {loadingTrips && driverTrips.length === 0 ? (
+                    {loadingPods && driverTrips.length === 0 ? (
                       <div className="text-gray-400 text-sm p-2">
                         Loading trips...
                       </div>
@@ -188,7 +192,7 @@ export default function ChainOfCustodyPage() {
             </Card>
           )}
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="flex flex-col gap-6">
             {/* Timeline Section */}
             <div className="lg:col-span-2">
               <CustodyTimeline
@@ -197,6 +201,11 @@ export default function ChainOfCustodyPage() {
               />
             </div>
 
+            <CustodyTimelineChart
+              data={analyticsData}
+              loading={loadingAnalytics}
+              error={analyticsError}
+            />
             {/* Analytics Section */}
             <div className="lg:col-span-1">
               <CustodyAnalytics {...cocState} />
