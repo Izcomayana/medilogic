@@ -24,7 +24,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 // import { formatDateTime } from '@/hooks/utils';
-import { getStatusBadge } from '../../badge';
+import { getTripStatusBadge } from '../../../../../../../utils/badge';
 import { formatDateTime } from '@/utils/datetime';
 
 type TripsDetailsProps = ReturnType<typeof useTrips>;
@@ -224,7 +224,7 @@ export function TripsDetailModal({
                     key={index}
                     className="flex flex-col gap-3 p-3 bg-gray-800 rounded-lg border border-gray-700"
                   >
-                    {getStatusBadge(entry.status)}
+                    {getTripStatusBadge(entry.status)}
                     <div className="flex flex-col gap-3">
                       <p className="text-white text-sm">{entry.note}</p>
                       <p className="text-gray-400 text-xs">

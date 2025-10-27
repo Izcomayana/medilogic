@@ -15,7 +15,7 @@ import { useAuthorizedRequest } from '@/hooks/useRequest';
 import axios from 'axios';
 import { PageHeader } from '../components/PageHeader';
 import { Button } from '@/components/ui/button';
-import { getStatusBadge } from './(pages)/trips/badge';
+import { getTripStatusBadge } from '../../../utils/badge';
 import Link from 'next/link';
 
 // Skeleton component for dashboard cards
@@ -398,7 +398,7 @@ export const AdminDashboard = () => {
                       <div className="mt-3 sm:mt-0 flex flex-col items-start sm:items-end">
                         {/* Status Badge */}
                         <span className="text-xs px-2 py-1 rounded-full font-medium">
-                          {getStatusBadge(trip.status || 'Unknown')}
+                          {getTripStatusBadge(trip.status || 'Unknown')}
                         </span>
 
                         {/* Time */}

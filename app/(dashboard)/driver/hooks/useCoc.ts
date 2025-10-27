@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { toast } from 'sonner';
 import { useAuthorizedRequest } from '@/hooks/useRequest';
 import { api } from '@/lib/api';
@@ -36,7 +36,7 @@ export interface CustodyEventFormData {
   location: string;
   notes: string;
   files?: File[];
-  signatureImage?: File | null; // 🧩 for uploading signature image
+  signatureImage?: File | null;
   signedBy: string;
   witnessName: string;
 }
@@ -49,70 +49,11 @@ export const eventTypes = [
   'delivered',
 ];
 
-const mockTrips: Trip[] = [
-  { id: 'TRIP-001', client: 'Acme Corp', date: '2025-10-24' },
-  { id: 'TRIP-002', client: 'Tech Solutions Ltd', date: '2025-10-24' },
-  { id: 'TRIP-003', client: 'Green Waste Co', date: '2025-10-23' },
-];
-
-const mockCustodyEvents: CustodyEvent[] = [
-  {
-    id: 'COC-001',
-    tripId: 'TRIP-001',
-    eventType: 'Pickup',
-    handler: 'John Driver',
-    timestamp: '2025-10-24 10:30',
-    location: 'London Clinic',
-    notes: 'Package sealed and labeled',
-    status: 'completed',
-  },
-  {
-    id: 'COC-002',
-    tripId: 'TRIP-001',
-    eventType: 'Transit',
-    handler: 'John Driver',
-    timestamp: '2025-10-24 11:00',
-    location: 'En route to disposal',
-    notes: 'In good condition, temperature maintained',
-    status: 'completed',
-  },
-  {
-    id: 'COC-003',
-    tripId: 'TRIP-001',
-    eventType: 'Drop-off',
-    handler: 'Waste Facility Staff',
-    timestamp: '2025-10-24 12:15',
-    location: "King's Disposal Center",
-    notes: 'Delivered intact, signed by facility manager',
-    status: 'completed',
-  },
-  {
-    id: 'COC-002',
-    tripId: 'TRIP-002',
-    eventType: 'Transit',
-    handler: 'John Driver',
-    timestamp: '2025-10-24 11:00',
-    location: 'En route to disposal',
-    notes: 'In good condition, temperature maintained',
-    status: 'completed',
-  },
-  {
-    id: 'COC-003',
-    tripId: 'TRIP-002',
-    eventType: 'Drop-off',
-    handler: 'Waste Facility Staff',
-    timestamp: '2025-10-24 12:15',
-    location: "King's Disposal Center",
-    notes: 'Delivered intact, signed by facility manager',
-    status: 'completed',
-  },
-];
-
 export function useCOC() {
-  const [selectedTrip, setSelectedTrip] = useState<string>('TRIP-001');
+  const [loadingEvents, setLoadingEvents] = useState(false);
   const [showLogModal, setShowLogModal] = useState(false);
-  const [custodyEvents, setCustodyEvents] =
-    useState<CustodyEvent[]>(mockCustodyEvents);
+  const [custodyEvents, setCustodyEvents] = useState<CustodyEvent[]>([]);
+  const [selectedTrip, setSelectedTrip] = useState<string>('');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -133,29 +74,60 @@ export function useCOC() {
 
   const authorizedRequest = useAuthorizedRequest();
 
-  const selectedTripData = mockTrips.find((t) => t.id === selectedTrip);
   const tripEvents = custodyEvents.filter((e) => e.tripId === selectedTrip);
 
-  const handleAddEvent = (
-    eventData: Omit<CustodyEvent, 'id' | 'tripId' | 'status'>
-  ) => {
-    const newEvent: CustodyEvent = {
-      id: `COC-${String(custodyEvents.length + 1).padStart(3, '0')}`,
-      tripId: selectedTrip,
-      ...eventData,
-      status: 'completed',
-    };
-    setCustodyEvents((prev) => [...prev, newEvent]);
-    setShowLogModal(false);
-    toast.success('Custody event logged successfully');
-  };
+  const fetchCustodyEvents = useCallback(async (tripId: string) => {
+    if (!tripId) return;
+    setLoadingEvents(true);
+    console.log(loadingEvents);
+    try {
+      await authorizedRequest(async (token) => {
+        const response = await api.get(`/custody/${tripId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setCustodyEvents(
+          (response.data || []).map((e: any) => ({
+            id: e.id,
+            tripId: e.trip_id,
+            eventType: e.event_type,
+            signedBy: e.signed_by,
+            timestamp: e.timestamp,
+            location: e.location,
+            notes: e.notes,
+            witnessName: e.witness_name,
+            attachmentUrl: e.attachment_urls,
+            signatureImageUrl: e.signature_image_url,
+            status:
+              e.event_type === 'dropoff_confirmed'
+                ? 'completed'
+                : 'in-progress',
+          }))
+        );
+      }, 'Failed to fetch custody events');
+    } catch (err) {
+      console.error('Error fetching custody events:', err);
+      toast.error('Failed to load custody events');
+    } finally {
+      setLoadingEvents(false);
+      console.log(loadingEvents);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (selectedTrip) {
+      fetchCustodyEvents(selectedTrip);
+    }
+  }, [selectedTrip, fetchCustodyEvents]);
 
   const handleRefresh = async () => {
+    if (!selectedTrip) return;
     setIsRefreshing(true);
-    await new Promise((r) => setTimeout(r, 1000));
+    await fetchCustodyEvents(selectedTrip);
     setIsRefreshing(false);
-    toast('Timeline updated with latest events');
   };
+
+  const selectedTripData = driverTrips.find((t) => t.trip_id === selectedTrip);
+  console.log(selectedTripData);
 
   const handleExport = (format: 'csv' | 'pdf') => {
     const eventsToExport = tripEvents;
@@ -397,17 +369,16 @@ export function useCOC() {
   };
 
   return {
-    mockTrips,
+    loadingEvents,
     custodyEvents,
+    tripEvents: custodyEvents,
     selectedTrip,
     setSelectedTrip,
     showLogModal,
     setShowLogModal,
     isRefreshing,
     selectedTripData,
-    tripEvents,
     analytics,
-    handleAddEvent,
     handleRefresh,
     handleExport,
     eventTypes,
