@@ -1,11 +1,19 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import { toast } from 'sonner';
+import { useAuthorizedRequest } from '@/hooks/useRequest';
+import { api } from '@/lib/api';
+import { usePods } from './usePODs';
+import { useProfile } from '@/hooks/useProfile';
 
-/* ───────────────────────────────
-   🔹 Interfaces / Types
-──────────────────────────────── */
+export interface Trip {
+  id: string;
+  client: string;
+  date: string;
+}
+
 export interface CustodyEvent {
   id: string;
   tripId: string;
@@ -15,179 +23,211 @@ export interface CustodyEvent {
   location: string;
   notes: string;
   status: string;
-}
-
-export interface Trip {
-  id: string;
-  client: string;
-  date: string;
+  attachmentUrl?: string[];
+  signatureImageUrl?: string;
+  signatureTimestamp?: string;
+  signedBy?: string;
+  witnessName?: string;
 }
 
 export interface CustodyEventFormData {
+  tripId: string;
   eventType: string;
   timestamp: string;
   location: string;
   notes: string;
+  files?: File[];
+  signatureImage?: File | null;
+  signedBy: string;
+  witnessName: string;
 }
 
-const eventTypes = [
-  'Pickup',
-  'Transit',
-  'Drop-off',
-  'Handover',
-  'Storage',
-  'Return',
+export interface CustodyAnalyticsPoint {
+  timestamp: string;
+  stage: string;
+  duration?: number; // optional depending on backend
+}
+
+export const eventTypes = [
+  'pickup_confirmed',
+  'in_transit',
+  'delayed',
+  'handed_off',
+  'delivered',
 ];
 
-/* ───────────────────────────────
-   🔹 Mock Data
-──────────────────────────────── */
-const mockTrips: Trip[] = [
-  { id: 'TRIP-001', client: 'Acme Corp', date: '2025-10-24' },
-  { id: 'TRIP-002', client: 'Tech Solutions Ltd', date: '2025-10-24' },
-  { id: 'TRIP-003', client: 'Green Waste Co', date: '2025-10-23' },
-];
-
-const mockCustodyEvents: CustodyEvent[] = [
-  {
-    id: 'COC-001',
-    tripId: 'TRIP-001',
-    eventType: 'Pickup',
-    handler: 'John Driver',
-    timestamp: '2025-10-24 10:30',
-    location: 'London Clinic',
-    notes: 'Package sealed and labeled',
-    status: 'completed',
-  },
-  {
-    id: 'COC-002',
-    tripId: 'TRIP-001',
-    eventType: 'Transit',
-    handler: 'John Driver',
-    timestamp: '2025-10-24 11:00',
-    location: 'En route to disposal',
-    notes: 'In good condition, temperature maintained',
-    status: 'completed',
-  },
-  {
-    id: 'COC-003',
-    tripId: 'TRIP-001',
-    eventType: 'Drop-off',
-    handler: 'Waste Facility Staff',
-    timestamp: '2025-10-24 12:15',
-    location: "King's Disposal Center",
-    notes: 'Delivered intact, signed by facility manager',
-    status: 'completed',
-  },
-  {
-    id: 'COC-002',
-    tripId: 'TRIP-002',
-    eventType: 'Transit',
-    handler: 'John Driver',
-    timestamp: '2025-10-24 11:00',
-    location: 'En route to disposal',
-    notes: 'In good condition, temperature maintained',
-    status: 'completed',
-  },
-  {
-    id: 'COC-003',
-    tripId: 'TRIP-002',
-    eventType: 'Drop-off',
-    handler: 'Waste Facility Staff',
-    timestamp: '2025-10-24 12:15',
-    location: "King's Disposal Center",
-    notes: 'Delivered intact, signed by facility manager',
-    status: 'completed',
-  },
-];
-
-/* ───────────────────────────────
-   🔹 Hook Definition
-──────────────────────────────── */
 export function useCOC() {
-  const [selectedTrip, setSelectedTrip] = useState<string>('TRIP-001');
+  const [loadingEvents, setLoadingEvents] = useState(false);
   const [showLogModal, setShowLogModal] = useState(false);
-  const [custodyEvents, setCustodyEvents] =
-    useState<CustodyEvent[]>(mockCustodyEvents);
+  const [custodyEvents, setCustodyEvents] = useState<CustodyEvent[]>([]);
+  const [selectedTrip, setSelectedTrip] = useState<string>('');
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { user } = useProfile();
+  const { loadingTrips, driverTrips, loadingPods } = usePods();
+  const [analyticsData, setAnalyticsData] = useState<CustodyAnalyticsPoint[]>(
+    []
+  );
+  const [loadingAnalytics, setLoadingAnalytics] = useState(false);
+  const [analyticsError, setAnalyticsError] = useState<string | null>(null);
+
   const [formData, setFormData] = useState<CustodyEventFormData>({
-    eventType: 'Pickup',
+    tripId: '',
+    eventType: 'pickup_confirmed',
     timestamp: new Date().toISOString().slice(0, 16),
     location: '',
     notes: '',
+    files: [],
+    signatureImage: null,
+    signedBy: '',
+    witnessName: '',
   });
 
-  const selectedTripData = mockTrips.find((t) => t.id === selectedTrip);
+  const authorizedRequest = useAuthorizedRequest();
+
   const tripEvents = custodyEvents.filter((e) => e.tripId === selectedTrip);
 
-  /* ────────────────
-     Add Event
-  ───────────────── */
-  const handleAddEvent = (
-    eventData: Omit<CustodyEvent, 'id' | 'tripId' | 'status'>
-  ) => {
-    const newEvent: CustodyEvent = {
-      id: `COC-${String(custodyEvents.length + 1).padStart(3, '0')}`,
-      tripId: selectedTrip,
-      ...eventData,
-      status: 'completed',
-    };
-    setCustodyEvents((prev) => [...prev, newEvent]);
-    setShowLogModal(false);
-    toast.success('Custody event logged successfully');
-  };
+  const fetchCustodyEvents = useCallback(async (tripId: string) => {
+    if (!tripId) return;
+    setLoadingEvents(true);
+    console.log(loadingEvents);
+    try {
+      await authorizedRequest(async (token) => {
+        const response = await api.get(`/custody/${tripId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setCustodyEvents(
+          (response.data || []).map((e: any) => ({
+            id: e.id,
+            tripId: e.trip_id,
+            eventType: e.event_type,
+            signedBy: e.signed_by,
+            timestamp: e.timestamp,
+            location: e.location,
+            notes: e.notes,
+            witnessName: e.witness_name,
+            attachmentUrl: e.attachment_urls,
+            signatureImageUrl: e.signature_image_url,
+            status:
+              e.event_type === 'dropoff_confirmed'
+                ? 'completed'
+                : 'in-progress',
+          }))
+        );
+      }, 'Failed to fetch custody events');
+    } catch (err) {
+      console.error('Error fetching custody events:', err);
+      toast.error('Failed to load custody events');
+    } finally {
+      setLoadingEvents(false);
+      console.log(loadingEvents);
+    }
+  }, []);
 
-  /* ────────────────
-     Refresh
-  ───────────────── */
+  const fetchCustodyAnalytics = useCallback(
+    async (tripId: string) => {
+      if (!tripId) return;
+      setLoadingAnalytics(true);
+      setAnalyticsError(null);
+
+      try {
+        await authorizedRequest(async (token) => {
+          const response = await api.get(`/custody/analytics/${tripId}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          const payload = response.data;
+
+          // Check if structure matches what we expect
+          if (
+            !payload ||
+            !Array.isArray(payload.data) ||
+            payload.data.length === 0
+          ) {
+            setAnalyticsData([]);
+            return;
+          }
+
+          const trace = payload.data[0]; // use first Plotly trace
+
+          const formattedData = trace.x.map((timestamp: string, i: number) => ({
+            timestamp,
+            stage: trace.y?.[i] || 'unknown',
+            info: trace.text?.[i] || '',
+          }));
+
+          setAnalyticsData(formattedData);
+        }, 'failed to get analytics');
+      } catch (err: any) {
+        console.error('Error fetching custody analytics:', err);
+        setAnalyticsError(err.message || 'Failed to load analytics');
+        toast.error('Failed to load custody chart');
+      } finally {
+        setLoadingAnalytics(false);
+      }
+    },
+    [authorizedRequest]
+  );
+
+  useEffect(() => {
+    if (selectedTrip) {
+      fetchCustodyEvents(selectedTrip);
+      fetchCustodyAnalytics(selectedTrip);
+    }
+  }, [selectedTrip]);
+
   const handleRefresh = async () => {
+    if (!selectedTrip) return;
     setIsRefreshing(true);
-    await new Promise((r) => setTimeout(r, 1000));
+    await fetchCustodyEvents(selectedTrip);
     setIsRefreshing(false);
-    toast('Timeline updated with latest events');
   };
 
-  /* ────────────────
-     Export
-  ───────────────── */
-  const handleExport = (format: 'csv' | 'pdf') => {
-    const eventsToExport = tripEvents;
+  const selectedTripData = driverTrips.find((t) => t.trip_id === selectedTrip);
 
-    if (format === 'csv') {
-      const csvContent = [
-        ['Stage', 'Handler', 'Timestamp', 'Location', 'Notes'],
-        ...eventsToExport.map((e) => [
-          e.eventType,
-          e.handler,
-          e.timestamp,
-          e.location,
-          e.notes,
-        ]),
-      ]
-        .map((row) => row.map((cell) => `"${cell}"`).join(','))
-        .join('\n');
-
-      const link = document.createElement('a');
-      link.setAttribute(
-        'href',
-        'data:text/csv;charset=utf-8,' + encodeURIComponent(csvContent)
-      );
-      link.setAttribute('download', `custody-${selectedTrip}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } else if (format === 'pdf') {
-      toast('PDF export would be generated here with pdfkit library');
+  const handleExport = async (format: 'csv' | 'pdf') => {
+    if (!selectedTrip) {
+      toast.error('Please select a trip first');
+      return;
     }
 
-    toast.success(`Custody log exported as ${format.toUpperCase()}`);
+    try {
+      toast.loading('Preparing export...', { id: 'export' });
+
+      await authorizedRequest(async (token) => {
+        const response = await api.get(`/custody/export/${selectedTrip}`, {
+          params: { format },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          responseType: 'blob', // Important for downloading files
+        });
+
+        // Create a blob and trigger download
+        const blob = new Blob([response.data], {
+          type: format === 'csv' ? 'text/csv' : 'application/pdf',
+        });
+
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `custody-log-${selectedTrip}.${format}`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      }, 'Failed to export');
+
+      toast.success(`Custody log exported as ${format.toUpperCase()}`, {
+        id: 'export',
+      });
+    } catch (error) {
+      console.error('Export failed:', error);
+      toast.error('Failed to export custody log', { id: 'export' });
+    }
   };
 
-  /* ────────────────
-     Analytics
-  ───────────────── */
   const analytics = useMemo(() => {
     if (!tripEvents.length) {
       return {
@@ -249,34 +289,46 @@ export function useCOC() {
 
   const handleGetLocation = async () => {
     setIsLoadingLocation(true);
-    try {
-      if ('geolocation' in navigator) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            setFormData((prev) => ({
-              ...prev,
-              location: `${latitude.toFixed(4)}, ${longitude.toFixed(4)}`,
-            }));
-            setIsLoadingLocation(false);
-          },
-          () => {
-            setIsLoadingLocation(false);
-            setFormData((prev) => ({
-              ...prev,
-              location: 'Location access denied',
-            }));
-          }
-        );
-      }
-    } catch {
+    if (!navigator.geolocation) {
+      toast.error('Geolocation not supported');
       setIsLoadingLocation(false);
+      return;
     }
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        setFormData((prev) => ({
+          ...prev,
+          location: `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`,
+        }));
+        toast.success('Location captured');
+        setIsLoadingLocation(false);
+      },
+      () => {
+        toast.error('Failed to fetch location');
+        setIsLoadingLocation(false);
+      }
+    );
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
   };
 
   const handleSubmitEvent = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+
+    if (!formData.tripId) {
+      toast.error('Please select a trip');
+      setIsSubmitting(false);
+      return;
+    }
 
     if (!formData.location.trim()) {
       toast.error('Please enter or fetch location');
@@ -284,47 +336,131 @@ export function useCOC() {
       return;
     }
 
-    const submitData = {
-      eventType: formData.eventType,
-      handler: 'John Driver',
-      timestamp: new Date(formData.timestamp).toLocaleString(),
-      location: formData.location,
-      notes: formData.notes,
-    };
+    try {
+      await authorizedRequest(async (token) => {
+        let signatureImageUrl = '';
 
-    handleAddEvent(submitData);
-    setIsSubmitting(false);
-    setShowLogModal(false);
+        // 🖋️ Step 1: If there's a signature image, upload it to S3 using presigned URL
+        if (formData.signatureImage) {
+          try {
+            // Detect the file extension (default to png if not found)
+            const ext =
+              formData.signatureImage.name.split('.').pop()?.toLowerCase() ||
+              'png';
 
-    // Reset form
-    setFormData({
-      eventType: 'Pickup',
-      timestamp: new Date().toISOString().slice(0, 16),
-      location: '',
-      notes: '',
-    });
+            // Ask backend for upload URL with correct extension
+            const { data: uploadInfo } = await api.get(
+              `/custody/upload/signature-url?file_ext=${ext}`,
+              {
+                headers: { Authorization: `Bearer ${token}` },
+              }
+            );
+
+            // Upload the image file directly to S3
+            await fetch(uploadInfo.upload_url, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': formData.signatureImage.type || 'image/png',
+              },
+              body: formData.signatureImage,
+            });
+
+            // Save the final file URL for later use
+            signatureImageUrl = uploadInfo.file_url;
+          } catch (uploadErr) {
+            console.error('Signature upload failed:', uploadErr);
+            toast.error('Failed to upload signature image');
+            setIsSubmitting(false);
+            return;
+          }
+        }
+
+        // 🧩 Step 2: Build the custody event form data
+        const fd = new FormData();
+
+        fd.append(
+          'event',
+          JSON.stringify({
+            trip_id: formData.tripId,
+            driver_id: user?.user_id,
+            event_type: formData.eventType.toLowerCase(),
+            timestamp: new Date(formData.timestamp).toISOString(),
+            location: formData.location,
+            notes: formData.notes,
+            organization_id: user?.organization.id,
+            signature_timestamp: new Date().toISOString(),
+            signed_by: formData.signedBy,
+            witness_name: formData.witnessName,
+            signature_image_url: signatureImageUrl || null, // ✅ Now valid URL string
+          })
+        );
+
+        // 📎 Step 3: Append additional file uploads (if any)
+        if (formData.files && formData.files.length > 0) {
+          formData.files.forEach((file) => {
+            fd.append('files', file);
+          });
+        }
+
+        // 🚀 Step 4: Submit the custody event
+        await api.post('/custody/', fd, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
+        toast.success('Custody event logged successfully ✅');
+        setShowLogModal(false);
+
+        // Reset form after submission
+        setFormData({
+          tripId: '',
+          eventType: 'pickup_confirmed',
+          timestamp: new Date().toISOString().slice(0, 16),
+          location: '',
+          notes: '',
+          files: [],
+          signatureImage: null,
+          signedBy: '',
+          witnessName: '',
+        });
+      }, 'Failed to log custody event');
+    } catch (error) {
+      console.error('Error logging custody event:', error);
+      toast.error('Failed to log custody event');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return {
-    mockTrips,
+    loadingEvents,
     custodyEvents,
+    tripEvents: custodyEvents,
     selectedTrip,
     setSelectedTrip,
     showLogModal,
     setShowLogModal,
     isRefreshing,
     selectedTripData,
-    tripEvents,
-    analytics, // ✅ available to CustodyAnalytics
-    handleAddEvent,
+    analytics,
     handleRefresh,
     handleExport,
     eventTypes,
+    driverTrips,
+    loadingPods,
+    loadingTrips,
     formData,
     setFormData,
     handleGetLocation,
+    formatFileSize,
     handleSubmitEvent,
     isLoadingLocation,
     isSubmitting,
+    analyticsData,
+    loadingAnalytics,
+    analyticsError,
+    fetchCustodyAnalytics,
   };
 }

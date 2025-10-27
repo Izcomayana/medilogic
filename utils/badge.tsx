@@ -3,7 +3,7 @@ import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, Loader, AlertCircle, XCircle } from 'lucide-react';
 
-export function getStatusBadge(status: string | null) {
+export function getTripStatusBadge(status: string | null) {
   switch (status?.toLowerCase()) {
     case 'completed':
       return (

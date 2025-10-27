@@ -121,9 +121,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   //   }
   // };
 
-  useEffect(() => {
-    console.log('AuthProvider mounted');
-  }, []);
+  // useEffect(() => {
+  //   console.log('AuthProvider mounted');
+  // }, []);
 
   if (loading) return null;
 

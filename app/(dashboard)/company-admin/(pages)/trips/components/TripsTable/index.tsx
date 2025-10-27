@@ -31,7 +31,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 import { TripsTableSkeleton } from './tripSkeleton';
-import { getStatusBadge } from '../../badge';
+import { getTripStatusBadge } from '../../../../../../../utils/badge';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -167,7 +167,7 @@ export function TripsTable({
                             {trip.dateTime}
                           </div>
                         </TableCell>
-                        <TableCell>{getStatusBadge(trip.status)}</TableCell>
+                        <TableCell>{getTripStatusBadge(trip.status)}</TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
                             <DropdownMenu>
