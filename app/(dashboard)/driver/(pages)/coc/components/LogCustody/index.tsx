@@ -244,7 +244,9 @@ export function LogCustodyEventModal({
             {/* File Upload */}
             <div>
               <Label className="text-gray-300 text-sm mb-2">Attachments</Label>
+
               <div className="relative border-2 border-dashed border-gray-600 rounded-lg p-6 text-center bg-gray-700/50 hover:bg-gray-700 transition">
+                {/* The actual file input */}
                 <input
                   type="file"
                   multiple
@@ -264,10 +266,12 @@ export function LogCustodyEventModal({
                       };
                     });
                   }}
-                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  className="absolute inset-0 opacity-0 cursor-pointer z-10"
                 />
-                <div>
+
+                <div className="relative z-0 pointer-events-none">
                   <FileUp className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+
                   {formData.files && formData.files.length > 0 ? (
                     <div className="space-y-1">
                       {formData.files.map((file, i) => (
@@ -289,19 +293,20 @@ export function LogCustodyEventModal({
                       </p>
                     </>
                   )}
-
-                  {formData.files && formData.files.length > 0 && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setFormData({ ...formData, files: [] })}
-                      className="mt-3 text-gray-700"
-                    >
-                      Clear files
-                    </Button>
-                  )}
                 </div>
               </div>
+
+              {/* Move Clear Button OUTSIDE so it's clickable */}
+              {formData.files && formData.files.length > 0 && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setFormData({ ...formData, files: [] })}
+                  className="mt-3 text-gray-700 border-gray-600 hover:text-white hover:bg-gray-700"
+                >
+                  Clear files
+                </Button>
+              )}
             </div>
           </div>
           {/* Footer stays sticky below */}
