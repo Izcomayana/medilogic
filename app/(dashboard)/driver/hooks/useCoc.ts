@@ -196,37 +196,108 @@ export function useCOC() {
       toast.loading('Preparing export...', { id: 'export' });
 
       await authorizedRequest(async (token) => {
-        const response = await api.get(`/custody/export/${selectedTrip}`, {
-          params: { format },
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          responseType: 'blob', // Important for downloading files
-        });
+        try {
+          const response = await api.get(`/custody/export/${selectedTrip}`, {
+            params: { format },
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            responseType: 'blob',
+            validateStatus: () => true, // ✅ let us handle non-200 responses manually
+          });
 
-        // Create a blob and trigger download
-        const blob = new Blob([response.data], {
-          type: format === 'csv' ? 'text/csv' : 'application/pdf',
-        });
+          if (response.status === 404) {
+            // Try to read error detail from backend (it might be JSON inside the blob)
+            const errorText = await response.data.text?.();
+            let errorMessage = 'No custody events found for this trip';
 
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `custody-log-${selectedTrip}.${format}`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      }, 'Failed to export');
+            try {
+              const json = JSON.parse(errorText);
+              errorMessage = json.detail || errorMessage;
+            } catch {
+              // ignore JSON parse error, fallback to default
+            }
 
-      toast.success(`Custody log exported as ${format.toUpperCase()}`, {
-        id: 'export',
-      });
+            toast.error(errorMessage, { id: 'export' });
+            throw new Error(errorMessage);
+          }
+
+          if (response.status !== 200) {
+            toast.error('Failed to export custody log', { id: 'export' });
+            throw new Error(`Unexpected status: ${response.status}`);
+          }
+
+          // ✅ If success, download blob
+          const blob = new Blob([response.data], {
+            type: format === 'csv' ? 'text/csv' : 'application/pdf',
+          });
+
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `custody-log-${selectedTrip}.${format}`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+
+          toast.success(`Custody log exported as ${format.toUpperCase()}`, {
+            id: 'export',
+          });
+        } catch (err: any) {
+          console.error('Export request failed:', err);
+          if (!err.message.includes('No custody events')) {
+            toast.error('Failed to export custody log', { id: 'export' });
+          }
+          throw err; // rethrow to outer catch
+        }
+      }, 'faile to export');
     } catch (error) {
       console.error('Export failed:', error);
-      toast.error('Failed to export custody log', { id: 'export' });
     }
   };
+
+  // const handleExport = async (format: 'csv' | 'pdf') => {
+  //   if (!selectedTrip) {
+  //     toast.error('Please select a trip first');
+  //     return;
+  //   }
+
+  //   try {
+  //     toast.loading('Preparing export...', { id: 'export' });
+
+  //     await authorizedRequest(async (token) => {
+  //       const response = await api.get(`/custody/export/${selectedTrip}`, {
+  //         params: { format },
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //         responseType: 'blob', // Important for downloading files
+  //       });
+
+  //       // Create a blob and trigger download
+  //       const blob = new Blob([response.data], {
+  //         type: format === 'csv' ? 'text/csv' : 'application/pdf',
+  //       });
+
+  //       const url = window.URL.createObjectURL(blob);
+  //       const link = document.createElement('a');
+  //       link.href = url;
+  //       link.download = `custody-log-${selectedTrip}.${format}`;
+  //       document.body.appendChild(link);
+  //       link.click();
+  //       document.body.removeChild(link);
+  //       window.URL.revokeObjectURL(url);
+  //     }, 'Failed to export');
+
+  //     toast.success(`Custody log exported as ${format.toUpperCase()}`, {
+  //       id: 'export',
+  //     });
+  //   } catch (error) {
+  //     console.error('Export failed:', error);
+  //     toast.error('Failed to export custody log', { id: 'export' });
+  //   }
+  // };
 
   const analytics = useMemo(() => {
     if (!tripEvents.length) {
