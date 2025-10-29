@@ -16,6 +16,7 @@ import {
   ChartNoAxesCombined,
   Waypoints,
   Link2,
+  Receipt,
 } from 'lucide-react';
 import { useAuth } from '@/components/auth';
 import {
@@ -64,14 +65,15 @@ const sidebarLinksByRole: Record<
       icon: Waypoints,
     },
     {
-      title: 'Assignments',
-      url: '/company-admin/assignments',
-      icon: ClipboardList,
-    },
-    {
       title: 'Charts',
       url: '/company-admin/charts',
       icon: ChartNoAxesCombined,
+    },
+    { title: 'Invoices', url: '/company-admin/invoices', icon: Receipt },
+    {
+      title: 'Assignments',
+      url: '/company-admin/assignments',
+      icon: ClipboardList,
     },
     { title: 'Settings', url: '/company-admin/settings', icon: Settings },
   ],
