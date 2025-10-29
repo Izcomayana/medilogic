@@ -70,7 +70,7 @@ export function CustodyTimeline({
           <div className="text-center py-12">
             <p className="text-gray-400">
               No custody events logged yet. Select a trip or Click{' '}
-              <span className="underline">Log Event</span> to get started.
+              {/* <span className="underline">Log Event</span> to get started. */}
             </p>
           </div>
         </CardContent>

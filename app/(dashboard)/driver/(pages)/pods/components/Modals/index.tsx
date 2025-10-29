@@ -103,10 +103,13 @@ export function CreatePOD({
                     {driverTrips.length > 0 ? (
                       driverTrips.map((trip) => {
                         const formattedType =
-                          trip.delivery_type
-                            ?.replaceAll('_', ' ')
-                            .replace(/\b\w/g, (l: string) => l.toUpperCase()) ||
-                          'Unknown Type';
+                          trip.delivery_type === 'other'
+                            ? trip.custom_delivery_description || 'Other'
+                            : trip.delivery_type
+                                ?.replaceAll('_', ' ')
+                                .replace(/\b\w/g, (l: string) =>
+                                  l.toUpperCase()
+                                ) || 'Unknown Type';
 
                         return (
                           <SelectItem key={trip.trip_id} value={trip.trip_id}>

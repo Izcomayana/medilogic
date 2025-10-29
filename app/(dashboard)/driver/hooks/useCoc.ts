@@ -186,7 +186,7 @@ export function useCOC() {
 
   const selectedTripData = driverTrips.find((t) => t.trip_id === selectedTrip);
 
-  const handleExport = async (format: 'csv' | 'pdf') => {
+  const handleExport = async () => {
     if (!selectedTrip) {
       toast.error('Please select a trip first');
       return;
@@ -198,25 +198,22 @@ export function useCOC() {
       await authorizedRequest(async (token) => {
         try {
           const response = await api.get(`/custody/export/${selectedTrip}`, {
-            params: { format },
+            params: { format: 'csv' }, // ✅ always csv now
             headers: {
               Authorization: `Bearer ${token}`,
             },
             responseType: 'blob',
-            validateStatus: () => true, // ✅ let us handle non-200 responses manually
+            validateStatus: () => true,
           });
 
           if (response.status === 404) {
-            // Try to read error detail from backend (it might be JSON inside the blob)
             const errorText = await response.data.text?.();
             let errorMessage = 'No custody events found for this trip';
 
             try {
               const json = JSON.parse(errorText);
               errorMessage = json.detail || errorMessage;
-            } catch {
-              // ignore JSON parse error, fallback to default
-            }
+            } catch {}
 
             toast.error(errorMessage, { id: 'export' });
             throw new Error(errorMessage);
@@ -227,31 +224,25 @@ export function useCOC() {
             throw new Error(`Unexpected status: ${response.status}`);
           }
 
-          // ✅ If success, download blob
-          const blob = new Blob([response.data], {
-            type: format === 'csv' ? 'text/csv' : 'application/pdf',
-          });
-
+          const blob = new Blob([response.data], { type: 'text/csv' }); // ✅ now only csv
           const url = window.URL.createObjectURL(blob);
           const link = document.createElement('a');
           link.href = url;
-          link.download = `custody-log-${selectedTrip}.${format}`;
+          link.download = `custody-log-${selectedTrip}.csv`;
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
           window.URL.revokeObjectURL(url);
 
-          toast.success(`Custody log exported as ${format.toUpperCase()}`, {
-            id: 'export',
-          });
+          toast.success(`Custody log exported as CSV`, { id: 'export' });
         } catch (err: any) {
           console.error('Export request failed:', err);
           if (!err.message.includes('No custody events')) {
             toast.error('Failed to export custody log', { id: 'export' });
           }
-          throw err; // rethrow to outer catch
+          throw err;
         }
-      }, 'faile to export');
+      }, 'failed to export');
     } catch (error) {
       console.error('Export failed:', error);
     }
