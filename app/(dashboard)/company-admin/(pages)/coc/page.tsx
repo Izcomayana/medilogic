@@ -111,10 +111,11 @@ export default function ChainOfCustodyPage() {
                     ) : adminTrips.length > 0 ? (
                       adminTrips.map((trip) => {
                         const formattedType =
-                          trip.delivery_type
-                            ?.replaceAll('_', ' ')
-                            .replace(/\b\w/g, (l: string) => l.toUpperCase()) ||
-                          'Unknown Type';
+                          trip.delivery_type === 'other'
+                            ? trip.custom_delivery_description || 'Other'
+                            : trip.delivery_type
+                              ?.replaceAll('_', ' ')
+                              .replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Unknown Type';
 
                         return (
                           <SelectItem
@@ -160,16 +161,10 @@ export default function ChainOfCustodyPage() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="bg-gray-800 border-gray-700">
                   <DropdownMenuItem
-                    onClick={() => handleExport('csv')}
+                    onClick={handleExport}
                     className="text-gray-300 hover:text-white hover:bg-gray-700"
                   >
                     Export as CSV
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => handleExport('pdf')}
-                    className="text-gray-300 hover:text-white hover:bg-gray-700"
-                  >
-                    Export as PDF
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

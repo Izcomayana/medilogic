@@ -75,10 +75,11 @@ export function LogCustodyEventModal({
                   {driverTrips.length > 0 ? (
                     driverTrips.map((trip) => {
                       const formattedType =
-                        trip.delivery_type
-                          ?.replaceAll('_', ' ')
-                          .replace(/\b\w/g, (l: string) => l.toUpperCase()) ||
-                        'Unknown Type';
+                        trip.delivery_type === 'other'
+                          ? trip.custom_delivery_description || 'Other'
+                          : trip.delivery_type
+                            ?.replaceAll('_', ' ')
+                            .replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Unknown Type';
 
                       return (
                         <SelectItem key={trip.trip_id} value={trip.trip_id}>
@@ -214,6 +215,7 @@ export function LogCustodyEventModal({
               <Label className="text-gray-300 text-sm mb-2">
                 Signature Image
               </Label>
+
               <div className="relative border-2 border-dashed border-gray-600 rounded-lg p-4 text-center bg-gray-700/50 hover:bg-gray-700 transition">
                 <input
                   type="file"
@@ -239,6 +241,19 @@ export function LogCustodyEventModal({
                   )}
                 </div>
               </div>
+
+              {formData.signatureImage && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() =>
+                    setFormData((prev) => ({ ...prev, signatureImage: null }))
+                  }
+                  className="mt-2 text-gray-700 hover:text-gray-300 border-gray-600 hover:bg-gray-700 hover:text-white text-sm p-2 !py-0"
+                >
+                  Clear signature image
+                </Button>
+              )}
             </div>
 
             {/* File Upload */}
