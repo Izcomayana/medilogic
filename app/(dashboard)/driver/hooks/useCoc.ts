@@ -213,7 +213,7 @@ export function useCOC() {
             try {
               const json = JSON.parse(errorText);
               errorMessage = json.detail || errorMessage;
-            } catch { }
+            } catch {}
 
             toast.error(errorMessage, { id: 'export' });
             throw new Error(errorMessage);
@@ -247,7 +247,6 @@ export function useCOC() {
       console.error('Export failed:', error);
     }
   };
-
 
   const analytics = useMemo(() => {
     if (!tripEvents.length) {
