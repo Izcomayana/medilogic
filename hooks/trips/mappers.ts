@@ -3,11 +3,11 @@ import { formatDateTime } from '@/utils/datetime';
 export type Trip = {
   driver_id: string;
   driver_name: string | null;
-  // driver_assigned: string | null;
   delivery_type: string;
   scheduled_time: string | null;
   cost: string | null;
   client_name: string | null;
+  client_id: string;
   organization_id: string | null;
   pickup_location: string | null;
   dropoff_location: string | null;
@@ -29,13 +29,13 @@ export function mapApiTripToUiTrip(apiTrip: Trip) {
   return {
     id: apiTrip.id,
     clientName: apiTrip.client_name,
+    clientId: apiTrip.client_id,
     deliveryType: apiTrip.delivery_type,
     organizationId: apiTrip.organization_id,
     pickupLocation: apiTrip.pickup_location,
     dropoffLocation: apiTrip.dropoff_location,
     driverId: apiTrip.driver_id,
     driverName: apiTrip.driver_name,
-    // driverAssigned: apiTrip.driver_assigned,
     status: apiTrip.status,
     priority: apiTrip.priority,
     dateTime: formatDateTime(apiTrip.scheduled_time || '-'),

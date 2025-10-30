@@ -24,13 +24,15 @@ export default function TripAnalyticsPage() {
         subtitle="Monitor insights, predictions, and trends across all trips"
       />
 
-      <main className="flex-1 p-6">
+      <main className="flex-1 p-4">
         <Filters {...tripsAnalyticState} />
 
         <KeyMetrics {...tripsAnalyticState} />
 
+        <Charts {...tripsAnalyticState} />
+
         {/* AI Predictions & Insights */}
-        <Card className="dashboard-card mb-8">
+        <Card className="dashboard-card mt-4">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
               <Brain className="h-5 w-5 text-purple-400" />
@@ -149,8 +151,6 @@ export default function TripAnalyticsPage() {
             )}
           </CardContent>
         </Card>
-
-        <Charts {...tripsAnalyticState} />
 
         {/* Filters Applied Summary */}
         <Card className="dashboard-card mt-4">

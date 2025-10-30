@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Truck, MapPin, DollarSign, Package, Target } from 'lucide-react';
+import { Truck, MapPin, PoundSterling, Package, Target } from 'lucide-react';
 import { useTripAnalytics } from '@/hooks/tripsAnalytics/useTripAnalytics';
 import { formatDeliveryType } from '@/hooks/utils';
 
@@ -35,7 +35,7 @@ export default function keyMetrics({
   return (
     <>
       {/* Key Metrics */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5 mb-8">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5">
         <Card className="dashboard-card">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-gray-300">
@@ -77,7 +77,7 @@ export default function keyMetrics({
             <CardTitle className="text-sm font-medium text-gray-300">
               Total Cost
             </CardTitle>
-            <DollarSign className="h-4 w-4 text-gray-400" />
+            <PoundSterling className="h-4 w-4 text-gray-400" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-white">

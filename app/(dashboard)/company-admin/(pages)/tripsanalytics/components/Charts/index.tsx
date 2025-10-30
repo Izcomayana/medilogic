@@ -68,7 +68,7 @@ export default function Charts({
 
   return (
     <>
-      <div className="grid gap-6 lg:grid-cols-2 mb-8">
+      <div className="grid gap-6 lg:grid-cols-2 my-4">
         {/* Delivery Type Distribution */}
         <ChartWrapper
           title="Trips per Delivery Type"

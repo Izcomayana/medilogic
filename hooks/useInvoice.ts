@@ -1,157 +1,73 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { useAuthorizedRequest } from '@/hooks/useRequest';
+import { useProfile } from '@/hooks/useProfile';
+import { api } from '@/lib/api';
+import { DateRangeLocal } from '@/app/(dashboard)/components/DateRange';
 
-const invoices = [
-  {
-    id: 'INV-0231',
-    client: "King's Clinic",
-    trips: ['TRP001', 'TRP002', 'TRP003'],
-    amount: 240.0,
-    issueDate: '2025-10-21',
-    status: 'Paid',
-    billingNotes: 'Monthly waste management services',
-    createdBy: 'Admin User',
-    createdAt: '2025-10-21 10:30',
-    tripDetails: [
-      { tripId: 'TRP001', description: 'Medical waste pickup', amount: 80.0 },
-      { tripId: 'TRP002', description: 'Hazmat disposal', amount: 85.0 },
-      {
-        tripId: 'TRP003',
-        description: 'General waste collection',
-        amount: 75.0,
-      },
-    ],
-  },
-  {
-    id: 'INV-0230',
-    client: 'TechCorp Solutions',
-    trips: ['TRP004', 'TRP005'],
-    amount: 165.5,
-    issueDate: '2025-10-20',
-    status: 'Pending',
-    billingNotes: 'Electronic waste disposal services',
-    createdBy: 'Admin User',
-    createdAt: '2025-10-20 14:15',
-    tripDetails: [
-      { tripId: 'TRP004', description: 'E-waste collection', amount: 90.0 },
-      {
-        tripId: 'TRP005',
-        description: 'Recycling center delivery',
-        amount: 75.5,
-      },
-    ],
-  },
-  {
-    id: 'INV-0229',
-    client: 'PharmaCare Industries',
-    trips: ['TRP006'],
-    amount: 120.0,
-    issueDate: '2025-10-19',
-    status: 'Overdue',
-    billingNotes: 'Pharmaceutical waste management',
-    createdBy: 'Admin User',
-    createdAt: '2025-10-19 09:00',
-    tripDetails: [
-      { tripId: 'TRP006', description: 'Pharma waste pickup', amount: 120.0 },
-    ],
-  },
-  {
-    id: 'INV-0228',
-    client: 'HealthCare Plus',
-    trips: ['TRP007', 'TRP008'],
-    amount: 195.75,
-    issueDate: '2025-10-18',
-    status: 'Paid',
-    billingNotes: 'Hospital waste collection and disposal',
-    createdBy: 'Admin User',
-    createdAt: '2025-10-18 11:45',
-    tripDetails: [
-      { tripId: 'TRP007', description: 'Hospital waste pickup', amount: 100.0 },
-      { tripId: 'TRP008', description: 'Biohazard disposal', amount: 95.75 },
-    ],
-  },
-];
+export interface Invoice {
+  issueDate: any;
+  id: string;
+  invoiceNumber: string;
+  client: string;
+  organization: string;
+  amount: number;
+  status: 'paid' | 'unpaid' | 'overdue';
+  generatedAt: string;
+  dueDate: Date | null;
+  referenceCode: string;
+  startDate: string;
+  endDate: string;
+  billingNotes: string;
+  trips: string[];
+}
 
-const clients = [
-  "King's Clinic",
-  'TechCorp Solutions',
-  'PharmaCare Industries',
-  'HealthCare Plus',
-  'WasteTech Solutions',
-];
-
-const completedTrips = [
-  {
-    id: 'TRP001',
-    client: "King's Clinic",
-    description: 'Medical waste pickup',
-    amount: 80.0,
-  },
-  {
-    id: 'TRP002',
-    client: "King's Clinic",
-    description: 'Hazmat disposal',
-    amount: 85.0,
-  },
-  {
-    id: 'TRP003',
-    client: "King's Clinic",
-    description: 'General waste collection',
-    amount: 75.0,
-  },
-  {
-    id: 'TRP004',
-    client: 'TechCorp Solutions',
-    description: 'E-waste collection',
-    amount: 90.0,
-  },
-  {
-    id: 'TRP005',
-    client: 'TechCorp Solutions',
-    description: 'Recycling center delivery',
-    amount: 75.5,
-  },
-  {
-    id: 'TRP006',
-    client: 'PharmaCare Industries',
-    description: 'Pharma waste pickup',
-    amount: 120.0,
-  },
-  {
-    id: 'TRP007',
-    client: 'HealthCare Plus',
-    description: 'Hospital waste pickup',
-    amount: 100.0,
-  },
-  {
-    id: 'TRP008',
-    client: 'HealthCare Plus',
-    description: 'Biohazard disposal',
-    amount: 95.75,
-  },
-];
+type InvoiceForm = {
+  client: string;
+  selectedTrips: string[];
+  billingNotes: string;
+  status: 'paid' | 'unpaid' | 'overdue';
+  dueDate: Date | null;
+};
 
 export function useInvoice() {
-  const [invoicesList, setInvoicesList] = useState(invoices);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [dateFilter, setDateFilter] = useState('all');
-  const [selectedInvoice, setSelectedInvoice] = useState<
-    (typeof invoices)[0] | null
-  >(null);
+  const [clientTrips, setClientTrips] = useState<any[]>([]);
+  const [tripsLoading, setTripsLoading] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [invoicesList, setInvoicesList] = useState<Invoice[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [clientId, setClientId] = useState<string | null>(null);
+  const [status, setStatus] = useState<'paid' | 'unpaid' | 'overdue' | null>(
+    null
+  );
+  const [dateRange, setDateRange] = useState<DateRangeLocal | undefined>();
+  const [dueDateFrom, setDueDateFrom] = useState<Date | null>(null);
+  const [dueDateTo, setDueDateTo] = useState<Date | null>(null);
+  const [dateFilter, setDateFilter] = useState<DateRangeLocal | undefined>(
+    undefined
+  );
+  const [selectedInvoice, setSelectedInvoice] = useState<Invoice[][0] | null>(
+    null
+  );
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false);
   const [invoiceToDelete, setInvoiceToDelete] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const invoicesPerPage = 10;
+  const { user } = useProfile();
 
-  // Form state for generate invoice
-  const [formData, setFormData] = useState({
+  const [page, setPage] = useState(1);
+  const limit = 10;
+  const skip = (page - 1) * limit;
+
+  const authorizedRequest = useAuthorizedRequest();
+
+  const [formData, setFormData] = useState<InvoiceForm>({
     client: '',
-    selectedTrips: [] as string[],
+    selectedTrips: [],
     billingNotes: '',
+    status: 'unpaid',
+    dueDate: null,
   });
 
   const resetForm = () => {
@@ -159,114 +75,235 @@ export function useInvoice() {
       client: '',
       selectedTrips: [],
       billingNotes: '',
+      status: 'unpaid',
+      dueDate: null,
     });
   };
-  const filteredInvoices = invoicesList.filter((invoice) => {
-    const matchesSearch =
-      invoice.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      invoice.client.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesStatus =
-      statusFilter === 'all' ||
-      invoice.status.toLowerCase() === statusFilter.toLowerCase();
+  const formatDateOnly = (d: Date) =>
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
+      d.getDate()
+    ).padStart(2, '0')}`;
 
-    const matchesDate =
-      dateFilter === 'all' || invoice.issueDate.startsWith(dateFilter);
-
-    return matchesSearch && matchesStatus && matchesDate;
-  });
-
-  const totalPages = Math.ceil(filteredInvoices.length / invoicesPerPage);
-  const startIndex = (currentPage - 1) * invoicesPerPage;
-  const paginatedInvoices = filteredInvoices.slice(
-    startIndex,
-    startIndex + invoicesPerPage
-  );
-
-  const handleViewDetails = (invoice: (typeof invoices)[0]) => {
-    setSelectedInvoice(invoice);
-    setIsDetailsModalOpen(true);
-  };
-
-  const handleDelete = (invoiceId: string) => {
-    setInvoicesList((prev) =>
-      prev.filter((invoice) => invoice.id !== invoiceId)
-    );
-    setInvoiceToDelete(null);
-    toast.success('Invoice deleted successfully');
-  };
-
-  const handleGenerateInvoice = () => {
-    if (!formData.client || formData.selectedTrips.length === 0) {
-      toast.error('Please select a client and at least one trip');
+  useEffect(() => {
+    if (!formData.client) {
+      setClientTrips([]);
       return;
     }
 
-    // const selectedTripDetails = completedTrips.filter((trip) => formData.selectedTrips.includes(trip.id))
-    const selectedTripDetails = completedTrips
-      .filter((trip) => formData.selectedTrips.includes(trip.id))
-      .map((trip) => ({
-        tripId: trip.id, // convert field name
-        description: trip.description,
-        amount: trip.amount,
-      }));
-    const totalAmount = selectedTripDetails.reduce(
-      (sum, trip) => sum + trip.amount,
-      0
-    );
+    setTripsLoading(true);
 
-    const newInvoice = {
-      id: `INV-${String(invoicesList.length + 1).padStart(4, '0')}`,
-      client: formData.client,
-      trips: formData.selectedTrips,
-      amount: totalAmount,
-      issueDate: new Date().toISOString().split('T')[0],
-      status: 'Pending',
-      billingNotes: formData.billingNotes,
-      createdBy: 'Admin User',
-      createdAt: new Date().toISOString().slice(0, 16).replace('T', ' '),
-      tripDetails: selectedTripDetails,
-    };
+    authorizedRequest(async (token) => {
+      const res = await api.get(
+        `/client/trips/client/${formData.client}/trips`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          params: {
+            status: 'completed',
+            start_date: dateFilter?.from || undefined,
+            end_date: dateFilter?.to || undefined,
+          },
+        }
+      );
 
-    setInvoicesList((prev) => [newInvoice, ...prev]);
-    setIsGenerateModalOpen(false);
-    resetForm();
-    toast.success('Invoice generated successfully');
+      setClientTrips(res.data.assigned_trips || []);
+    }, 'fail to get client trips')
+      .catch(() => setClientTrips([]))
+      .finally(() => setTripsLoading(false));
+  }, [formData.client, dateFilter]);
+
+  const handleGenerateInvoice = async () => {
+    if (!formData.client) {
+      toast.error('Please select a client');
+      return;
+    }
+
+    if (!dateFilter?.from || !dateFilter?.to) {
+      toast.error('Please select a billing date range');
+      return;
+    }
+
+    try {
+      setGenerating(true);
+      await authorizedRequest(async (token) => {
+        const payload = {
+          client_id: formData.client,
+          organization_id: user?.organization.id,
+          start_date: formatDateOnly(dateFilter.from!),
+          end_date: formatDateOnly(dateFilter.to!),
+          due_date: formData.dueDate
+            ? formData.dueDate.toISOString()
+            : undefined,
+          status: formData.status,
+          generated_at: new Date().toISOString(),
+          reference_code: `INV-${Math.floor(Math.random() * 999999)}`,
+          trips: formData.selectedTrips,
+          notes: formData.billingNotes || '',
+        };
+
+        const res = await api.post('/invoices/generate', payload, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const newInvoice: Invoice = {
+          id: res.data.id,
+          invoiceNumber: res.data.invoice_number,
+          client: res.data.client_id,
+          organization: res.data.organization_id,
+          amount: res.data.amount,
+          status: res.data.status,
+          generatedAt: res.data.generated_at,
+          dueDate: res.data.due_date,
+          referenceCode: res.data.reference_code,
+          startDate: res.data.start_date,
+          endDate: res.data.end_date,
+          issueDate: res.data.issueDate,
+
+          // custom local fields (optional, not required by backend)
+          billingNotes: formData.billingNotes,
+          trips: formData.selectedTrips,
+        };
+
+        setInvoicesList((prev) => [newInvoice, ...prev]);
+      }, 'fail to generate invoice');
+
+      setIsGenerateModalOpen(false);
+      resetForm();
+      toast.success('Invoice generated successfully');
+    } catch (error) {
+      console.error('Generate invoice failed:', error);
+      toast.error('Failed to generate invoice');
+    } finally {
+      setGenerating(false);
+    }
   };
 
-  const handleExport = (type: 'csv') => {
-    const headers = [
-      'Invoice ID',
-      'Client',
-      'Trips',
-      'Amount',
-      'Issue Date',
-      'Status',
-    ];
-    const rows = filteredInvoices.map((inv) => [
-      inv.id,
-      inv.client,
-      inv.trips.join(', '),
-      `£${inv.amount.toFixed(2)}`,
-      inv.issueDate,
-      inv.status,
-    ]);
+  const fetchInvoices = async () => {
+    try {
+      setLoading(true);
+      await authorizedRequest(async (token) => {
+        const res = await api.get('/invoices/admin', {
+          headers: { Authorization: `Bearer ${token}` },
+          params: {
+            client_id: clientId || undefined,
+            status: status || undefined,
+            due_date_from: dateRange?.from
+              ? dateRange.from.toISOString()
+              : undefined,
+            due_date_to: dateRange?.to ? dateRange.to.toISOString() : undefined,
+            skip,
+            limit,
+          },
+        });
+        const formatted = res.data.map(
+          (inv: any): Invoice => ({
+            id: inv.id,
+            invoiceNumber: inv.invoice_number,
+            client: inv.client_id,
+            organization: inv.organization_id,
+            status: inv.status,
+            generatedAt: inv.generated_at,
+            dueDate: inv.due_date ? new Date(inv.due_date) : null,
+            referenceCode: inv.reference_code,
+            startDate: inv.start_date,
+            endDate: inv.end_date,
+            amount: inv.amount,
+            issueDate: inv.issue_date,
+            billingNotes: inv.billing_notes,
+            trips: inv.trips,
+          })
+        );
 
-    const csvContent = [headers, ...rows]
-      .map((row) => row.join(','))
-      .join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `invoices-${new Date().toISOString().split('T')[0]}.csv`;
-    a.click();
-    window.URL.revokeObjectURL(url);
-    toast.success('CSV export completed');
+        setInvoicesList(formatted);
+      }, 'fail to get invoices');
+    } catch (err: any) {
+      console.log(err?.response?.data?.message || 'Failed to load invoices.');
+      toast.error('Failed to get invoices');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const getClientTrips = (client: string) => {
-    return completedTrips.filter((trip) => trip.client === client);
+  useEffect(() => {
+    fetchInvoices();
+  }, [clientId, status, dueDateFrom, dueDateTo, page]);
+
+  const filteredInvoices = invoicesList.filter((invoice) => {
+    const matchesStatus = status === null || invoice.status === status;
+    const matchesClient = clientId === null || invoice.client === clientId;
+
+    const matchesDate =
+      (!dateRange?.from ||
+        (invoice.dueDate && invoice.dueDate >= dateRange.from)) &&
+      (!dateRange?.to || (invoice.dueDate && invoice.dueDate <= dateRange.to));
+
+    return matchesStatus && matchesClient && matchesDate;
+  });
+
+  const totalPages = Math.ceil(filteredInvoices.length / limit);
+  const startIndex = (page - 1) * limit;
+  const paginatedInvoices = filteredInvoices.slice(
+    startIndex,
+    startIndex + limit
+  );
+
+  // const handleViewDetails = (invoice: (Invoice)[]) => {
+  //   setSelectedInvoice(invoice);
+  //   setIsDetailsModalOpen(true);
+  // };
+
+  const handleDelete = async (invoiceId: string) => {
+    try {
+      // Call the backend
+      await authorizedRequest(async (token) => {
+        await api.delete(`/invoices/${invoiceId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      }, 'fail to delete');
+
+      // Update UI
+      setInvoicesList((prev) =>
+        prev.filter((invoice) => invoice.id !== invoiceId)
+      );
+      setInvoiceToDelete(null);
+      toast.success('Invoice deleted successfully');
+    } catch (error) {
+      toast.error('Something went wrong while deleting');
+      console.error(error);
+    }
+  };
+
+  const handleExport = async () => {
+    toast.loading('Preparing export...', { id: 'export' });
+
+    try {
+      await authorizedRequest(async (token) => {
+        const response = await api.get(`/invoices/export`, {
+          headers: { Authorization: `Bearer ${token}` },
+          params: {
+            client_id: clientId || undefined,
+            status: status || undefined,
+          },
+          responseType: 'blob',
+        });
+
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute(
+          'download',
+          `invoices-${new Date().toISOString().split('T')[0]}.csv`
+        );
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+
+        toast.success('Invoices exported successfully', { id: 'export' }); // ✅ Replaces loading toast
+      }, 'fail to export');
+    } catch {
+      toast.error('Failed to export invoices', { id: 'export' }); // ✅ Replaces loading toast
+    }
   };
 
   const toggleTripSelection = (tripId: string) => {
@@ -279,21 +316,28 @@ export function useInvoice() {
   };
 
   const calculateTotal = () => {
-    return completedTrips
-      .filter((trip) => formData.selectedTrips.includes(trip.id))
-      .reduce((sum, trip) => sum + trip.amount, 0);
+    return clientTrips
+      .filter((trip) => formData.selectedTrips.includes(trip.trip_id))
+      .reduce((sum, trip) => sum + trip.cost, 0);
   };
 
   return {
-    invoices,
-    clients,
-    completedTrips,
+    clientTrips,
+    tripsLoading,
+    generating,
+    loading,
     invoicesList,
     setInvoicesList,
-    searchTerm,
-    setSearchTerm,
-    statusFilter,
-    setStatusFilter,
+    status,
+    setStatus,
+    clientId,
+    setClientId,
+    dateRange,
+    setDateRange,
+    dueDateFrom,
+    setDueDateFrom,
+    dueDateTo,
+    setDueDateTo,
     dateFilter,
     setDateFilter,
     selectedInvoice,
@@ -304,21 +348,20 @@ export function useInvoice() {
     setIsGenerateModalOpen,
     invoiceToDelete,
     setInvoiceToDelete,
-    currentPage,
-    setCurrentPage,
-    invoicesPerPage,
+    page,
+    setPage,
+    limit,
     formData,
     setFormData,
     filteredInvoices,
     totalPages,
     startIndex,
     paginatedInvoices,
-    handleViewDetails,
+    // handleViewDetails,
     handleDelete,
     resetForm,
     handleGenerateInvoice,
     handleExport,
-    getClientTrips,
     toggleTripSelection,
     calculateTotal,
   };

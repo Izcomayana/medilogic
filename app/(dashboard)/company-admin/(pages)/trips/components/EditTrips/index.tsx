@@ -23,6 +23,8 @@ import {
 import { useTrips } from '@/hooks/trips/useTrips';
 import { X } from 'lucide-react';
 import { useSysConfig } from '@/hooks/settings/useSysConfg';
+import { useUsers } from '@/hooks/useUsers';
+import { Spinner } from '@/components/ui/spinner';
 
 type EditTripProps = ReturnType<typeof useTrips>;
 
@@ -36,6 +38,10 @@ export function EditTripModal({
   resetForm,
   handleUpdateTrip,
 }: EditTripProps) {
+  const { users, loading: loadingUsers } = useUsers();
+  const drivers = users.filter((user) => user.role === 'driver');
+  const clients = users.filter((user) => user.role === 'client');
+
   const {
     isLoadingPriorityLevels,
     priorityLevels,
@@ -49,7 +55,7 @@ export function EditTripModal({
 
   return (
     <AlertDialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
-      <AlertDialogContent className="bg-gray-800 border-gray-700 text-white !max-w-2xl max-h-[80vh] overflow-y-auto">
+      <AlertDialogContent className="bg-gray-800 border-gray-700 text-white lg:max-w-2xl ">
         <AlertDialogHeader>
           <div className="flex justify-between">
             <AlertDialogTitle>Edit Trip - {selectedTrip?.id}</AlertDialogTitle>
@@ -66,9 +72,52 @@ export function EditTripModal({
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        <div className="grid gap-4 py-4">
+        <div className="grid gap-4 pt-4 max-h-[70vh] overflow-y-auto pr-1">
           <div className="grid grid-cols-2 gap-4">
             {/* Driver & Client Name */}
+            <div>
+              <Label htmlFor="client" className="text-gray-300 mb-2">
+                Client
+              </Label>
+
+              <Select
+                value={formData.clientId}
+                onValueChange={(value) => {
+                  const selectedClient = clients.find((d) => d.id === value);
+                  setFormData({
+                    ...formData,
+                    clientId: value,
+                    clientName: selectedClient ? selectedClient.name : '',
+                  });
+                }}
+              >
+                <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                  <SelectValue
+                    placeholder={
+                      loadingUsers ? 'Loading clients...' : 'Select client'
+                    }
+                  />
+                </SelectTrigger>
+
+                <SelectContent className="bg-gray-700 border-gray-600">
+                  {loadingUsers ? (
+                    <div className="p-2 text-gray-400 text-sm">
+                      Loading clients...
+                    </div>
+                  ) : clients.length === 0 ? (
+                    <div className="p-2 text-gray-400 text-sm">
+                      No clients found
+                    </div>
+                  ) : (
+                    clients.map((client) => (
+                      <SelectItem key={client.id} value={client.id}>
+                        {client.name}
+                      </SelectItem>
+                    ))
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
             <div>
               <Label htmlFor="client" className="text-gray-300">
                 Client Name
@@ -83,6 +132,45 @@ export function EditTripModal({
                 className="bg-gray-700 border-gray-600 text-white mt-2"
               />
             </div>
+
+            <div>
+              <Label htmlFor="driverAssigned" className="text-gray-300">
+                Assign Driver
+              </Label>
+              <Select
+                value={formData.driverId}
+                onValueChange={(value) => {
+                  const selectedDriver = drivers.find((d) => d.id === value);
+                  setFormData({
+                    ...formData,
+                    driverId: value,
+                    driverName: selectedDriver ? selectedDriver.name : '',
+                  });
+                }}
+              >
+                <SelectTrigger className="bg-gray-700 border-gray-600 text-white mt-2">
+                  <SelectValue
+                    placeholder={
+                      loadingUsers ? 'Loading drivers...' : 'Select driver'
+                    }
+                  />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-700 border-gray-600">
+                  {drivers.length > 0 ? (
+                    drivers.map((driver) => (
+                      <SelectItem key={driver.id} value={driver.id}>
+                        {driver.name}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <div className="text-gray-400 text-sm p-2 italic">
+                      No drivers found <br /> kindly register a driver first.
+                    </div>
+                  )}
+                </SelectContent>
+              </Select>
+            </div>
+
             <div>
               <Label htmlFor="driver" className="text-gray-300">
                 Driver Name
@@ -480,7 +568,7 @@ export function EditTripModal({
           </div>
         </div>
 
-        <AlertDialogFooter>
+        <AlertDialogFooter className="border-t border-gray-700 pt-4 bg-gray-800 sticky z-20">
           <Button
             variant="outline"
             onClick={() => {
@@ -496,7 +584,7 @@ export function EditTripModal({
             disabled={loading}
             className="primary-button"
           >
-            {loading ? 'Updating...' : 'Update Trip'}
+            {loading ? <Spinner className="mx-8" /> : 'Update Trip'}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

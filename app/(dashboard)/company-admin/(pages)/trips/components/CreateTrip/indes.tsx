@@ -20,6 +20,7 @@ import {
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
+import { Spinner } from '@/components/ui/spinner';
 
 type CreateTripProps = ReturnType<typeof useTrips>;
 
@@ -74,7 +75,7 @@ export function CreateTrips({
         </AlertDialogTrigger>
       </div>
 
-      <AlertDialogContent className="bg-gray-800 border-gray-700 text-white !max-w-2xl max-h-[80vh] overflow-y-auto">
+      <AlertDialogContent className="bg-gray-800 border-gray-700 text-white lg:max-w-2xl">
         <AlertDialogHeader>
           <div className="flex justify-between">
             <AlertDialogTitle>Create New Trip</AlertDialogTitle>
@@ -96,7 +97,7 @@ export function CreateTrips({
           drivers={drivers}
         />
 
-        <AlertDialogFooter>
+        <AlertDialogFooter className="border-t border-gray-700 pt-4 bg-gray-800 sticky z-20">
           <Button
             variant="outline"
             onClick={() => setIsCreateModalOpen(false)}
@@ -109,7 +110,7 @@ export function CreateTrips({
             className="primary-button"
             disabled={loading}
           >
-            {loading ? 'Creating...' : 'Create Trip'}
+            {loading ? <Spinner className="mx-8" /> : 'Create Trip'}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
