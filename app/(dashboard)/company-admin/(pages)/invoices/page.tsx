@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { PageHeader } from '../../../components/PageHeader';
@@ -20,7 +21,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { FileText, Search, Calendar, Filter, Download } from 'lucide-react';
+import { FileText, Filter, Download } from 'lucide-react';
 import { useInvoice } from '@/hooks/useInvoice';
 import { InvoicesTable } from './components/Table';
 // import { InvoiceDetails } from './components/Details';
