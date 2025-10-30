@@ -58,7 +58,7 @@ export function GenerateInvoice({
     >
       <AlertDialogTrigger asChild>
         <Button className="primary-button">
-          <Plus className="h-4 w-4 mr-2" />
+          <Plus className="h-4 w-4" />
           Generate Invoice
         </Button>
       </AlertDialogTrigger>
@@ -190,7 +190,10 @@ export function GenerateInvoice({
             <Select
               value={formData.status}
               onValueChange={(value) =>
-                setFormData({ ...formData, status: value as 'paid' | 'unpaid' | 'overdue' })
+                setFormData({
+                  ...formData,
+                  status: value as 'paid' | 'unpaid' | 'overdue',
+                })
               }
             >
               <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
@@ -199,7 +202,7 @@ export function GenerateInvoice({
               <SelectContent className="bg-gray-700 border-gray-600">
                 <SelectItem value="paid">Paid</SelectItem>
                 <SelectItem value="unpaid">Unpaid</SelectItem>
-                <SelectItem value='overdue'>Overdue</SelectItem>
+                <SelectItem value="overdue">Overdue</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -272,8 +275,12 @@ export function GenerateInvoice({
           >
             Cancel
           </Button>
-          <Button onClick={handleGenerateInvoice} className="primary-button" disabled={generating}>
-            {generating ? <Spinner className="mx-10" /> : 'Generate Invoice' }  
+          <Button
+            onClick={handleGenerateInvoice}
+            className="primary-button"
+            disabled={generating}
+          >
+            {generating ? <Spinner className="mx-10" /> : 'Generate Invoice'}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

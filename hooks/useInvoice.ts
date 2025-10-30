@@ -7,77 +7,6 @@ import { useProfile } from '@/hooks/useProfile';
 import { api } from '@/lib/api';
 import { DateRangeLocal } from '@/app/(dashboard)/components/DateRange';
 
-const invoices = [
-  {
-    id: 'INV-0231',
-    client: "King's Clinic",
-    trips: ['TRP001', 'TRP002', 'TRP003'],
-    amount: 240.0,
-    issueDate: '2025-10-21',
-    status: 'Paid',
-    billingNotes: 'Monthly waste management services',
-    createdBy: 'Admin User',
-    createdAt: '2025-10-21 10:30',
-    tripDetails: [
-      { tripId: 'TRP001', description: 'Medical waste pickup', amount: 80.0 },
-      { tripId: 'TRP002', description: 'Hazmat disposal', amount: 85.0 },
-      {
-        tripId: 'TRP003',
-        description: 'General waste collection',
-        amount: 75.0,
-      },
-    ],
-  },
-  {
-    id: 'INV-0230',
-    client: 'TechCorp Solutions',
-    trips: ['TRP004', 'TRP005'],
-    amount: 165.5,
-    issueDate: '2025-10-20',
-    status: 'Pending',
-    billingNotes: 'Electronic waste disposal services',
-    createdBy: 'Admin User',
-    createdAt: '2025-10-20 14:15',
-    tripDetails: [
-      { tripId: 'TRP004', description: 'E-waste collection', amount: 90.0 },
-      {
-        tripId: 'TRP005',
-        description: 'Recycling center delivery',
-        amount: 75.5,
-      },
-    ],
-  },
-  {
-    id: 'INV-0229',
-    client: 'PharmaCare Industries',
-    trips: ['TRP006'],
-    amount: 120.0,
-    issueDate: '2025-10-19',
-    status: 'Overdue',
-    billingNotes: 'Pharmaceutical waste management',
-    createdBy: 'Admin User',
-    createdAt: '2025-10-19 09:00',
-    tripDetails: [
-      { tripId: 'TRP006', description: 'Pharma waste pickup', amount: 120.0 },
-    ],
-  },
-  {
-    id: 'INV-0228',
-    client: 'HealthCare Plus',
-    trips: ['TRP007', 'TRP008'],
-    amount: 195.75,
-    issueDate: '2025-10-18',
-    status: 'Paid',
-    billingNotes: 'Hospital waste collection and disposal',
-    createdBy: 'Admin User',
-    createdAt: '2025-10-18 11:45',
-    tripDetails: [
-      { tripId: 'TRP007', description: 'Hospital waste pickup', amount: 100.0 },
-      { tripId: 'TRP008', description: 'Biohazard disposal', amount: 95.75 },
-    ],
-  },
-];
-
 export interface Invoice {
   issueDate: any;
   id: string;
@@ -110,25 +39,24 @@ export function useInvoice() {
   const [invoicesList, setInvoicesList] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(false);
   const [clientId, setClientId] = useState<string | null>(null);
-  const [status, setStatus] = useState<"paid" | "unpaid" | "overdue" | null>(null);
+  const [status, setStatus] = useState<'paid' | 'unpaid' | 'overdue' | null>(
+    null
+  );
   const [dateRange, setDateRange] = useState<DateRangeLocal | undefined>();
   const [dueDateFrom, setDueDateFrom] = useState<Date | null>(null);
   const [dueDateTo, setDueDateTo] = useState<Date | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
   const [dateFilter, setDateFilter] = useState<DateRangeLocal | undefined>(
     undefined
   );
-  const [selectedInvoice, setSelectedInvoice] = useState<
-    (typeof invoices)[0] | null
-  >(null);
+  const [selectedInvoice, setSelectedInvoice] = useState<Invoice[][0] | null>(
+    null
+  );
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false);
   const [invoiceToDelete, setInvoiceToDelete] = useState<string | null>(null);
-  // const [currentPage, setCurrentPage] = useState(1);
-  // const invoicesPerPage = 10;
   const { user } = useProfile();
 
-    const [page, setPage] = useState(1);
+  const [page, setPage] = useState(1);
   const limit = 10;
   const skip = (page - 1) * limit;
 
@@ -246,67 +174,71 @@ export function useInvoice() {
       console.error('Generate invoice failed:', error);
       toast.error('Failed to generate invoice');
     } finally {
-      setGenerating(false)
+      setGenerating(false);
     }
   };
 
   const fetchInvoices = async () => {
     try {
-    setLoading(true);
+      setLoading(true);
       await authorizedRequest(async (token) => {
-              const res = await api.get("/invoices/admin", {
-        headers: { Authorization: `Bearer ${token}` },
-        params: {
-          client_id: clientId || undefined,
-          status: status || undefined,
-          due_date_from: dateRange?.from ? dateRange.from.toISOString() : undefined,
-  due_date_to: dateRange?.to ? dateRange.to.toISOString() : undefined,
-          skip,
-          limit,
-        },
-      });
-      const formatted = res.data.map((inv: any): Invoice => ({
-        id: inv.id,
-        invoiceNumber: inv.invoice_number,
-        client: inv.client_id,
-        organization: inv.organization_id,
-        status: inv.status,
-        generatedAt: inv.generated_at,
-        dueDate: inv.due_date ? new Date(inv.due_date) : null,
-        referenceCode: inv.reference_code,
-        startDate: inv.start_date,
-        endDate: inv.end_date,
-        amount: inv.amount,
-        issueDate: inv.issue_date,
-        billingNotes: inv.billing_notes,
-        trips: inv.trips,
-      }));
+        const res = await api.get('/invoices/admin', {
+          headers: { Authorization: `Bearer ${token}` },
+          params: {
+            client_id: clientId || undefined,
+            status: status || undefined,
+            due_date_from: dateRange?.from
+              ? dateRange.from.toISOString()
+              : undefined,
+            due_date_to: dateRange?.to ? dateRange.to.toISOString() : undefined,
+            skip,
+            limit,
+          },
+        });
+        const formatted = res.data.map(
+          (inv: any): Invoice => ({
+            id: inv.id,
+            invoiceNumber: inv.invoice_number,
+            client: inv.client_id,
+            organization: inv.organization_id,
+            status: inv.status,
+            generatedAt: inv.generated_at,
+            dueDate: inv.due_date ? new Date(inv.due_date) : null,
+            referenceCode: inv.reference_code,
+            startDate: inv.start_date,
+            endDate: inv.end_date,
+            amount: inv.amount,
+            issueDate: inv.issue_date,
+            billingNotes: inv.billing_notes,
+            trips: inv.trips,
+          })
+        );
 
-      setInvoicesList(formatted);
-      }, 'fail to get invoices')
+        setInvoicesList(formatted);
+      }, 'fail to get invoices');
     } catch (err: any) {
-      console.log(err?.response?.data?.message || "Failed to load invoices.");
+      console.log(err?.response?.data?.message || 'Failed to load invoices.');
       toast.error('Failed to get invoices');
     } finally {
       setLoading(false);
     }
   };
 
-useEffect(() => {
-  fetchInvoices();
-}, [clientId, status, dueDateFrom, dueDateTo, page]);
+  useEffect(() => {
+    fetchInvoices();
+  }, [clientId, status, dueDateFrom, dueDateTo, page]);
 
-const filteredInvoices = invoicesList.filter((invoice) => {
-  const matchesStatus = status === null || invoice.status === status;
-  const matchesClient = clientId === null || invoice.client === clientId;
+  const filteredInvoices = invoicesList.filter((invoice) => {
+    const matchesStatus = status === null || invoice.status === status;
+    const matchesClient = clientId === null || invoice.client === clientId;
 
-  const matchesDate =
-    (!dateRange?.from || (invoice.dueDate && invoice.dueDate >= dateRange.from)) &&
-    (!dateRange?.to || (invoice.dueDate && invoice.dueDate <= dateRange.to));
+    const matchesDate =
+      (!dateRange?.from ||
+        (invoice.dueDate && invoice.dueDate >= dateRange.from)) &&
+      (!dateRange?.to || (invoice.dueDate && invoice.dueDate <= dateRange.to));
 
-  return matchesStatus && matchesClient && matchesDate;
-});
-
+    return matchesStatus && matchesClient && matchesDate;
+  });
 
   const totalPages = Math.ceil(filteredInvoices.length / limit);
   const startIndex = (page - 1) * limit;
@@ -315,48 +247,63 @@ const filteredInvoices = invoicesList.filter((invoice) => {
     startIndex + limit
   );
 
-  const handleViewDetails = (invoice: (typeof invoices)[0]) => {
-    setSelectedInvoice(invoice);
-    setIsDetailsModalOpen(true);
+  // const handleViewDetails = (invoice: (Invoice)[]) => {
+  //   setSelectedInvoice(invoice);
+  //   setIsDetailsModalOpen(true);
+  // };
+
+  const handleDelete = async (invoiceId: string) => {
+    try {
+      // Call the backend
+      await authorizedRequest(async (token) => {
+        await api.delete(`/invoices/${invoiceId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      }, 'fail to delete');
+
+      // Update UI
+      setInvoicesList((prev) =>
+        prev.filter((invoice) => invoice.id !== invoiceId)
+      );
+      setInvoiceToDelete(null);
+      toast.success('Invoice deleted successfully');
+    } catch (error) {
+      toast.error('Something went wrong while deleting');
+      console.error(error);
+    }
   };
 
-  const handleDelete = (invoiceId: string) => {
-    setInvoicesList((prev) =>
-      prev.filter((invoice) => invoice.id !== invoiceId)
-    );
-    setInvoiceToDelete(null);
-    toast.success('Invoice deleted successfully');
-  };
+  const handleExport = async () => {
+    toast.loading('Preparing export...', { id: 'export' });
 
-  const handleExport = (type: 'csv') => {
-    const headers = [
-      'Invoice ID',
-      'Client',
-      'Trips',
-      'Amount',
-      'Issue Date',
-      'Status',
-    ];
-    const rows = filteredInvoices.map((inv) => [
-      inv.id,
-      inv.client,
-      inv.trips.join(', '),
-      `£${inv.amount.toFixed(2)}`,
-      inv.issueDate,
-      inv.status,
-    ]);
+    try {
+      await authorizedRequest(async (token) => {
+        const response = await api.get(`/invoices/export`, {
+          headers: { Authorization: `Bearer ${token}` },
+          params: {
+            client_id: clientId || undefined,
+            status: status || undefined,
+          },
+          responseType: 'blob',
+        });
 
-    const csvContent = [headers, ...rows]
-      .map((row) => row.join(','))
-      .join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `invoices-${new Date().toISOString().split('T')[0]}.csv`;
-    a.click();
-    window.URL.revokeObjectURL(url);
-    toast.success('CSV export completed');
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute(
+          'download',
+          `invoices-${new Date().toISOString().split('T')[0]}.csv`
+        );
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+
+        toast.success('Invoices exported successfully', { id: 'export' }); // ✅ Replaces loading toast
+      }, 'fail to export');
+    } catch {
+      toast.error('Failed to export invoices', { id: 'export' }); // ✅ Replaces loading toast
+    }
   };
 
   const toggleTripSelection = (tripId: string) => {
@@ -378,22 +325,19 @@ const filteredInvoices = invoicesList.filter((invoice) => {
     clientTrips,
     tripsLoading,
     generating,
-    invoices,
     loading,
     invoicesList,
     setInvoicesList,
-    searchTerm,
-    setSearchTerm,
     status,
     setStatus,
-  clientId,
-  setClientId,
-  dateRange,
-  setDateRange,
-  dueDateFrom,
-  setDueDateFrom,
-  dueDateTo,
-  setDueDateTo,
+    clientId,
+    setClientId,
+    dateRange,
+    setDateRange,
+    dueDateFrom,
+    setDueDateFrom,
+    dueDateTo,
+    setDueDateTo,
     dateFilter,
     setDateFilter,
     selectedInvoice,
@@ -413,7 +357,7 @@ const filteredInvoices = invoicesList.filter((invoice) => {
     totalPages,
     startIndex,
     paginatedInvoices,
-    handleViewDetails,
+    // handleViewDetails,
     handleDelete,
     resetForm,
     handleGenerateInvoice,
