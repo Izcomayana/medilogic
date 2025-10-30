@@ -111,7 +111,7 @@ export function InvoicesTable({
                         {invoice.client}
                       </TableCell>
                       <TableCell className="text-gray-300">
-                        {invoice.trips.length} Trips
+                        {invoice?.trips.length} Trips
                       </TableCell>
                       <TableCell className="text-white font-semibold flex items-center gap-1">
                         <DollarSign className="h-4 w-4" />£
@@ -122,55 +122,44 @@ export function InvoicesTable({
                       </TableCell>
                       <TableCell>{getStatusBadge(invoice.status)}</TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleViewDetails(invoice)}
-                            className="border-gray-600 text-gray-300 hover:bg-gray-700"
-                          >
-                            <Eye className="h-3 w-3 mr-1" />
-                            View
-                          </Button>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                className="h-8 w-8 p-0 text-gray-400 hover:bg-gray-700"
-                              >
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent
-                              align="end"
-                              className="bg-gray-700 border-gray-600"
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              className="h-8 w-8 p-0 text-gray-400 hover:bg-gray-700"
                             >
-                              <DropdownMenuItem
-                                className="text-gray-300 hover:bg-gray-600"
-                                onClick={() => handleViewDetails(invoice)}
-                              >
-                                <Eye className="mr-2 h-4 w-4" />
-                                View Details
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                className="text-gray-300 hover:bg-gray-600"
-                                onClick={() =>
-                                  toast.info('PDF download feature coming soon')
-                                }
-                              >
-                                <Download className="mr-2 h-4 w-4" />
-                                Download PDF
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                className="text-red-400 hover:bg-gray-600"
-                                onClick={() => setInvoiceToDelete(invoice.id)}
-                              >
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                Delete
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent
+                            align="end"
+                            className="bg-gray-700 border-gray-600"
+                          >
+                            <DropdownMenuItem
+                              className="text-gray-300 hover:bg-gray-600"
+                              onClick={() => handleViewDetails(invoice)}
+                            >
+                              <Eye className="mr-2 h-4 w-4" />
+                              View Details
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              className="text-gray-300 hover:bg-gray-600"
+                              onClick={() =>
+                                toast.info('PDF download feature coming soon')
+                              }
+                            >
+                              <Download className="mr-2 h-4 w-4" />
+                              Download PDF
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              className="text-red-400 hover:bg-gray-600"
+                              onClick={() => setInvoiceToDelete(invoice.id)}
+                            >
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </TableCell>
                     </TableRow>
                   ))}

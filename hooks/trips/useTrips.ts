@@ -35,6 +35,7 @@ export function useTrips(tripsPerPage = 10) {
 
   const [formData, setFormData] = useState({
     clientName: '',
+    clientId: '',
     pickupLocation: '',
     dropoffLocation: '',
     driverName: '',
@@ -59,6 +60,7 @@ export function useTrips(tripsPerPage = 10) {
   const resetForm = () => {
     setFormData({
       clientName: '',
+      clientId: '',
       pickupLocation: '',
       dropoffLocation: '',
       driverName: '',
@@ -212,6 +214,7 @@ export function useTrips(tripsPerPage = 10) {
           ? new Date(formData.dateTime).toISOString()
           : undefined,
         client_name: formData.clientName,
+        client_id: formData.clientId,
         pickup_location: formData.pickupLocation || undefined,
         dropoff_location: formData.dropoffLocation || undefined,
         notes: formData.notes,
@@ -350,6 +353,7 @@ export function useTrips(tripsPerPage = 10) {
     setSelectedTrip(trip);
     setFormData({
       clientName: trip.clientName || '',
+      clientId: trip.clientId || '',
       pickupLocation: trip.pickupLocation || '',
       dropoffLocation: trip.dropoffLocation || '',
       driverName: trip.driverName || '',
@@ -424,6 +428,7 @@ export function useTrips(tripsPerPage = 10) {
         ? new Date(formData.dateTime).toISOString()
         : undefined,
       cost: formData.cost,
+      client_id: formData.clientId,
       client_name: formData.clientName,
       organization_id: user?.organization?.id || undefined,
       pickup_location: formData.pickupLocation || undefined,

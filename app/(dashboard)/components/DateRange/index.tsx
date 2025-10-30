@@ -54,7 +54,11 @@ export default function DateRangeFilter({
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="w-auto p-0 bg-gray-800 border-gray-700 border-0">
+      <PopoverContent
+        className="w-auto p-0 bg-gray-800 border-gray-700 border-0 z-[99999]"
+        side="bottom"
+        align="start"
+      >
         <div className="p-3">
           <Calendar
             mode="range"

@@ -26,6 +26,7 @@ import { useInvoice } from '@/hooks/useInvoice';
 import { InvoicesTable } from './components/Table';
 import { InvoiceDetails } from './components/Details';
 import { GenerateInvoice } from './components/Generate';
+import DateRangeFilter from '@/app/(dashboard)/components/DateRange';
 
 export default function InvoicesPage() {
   const invoiceState = useInvoice();
@@ -96,18 +97,7 @@ export default function InvoicesPage() {
                   <SelectItem value="overdue">Overdue</SelectItem>
                 </SelectContent>
               </Select>
-              <Select value={dateFilter} onValueChange={setDateFilter}>
-                <SelectTrigger className="w-[150px] bg-gray-700 border-gray-600 text-white">
-                  <Calendar className="h-4 w-4 mr-2" />
-                  <SelectValue placeholder="Date" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-700 border-gray-600">
-                  <SelectItem value="all">All Dates</SelectItem>
-                  <SelectItem value="2025-10-21">Today</SelectItem>
-                  <SelectItem value="2025-10-20">Yesterday</SelectItem>
-                  <SelectItem value="2025-10-19">2 days ago</SelectItem>
-                </SelectContent>
-              </Select>
+              <DateRangeFilter value={dateFilter} onChange={setDateFilter} />
             </div>
           </CardContent>
         </Card>

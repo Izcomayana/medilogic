@@ -23,7 +23,7 @@ export default function Filters({
   // setStatus,
 }: FiltersProps) {
   return (
-    <Card className="dashboard-card mb-6 flex flex-row items-center justify-between">
+    <Card className="dashboard-card mb-4 flex flex-row items-center justify-between">
       <CardHeader>
         <CardTitle className="text-white flex items-center gap-2">
           <Filter className="h-5 w-5" />

@@ -115,6 +115,22 @@ export function useUsers() {
     };
   }, [authorizedRequest]);
 
+  const filteredUsers: User[] = users.filter((user) => {
+    const matchesSearch =
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.id.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesRole =
+      roleFilter === 'all' ||
+      user.role.toLowerCase() === roleFilter.toLowerCase();
+    const matchesStatus =
+      statusFilter === 'all' ||
+      user.status.toLowerCase() === statusFilter.toLowerCase();
+    const matchesDate =
+      dateFilter === 'all' || user.dateJoined.startsWith(dateFilter);
+    return matchesSearch && matchesRole && matchesStatus && matchesDate;
+  });
+
   const handleDeactivateUser = async (userId: string) => {
     try {
       await authorizedRequest(async (token) => {
@@ -205,22 +221,6 @@ export function useUsers() {
       isMounted = false;
     };
   }, [authorizedRequest]);
-
-  const filteredUsers: User[] = users.filter((user) => {
-    const matchesSearch =
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.id.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesRole =
-      roleFilter === 'all' ||
-      user.role.toLowerCase() === roleFilter.toLowerCase();
-    const matchesStatus =
-      statusFilter === 'all' ||
-      user.status.toLowerCase() === statusFilter.toLowerCase();
-    const matchesDate =
-      dateFilter === 'all' || user.dateJoined.startsWith(dateFilter);
-    return matchesSearch && matchesRole && matchesStatus && matchesDate;
-  });
 
   const filteredDeletedUsers: DeletedUser[] = deletedUsers.filter((user) => {
     const matchesSearch =

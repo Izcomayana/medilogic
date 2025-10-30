@@ -60,7 +60,7 @@ export function CreatePOD({
 
   return (
     <AlertDialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
-      <AlertDialogContent className="bg-gray-800 border-gray-700 text-white lg:max-w-2xl max-h-[90vh] flex flex-col">
+      <AlertDialogContent className="bg-gray-800 border-gray-700 text-white lg:max-w-2xl max-h-[85vh] flex flex-col">
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-2">
             <Plus className="h-5 w-5 text-[#15941f]" />
@@ -474,7 +474,7 @@ export function ViewPOD({
           </p>
         )}
 
-        <DialogFooter className='border-t border-gray-700 mt-2 pt-4 bg-gray-800 sticky"'>
+        <DialogFooter className="border-t border-gray-700 mt-2 pt-4 bg-gray-800 sticky">
           <Button
             variant="outline"
             onClick={() => setIsDetailsModalOpen(false)}

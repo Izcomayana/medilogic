@@ -1,7 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+import { useAuthorizedRequest } from '@/hooks/useRequest';
+import { useProfile } from '@/hooks/useProfile';
+import { api } from '@/lib/api';
+import { DateRangeLocal } from '@/app/(dashboard)/components/DateRange';
 
 const invoices = [
   {
@@ -74,70 +78,41 @@ const invoices = [
   },
 ];
 
-const clients = [
-  "King's Clinic",
-  'TechCorp Solutions',
-  'PharmaCare Industries',
-  'HealthCare Plus',
-  'WasteTech Solutions',
-];
+export interface Invoice {
+  issueDate: any;
+  id: string;
+  invoiceNumber: string;
+  client: string;
+  organization: string;
+  amount: number;
+  status: 'paid' | 'unpaid';
+  generatedAt: string;
+  dueDate: Date | null;
+  referenceCode: string;
+  startDate: string;
+  endDate: string;
+  billingNotes: string;
+  trips: string[];
+}
 
-const completedTrips = [
-  {
-    id: 'TRP001',
-    client: "King's Clinic",
-    description: 'Medical waste pickup',
-    amount: 80.0,
-  },
-  {
-    id: 'TRP002',
-    client: "King's Clinic",
-    description: 'Hazmat disposal',
-    amount: 85.0,
-  },
-  {
-    id: 'TRP003',
-    client: "King's Clinic",
-    description: 'General waste collection',
-    amount: 75.0,
-  },
-  {
-    id: 'TRP004',
-    client: 'TechCorp Solutions',
-    description: 'E-waste collection',
-    amount: 90.0,
-  },
-  {
-    id: 'TRP005',
-    client: 'TechCorp Solutions',
-    description: 'Recycling center delivery',
-    amount: 75.5,
-  },
-  {
-    id: 'TRP006',
-    client: 'PharmaCare Industries',
-    description: 'Pharma waste pickup',
-    amount: 120.0,
-  },
-  {
-    id: 'TRP007',
-    client: 'HealthCare Plus',
-    description: 'Hospital waste pickup',
-    amount: 100.0,
-  },
-  {
-    id: 'TRP008',
-    client: 'HealthCare Plus',
-    description: 'Biohazard disposal',
-    amount: 95.75,
-  },
-];
+type InvoiceForm = {
+  client: string;
+  selectedTrips: string[];
+  billingNotes: string;
+  status: 'paid' | 'unpaid';
+  dueDate: Date | null;
+};
 
 export function useInvoice() {
-  const [invoicesList, setInvoicesList] = useState(invoices);
+  const [clientTrips, setClientTrips] = useState<any[]>([]);
+  const [tripsLoading, setTripsLoading] = useState(false);
+  const [generating, setGenerating] = useState(false);
+  const [invoicesList, setInvoicesList] = useState<Invoice[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [dateFilter, setDateFilter] = useState('all');
+  const [dateFilter, setDateFilter] = useState<DateRangeLocal | undefined>(
+    undefined
+  );
   const [selectedInvoice, setSelectedInvoice] = useState<
     (typeof invoices)[0] | null
   >(null);
@@ -146,12 +121,16 @@ export function useInvoice() {
   const [invoiceToDelete, setInvoiceToDelete] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const invoicesPerPage = 10;
+  const { user } = useProfile();
 
-  // Form state for generate invoice
-  const [formData, setFormData] = useState({
+  const authorizedRequest = useAuthorizedRequest();
+
+  const [formData, setFormData] = useState<InvoiceForm>({
     client: '',
-    selectedTrips: [] as string[],
+    selectedTrips: [],
     billingNotes: '',
+    status: 'unpaid',
+    dueDate: null,
   });
 
   const resetForm = () => {
@@ -159,8 +138,109 @@ export function useInvoice() {
       client: '',
       selectedTrips: [],
       billingNotes: '',
+      status: 'unpaid',
+      dueDate: null,
     });
   };
+
+  const formatDateOnly = (d: Date) =>
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(
+      d.getDate()
+    ).padStart(2, '0')}`;
+
+  useEffect(() => {
+    if (!formData.client) {
+      setClientTrips([]);
+      return;
+    }
+
+    setTripsLoading(true);
+
+    authorizedRequest(async (token) => {
+      const res = await api.get(
+        `/client/trips/client/${formData.client}/trips`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          params: {
+            status: 'completed',
+            start_date: dateFilter?.from || undefined,
+            end_date: dateFilter?.to || undefined,
+          },
+        }
+      );
+
+      setClientTrips(res.data.assigned_trips || []);
+    }, 'fail to get client trips')
+      .catch(() => setClientTrips([]))
+      .finally(() => setTripsLoading(false));
+  }, [formData.client, dateFilter]);
+
+  const handleGenerateInvoice = async () => {
+    if (!formData.client) {
+      toast.error('Please select a client');
+      return;
+    }
+
+    if (!dateFilter?.from || !dateFilter?.to) {
+      toast.error('Please select a billing date range');
+      return;
+    }
+
+    try {
+      setGenerating(true);
+      await authorizedRequest(async (token) => {
+        const payload = {
+          client_id: formData.client,
+          organization_id: user?.organization.id,
+          start_date: formatDateOnly(dateFilter.from!),
+          end_date: formatDateOnly(dateFilter.to!),
+          due_date: formData.dueDate
+            ? formData.dueDate.toISOString()
+            : undefined,
+          status: formData.status,
+          generated_at: new Date().toISOString(),
+          reference_code: `INV-${Math.floor(Math.random() * 999999)}`,
+          trips: formData.selectedTrips,
+          notes: formData.billingNotes || '',
+        };
+
+        const res = await api.post('/invoices/generate', payload, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const newInvoice: Invoice = {
+          id: res.data.id,
+          invoiceNumber: res.data.invoice_number,
+          client: res.data.client_id,
+          organization: res.data.organization_id,
+          amount: res.data.amount,
+          status: res.data.status,
+          generatedAt: res.data.generated_at,
+          dueDate: res.data.due_date,
+          referenceCode: res.data.reference_code,
+          startDate: res.data.start_date,
+          endDate: res.data.end_date,
+          issueDate: res.data.issueDate,
+
+          // custom local fields (optional, not required by backend)
+          billingNotes: formData.billingNotes,
+          trips: formData.selectedTrips,
+        };
+
+        setInvoicesList((prev) => [newInvoice, ...prev]);
+      }, 'fail to generate invoice');
+
+      setIsGenerateModalOpen(false);
+      resetForm();
+      toast.success('Invoice generated successfully');
+    } catch (error) {
+      console.error('Generate invoice failed:', error);
+      toast.error('Failed to generate invoice');
+    } finally {
+      setGenerating(false)
+    }
+  };
+
   const filteredInvoices = invoicesList.filter((invoice) => {
     const matchesSearch =
       invoice.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -170,10 +250,11 @@ export function useInvoice() {
       statusFilter === 'all' ||
       invoice.status.toLowerCase() === statusFilter.toLowerCase();
 
-    const matchesDate =
-      dateFilter === 'all' || invoice.issueDate.startsWith(dateFilter);
+    // const matchesDate =
+    //   dateFilter === 'all' || invoice.issueDate.startsWith(dateFilter);
 
-    return matchesSearch && matchesStatus && matchesDate;
+    // return matchesSearch && matchesStatus && matchesDate;
+    return matchesSearch && matchesStatus;
   });
 
   const totalPages = Math.ceil(filteredInvoices.length / invoicesPerPage);
@@ -194,44 +275,6 @@ export function useInvoice() {
     );
     setInvoiceToDelete(null);
     toast.success('Invoice deleted successfully');
-  };
-
-  const handleGenerateInvoice = () => {
-    if (!formData.client || formData.selectedTrips.length === 0) {
-      toast.error('Please select a client and at least one trip');
-      return;
-    }
-
-    // const selectedTripDetails = completedTrips.filter((trip) => formData.selectedTrips.includes(trip.id))
-    const selectedTripDetails = completedTrips
-      .filter((trip) => formData.selectedTrips.includes(trip.id))
-      .map((trip) => ({
-        tripId: trip.id, // convert field name
-        description: trip.description,
-        amount: trip.amount,
-      }));
-    const totalAmount = selectedTripDetails.reduce(
-      (sum, trip) => sum + trip.amount,
-      0
-    );
-
-    const newInvoice = {
-      id: `INV-${String(invoicesList.length + 1).padStart(4, '0')}`,
-      client: formData.client,
-      trips: formData.selectedTrips,
-      amount: totalAmount,
-      issueDate: new Date().toISOString().split('T')[0],
-      status: 'Pending',
-      billingNotes: formData.billingNotes,
-      createdBy: 'Admin User',
-      createdAt: new Date().toISOString().slice(0, 16).replace('T', ' '),
-      tripDetails: selectedTripDetails,
-    };
-
-    setInvoicesList((prev) => [newInvoice, ...prev]);
-    setIsGenerateModalOpen(false);
-    resetForm();
-    toast.success('Invoice generated successfully');
   };
 
   const handleExport = (type: 'csv') => {
@@ -265,10 +308,6 @@ export function useInvoice() {
     toast.success('CSV export completed');
   };
 
-  const getClientTrips = (client: string) => {
-    return completedTrips.filter((trip) => trip.client === client);
-  };
-
   const toggleTripSelection = (tripId: string) => {
     setFormData((prev) => ({
       ...prev,
@@ -279,15 +318,16 @@ export function useInvoice() {
   };
 
   const calculateTotal = () => {
-    return completedTrips
-      .filter((trip) => formData.selectedTrips.includes(trip.id))
-      .reduce((sum, trip) => sum + trip.amount, 0);
+    return clientTrips
+      .filter((trip) => formData.selectedTrips.includes(trip.trip_id))
+      .reduce((sum, trip) => sum + trip.cost, 0);
   };
 
   return {
+    clientTrips,
+    tripsLoading,
+    generating,
     invoices,
-    clients,
-    completedTrips,
     invoicesList,
     setInvoicesList,
     searchTerm,
@@ -318,7 +358,6 @@ export function useInvoice() {
     resetForm,
     handleGenerateInvoice,
     handleExport,
-    getClientTrips,
     toggleTripSelection,
     calculateTotal,
   };
