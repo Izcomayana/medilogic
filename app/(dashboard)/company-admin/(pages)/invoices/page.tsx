@@ -27,23 +27,28 @@ import { InvoicesTable } from './components/Table';
 import { InvoiceDetails } from './components/Details';
 import { GenerateInvoice } from './components/Generate';
 import DateRangeFilter from '@/app/(dashboard)/components/DateRange';
+import { useUsers } from '@/hooks/useUsers';
 
 export default function InvoicesPage() {
   const invoiceState = useInvoice();
 
   const {
-    searchTerm,
-    setSearchTerm,
-    statusFilter,
-    setStatusFilter,
-    dateFilter,
-    setDateFilter,
+    clientId,
+    setClientId,
+    status,
+    setStatus,
+    dateRange,
+    setDateRange,
     invoiceToDelete,
     setInvoiceToDelete,
     filteredInvoices,
     handleDelete,
     handleExport,
   } = invoiceState;
+
+    const { users } = useUsers();
+    const clients = users.filter((user) => user.role === 'client');
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
       <PageHeader
@@ -75,31 +80,39 @@ export default function InvoicesPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                <Input
-                  placeholder="Search by invoice ID or client name..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                />
-              </div>
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-[150px] bg-gray-700 border-gray-600 text-white">
-                  <Filter className="h-4 w-4 mr-2" />
-                  <SelectValue placeholder="Status" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-700 border-gray-600">
-                  <SelectItem value="all">All Status</SelectItem>
-                  <SelectItem value="paid">Paid</SelectItem>
-                  <SelectItem value="pending">Pending</SelectItem>
-                  <SelectItem value="overdue">Overdue</SelectItem>
-                </SelectContent>
-              </Select>
-              <DateRangeFilter value={dateFilter} onChange={setDateFilter} />
-            </div>
-          </CardContent>
+  <div className="flex flex-col md:flex-row md:items-center gap-4 mb-4">
+    <Select value={clientId || "all"} onValueChange={(v) => setClientId(v === "all" ? null : v)}>
+      <SelectTrigger className="w-[200px] bg-gray-700 border-gray-600 text-white">
+        <SelectValue placeholder="Client" />
+      </SelectTrigger>
+      <SelectContent className="bg-gray-700 border-gray-600">
+        <SelectItem value="all">All Clients</SelectItem>
+        {clients.map((c) => (
+          <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+
+    {/* STATUS FILTER */}
+    <Select value={status || "all"} onValueChange={(value) => setStatus(value === "all" ? null : value as any)}>
+      <SelectTrigger className="w-[150px] bg-gray-700 border-gray-600 text-white flex gap-2">
+        <Filter className="h-4 w-4" />
+        <SelectValue placeholder="Status" />
+      </SelectTrigger>
+      <SelectContent className="bg-gray-700 border-gray-600">
+        <SelectItem value="all">All Status</SelectItem>
+        <SelectItem value="paid">Paid</SelectItem>
+        <SelectItem value="unpaid">Unpaid</SelectItem>
+        <SelectItem value="overdue">Overdue</SelectItem>
+      </SelectContent>
+    </Select>
+
+<DateRangeFilter 
+  value={dateRange}
+  onChange={setDateRange}
+/>
+  </div>
+</CardContent>
         </Card>
 
         <InvoicesTable {...invoiceState} />

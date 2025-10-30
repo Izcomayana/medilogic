@@ -28,19 +28,21 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
+import { formatDateTime } from '@/utils/datetime';
 
 type InvoicesTableProps = ReturnType<typeof useInvoice>;
 
 export function InvoicesTable({
+  invoicesList,
   filteredInvoices,
   paginatedInvoices,
   handleViewDetails,
   setInvoiceToDelete,
   totalPages,
   startIndex,
-  invoicesPerPage,
-  setCurrentPage,
-  currentPage,
+  limit,
+  setPage,
+  page,
 }: InvoicesTableProps) {
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
@@ -51,11 +53,11 @@ export function InvoicesTable({
             Paid
           </Badge>
         );
-      case 'pending':
+      case 'unpiad':
         return (
           <Badge variant="secondary" className="bg-yellow-600 text-white">
             <Clock className="h-3 w-3 mr-1" />
-            Pending
+            Unpaid
           </Badge>
         );
       case 'overdue':
@@ -89,12 +91,11 @@ export function InvoicesTable({
               <Table>
                 <TableHeader>
                   <TableRow className="border-gray-700 hover:bg-gray-800">
-                    <TableHead className="text-gray-300">Invoice ID</TableHead>
-                    <TableHead className="text-gray-300">Client</TableHead>
-                    <TableHead className="text-gray-300">Trips</TableHead>
-                    <TableHead className="text-gray-300">Amount</TableHead>
-                    <TableHead className="text-gray-300">Issue Date</TableHead>
+                    {/* <TableHead className="text-gray-300">Client</TableHead> */}
+                    <TableHead className="text-gray-300">Invoice No</TableHead>
                     <TableHead className="text-gray-300">Status</TableHead>
+                    <TableHead className="text-gray-300">Generated On</TableHead>
+                    <TableHead className="text-gray-300">Amount</TableHead>
                     <TableHead className="text-gray-300">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -104,23 +105,18 @@ export function InvoicesTable({
                       key={invoice.id}
                       className="border-gray-700 hover:bg-gray-800"
                     >
-                      <TableCell className="font-medium text-white">
-                        {invoice.id}
-                      </TableCell>
-                      <TableCell className="text-gray-300">
+                      {/* <TableCell className="text-gray-300">
                         {invoice.client}
-                      </TableCell>
+                      </TableCell> */}
+                      <TableCell className='text-gray-300'>{invoice.invoiceNumber}</TableCell>
+                      <TableCell>{getStatusBadge(invoice.status)}</TableCell>
                       <TableCell className="text-gray-300">
-                        {invoice?.trips.length} Trips
+                        {formatDateTime(invoice.generatedAt)}
                       </TableCell>
                       <TableCell className="text-white font-semibold flex items-center gap-1">
                         <DollarSign className="h-4 w-4" />£
                         {invoice.amount.toFixed(2)}
                       </TableCell>
-                      <TableCell className="text-gray-300">
-                        {invoice.issueDate}
-                      </TableCell>
-                      <TableCell>{getStatusBadge(invoice.status)}</TableCell>
                       <TableCell>
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
@@ -135,13 +131,13 @@ export function InvoicesTable({
                             align="end"
                             className="bg-gray-700 border-gray-600"
                           >
-                            <DropdownMenuItem
+                            {/* <DropdownMenuItem
                               className="text-gray-300 hover:bg-gray-600"
                               onClick={() => handleViewDetails(invoice)}
                             >
                               <Eye className="mr-2 h-4 w-4" />
                               View Details
-                            </DropdownMenuItem>
+                            </DropdownMenuItem> */}
                             <DropdownMenuItem
                               className="text-gray-300 hover:bg-gray-600"
                               onClick={() =>
@@ -173,7 +169,7 @@ export function InvoicesTable({
                 <div className="text-sm text-gray-400">
                   Showing {startIndex + 1}-
                   {Math.min(
-                    startIndex + invoicesPerPage,
+                    startIndex + limit,
                     filteredInvoices.length
                   )}{' '}
                   of {filteredInvoices.length}
@@ -182,8 +178,8 @@ export function InvoicesTable({
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                    disabled={currentPage === 1}
+                    onClick={() => setPage(Math.max(1, page - 1))}
+                    disabled={page === 1}
                     className="border-gray-600 text-gray-300 hover:bg-gray-700 disabled:opacity-50"
                   >
                     Previous
@@ -192,9 +188,9 @@ export function InvoicesTable({
                     variant="outline"
                     size="sm"
                     onClick={() =>
-                      setCurrentPage(Math.min(totalPages, currentPage + 1))
+                      setPage(Math.min(totalPages, page + 1))
                     }
-                    disabled={currentPage === totalPages}
+                    disabled={page === totalPages}
                     className="border-gray-600 text-gray-300 hover:bg-gray-700 disabled:opacity-50"
                   >
                     Next

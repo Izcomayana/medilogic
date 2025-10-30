@@ -190,7 +190,7 @@ export function GenerateInvoice({
             <Select
               value={formData.status}
               onValueChange={(value) =>
-                setFormData({ ...formData, status: value as 'paid' | 'unpaid' })
+                setFormData({ ...formData, status: value as 'paid' | 'unpaid' | 'overdue' })
               }
             >
               <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
@@ -199,6 +199,7 @@ export function GenerateInvoice({
               <SelectContent className="bg-gray-700 border-gray-600">
                 <SelectItem value="paid">Paid</SelectItem>
                 <SelectItem value="unpaid">Unpaid</SelectItem>
+                <SelectItem value='overdue'>Overdue</SelectItem>
               </SelectContent>
             </Select>
           </div>

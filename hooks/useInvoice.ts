@@ -85,7 +85,7 @@ export interface Invoice {
   client: string;
   organization: string;
   amount: number;
-  status: 'paid' | 'unpaid';
+  status: 'paid' | 'unpaid' | 'overdue';
   generatedAt: string;
   dueDate: Date | null;
   referenceCode: string;
@@ -99,7 +99,7 @@ type InvoiceForm = {
   client: string;
   selectedTrips: string[];
   billingNotes: string;
-  status: 'paid' | 'unpaid';
+  status: 'paid' | 'unpaid' | 'overdue';
   dueDate: Date | null;
 };
 
@@ -108,8 +108,13 @@ export function useInvoice() {
   const [tripsLoading, setTripsLoading] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [invoicesList, setInvoicesList] = useState<Invoice[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [clientId, setClientId] = useState<string | null>(null);
+  const [status, setStatus] = useState<"paid" | "unpaid" | "overdue" | null>(null);
+  const [dateRange, setDateRange] = useState<DateRangeLocal | undefined>();
+  const [dueDateFrom, setDueDateFrom] = useState<Date | null>(null);
+  const [dueDateTo, setDueDateTo] = useState<Date | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
   const [dateFilter, setDateFilter] = useState<DateRangeLocal | undefined>(
     undefined
   );
@@ -119,9 +124,13 @@ export function useInvoice() {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false);
   const [invoiceToDelete, setInvoiceToDelete] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const invoicesPerPage = 10;
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const invoicesPerPage = 10;
   const { user } = useProfile();
+
+    const [page, setPage] = useState(1);
+  const limit = 10;
+  const skip = (page - 1) * limit;
 
   const authorizedRequest = useAuthorizedRequest();
 
@@ -241,27 +250,69 @@ export function useInvoice() {
     }
   };
 
-  const filteredInvoices = invoicesList.filter((invoice) => {
-    const matchesSearch =
-      invoice.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      invoice.client.toLowerCase().includes(searchTerm.toLowerCase());
+  const fetchInvoices = async () => {
+    try {
+    setLoading(true);
+      await authorizedRequest(async (token) => {
+              const res = await api.get("/invoices/admin", {
+        headers: { Authorization: `Bearer ${token}` },
+        params: {
+          client_id: clientId || undefined,
+          status: status || undefined,
+          due_date_from: dateRange?.from ? dateRange.from.toISOString() : undefined,
+  due_date_to: dateRange?.to ? dateRange.to.toISOString() : undefined,
+          skip,
+          limit,
+        },
+      });
+      const formatted = res.data.map((inv: any): Invoice => ({
+        id: inv.id,
+        invoiceNumber: inv.invoice_number,
+        client: inv.client_id,
+        organization: inv.organization_id,
+        status: inv.status,
+        generatedAt: inv.generated_at,
+        dueDate: inv.due_date ? new Date(inv.due_date) : null,
+        referenceCode: inv.reference_code,
+        startDate: inv.start_date,
+        endDate: inv.end_date,
+        amount: inv.amount,
+        issueDate: inv.issue_date,
+        billingNotes: inv.billing_notes,
+        trips: inv.trips,
+      }));
 
-    const matchesStatus =
-      statusFilter === 'all' ||
-      invoice.status.toLowerCase() === statusFilter.toLowerCase();
+      setInvoicesList(formatted);
+      }, 'fail to get invoices')
+    } catch (err: any) {
+      console.log(err?.response?.data?.message || "Failed to load invoices.");
+      toast.error('Failed to get invoices');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    // const matchesDate =
-    //   dateFilter === 'all' || invoice.issueDate.startsWith(dateFilter);
+useEffect(() => {
+  fetchInvoices();
+}, [clientId, status, dueDateFrom, dueDateTo, page]);
 
-    // return matchesSearch && matchesStatus && matchesDate;
-    return matchesSearch && matchesStatus;
-  });
+const filteredInvoices = invoicesList.filter((invoice) => {
+  const matchesStatus = status === null || invoice.status === status;
+  const matchesClient = clientId === null || invoice.client === clientId;
 
-  const totalPages = Math.ceil(filteredInvoices.length / invoicesPerPage);
-  const startIndex = (currentPage - 1) * invoicesPerPage;
+  const matchesDate =
+    (!dateRange?.from || (invoice.dueDate && invoice.dueDate >= dateRange.from)) &&
+    (!dateRange?.to || (invoice.dueDate && invoice.dueDate <= dateRange.to));
+
+  return matchesStatus && matchesClient && matchesDate;
+});
+
+
+  const totalPages = Math.ceil(filteredInvoices.length / limit);
+  const startIndex = (page - 1) * limit;
   const paginatedInvoices = filteredInvoices.slice(
     startIndex,
-    startIndex + invoicesPerPage
+    startIndex + limit
   );
 
   const handleViewDetails = (invoice: (typeof invoices)[0]) => {
@@ -328,12 +379,21 @@ export function useInvoice() {
     tripsLoading,
     generating,
     invoices,
+    loading,
     invoicesList,
     setInvoicesList,
     searchTerm,
     setSearchTerm,
-    statusFilter,
-    setStatusFilter,
+    status,
+    setStatus,
+  clientId,
+  setClientId,
+  dateRange,
+  setDateRange,
+  dueDateFrom,
+  setDueDateFrom,
+  dueDateTo,
+  setDueDateTo,
     dateFilter,
     setDateFilter,
     selectedInvoice,
@@ -344,9 +404,9 @@ export function useInvoice() {
     setIsGenerateModalOpen,
     invoiceToDelete,
     setInvoiceToDelete,
-    currentPage,
-    setCurrentPage,
-    invoicesPerPage,
+    page,
+    setPage,
+    limit,
     formData,
     setFormData,
     filteredInvoices,
