@@ -28,6 +28,7 @@ import { InvoicesTable } from './components/Table';
 import { GenerateInvoice } from './components/Generate';
 import DateRangeFilter from '@/app/(dashboard)/components/DateRange';
 import { useUsers } from '@/hooks/useUsers';
+import { UpdateStatusModal } from './components/Table/UpdateStatus';
 
 export default function InvoicesPage() {
   const invoiceState = useInvoice();
@@ -44,6 +45,9 @@ export default function InvoicesPage() {
     filteredInvoices,
     handleDelete,
     handleExport,
+    invoiceToUpdate,
+    setInvoiceToUpdate,
+    updateInvoiceStatus,
   } = invoiceState;
 
   const { users } = useUsers();
@@ -65,6 +69,7 @@ export default function InvoicesPage() {
                 <FileText className="h-5 w-5" />
                 Invoices Management ({filteredInvoices.length})
               </CardTitle>
+
               <div className="md:flex gap-2">
                 <Button
                   onClick={handleExport}
@@ -153,6 +158,12 @@ export default function InvoicesPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <UpdateStatusModal
+        invoiceToUpdate={invoiceToUpdate}
+        setInvoiceToUpdate={setInvoiceToUpdate}
+        updateInvoiceStatus={updateInvoiceStatus}
+      />
     </div>
   );
 }

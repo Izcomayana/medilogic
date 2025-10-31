@@ -185,7 +185,7 @@ export function GenerateInvoice({
             </div>
           )}
 
-          <div>
+          {/* <div>
             <Label className="text-gray-300 mb-2 block">Invoice Status</Label>
             <Select
               value={formData.status}
@@ -205,7 +205,7 @@ export function GenerateInvoice({
                 <SelectItem value="overdue">Overdue</SelectItem>
               </SelectContent>
             </Select>
-          </div>
+          </div> */}
 
           <div>
             <Label className="text-gray-300 mb-2 block">Due Date</Label>
