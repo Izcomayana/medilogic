@@ -342,7 +342,7 @@ export function LogCustodyEventModal({
               disabled={isSubmitting}
               className="bg-blue-600 hover:bg-blue-700 text-white"
             >
-              {isSubmitting ? <Spinner className='mx-8' /> : 'Log Event'}
+              {isSubmitting ? <Spinner className="mx-8" /> : 'Log Event'}
             </Button>
           </AlertDialogFooter>
         </form>
