@@ -22,6 +22,7 @@ import {
 import { MapPin, Loader, FileUp } from 'lucide-react';
 import { useCOC } from '@/app/(dashboard)/driver/hooks/useCoc';
 import { formatDateTime } from '@/utils/datetime';
+import { Spinner } from '@/components/ui/spinner';
 
 export function LogCustodyEventModal({
   showLogModal,
@@ -341,7 +342,7 @@ export function LogCustodyEventModal({
               disabled={isSubmitting}
               className="bg-blue-600 hover:bg-blue-700 text-white"
             >
-              {isSubmitting ? 'Logging...' : 'Log Event'}
+              {isSubmitting ? <Spinner className='mx-8' /> : 'Log Event'}
             </Button>
           </AlertDialogFooter>
         </form>
