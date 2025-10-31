@@ -48,12 +48,15 @@ export function useInvoice() {
   const [dateFilter, setDateFilter] = useState<DateRangeLocal | undefined>(
     undefined
   );
-  const [selectedInvoice, setSelectedInvoice] = useState<Invoice[][0] | null>(
-    null
-  );
+  const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false);
   const [invoiceToDelete, setInvoiceToDelete] = useState<string | null>(null);
+  const [invoiceToUpdate, setInvoiceToUpdate] = useState<{
+    id: string;
+    status: string;
+  } | null>(null);
+
   const { user } = useProfile();
 
   const [page, setPage] = useState(1);
@@ -285,24 +288,62 @@ export function useInvoice() {
             status: status || undefined,
           },
           responseType: 'blob',
+          validateStatus: () => true, // ✅ prevents auto throwing, so we can inspect status
         });
 
-        const url = window.URL.createObjectURL(new Blob([response.data]));
+        if (response.status === 404) {
+          toast.error('No invoices available to export', { id: 'export' });
+          return;
+        }
+
+        if (response.status !== 200) {
+          toast.error('Failed to export invoices', { id: 'export' });
+          return;
+        }
+
+        // ✅ Successful export
+        const blob = new Blob([response.data], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
+
         link.href = url;
-        link.setAttribute(
-          'download',
-          `invoices-${new Date().toISOString().split('T')[0]}.csv`
-        );
+        link.download = `invoices-${new Date().toISOString().split('T')[0]}.csv`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
         window.URL.revokeObjectURL(url);
 
-        toast.success('Invoices exported successfully', { id: 'export' }); // ✅ Replaces loading toast
+        toast.success('Invoices exported successfully', { id: 'export' });
       }, 'fail to export');
-    } catch {
-      toast.error('Failed to export invoices', { id: 'export' }); // ✅ Replaces loading toast
+    } catch (error) {
+      toast.error('Failed to export invoices', { id: 'export' });
+      console.error(error);
+    }
+  };
+
+  const updateInvoiceStatus = async (invoiceId: string, newStatus: string) => {
+    try {
+      toast.loading('Updating status...', { id: 'status-update' });
+
+      await authorizedRequest(async (token) => {
+        const res = await api.patch(
+          `/invoices/${invoiceId}/update-status`,
+          { status: newStatus },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+
+        // Update the invoice list state
+        setInvoicesList((prev) =>
+          prev.map((inv) =>
+            inv.id === invoiceId ? { ...inv, status: res.data.status } : inv
+          )
+        );
+      }, 'Failed to update invoice status');
+
+      toast.success('Status updated successfully ✅', { id: 'status-update' });
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to update status', { id: 'status-update' });
     }
   };
 
@@ -348,6 +389,8 @@ export function useInvoice() {
     setIsGenerateModalOpen,
     invoiceToDelete,
     setInvoiceToDelete,
+    invoiceToUpdate,
+    setInvoiceToUpdate,
     page,
     setPage,
     limit,
@@ -362,6 +405,7 @@ export function useInvoice() {
     resetForm,
     handleGenerateInvoice,
     handleExport,
+    updateInvoiceStatus,
     toggleTripSelection,
     calculateTotal,
   };
