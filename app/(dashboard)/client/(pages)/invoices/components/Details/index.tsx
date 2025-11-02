@@ -19,7 +19,6 @@ import {
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { toast } from 'sonner';
 import { formatDateTime } from '@/utils/datetime';
 
 type InvoiceDetailsProps = ReturnType<typeof useClientInvoice>;

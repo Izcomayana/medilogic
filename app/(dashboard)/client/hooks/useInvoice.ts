@@ -143,6 +143,7 @@ export function useClientInvoice() {
       }, 'Failed to load invoice details');
     } catch (err: any) {
       toast.error('Unable to load invoice details');
+      console.log('error:', err)
     } finally {
       setLoading(false);
     }

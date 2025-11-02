@@ -47,7 +47,6 @@ export function ClientInvoicesTable({
   page,
   handleViewDetails,
   handleDownloadInvoice,
-  selectedInvoice,
 }: Props) {
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
