@@ -47,7 +47,6 @@ export function useInvoice() {
     undefined
   );
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
-  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false);
   const [invoiceToDelete, setInvoiceToDelete] = useState<string | null>(null);
   const [invoiceToUpdate, setInvoiceToUpdate] = useState<{
@@ -248,11 +247,6 @@ export function useInvoice() {
     startIndex + limit
   );
 
-  // const handleViewDetails = (invoice: (Invoice)[]) => {
-  //   setSelectedInvoice(invoice);
-  //   setIsDetailsModalOpen(true);
-  // };
-
   const handleDelete = async (invoiceId: string) => {
     try {
       // Call the backend
@@ -377,8 +371,6 @@ export function useInvoice() {
     setDateFilter,
     selectedInvoice,
     setSelectedInvoice,
-    isDetailsModalOpen,
-    setIsDetailsModalOpen,
     isGenerateModalOpen,
     setIsGenerateModalOpen,
     invoiceToDelete,
@@ -394,7 +386,6 @@ export function useInvoice() {
     totalPages,
     startIndex,
     paginatedInvoices,
-    // handleViewDetails,
     handleDelete,
     resetForm,
     handleGenerateInvoice,

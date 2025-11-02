@@ -14,10 +14,13 @@ import {
   CheckCircle,
   Clock,
   AlertCircle,
+  Download,
+  Eye,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { formatDateTime } from '@/utils/datetime';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
 
 type Props = {
   loading: boolean;
@@ -28,6 +31,9 @@ type Props = {
   limit: number;
   page: number;
   setPage: (page: number) => void;
+  handleViewDetails: any;
+  selectedInvoice: any;
+  handleDownloadInvoice: any;
 };
 
 export function ClientInvoicesTable({
@@ -39,6 +45,8 @@ export function ClientInvoicesTable({
   limit,
   setPage,
   page,
+  handleViewDetails,
+  handleDownloadInvoice,
 }: Props) {
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
@@ -83,6 +91,7 @@ export function ClientInvoicesTable({
                       Generated On
                     </TableHead>
                     <TableHead className="text-gray-300">Amount</TableHead>
+                    <TableHead className="text-gray-300">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -102,6 +111,9 @@ export function ClientInvoicesTable({
                       </TableCell>
                       <TableCell>
                         <Skeleton className="h-4 w-24 bg-gray-700" />
+                      </TableCell>
+                      <TableCell>
+                        <Skeleton className="h-8 w-8 bg-gray-700" />
                       </TableCell>
                     </TableRow>
                   ))}
@@ -131,6 +143,7 @@ export function ClientInvoicesTable({
                       Generated On
                     </TableHead>
                     <TableHead className="text-gray-300">Amount</TableHead>
+                    <TableHead className="text-gray-300">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -151,6 +164,23 @@ export function ClientInvoicesTable({
                       <TableCell className="text-white font-semibold flex items-center gap-1">
                         <DollarSign className="h-4 w-4" />£
                         {invoice.amount.toFixed(2)}
+                      </TableCell>
+
+                      <TableCell className="">
+                        <div className="flex gap-2">
+                          <Button
+                            variant="ghost"
+                            onClick={() => handleDownloadInvoice(invoice.id)}
+                          >
+                            <Download className="w-4 h-4" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            onClick={() => handleViewDetails(invoice.id)}
+                          >
+                            <Eye className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}

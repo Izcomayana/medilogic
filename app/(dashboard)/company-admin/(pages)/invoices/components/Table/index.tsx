@@ -96,9 +96,7 @@ export function InvoicesTable({
                         Generated On
                       </TableHead>
                       <TableHead className="text-gray-300">Amount</TableHead>
-                      {role === 'admin' && (
-                        <TableHead className="text-gray-300">Actions</TableHead>
-                      )}
+                      <TableHead className="text-gray-300">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
