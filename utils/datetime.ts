@@ -42,8 +42,12 @@ export const formatDateEndUtc = (date: Date): string => {
  * Format a UTC datetime string into user's local time.
  * Example: "2025-10-01T14:00:00Z" -> "Oct 1, 2025, 3:00 PM"
  */
-export const formatDateTime = (dateTime: string): string => {
-  return new Date(dateTime).toLocaleString(undefined, {
+export const formatDateTime = (dateTime: string | Date | null): string => {
+  if (!dateTime) return '—'; // graceful fallback if null or undefined
+
+  const dateObj = typeof dateTime === 'string' ? new Date(dateTime) : dateTime;
+
+  return dateObj.toLocaleString(undefined, {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
@@ -51,6 +55,16 @@ export const formatDateTime = (dateTime: string): string => {
     minute: '2-digit',
   });
 };
+
+// export const formatDateTime = (dateTime: string): string => {
+//   return new Date(dateTime).toLocaleString(undefined, {
+//     year: 'numeric',
+//     month: 'short',
+//     day: 'numeric',
+//     hour: '2-digit',
+//     minute: '2-digit',
+//   });
+// };
 
 /**
  * Same as formatDateTime, but also shows the timezone explicitly.
