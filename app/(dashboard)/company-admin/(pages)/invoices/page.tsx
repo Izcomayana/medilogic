@@ -29,6 +29,7 @@ import { GenerateInvoice } from './components/Generate';
 import DateRangeFilter from '@/app/(dashboard)/components/DateRange';
 import { useUsers } from '@/hooks/useUsers';
 import { UpdateStatusModal } from './components/Table/UpdateStatus';
+import { InvoiceDetails } from '@/app/(dashboard)/client/(pages)/invoices/components/Details';
 
 export default function InvoicesPage() {
   const invoiceState = useInvoice();
@@ -130,7 +131,7 @@ export default function InvoicesPage() {
         <InvoicesTable {...invoiceState} />
       </main>
 
-      {/* <InvoiceDetails {...invoiceState} /> */}
+      <InvoiceDetails {...invoiceState} />
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog

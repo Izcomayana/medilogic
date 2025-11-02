@@ -48,6 +48,7 @@ export function useInvoice() {
   );
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [invoiceToDelete, setInvoiceToDelete] = useState<string | null>(null);
   const [invoiceToUpdate, setInvoiceToUpdate] = useState<{
     id: string;
@@ -268,6 +269,43 @@ export function useInvoice() {
     }
   };
 
+  const handleViewDetails = async (invoiceId: string) => {
+    try {
+      setLoading(true);
+      await authorizedRequest(async (token) => {
+        const res = await api.get(`/invoices/${invoiceId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const inv = res.data;
+
+        setSelectedInvoice({
+          id: inv.id,
+          invoiceNumber: inv.invoice_number,
+          client: inv.client_id,
+          organization: inv.organization_id,
+          status: inv.status,
+          generatedAt: inv.generated_at,
+          dueDate: inv.due_date ? new Date(inv.due_date) : null,
+          referenceCode: inv.reference_code,
+          startDate: inv.start_date,
+          endDate: inv.end_date,
+          amount: inv.amount,
+          issueDate: inv.issue_date,
+          billingNotes: inv.billing_notes,
+          trips: inv.trips,
+        });
+
+        setIsDetailsModalOpen(true);
+      }, 'Failed to load invoice details');
+    } catch (err: any) {
+      toast.error('Unable to load invoice details');
+      console.log('error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleExport = async () => {
     toast.loading('Preparing export...', { id: 'export' });
 
@@ -309,6 +347,49 @@ export function useInvoice() {
       }, 'fail to export');
     } catch (error) {
       toast.error('Failed to export invoices', { id: 'export' });
+      console.error(error);
+    }
+  };
+
+  const handleDownloadInvoice = async (
+    invoiceId: string,
+    invoiceNumber?: string
+  ) => {
+    toast.loading('Preparing invoice download...', { id: 'download' });
+
+    try {
+      await authorizedRequest(async (token) => {
+        const response = await api.get(`/invoices/${invoiceId}/download`, {
+          headers: { Authorization: `Bearer ${token}` },
+          responseType: 'blob',
+          validateStatus: () => true,
+        });
+
+        if (response.status === 404) {
+          toast.error('Invoice not found', { id: 'download' });
+          return;
+        }
+
+        if (response.status !== 200) {
+          toast.error('Failed to download invoice', { id: 'download' });
+          return;
+        }
+
+        const blob = new Blob([response.data], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+
+        link.href = url;
+        link.download = `${invoiceNumber || invoiceId}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+
+        toast.success('Invoice downloaded successfully', { id: 'download' });
+      }, 'failed to download invoice');
+    } catch (error) {
+      toast.error('Failed to download invoice', { id: 'download' });
       console.error(error);
     }
   };
@@ -390,6 +471,10 @@ export function useInvoice() {
     resetForm,
     handleGenerateInvoice,
     handleExport,
+    handleDownloadInvoice,
+    isDetailsModalOpen,
+    setIsDetailsModalOpen,
+    handleViewDetails,
     updateInvoiceStatus,
     toggleTripSelection,
     calculateTotal,

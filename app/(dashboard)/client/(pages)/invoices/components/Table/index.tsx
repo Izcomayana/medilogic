@@ -10,7 +10,6 @@ import {
 } from '@/components/ui/table';
 import {
   FileText,
-  DollarSign,
   CheckCircle,
   Clock,
   AlertCircle,
@@ -162,8 +161,7 @@ export function ClientInvoicesTable({
                         {formatDateTime(invoice.generatedAt)}
                       </TableCell>
                       <TableCell className="text-white font-semibold flex items-center gap-1">
-                        <DollarSign className="h-4 w-4" />£
-                        {invoice.amount.toFixed(2)}
+                        £{invoice.amount.toFixed(2)}
                       </TableCell>
 
                       <TableCell className="">

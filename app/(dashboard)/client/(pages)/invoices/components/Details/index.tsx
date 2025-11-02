@@ -11,7 +11,6 @@ import {
   FileText,
   Calendar,
   Download,
-  DollarSign,
   CheckCircle,
   AlertCircle,
   Clock,
@@ -79,12 +78,6 @@ export function InvoiceDetails({
                   Invoice Information
                 </h3>
                 <div className="space-y-3">
-                  {/* <div>
-                    <Label className="text-gray-400 text-sm">Invoice ID</Label>
-                    <p className="text-white font-medium">
-                      {selectedInvoice.id}
-                    </p>
-                  </div> */}
                   {/* <div>
                     <Label className="text-gray-400 text-sm">
                       Client / Organization
@@ -154,17 +147,12 @@ export function InvoiceDetails({
                     £{selectedInvoice.amount.toFixed(2)}
                   </span>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-300">Tax (0%):</span>
-                  <span className="text-white font-medium">£0.00</span>
-                </div>
                 <div className="border-t border-gray-600 pt-3 flex items-center justify-between">
                   <span className="text-white font-semibold">
                     Total Amount:
                   </span>
                   <span className="text-2xl font-bold text-white flex items-center gap-1">
-                    <DollarSign className="h-5 w-5" />£
-                    {selectedInvoice.amount.toFixed(2)}
+                    £{selectedInvoice.amount.toFixed(2)}
                   </span>
                 </div>
               </div>
@@ -203,7 +191,7 @@ export function InvoiceDetails({
             className="primary-button"
           >
             <Download className="h-4 w-4 mr-2" />
-            Download PDF
+            Download
           </Button>
         </DialogFooter>
       </DialogContent>
