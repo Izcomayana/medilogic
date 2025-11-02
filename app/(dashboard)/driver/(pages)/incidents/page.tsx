@@ -219,7 +219,7 @@ export default function DriverIncidentsPage() {
                     No incidents reported
                   </h3>
                   <p className="text-gray-400">
-                    You haven't reported any incidents yet
+                    You haven&apos;t reported any incidents yet
                   </p>
                 </div>
               ) : (
