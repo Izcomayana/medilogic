@@ -89,8 +89,8 @@ const sidebarLinksByRole: Record<
   client: [
     { title: 'Dashboard', url: '/client', icon: Home },
     { title: 'Settings', url: '/client/settings', icon: Settings },
+    { title: 'Invoices', url: '/client/invoices', icon: Receipt },
     { title: 'My Trips', url: '/client/#', icon: ClipboardList },
-    { title: 'Waste Reports', url: '/client/#', icon: FileText },
   ],
   driver: [
     { title: 'Dashboard', url: '/driver', icon: Home },

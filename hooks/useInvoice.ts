@@ -43,8 +43,6 @@ export function useInvoice() {
     null
   );
   const [dateRange, setDateRange] = useState<DateRangeLocal | undefined>();
-  const [dueDateFrom, setDueDateFrom] = useState<Date | null>(null);
-  const [dueDateTo, setDueDateTo] = useState<Date | null>(null);
   const [dateFilter, setDateFilter] = useState<DateRangeLocal | undefined>(
     undefined
   );
@@ -229,7 +227,7 @@ export function useInvoice() {
 
   useEffect(() => {
     fetchInvoices();
-  }, [clientId, status, dueDateFrom, dueDateTo, page]);
+  }, [clientId, status, page]);
 
   const filteredInvoices = invoicesList.filter((invoice) => {
     const matchesStatus = status === null || invoice.status === status;
@@ -375,10 +373,6 @@ export function useInvoice() {
     setClientId,
     dateRange,
     setDateRange,
-    dueDateFrom,
-    setDueDateFrom,
-    dueDateTo,
-    setDueDateTo,
     dateFilter,
     setDateFilter,
     selectedInvoice,
