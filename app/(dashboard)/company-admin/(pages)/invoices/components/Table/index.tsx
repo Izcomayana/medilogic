@@ -28,6 +28,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
+import { useAuth } from '@/components/auth';
 
 type InvoicesTableProps = ReturnType<typeof useInvoice>;
 
@@ -43,6 +44,8 @@ export function InvoicesTable({
   page,
   setInvoiceToUpdate,
 }: InvoicesTableProps) {
+  const { role } = useAuth();
+
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
       case 'paid':
@@ -93,7 +96,9 @@ export function InvoicesTable({
                         Generated On
                       </TableHead>
                       <TableHead className="text-gray-300">Amount</TableHead>
-                      <TableHead className="text-gray-300">Actions</TableHead>
+                      {role === 'admin' && (
+                        <TableHead className="text-gray-300">Actions</TableHead>
+                      )}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -173,42 +178,44 @@ export function InvoicesTable({
                           <DollarSign className="h-4 w-4" />£
                           {invoice.amount.toFixed(2)}
                         </TableCell>
-                        <TableCell className="items-center">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                className="h-8 w-8 p-0 text-gray-300 hover:bg-gray-700"
+                        {role === 'admin' && (
+                          <TableCell className="items-center">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  className="h-8 w-8 p-0 text-gray-300 hover:bg-gray-700"
+                                >
+                                  <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent
+                                align="end"
+                                className="bg-gray-800 border-gray-700"
                               >
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent
-                              align="end"
-                              className="bg-gray-800 border-gray-700"
-                            >
-                              <DropdownMenuItem
-                                onClick={() =>
-                                  setInvoiceToUpdate({
-                                    id: invoice.id,
-                                    status: invoice.status,
-                                  })
-                                }
-                                className="text-gray-200 hover:bg-gray-700 cursor-pointer"
-                              >
-                                <Edit className="h-4 w-4" />
-                                Update Status
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => setInvoiceToDelete(invoice.id)}
-                                className="text-red-400 hover:bg-red-600 hover:text-white cursor-pointer"
-                              >
-                                <Trash2 className="h-4 w-4" />
-                                Delete Invoice
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
+                                <DropdownMenuItem
+                                  onClick={() =>
+                                    setInvoiceToUpdate({
+                                      id: invoice.id,
+                                      status: invoice.status,
+                                    })
+                                  }
+                                  className="text-gray-200 hover:bg-gray-700 cursor-pointer"
+                                >
+                                  <Edit className="h-4 w-4" />
+                                  Update Status
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() => setInvoiceToDelete(invoice.id)}
+                                  className="text-red-400 hover:bg-red-600 hover:text-white cursor-pointer"
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                  Delete Invoice
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        )}
                       </TableRow>
                     ))}
                   </TableBody>
