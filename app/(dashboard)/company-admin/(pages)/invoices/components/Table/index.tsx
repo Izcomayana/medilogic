@@ -11,11 +11,11 @@ import { useInvoice } from '@/hooks/useInvoice';
 import {
   FileText,
   Trash2,
-  DollarSign,
   CheckCircle,
   Clock,
   AlertCircle,
   Edit,
+  Eye,
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -43,6 +43,7 @@ export function InvoicesTable({
   setPage,
   page,
   setInvoiceToUpdate,
+  handleViewDetails,
 }: InvoicesTableProps) {
   const { role } = useAuth();
 
@@ -173,8 +174,7 @@ export function InvoicesTable({
                           {formatDateTime(invoice.generatedAt)}
                         </TableCell>
                         <TableCell className="text-white font-semibold flex items-center gap-1">
-                          <DollarSign className="h-4 w-4" />£
-                          {invoice.amount.toFixed(2)}
+                          £{invoice.amount.toFixed(2)}
                         </TableCell>
                         {role === 'admin' && (
                           <TableCell className="items-center">
@@ -209,6 +209,13 @@ export function InvoicesTable({
                                 >
                                   <Trash2 className="h-4 w-4" />
                                   Delete Invoice
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() => handleViewDetails(invoice.id)}
+                                  className="text-gray-200 hover:bg-gray-700 cursor-pointer"
+                                >
+                                  <Eye className="w-4 h-4" />
+                                  View
                                 </DropdownMenuItem>
                               </DropdownMenuContent>
                             </DropdownMenu>
