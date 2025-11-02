@@ -12,7 +12,6 @@ import {
 } from '@/components/ui/select';
 import { FileText, Filter } from 'lucide-react';
 import { useClientInvoice } from '../../hooks/useInvoice';
-import { InvoicesTable } from '@/app/(dashboard)/company-admin/(pages)/invoices/components/Table';
 import DateRangeFilter from '@/app/(dashboard)/components/DateRange';
 import { ClientInvoicesTable } from './Table';
 
@@ -65,7 +64,6 @@ export default function InvoicesPage() {
           </CardContent>
         </Card>
 
-        {/* <InvoicesTable {...invoiceState} /> */}
         <ClientInvoicesTable {...invoiceState} />
       </main>
     </div>
