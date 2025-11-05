@@ -32,21 +32,21 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { useDriverIncidents } from '../../hooks/useIncidents';
+import { useDriverIncidents } from '@/hooks/incidents/driver';
 
 export default function DriverIncidentsPage() {
   const {
-    incidentTypes,
-    mockTrips,
     incidents,
     showReportModal,
     setShowReportModal,
+    showDetailsModal,
     setShowDetailsModal,
     selectedIncident,
-    showDetailsModal,
+    incidentTypes,
+    mockTrips,
     formData,
     setFormData,
-    handleReportIncident,
+    reportIncident,
     handleViewDetails,
   } = useDriverIncidents();
 
@@ -193,7 +193,7 @@ export default function DriverIncidentsPage() {
                     Cancel
                   </Button>
                   <Button
-                    onClick={handleReportIncident}
+                    onClick={reportIncident}
                     className="bg-blue-600 hover:bg-blue-700 text-white"
                   >
                     Submit Incident

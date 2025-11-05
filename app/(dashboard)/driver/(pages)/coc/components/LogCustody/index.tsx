@@ -327,6 +327,7 @@ export function LogCustodyEventModal({
               )}
             </div>
           </div>
+
           {/* Footer stays sticky below */}
           <AlertDialogFooter className="pt-4 mt-4 border-t border-gray-700 flex-shrink-0">
             <Button
