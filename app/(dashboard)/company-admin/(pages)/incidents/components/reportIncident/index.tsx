@@ -178,7 +178,7 @@ export function ReportIncident({
               Escalate Incident
             </Label>
           </div>
-          ``
+
           <div>
             <Label className="text-gray-300 text-sm mb-2">Upload files</Label>
 

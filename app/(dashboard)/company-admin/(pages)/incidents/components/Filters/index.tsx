@@ -16,9 +16,9 @@ export function IncidentFilters({
   setSearchTerm,
   statusFilter,
   setStatusFilter,
-  driverFilter,
-  setDriverFilter,
-  drivers,
+  // driverFilter,
+  // setDriverFilter,
+  // drivers,
 }: IncidentFiltersProps) {
   return (
     <div className="flex flex-col gap-4">
