@@ -6,6 +6,8 @@ import { toast } from 'sonner';
 import { useAuthorizedRequest } from '@/hooks/useRequest';
 import { api } from '@/lib/api';
 
+const severity = ['low', 'moderate', 'critical'];
+
 export function useIncidentsBase(initialIncidents: Incident[]) {
   const [incidents, setIncidents] = useState<Incident[]>(initialIncidents);
   const [selectedIncident, setSelectedIncident] = useState<Incident | null>(
@@ -14,8 +16,10 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [reporting, setReporting] = useState(false);
+  const [isLoadingLocation, setIsLoadingLocation] = useState(false);
 
   const { user } = useProfile();
+  const role = user?.role;
   const authorizedRequest = useAuthorizedRequest();
 
   const [formData, setFormData] = useState({
@@ -24,6 +28,7 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
     submittedBy: user?.user_id,
     organization: user?.organization.id,
     type: '',
+    severity: '',
     location: '',
     isVisibleToRegulator: false,
     escalated: false,
@@ -37,6 +42,7 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
       submittedBy: '',
       organization: '',
       type: '',
+      severity: '',
       location: '',
       isVisibleToRegulator: false,
       escalated: false,
@@ -46,19 +52,28 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
   const reportIncident = async () => {
     setReporting(true);
 
-    if (!formData.title || !formData.description || !formData.files) {
+    if (
+      !formData.title ||
+      !formData.description ||
+      !formData.files ||
+      !formData.severity
+    ) {
       toast.error('Please fill all required fields');
       setReporting(false);
       return;
     }
 
     try {
+      const endpoint =
+        role === 'admin' ? '/incidents/submit' : '/incidents/incidents/driver';
+
       const payload = new FormData();
       payload.append('title', formData.title);
       payload.append('description', formData.description);
       payload.append('submitted_by_id', formData.submittedBy || '');
       payload.append('organization_id', formData.organization || '');
       payload.append('incident_type', formData.type);
+      payload.append('severity', formData.severity);
       payload.append('location', formData.location);
       payload.append(
         'is_visible_to_regulator',
@@ -78,7 +93,7 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
       });
 
       await authorizedRequest(async (token) => {
-        const response = await api.post('/incidents/submit', payload, {
+        const response = await api.post(endpoint, payload, {
           headers: {
             Authorization: `Bearer ${token}`,
             'Content-Type': 'applicaton/json',
@@ -100,12 +115,46 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
     }
   };
 
+  const handleGetLocation = async () => {
+    setIsLoadingLocation(true);
+    if (!navigator.geolocation) {
+      toast.error('Geolocation not supported');
+      setIsLoadingLocation(false);
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        setFormData((prev) => ({
+          ...prev,
+          location: `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`,
+        }));
+        toast.success('Location captured');
+        setIsLoadingLocation(false);
+      },
+      () => {
+        toast.error('Failed to fetch location');
+        setIsLoadingLocation(false);
+      }
+    );
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
+  };
+
   const handleViewDetails = (incident: Incident) => {
     setSelectedIncident(incident);
     setShowDetailsModal(true);
   };
 
   return {
+    severity,
     incidents,
     setIncidents,
     selectedIncident,
@@ -115,10 +164,13 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
     showReportModal,
     setShowReportModal,
     reporting,
+    isLoadingLocation,
     formData,
     setFormData,
     resetForm,
     reportIncident,
+    handleGetLocation,
+    formatFileSize,
     handleViewDetails,
   };
 }
