@@ -162,6 +162,7 @@ export function useOrganizations() {
       state: data.organization.state ?? '',
       phone: data.organization.phone_number ?? '',
       email: data.organization.email ?? '',
+      postal_code: data.organization.postal_code ?? '',
       invite_code: data.organization.invite_code,
       ico_registered: data.organization.ico_registered,
       ico_registration_number:

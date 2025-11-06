@@ -67,7 +67,7 @@ export function useSettings() {
     license_number: '',
     data_retention_years: '',
     ico_registration_number: '',
-    license_expiry: '',
+    license_expiry: '' as string | null,
     supported_waste_types: [] as string[],
     user_count: '',
     trip_count: '',
@@ -137,7 +137,10 @@ export function useSettings() {
             license_number: org.license_number || '',
             ico_registered: org.ico_registered ?? false,
             data_retention_years: org.data_retention_years?.toString() || '',
-            license_expiry: org.license_expiry || '',
+            license_expiry: org.license_expiry
+              ? org.license_expiry.split('T')[0]
+              : null,
+            // license_expiry: org.license_expiry ? org.license_expiry.split("T")[0] : "",
             supported_waste_types: org.supported_waste_types || [],
             ico_registration_number: org.ico_registration_number || '',
             user_count: res.data.user_count?.toString() || '',
@@ -169,7 +172,7 @@ export function useSettings() {
     return () => {
       isFetched = true;
     };
-  }, [user?.organization?.id]); // only depend on org ID
+  }, [user?.organization?.id]);
 
   const isUserProfileChanged =
     JSON.stringify(userProfileData) !== JSON.stringify(initialUserProfile);
@@ -217,6 +220,18 @@ export function useSettings() {
     setIsLoading(true);
     try {
       await authorizedRequest(async (token) => {
+        //         const payload: any = { ...orgProfileData };
+
+        // payload.license_expiry = orgProfileData.license_expiry
+        //   ? new Date(orgProfileData.license_expiry).toISOString()
+        //   : null;
+
+        // await axios.patch(
+        //   `${API_BASE_URL}/super/${user.organization.id}`,
+        //   payload,
+        //   { headers: { Authorization: `Bearer ${token}` } }
+        // );
+
         await axios.patch(
           `${API_BASE_URL}/super/${user.organization.id}`,
           orgProfileData,

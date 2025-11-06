@@ -320,7 +320,7 @@ export function ProfileTab({
               !orgProfileData.email.includes('@')
             }
           >
-            {isLoading ? <Spinner className="mx-12" /> : 'Update Organization'}
+            {isLoading ? <Spinner className="mx-14" /> : 'Update Organization'}
           </Button>
         </div>
       </section>
