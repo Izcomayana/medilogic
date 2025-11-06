@@ -2,8 +2,7 @@ export type Incident = {
   id: string;
   title: string;
   incident_type: string;
-  driver?: string;
-  driverId?: string;
+  severity: string;
   description: string;
   status: string;
   created_at?: string;

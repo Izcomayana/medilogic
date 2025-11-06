@@ -13,12 +13,14 @@ import {
 import { Button } from '@/components/ui/button';
 import { formatDateTime } from '@/utils/datetime';
 import { getSeverityBadge } from '@/utils/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 
 type IncidentTableProps = ReturnType<typeof useAdminIncidents>;
 
 export function IncidentTable({
   filteredIncidents,
   handleViewIncident,
+  loadingAccidents,
 }: IncidentTableProps) {
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
@@ -37,34 +39,63 @@ export function IncidentTable({
     }
   };
 
+  // ✅ Skeleton Rows Builder
+  const renderSkeletonRows = () => {
+    return [...Array(5)].map((_, i) => (
+      <TableRow key={i} className="border-gray-700">
+        <TableCell>
+          <Skeleton className="h-4 w-24 bg-gray-700" />
+        </TableCell>
+        <TableCell>
+          <Skeleton className="h-4 w-36 bg-gray-700" />
+        </TableCell>
+        <TableCell>
+          <Skeleton className="h-5 w-8 bg-gray-700" />
+        </TableCell>
+        <TableCell>
+          <Skeleton className="h-5 w-12 bg-gray-700" />
+        </TableCell>
+        <TableCell>
+          <Skeleton className="h-4 w-16 bg-gray-700" />
+        </TableCell>
+        {/* <TableCell><Skeleton className="h-8 w-20 bg-gray-700" /></TableCell> */}
+      </TableRow>
+    ));
+  };
+
   return (
     <Card className="dashboard-card">
       <CardContent className="p-0">
-        {filteredIncidents.length === 0 ? (
-          <div className="text-center py-12">
-            <AlertCircle className="h-12 w-12 text-gray-600 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-white mb-2">
-              No incidents found
-            </h3>
-            <p className="text-gray-400">
-              No incidents match your search and filter criteria
-            </p>
-          </div>
-        ) : (
-          <div className="rounded-md border border-gray-700 overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow className="border-gray-700 hover:bg-gray-800">
-                  <TableHead className="text-gray-300">Title</TableHead>
-                  <TableHead className="text-gray-300">Description</TableHead>
-                  <TableHead className="text-gray-300">Type</TableHead>
-                  <TableHead className="text-gray-300">Status</TableHead>
-                  <TableHead className="text-gray-300">Reported Date</TableHead>
-                  {/* <TableHead className="text-gray-300">Actions</TableHead> */}
+        <div className="rounded-md border border-gray-700 overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow className="border-gray-700 hover:bg-gray-800">
+                <TableHead className="text-gray-300">Title</TableHead>
+                <TableHead className="text-gray-300">Type</TableHead>
+                <TableHead className="text-gray-300">Severity</TableHead>
+                <TableHead className="text-gray-300">Status</TableHead>
+                <TableHead className="text-gray-300">Reported Date</TableHead>
+                {/* <TableHead className="text-gray-300">Actions</TableHead> */}
+              </TableRow>
+            </TableHeader>
+
+            <TableBody>
+              {loadingAccidents ? (
+                renderSkeletonRows()
+              ) : filteredIncidents.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-12">
+                    <AlertCircle className="h-12 w-12 text-gray-600 mx-auto mb-4" />
+                    <h3 className="text-lg font-medium text-white mb-2">
+                      No incidents found
+                    </h3>
+                    <p className="text-gray-400">
+                      No incidents match your search and filter criteria
+                    </p>
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredIncidents.map((incident) => (
+              ) : (
+                filteredIncidents.map((incident) => (
                   <TableRow
                     key={incident.id}
                     className="border-gray-700 hover:bg-gray-800"
@@ -73,10 +104,10 @@ export function IncidentTable({
                       {incident.title}
                     </TableCell>
                     <TableCell className="text-gray-300">
-                      {incident.description}
+                      {incident.incident_type}
                     </TableCell>
                     <TableCell className="text-gray-300">
-                      {getSeverityBadge(incident.incident_type)}
+                      {getSeverityBadge(incident.severity)}
                     </TableCell>
                     <TableCell>{getStatusBadge(incident.status)}</TableCell>
                     <TableCell className="text-gray-300 text-sm">
@@ -90,18 +121,18 @@ export function IncidentTable({
                         variant="outline"
                         size="sm"
                         onClick={() => handleViewIncident(incident)}
-                        className="border-gray-600 text-gray-700 hover;text-gray-300 hover:bg-gray-700"
+                        className="border-gray-600 text-gray-300 hover:bg-gray-700"
                       >
                         <Eye className="h-3 w-3 mr-1" />
                         View
                       </Button>
                     </TableCell> */}
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        )}
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </CardContent>
     </Card>
   );

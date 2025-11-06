@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { useAuthorizedRequest } from '@/hooks/useRequest';
 import { api } from '@/lib/api';
 
-const incidentTypes = ['low', 'moderate', 'critical'];
+const severity = ['low', 'moderate', 'critical'];
 
 export function useIncidentsBase(initialIncidents: Incident[]) {
   const [incidents, setIncidents] = useState<Incident[]>(initialIncidents);
@@ -52,7 +52,12 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
   const reportIncident = async () => {
     setReporting(true);
 
-    if (!formData.title || !formData.description || !formData.files) {
+    if (
+      !formData.title ||
+      !formData.description ||
+      !formData.files ||
+      !formData.severity
+    ) {
       toast.error('Please fill all required fields');
       setReporting(false);
       return;
@@ -68,7 +73,7 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
       payload.append('submitted_by_id', formData.submittedBy || '');
       payload.append('organization_id', formData.organization || '');
       payload.append('incident_type', formData.type);
-      payload.append('severity', formData.type);
+      payload.append('severity', formData.severity);
       payload.append('location', formData.location);
       payload.append(
         'is_visible_to_regulator',
@@ -149,7 +154,7 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
   };
 
   return {
-    incidentTypes,
+    severity,
     incidents,
     setIncidents,
     selectedIncident,

@@ -69,7 +69,7 @@ export function IncidentDetails({
               <div>
                 <Label className="text-gray-400 text-sm">Driver</Label>
                 <p className="text-white font-medium mt-1">
-                  {selectedIncident.driver}
+                  {selectedIncident.severity}
                 </p>
               </div>
               <div>

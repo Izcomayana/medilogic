@@ -10,10 +10,11 @@ import { api } from '@/lib/api';
 
 export function useAdminIncidents() {
   const base = useIncidentsBase([]);
+  const [loadingAccidents, setLoadingAccidents] = useState(false);
 
   // Filters
   const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [severityFilter, setSeverityFilter] = useState('all');
   const [driverFilter, setDriverFilter] = useState('all');
 
   // Modal form state
@@ -23,24 +24,49 @@ export function useAdminIncidents() {
   });
 
   const authorizedRequest = useAuthorizedRequest();
-  // ✅ Fetch incidents for admin
-  const fetchAdminIncidents = async () => {
-    await authorizedRequest(async (token) => {
-      const response = await api.get('/incidents/incidents/admin', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
 
-      // Backend returns correct incident structure already
-      base.setIncidents(response.data);
-    }, 'Failed to load incidents');
+  const fetchAdminIncidents = async () => {
+    setLoadingAccidents(true);
+
+    try {
+      await authorizedRequest(async (token) => {
+        const response = await api.get('/incidents/incidents/admin', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        // Backend returns correct incident structure already
+        base.setIncidents(response.data);
+      }, 'Failed to load incidents');
+    } catch (error) {
+      console.error('Error fetching accidents:', error);
+      toast.error('Failed to load accidents');
+    } finally {
+      setLoadingAccidents(false);
+    }
   };
 
   // Load on mount
   useEffect(() => {
     fetchAdminIncidents();
   }, []);
+
+  const filteredIncidents = base.incidents.filter((incident: any) => {
+    const matchesSearch =
+      incident.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      incident.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      incident.type?.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesSeverity =
+      severityFilter === 'all' ||
+      incident.severity.toLowerCase() === severityFilter.toLowerCase();
+
+    // const matchesDriver =
+    //   driverFilter === 'all' || incident.submitted_by_id === driverFilter;
+
+    return matchesSearch && matchesSeverity;
+  });
 
   const handleViewIncident = (incident: Incident) => {
     base.setSelectedIncident(incident);
@@ -114,22 +140,6 @@ export function useAdminIncidents() {
     toast.success('Internal note added');
   };
 
-  // Filtering logic stays the same
-  const filteredIncidents = base.incidents.filter((incident: any) => {
-    const matchesSearch =
-      incident.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      incident.description?.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const matchesStatus =
-      statusFilter === 'all' ||
-      incident.status.toLowerCase() === statusFilter.toLowerCase();
-
-    const matchesDriver =
-      driverFilter === 'all' || incident.submitted_by_id === driverFilter;
-
-    return matchesSearch && matchesStatus && matchesDriver;
-  });
-
   // Build driver list from submitters
   const drivers = [
     ...new Set(
@@ -142,10 +152,11 @@ export function useAdminIncidents() {
 
   return {
     ...base,
+    loadingAccidents,
     searchTerm,
     setSearchTerm,
-    statusFilter,
-    setStatusFilter,
+    severityFilter,
+    setSeverityFilter,
     driverFilter,
     setDriverFilter,
     handleViewIncident,

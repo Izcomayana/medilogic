@@ -35,7 +35,7 @@ export function ReportIncident({
   setFormData,
   reportIncident,
   isLoadingLocation,
-  incidentTypes,
+  severity,
   handleGetLocation,
   formatFileSize,
   reporting,
@@ -60,7 +60,7 @@ export function ReportIncident({
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        <div className="space-y-4 py-4 pr-2 max-h-[70vh] overflow-y-auto">
+        <div className="space-y-5 py-4 pr-2 max-h-[70vh] overflow-y-auto">
           <div>
             <Label htmlFor="title" className="text-gray-300 mb-2">
               Title <span className="text-red-500">*</span>
@@ -75,7 +75,6 @@ export function ReportIncident({
                   title: e.target.value,
                 }))
               }
-              className=""
             />
           </div>
           <div>
@@ -97,20 +96,36 @@ export function ReportIncident({
             />
           </div>
           <div>
-            <Label htmlFor="type" className="text-gray-300">
+            <Label htmlFor="type" className="text-gray-300 mb-2">
               Incident Type <span className="text-red-500">*</span>
             </Label>
-            <Select
+            <Input
+              id="type"
+              type="text"
               value={formData.type}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  type: e.target.value,
+                }))
+              }
+            />
+          </div>
+          <div>
+            <Label htmlFor="type" className="text-gray-300">
+              Severity <span className="text-red-500">*</span>
+            </Label>
+            <Select
+              value={formData.severity}
               onValueChange={(value) =>
-                setFormData({ ...formData, type: value })
+                setFormData({ ...formData, severity: value })
               }
             >
               <SelectTrigger className="bg-gray-700 border-gray-600 text-white mt-1">
                 <SelectValue placeholder="Select type" />
               </SelectTrigger>
               <SelectContent className="bg-gray-700 border-gray-600">
-                {incidentTypes.map((type) => (
+                {severity.map((type) => (
                   <SelectItem key={type} value={type}>
                     {type}
                   </SelectItem>
@@ -268,7 +283,7 @@ export function ReportIncident({
             disabled={reporting}
             className="bg-blue-600 hover:bg-blue-700 text-white"
           >
-            {reporting ? <Spinner className="mx-10" /> : 'Submit Incident'}
+            {reporting ? <Spinner className="mx-12" /> : 'Submit Incident'}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
