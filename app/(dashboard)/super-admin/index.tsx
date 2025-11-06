@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import CreateOrganizationDialog from './(pages)/organizations/components/creatOrg';
 import { useAdmin } from '@/hooks/useAdmin';
-import { useOrganizations } from '@/hooks/useOrg';
+import { useOrganizations } from '@/hooks/orgs/useOrg';
 import { useRegulators } from '@/hooks/useReg';
 import { CreateRegulatorDialog } from './(pages)/regulators/components/CreateRegulator';
 import { CreateAdmin } from './(pages)/admins/components/CreateAdmin';

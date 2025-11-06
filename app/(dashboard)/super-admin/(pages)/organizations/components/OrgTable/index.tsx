@@ -16,7 +16,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Users, Eye, Edit, MoreHorizontal, Trash2 } from 'lucide-react';
-import { Organization } from '../../org';
+import { Organization } from '../../../../../../../hooks/orgs/org';
 import { StatusBadge } from '../StatusBadge';
 import { motion } from 'framer-motion';
 

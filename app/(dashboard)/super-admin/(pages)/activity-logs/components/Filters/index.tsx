@@ -17,7 +17,7 @@ import {
   Settings,
   Download,
 } from 'lucide-react';
-import { useOrganizations } from '@/hooks/useOrg';
+import { useOrganizations } from '@/hooks/orgs/useOrg';
 import { DateRangeFilter, useActivityLogs } from '@/hooks/useActivity';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
