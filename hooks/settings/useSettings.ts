@@ -60,6 +60,9 @@ export function useSettings() {
     email: '',
     phone_number: '',
     address_line: '',
+    country: '',
+    region: '',
+    state: '',
     postal_code: '',
     license_number: '',
     data_retention_years: '',
@@ -127,6 +130,9 @@ export function useSettings() {
             email: org.email || '',
             phone_number: org.phone_number || '',
             address_line: org.address_line || '',
+            country: org.country || '',
+            region: org.region || '',
+            state: org.state || '',
             postal_code: org.postal_code || '',
             license_number: org.license_number || '',
             ico_registered: org.ico_registered ?? false,
@@ -146,6 +152,7 @@ export function useSettings() {
           };
 
           setOrgProfileData(orgData);
+          console.log('data:', orgProfileData);
           setInitialOrgProfile(orgData);
         }, 'Failed to fetch organization details');
       } catch (err) {

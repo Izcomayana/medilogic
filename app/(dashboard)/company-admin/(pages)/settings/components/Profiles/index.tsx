@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useSettings } from '@/hooks/settings/useSettings';
+import { Spinner } from '@/components/ui/spinner';
 
 type ProfileProps = ReturnType<typeof useSettings>;
 
@@ -136,6 +137,48 @@ export function ProfileTab({
                 })
               }
               rows={2}
+              className="bg-gray-700 border-gray-600 text-white mt-2"
+            />
+          </div>
+
+          <div>
+            <Label className="text-gray-300">Country</Label>
+            <Input
+              value={orgProfileData.country}
+              onChange={(e) =>
+                setOrgProfileData({
+                  ...orgProfileData,
+                  country: e.target.value,
+                })
+              }
+              className="bg-gray-700 border-gray-600 text-white mt-2"
+            />
+          </div>
+
+          <div>
+            <Label className="text-gray-300">State</Label>
+            <Input
+              value={orgProfileData.state}
+              onChange={(e) =>
+                setOrgProfileData({
+                  ...orgProfileData,
+                  state: e.target.value,
+                })
+              }
+              className="bg-gray-700 border-gray-600 text-white mt-2"
+            />
+          </div>
+
+          <div>
+            <Label className="text-gray-300">Region</Label>
+            <Input
+              value={orgProfileData.region}
+              onChange={(e) =>
+                setOrgProfileData({
+                  ...orgProfileData,
+                  region: e.target.value,
+                })
+              }
               className="bg-gray-700 border-gray-600 text-white mt-2"
             />
           </div>
@@ -277,11 +320,7 @@ export function ProfileTab({
               !orgProfileData.email.includes('@')
             }
           >
-            {isLoading ? (
-              <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mx-12"></span>
-            ) : (
-              'Update Organization'
-            )}
+            {isLoading ? <Spinner className="mx-12" /> : 'Update Organization'}
           </Button>
         </div>
       </section>
