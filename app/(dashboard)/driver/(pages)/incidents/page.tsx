@@ -24,7 +24,7 @@ import {
   // DialogTrigger,
 } from '@/components/ui/dialog';
 import { useDriverIncidents } from '@/hooks/incidents/driver';
-import { ReportIncident } from '@/app/(dashboard)/company-admin/(pages)/incidents/components/reportIncident';
+import { ReportIncident } from '@/app/(dashboard)/components/ReportIncident';
 
 export default function DriverIncidentsPage() {
   const incidentState = useDriverIncidents();

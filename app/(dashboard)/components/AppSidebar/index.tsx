@@ -79,11 +79,8 @@ const sidebarLinksByRole: Record<
   ],
   regulator: [
     { title: 'Dashboard', url: '/regulator', icon: Home },
-    {
-      title: 'Organizations',
-      url: '/regulator/organizations',
-      icon: Building2,
-    },
+
+    { title: 'Incidents', url: '/regulator/incidents', icon: ClipboardList },
     { title: 'Compliance', url: '/regulator/compliance', icon: Shield },
   ],
   client: [
@@ -96,7 +93,7 @@ const sidebarLinksByRole: Record<
     { title: 'Dashboard', url: '/driver', icon: Home },
     { title: 'PODs', url: '/driver/pods', icon: FileText },
     { title: 'COC', url: '/driver/coc', icon: Link2 },
-    { title: 'My Trips', url: '/driver/#', icon: ClipboardList },
+    { title: 'Incidents', url: '/driver/incidents', icon: ClipboardList },
     { title: 'Settings', url: '/driver/settings', icon: Settings },
   ],
 };

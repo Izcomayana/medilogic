@@ -10,12 +10,8 @@ import { api } from '@/lib/api';
 
 export function useAdminIncidents() {
   const base = useIncidentsBase([]);
-  const [loadingAccidents, setLoadingAccidents] = useState(false);
 
   // Filters
-  const [searchTerm, setSearchTerm] = useState('');
-  const [severityFilter, setSeverityFilter] = useState('all');
-  const [driverFilter, setDriverFilter] = useState('all');
 
   // Modal form state
   const [modalState, setModalState] = useState({
@@ -24,49 +20,6 @@ export function useAdminIncidents() {
   });
 
   const authorizedRequest = useAuthorizedRequest();
-
-  const fetchAdminIncidents = async () => {
-    setLoadingAccidents(true);
-
-    try {
-      await authorizedRequest(async (token) => {
-        const response = await api.get('/incidents/incidents/admin', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        // Backend returns correct incident structure already
-        base.setIncidents(response.data);
-      }, 'Failed to load incidents');
-    } catch (error) {
-      console.error('Error fetching accidents:', error);
-      toast.error('Failed to load accidents');
-    } finally {
-      setLoadingAccidents(false);
-    }
-  };
-
-  // Load on mount
-  useEffect(() => {
-    fetchAdminIncidents();
-  }, []);
-
-  const filteredIncidents = base.incidents.filter((incident: any) => {
-    const matchesSearch =
-      incident.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      incident.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      incident.type?.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const matchesSeverity =
-      severityFilter === 'all' ||
-      incident.severity.toLowerCase() === severityFilter.toLowerCase();
-
-    // const matchesDriver =
-    //   driverFilter === 'all' || incident.submitted_by_id === driverFilter;
-
-    return matchesSearch && matchesSeverity;
-  });
 
   const handleViewIncident = (incident: Incident) => {
     base.setSelectedIncident(incident);
@@ -152,17 +105,9 @@ export function useAdminIncidents() {
 
   return {
     ...base,
-    loadingAccidents,
-    searchTerm,
-    setSearchTerm,
-    severityFilter,
-    setSeverityFilter,
-    driverFilter,
-    setDriverFilter,
     handleViewIncident,
     handleStatusChange,
     handleAddNote,
-    filteredIncidents,
     drivers,
     modalState,
     setModalState,
