@@ -1,5 +1,5 @@
 // base.ts
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Incident } from './type';
 import { useProfile } from '@/hooks/useProfile';
 import { toast } from 'sonner';
@@ -17,10 +17,14 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
   const [showReportModal, setShowReportModal] = useState(false);
   const [reporting, setReporting] = useState(false);
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
+  const [loadingAccidents, setLoadingAccidents] = useState(false);
 
   const { user } = useProfile();
   const role = user?.role;
   const authorizedRequest = useAuthorizedRequest();
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [severityFilter, setSeverityFilter] = useState('all');
 
   const [formData, setFormData] = useState({
     title: '',
@@ -148,6 +152,52 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
     return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
   };
 
+  const fetchAdminIncidents = async () => {
+    setLoadingAccidents(true);
+
+    try {
+      const endpoint =
+        role === 'admin' ? '/incidents/incidents/admin' : '/incidents/';
+
+      await authorizedRequest(async (token) => {
+        const response = await api.get(endpoint, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        // Backend returns correct incident structure already
+        setIncidents(response.data);
+      }, 'Failed to load incidents');
+    } catch (error) {
+      console.error('Error fetching accidents:', error);
+      toast.error('Failed to load accidents');
+    } finally {
+      setLoadingAccidents(false);
+    }
+  };
+
+  // Load on mount
+  useEffect(() => {
+    fetchAdminIncidents();
+  }, []);
+
+  const filteredIncidents = incidents.filter((incident: any) => {
+    const matchesSearch =
+      incident.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      incident.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      incident.type?.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesSeverity =
+      severityFilter === 'all' ||
+      incident.severity.toLowerCase() === severityFilter.toLowerCase();
+
+    // const matchesDriver =
+    //   driverFilter === 'all' || incident.submitted_by_id === driverFilter;
+
+    return matchesSearch && matchesSeverity;
+  });
+
   const handleViewDetails = (incident: Incident) => {
     setSelectedIncident(incident);
     setShowDetailsModal(true);
@@ -165,12 +215,18 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
     setShowReportModal,
     reporting,
     isLoadingLocation,
+    loadingAccidents,
+    searchTerm,
+    setSearchTerm,
+    severityFilter,
+    setSeverityFilter,
     formData,
     setFormData,
     resetForm,
     reportIncident,
     handleGetLocation,
     formatFileSize,
+    filteredIncidents,
     handleViewDetails,
   };
 }
