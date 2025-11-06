@@ -13,7 +13,7 @@ import { Users, Search, Building2 } from 'lucide-react';
 import { CreateAdmin } from './components/CreateAdmin';
 import { useAdmin } from '@/hooks/useAdmin';
 import { AdminTable } from './components/AdminTable';
-import { useOrganizations } from '@/hooks/useOrg';
+import { useOrganizations } from '@/hooks/orgs/useOrg';
 import React from 'react';
 import {
   AlertDialog,

@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Building2, Search } from 'lucide-react';
 import OrganizationTable from './components/OrgTable';
-import { useOrganizations } from '@/hooks/useOrg';
+import { useOrganizations } from '@/hooks/orgs/useOrg';
 import {
   OrgActionsDialog,
   ViewOrganizationDialog,

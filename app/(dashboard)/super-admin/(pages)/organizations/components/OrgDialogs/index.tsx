@@ -18,7 +18,7 @@ import {
   RefreshCcw,
   Users,
 } from 'lucide-react';
-import type { Organization } from '../../org';
+import type { Organization } from '../../../../../../../hooks/orgs/org';
 import { StatusBadge } from '../StatusBadge';
 
 interface ViewDialogProps {
@@ -89,6 +89,19 @@ export function ViewOrganizationDialog({
             <div>
               <Label className="text-xs uppercase text-gray-400">Phone</Label>
               <p className="mt-1 text-base text-gray-200">{org.phone}</p>
+            </div>
+            <div>
+              <Label className="text-xs uppercase text-gray-400">Country</Label>
+              <p className="mt-1 text-base text-gray-200">{org.country}</p>
+            </div>
+            <div>
+              <Label className="text-xs uppercase text-gray-400">Region</Label>
+              <p className="mt-1 text-base text-gray-200">{org.region}</p>
+            </div>
+
+            <div>
+              <Label className="text-xs uppercase text-gray-400">State</Label>
+              <p className="mt-1 text-base text-gray-200">{org.state}</p>
             </div>
 
             <div>

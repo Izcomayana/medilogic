@@ -8,6 +8,9 @@ export interface Organization {
   tripCount?: number;
   description?: string;
   address?: string;
+  country?: string;
+  state?: string;
+  region?: string;
   phone?: string;
   email?: string;
   invite_code?: string;

@@ -23,7 +23,7 @@ import { Label } from '@/components/ui/label';
 import { UserPlus, XIcon, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 import { useState } from 'react';
-import { useOrganizations } from '@/hooks/useOrg';
+import { useOrganizations } from '@/hooks/orgs/useOrg';
 
 interface Props {
   onCreate: (adminData: {

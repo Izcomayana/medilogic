@@ -4,8 +4,8 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { toast } from 'sonner';
 import axios from 'axios';
-import { Organization } from '../app/(dashboard)/super-admin/(pages)/organizations/org';
-import { useAuthorizedRequest } from './useRequest';
+import { Organization } from './org';
+import { useAuthorizedRequest } from '../useRequest';
 
 export function useOrganizations() {
   const [orgs, setOrgs] = useState<Organization[]>([]);
@@ -157,6 +157,9 @@ export function useOrganizations() {
       tripCount: data.trip_count ?? 0,
       description: data.organization.description ?? '',
       address: data.organization.address_line ?? '',
+      country: data.organization.country ?? '',
+      region: data.organization.region ?? '',
+      state: data.organization.state ?? '',
       phone: data.organization.phone_number ?? '',
       email: data.organization.email ?? '',
       invite_code: data.organization.invite_code,
