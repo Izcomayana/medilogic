@@ -1,14 +1,12 @@
 export type Incident = {
   id: string;
-  tripId: string;
-  type: string;
+  title: string;
+  incident_type: string;
   driver?: string;
   driverId?: string;
   description: string;
   status: string;
-  reportedDate?: string;
-  reportedAt?: string;
-  reportedTime?: string;
+  created_at?: string;
   timestamp?: string;
   photoUrl: string | null;
   adminResponse?: string | null;

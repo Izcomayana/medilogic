@@ -1,19 +1,10 @@
 'use client';
 
 import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
-import { Plus, Eye, AlertCircle, Calendar, FileText } from 'lucide-react';
+import { Eye, AlertCircle, Calendar, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import {
   Table,
@@ -33,22 +24,22 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { useDriverIncidents } from '@/hooks/incidents/driver';
+import { ReportIncident } from '@/app/(dashboard)/company-admin/(pages)/incidents/components/reportIncident';
+import { useIncidentsBase } from '@/hooks/incidents/base';
 
 export default function DriverIncidentsPage() {
+  const incidentState = useDriverIncidents();
+
   const {
     incidents,
-    showReportModal,
-    setShowReportModal,
+    mockIncidents,
     showDetailsModal,
     setShowDetailsModal,
     selectedIncident,
-    incidentTypes,
-    mockTrips,
-    formData,
-    setFormData,
-    reportIncident,
     handleViewDetails,
   } = useDriverIncidents();
+
+  // const base = useIncidentsBase(mockIncidents);
 
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
@@ -73,134 +64,7 @@ export default function DriverIncidentsPage() {
       <main className="flex-1 overflow-auto">
         <div className="p-8">
           <div className="mb-8 flex justify-between items-start">
-            <Dialog open={showReportModal} onOpenChange={setShowReportModal}>
-              <DialogTrigger asChild>
-                <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Report Incident
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="bg-gray-800 border-gray-700 text-white max-w-2xl">
-                <DialogHeader>
-                  <DialogTitle>Report Incident</DialogTitle>
-                  <DialogDescription className="text-gray-400">
-                    Report an issue that occurred during your trip
-                  </DialogDescription>
-                </DialogHeader>
-
-                <div className="space-y-4 py-4">
-                  <div>
-                    <Label htmlFor="trip" className="text-gray-300">
-                      Trip <span className="text-red-500">*</span>
-                    </Label>
-                    <Select
-                      value={formData.trip}
-                      onValueChange={(value) =>
-                        setFormData({ ...formData, trip: value })
-                      }
-                    >
-                      <SelectTrigger className="bg-gray-700 border-gray-600 text-white mt-1">
-                        <SelectValue placeholder="Select trip" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-gray-700 border-gray-600">
-                        {mockTrips.map((trip) => (
-                          <SelectItem key={trip.id} value={trip.id}>
-                            {trip.id} - {trip.client}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="type" className="text-gray-300">
-                      Incident Type <span className="text-red-500">*</span>
-                    </Label>
-                    <Select
-                      value={formData.type}
-                      onValueChange={(value) =>
-                        setFormData({ ...formData, type: value })
-                      }
-                    >
-                      <SelectTrigger className="bg-gray-700 border-gray-600 text-white mt-1">
-                        <SelectValue placeholder="Select type" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-gray-700 border-gray-600">
-                        {incidentTypes.map((type) => (
-                          <SelectItem key={type} value={type}>
-                            {type}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="description" className="text-gray-300">
-                      Description <span className="text-red-500">*</span>
-                    </Label>
-                    <Textarea
-                      id="description"
-                      value={formData.description}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          description: e.target.value,
-                        })
-                      }
-                      placeholder="Describe the incident in detail"
-                      className="bg-gray-700 border-gray-600 text-white mt-1"
-                      rows={4}
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="photo" className="text-gray-300">
-                      Photo Upload (Optional)
-                    </Label>
-                    <Input
-                      id="photo"
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          photoFile: e.target.files?.[0] || null,
-                        })
-                      }
-                      className="bg-gray-700 border-gray-600 text-gray-300 mt-1"
-                    />
-                    {formData.photoFile && (
-                      <p className="text-sm text-gray-400 mt-1">
-                        File: {formData.photoFile.name}
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="bg-gray-700 rounded p-3 border border-gray-600">
-                    <p className="text-sm text-gray-300">
-                      <strong>Timestamp:</strong>{' '}
-                      {new Date().toISOString().slice(0, 16).replace('T', ' ')}
-                    </p>
-                  </div>
-                </div>
-
-                <DialogFooter>
-                  <Button
-                    variant="outline"
-                    onClick={() => setShowReportModal(false)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    onClick={reportIncident}
-                    className="bg-blue-600 hover:bg-blue-700 text-white"
-                  >
-                    Submit Incident
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+            <ReportIncident {...incidentState} />
           </div>
 
           {/* Incidents Table */}
@@ -249,16 +113,16 @@ export default function DriverIncidentsPage() {
                             {incident.id}
                           </TableCell>
                           <TableCell className="text-gray-300">
-                            {incident.tripId}
+                            {incident.title}
                           </TableCell>
                           <TableCell className="text-gray-300">
-                            {incident.type}
+                            {incident.incident_type}
                           </TableCell>
                           <TableCell>
                             {getStatusBadge(incident.status)}
                           </TableCell>
                           <TableCell className="text-gray-300 text-sm">
-                            {incident.reportedAt}
+                            {incident.created_at}
                           </TableCell>
                           <TableCell>
                             <Button
@@ -301,13 +165,13 @@ export default function DriverIncidentsPage() {
                 <div>
                   <Label className="text-gray-400 text-sm">Trip</Label>
                   <p className="text-white font-medium mt-1">
-                    {selectedIncident.tripId}
+                    {selectedIncident.title}
                   </p>
                 </div>
                 <div>
                   <Label className="text-gray-400 text-sm">Type</Label>
                   <p className="text-white font-medium mt-1">
-                    {selectedIncident.type}
+                    {selectedIncident.incident_type}
                   </p>
                 </div>
               </div>

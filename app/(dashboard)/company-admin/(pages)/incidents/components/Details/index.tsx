@@ -75,13 +75,13 @@ export function IncidentDetails({
               <div>
                 <Label className="text-gray-400 text-sm">Trip</Label>
                 <p className="text-white font-medium mt-1">
-                  {selectedIncident.tripId}
+                  {selectedIncident.title}
                 </p>
               </div>
               <div>
                 <Label className="text-gray-400 text-sm">Type</Label>
                 <p className="text-white font-medium mt-1">
-                  {selectedIncident.type}
+                  {selectedIncident.incident_type}
                 </p>
               </div>
               <div>
@@ -105,10 +105,7 @@ export function IncidentDetails({
             {/* Timestamp */}
             <div className="flex items-center gap-4 text-sm text-gray-400">
               <Calendar className="h-4 w-4" />
-              <span>
-                {selectedIncident.reportedDate} at{' '}
-                {selectedIncident.reportedTime}
-              </span>
+              <span>{selectedIncident.timestamp}</span>
             </div>
 
             {/* Status Change Section */}

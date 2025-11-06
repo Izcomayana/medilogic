@@ -37,3 +37,19 @@ export function getTripStatusBadge(status: string | null) {
       return <Badge variant="outline">{status}</Badge>;
   }
 }
+
+export const getSeverityBadge = (severity: string) => {
+  switch (severity?.toLowerCase()) {
+    case 'low':
+      return <Badge className="bg-green-600 text-white">Low</Badge>;
+
+    case 'moderate':
+      return <Badge className="bg-yellow-600 text-white">Moderate</Badge>;
+
+    case 'critical':
+      return <Badge className="bg-red-600 text-white">Critical</Badge>;
+
+    default:
+      return <Badge variant="outline">{severity || 'Unknown'}</Badge>;
+  }
+};

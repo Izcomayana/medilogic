@@ -11,6 +11,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
+import { formatDateTime } from '@/utils/datetime';
+import { getSeverityBadge } from '@/utils/badge';
 
 type IncidentTableProps = ReturnType<typeof useAdminIncidents>;
 
@@ -53,13 +55,12 @@ export function IncidentTable({
             <Table>
               <TableHeader>
                 <TableRow className="border-gray-700 hover:bg-gray-800">
-                  <TableHead className="text-gray-300">ID</TableHead>
-                  <TableHead className="text-gray-300">Driver</TableHead>
-                  <TableHead className="text-gray-300">Trip</TableHead>
+                  <TableHead className="text-gray-300">Title</TableHead>
+                  <TableHead className="text-gray-300">Description</TableHead>
                   <TableHead className="text-gray-300">Type</TableHead>
                   <TableHead className="text-gray-300">Status</TableHead>
                   <TableHead className="text-gray-300">Reported Date</TableHead>
-                  <TableHead className="text-gray-300">Actions</TableHead>
+                  {/* <TableHead className="text-gray-300">Actions</TableHead> */}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -68,36 +69,33 @@ export function IncidentTable({
                     key={incident.id}
                     className="border-gray-700 hover:bg-gray-800"
                   >
-                    <TableCell className="font-medium text-white">
-                      {incident.id}
+                    <TableCell className="text-gray-300">
+                      {incident.title}
                     </TableCell>
                     <TableCell className="text-gray-300">
-                      {incident.driver}
+                      {incident.description}
                     </TableCell>
                     <TableCell className="text-gray-300">
-                      {incident.tripId}
-                    </TableCell>
-                    <TableCell className="text-gray-300">
-                      {incident.type}
+                      {getSeverityBadge(incident.incident_type)}
                     </TableCell>
                     <TableCell>{getStatusBadge(incident.status)}</TableCell>
                     <TableCell className="text-gray-300 text-sm">
                       <div className="flex items-center gap-1">
                         <Calendar className="h-3 w-3" />
-                        {incident.reportedDate}
+                        {formatDateTime(incident.created_at || '')}
                       </div>
                     </TableCell>
-                    <TableCell>
+                    {/* <TableCell>
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => handleViewIncident(incident)}
-                        className="border-gray-600 text-gray-300 hover:bg-gray-700"
+                        className="border-gray-600 text-gray-700 hover;text-gray-300 hover:bg-gray-700"
                       >
                         <Eye className="h-3 w-3 mr-1" />
                         View
                       </Button>
-                    </TableCell>
+                    </TableCell> */}
                   </TableRow>
                 ))}
               </TableBody>
