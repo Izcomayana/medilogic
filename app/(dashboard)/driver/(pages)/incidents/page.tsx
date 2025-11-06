@@ -21,25 +21,21 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
+  // DialogTrigger,
 } from '@/components/ui/dialog';
 import { useDriverIncidents } from '@/hooks/incidents/driver';
 import { ReportIncident } from '@/app/(dashboard)/company-admin/(pages)/incidents/components/reportIncident';
-import { useIncidentsBase } from '@/hooks/incidents/base';
 
 export default function DriverIncidentsPage() {
   const incidentState = useDriverIncidents();
 
   const {
     incidents,
-    mockIncidents,
     showDetailsModal,
     setShowDetailsModal,
     selectedIncident,
     handleViewDetails,
   } = useDriverIncidents();
-
-  // const base = useIncidentsBase(mockIncidents);
 
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {

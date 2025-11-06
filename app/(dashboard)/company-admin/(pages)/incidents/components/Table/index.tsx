@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { useAdminIncidents } from '@/hooks/incidents/adminIncidents';
-import { Eye, AlertCircle, Calendar } from 'lucide-react';
+import { AlertCircle, Calendar } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import {
   Table,
@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
+// import { Button } from '@/components/ui/button';
 import { formatDateTime } from '@/utils/datetime';
 import { getSeverityBadge } from '@/utils/badge';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -19,7 +19,7 @@ type IncidentTableProps = ReturnType<typeof useAdminIncidents>;
 
 export function IncidentTable({
   filteredIncidents,
-  handleViewIncident,
+  // handleViewIncident,
   loadingAccidents,
 }: IncidentTableProps) {
   const getStatusBadge = (status: string) => {
