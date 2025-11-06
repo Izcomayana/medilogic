@@ -157,6 +157,7 @@ export function useRegulators() {
     await authorizedRequest(async (validToken) => {
       const payload = {
         organization_name: regulator.orgName || '',
+        is_active: regulator.is_active || false,
         name: regulator.name || '',
         email: regulator.email || '',
         license_number: regulator.license_number || '',

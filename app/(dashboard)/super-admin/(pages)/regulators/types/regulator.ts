@@ -1,6 +1,7 @@
 export interface Regulators {
   id: string;
   name: string;
+  is_active?: boolean;
   email?: string;
   role?: 'regulator';
   phone?: string;
