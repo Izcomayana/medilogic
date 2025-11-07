@@ -92,7 +92,7 @@ export function CreatePOD({
                   <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
                     <SelectValue
                       placeholder={
-                        loadingTrips
+                        loadingPods
                           ? 'Loading trips...'
                           : 'Select completed trip'
                       }
@@ -100,7 +100,11 @@ export function CreatePOD({
                   </SelectTrigger>
 
                   <SelectContent className="bg-gray-700 border-gray-600 text-white">
-                    {driverTrips.length > 0 ? (
+                    {loadingPods && driverTrips.length === 0 ? (
+                      <div className="text-gray-400 text-sm p-2">
+                        Loading trips...
+                      </div>
+                    ) : driverTrips.length > 0 ? (
                       driverTrips.map((trip) => {
                         const formattedType =
                           trip.delivery_type === 'other'
@@ -211,12 +215,28 @@ export function CreatePOD({
                   type="file"
                   multiple
                   onChange={(e) => {
-                    const files = Array.from(e.target.files || []);
-                    setFormData((prev) => ({
-                      ...prev,
-                      files,
-                    }));
+                    const newFiles = Array.from(e.target.files || []);
+                    setFormData((prev) => {
+                      const existing = prev.files || [];
+                      const uniqueFiles = newFiles.filter(
+                        (file) =>
+                          !existing.some(
+                            (f) => f.name === file.name && f.size === file.size
+                          )
+                      );
+                      return {
+                        ...prev,
+                        files: [...existing, ...uniqueFiles],
+                      };
+                    });
                   }}
+                  // onChange={(e) => {
+                  //   const files = Array.from(e.target.files || []);
+                  //   setFormData((prev) => ({
+                  //     ...prev,
+                  //     files,
+                  //   }));
+                  // }}
                   className="absolute inset-0 opacity-0 cursor-pointer"
                 />
                 <div>
