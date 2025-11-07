@@ -5,6 +5,7 @@ import { useProfile } from '@/hooks/useProfile';
 import { toast } from 'sonner';
 import { useAuthorizedRequest } from '@/hooks/useRequest';
 import { api } from '@/lib/api';
+import { useAuth } from '@/components/auth';
 
 const severity = ['low', 'moderate', 'critical'];
 
@@ -19,8 +20,8 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
   const [loadingAccidents, setLoadingAccidents] = useState(false);
 
+  const { role } = useAuth();
   const { user } = useProfile();
-  const role = user?.role;
   const authorizedRequest = useAuthorizedRequest();
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -156,17 +157,22 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
     setLoadingAccidents(true);
 
     try {
-      const endpoint =
-        role === 'admin' ? '/incidents/incidents/admin' : '/incidents/';
+      let endpoint = '';
+
+      if (role === 'regulator') {
+        endpoint = '/incidents/';
+      } else if (role === 'admin') {
+        endpoint = '/incidents/incidents/admin';
+      } else {
+        // fallback or driver/client view:
+        endpoint = '/incidents/user';
+      }
 
       await authorizedRequest(async (token) => {
         const response = await api.get(endpoint, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
 
-        // Backend returns correct incident structure already
         setIncidents(response.data);
       }, 'Failed to load incidents');
     } catch (error) {
@@ -177,7 +183,6 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
     }
   };
 
-  // Load on mount
   useEffect(() => {
     fetchAdminIncidents();
   }, []);
