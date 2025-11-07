@@ -17,6 +17,7 @@ import {
   Waypoints,
   Link2,
   Receipt,
+  BadgeAlert,
 } from 'lucide-react';
 import { useAuth } from '@/components/auth';
 import {
@@ -70,6 +71,7 @@ const sidebarLinksByRole: Record<
       icon: ChartNoAxesCombined,
     },
     { title: 'Invoices', url: '/company-admin/invoices', icon: Receipt },
+    { title: 'Incidents', url: '/company-admin/incidents', icon: BadgeAlert },
     {
       title: 'Assignments',
       url: '/company-admin/assignments',

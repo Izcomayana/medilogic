@@ -10,7 +10,7 @@ import {
   AlertDialogCancel,
 } from '@/components/ui/alert-dialog';
 // import { useAdminIncidents } from '@/hooks/incidents/adminIncidents';
-import { Plus, MapPin, FileUp } from 'lucide-react';
+import { MessageCircleWarning, MapPin, FileUp } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -44,7 +44,7 @@ export function ReportIncident({
     <AlertDialog open={showReportModal} onOpenChange={setShowReportModal}>
       <AlertDialogTrigger asChild>
         <Button className="bg-blue-600 hover:bg-blue-700 text-white lg:max-w-2xl">
-          <Plus className="h-4 w-4 mr-2" />
+          <MessageCircleWarning className="h-4 w-4" />
           Report Incident
         </Button>
       </AlertDialogTrigger>

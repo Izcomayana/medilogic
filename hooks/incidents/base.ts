@@ -164,7 +164,6 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
       } else if (role === 'admin') {
         endpoint = '/incidents/incidents/admin';
       } else {
-        // fallback or driver/client view:
         endpoint = '/incidents/user';
       }
 
