@@ -9,7 +9,6 @@ import {
   AlertDialogTrigger,
   AlertDialogCancel,
 } from '@/components/ui/alert-dialog';
-// import { useAdminIncidents } from '@/hooks/incidents/adminIncidents';
 import { MessageCircleWarning, MapPin, FileUp } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -25,7 +24,6 @@ import { Spinner } from '@/components/ui/spinner';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useIncidentsBase } from '@/hooks/incidents/base';
 
-// type ReportIncidentProps = ReturnType<typeof useAdminIncidents>;
 type ReportIncidentProps = ReturnType<typeof useIncidentsBase>;
 
 export function ReportIncident({

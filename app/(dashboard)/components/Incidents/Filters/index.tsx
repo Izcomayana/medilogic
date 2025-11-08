@@ -8,8 +8,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useIncidentsBase } from '@/hooks/incidents/base';
 
-type IncidentFiltersProps = ReturnType<typeof useAdminIncidents>;
+type IncidentFiltersProps = ReturnType<typeof useIncidentsBase>;
 
 export function IncidentFilters({
   searchTerm,
@@ -34,7 +35,7 @@ export function IncidentFilters({
           <Select value={severityFilter} onValueChange={setSeverityFilter}>
             <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
               <Filter className="h-4 w-4 mr-2" />
-              <SelectValue />
+              <SelectValue placeholder="Select severity" />
             </SelectTrigger>
             <SelectContent className="bg-gray-700 border-gray-600">
               <SelectItem value="all">All Severity</SelectItem>

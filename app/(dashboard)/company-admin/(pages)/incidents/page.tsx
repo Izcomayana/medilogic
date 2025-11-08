@@ -4,10 +4,10 @@ import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 import { AlertCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAdminIncidents } from '@/hooks/incidents/adminIncidents';
-import { ReportIncident } from '../../../components/ReportIncident';
-import { IncidentFilters } from './components/Filters';
-import { IncidentTable } from './components/Table';
-import { IncidentDetails } from './components/Details';
+import { ReportIncident } from '../../../components/Incidents/ReportIncident';
+import { IncidentFilters } from '../../../components/Incidents/Filters';
+import { IncidentTable } from '../../../components/Incidents/Table';
+import { IncidentDetails } from '../../../components/Incidents/Details';
 
 export default function AdminIncidentsPage() {
   const incidentState = useAdminIncidents();
