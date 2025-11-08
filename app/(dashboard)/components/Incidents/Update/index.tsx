@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/select';
 import { toast } from 'sonner';
 import { Switch } from '@/components/ui/switch';
+import { useAuth } from '@/components/auth';
 
 interface Props {
   open: boolean;
@@ -73,6 +74,8 @@ export default function UpdateIncident({
     }
   };
 
+  const { role } = useAuth();
+
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogContent className="bg-gray-800 border-gray-700 text-white max-w-md">
@@ -107,13 +110,16 @@ export default function UpdateIncident({
               </Select>
             </div>
 
-            <div className="flex items-center justify-between mt-10">
-              <Label className="text-gray-300">Escalated</Label>
-              <Switch
-                checked={incident.escalated}
-                onCheckedChange={handleEscalationToggle}
-              />
-            </div>
+            {role === 'admin' ||
+              (role === 'regulator' && (
+                <div className="flex items-center justify-between mt-10">
+                  <Label className="text-gray-300">Escalated</Label>
+                  <Switch
+                    checked={incident.escalated}
+                    onCheckedChange={handleEscalationToggle}
+                  />
+                </div>
+              ))}
           </div>
         ) : (
           <p className="text-gray-400 text-sm py-8 text-center">

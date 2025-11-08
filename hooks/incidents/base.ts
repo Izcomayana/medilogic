@@ -19,6 +19,9 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
   const [reporting, setReporting] = useState(false);
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
   const [loadingAccidents, setLoadingAccidents] = useState(false);
+  const [page, setPage] = useState(1);
+  const [limit] = useState(10); // or make this adjustable
+  const [totalCount, setTotalCount] = useState(0);
   const [showStatusModal, setShowStatusModal] = useState(false);
 
   const { role } = useAuth();
@@ -27,6 +30,7 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [severityFilter, setSeverityFilter] = useState('all');
+  const [scope, setScope] = useState<'all' | 'mine' | 'org'>('all');
 
   const [formData, setFormData] = useState({
     title: '',
@@ -160,20 +164,31 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
     try {
       let endpoint = '';
 
-      if (role === 'regulator') {
+      if (role === 'admin') {
+        // choose endpoint based on scope
+        if (scope === 'mine') endpoint = '/incidents/my-submissions';
+        else endpoint = '/incidents/incidents/admin';
+      } else if (role === 'regulator') {
         endpoint = '/incidents/regulator';
-      } else if (role === 'admin') {
-        endpoint = '/incidents/incidents/admin';
       } else {
         endpoint = '/incidents/driver/my-submissions';
       }
 
       await authorizedRequest(async (token) => {
+        const skip = (page - 1) * limit;
         const response = await api.get(endpoint, {
+          params: { skip, limit },
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        setIncidents(response.data);
+        const data = response.data;
+        if (Array.isArray(data)) {
+          setIncidents(response.data);
+          setTotalCount(data.length);
+        } else {
+          setIncidents(response.data.items || []);
+          setTotalCount(response.data.total || 0);
+        }
       }, 'Failed to load incidents');
     } catch (error) {
       console.error('Error fetching accidents:', error);
@@ -185,7 +200,17 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
 
   useEffect(() => {
     fetchIncidents();
-  }, []);
+  }, [page, scope]);
+
+  const totalPages = Math.ceil(totalCount / limit);
+
+  const nextPage = () => {
+    if (page < totalPages) setPage(page + 1);
+  };
+
+  const prevPage = () => {
+    if (page > 1) setPage(page - 1);
+  };
 
   const filteredIncidents = incidents.filter((incident: any) => {
     const matchesSearch =
@@ -196,9 +221,6 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
     const matchesSeverity =
       severityFilter === 'all' ||
       incident.severity.toLowerCase() === severityFilter.toLowerCase();
-
-    // const matchesDriver =
-    //   driverFilter === 'all' || incident.submitted_by_id === driverFilter;
 
     return matchesSearch && matchesSeverity;
   });
@@ -229,11 +251,6 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
     }
     fetchIncidentDetails(incident.id);
   };
-
-  // const [modalState, setModalState] = useState({
-  //   newStatus: '',
-  //   internalNote: '',
-  // });
 
   const updateIncidentStatus = async (
     incidentId: string,
@@ -289,12 +306,19 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
     reporting,
     isLoadingLocation,
     loadingAccidents,
+    page,
+    totalPages,
+    nextPage,
+    prevPage,
+    setPage,
     showStatusModal,
     setShowStatusModal,
     searchTerm,
     setSearchTerm,
     severityFilter,
     setSeverityFilter,
+    scope,
+    setScope,
     formData,
     setFormData,
     resetForm,

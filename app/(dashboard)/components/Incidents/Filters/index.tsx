@@ -1,5 +1,5 @@
 import { Input } from '@/components/ui/input';
-import { Filter, Search } from 'lucide-react';
+import { Filter, Search, Users } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useIncidentsBase } from '@/hooks/incidents/base';
+import { useAuth } from '@/components/auth';
 
 type IncidentFiltersProps = ReturnType<typeof useIncidentsBase>;
 
@@ -16,7 +17,11 @@ export function IncidentFilters({
   setSearchTerm,
   severityFilter,
   setSeverityFilter,
+  scope,
+  setScope,
 }: IncidentFiltersProps) {
+  const { role } = useAuth();
+
   return (
     <div className="flex flex-col md:flex-row gap-4">
       <div className="relative md:w-[85%]">
@@ -45,6 +50,27 @@ export function IncidentFilters({
           </Select>
         </div>
       </div>
+
+      {role === 'admin' && (
+          <div>
+            <Select
+              value={scope}
+              onValueChange={(value) =>
+                setScope(value as 'all' | 'mine' | 'org')
+              }
+            >
+              <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                <Users className="h-4 w-4 mr-2" />
+                <SelectValue placeholder="Scope" />
+              </SelectTrigger>
+              <SelectContent className="bg-gray-700 border-gray-600">
+                <SelectItem value="all">All Incidents</SelectItem>
+                <SelectItem value="mine">My Incidents</SelectItem>
+                <SelectItem value="org">Organization Incidents</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
     </div>
   );
 }

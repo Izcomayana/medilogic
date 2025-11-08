@@ -15,7 +15,7 @@ import { getSeverityBadge } from '@/utils/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useIncidentsBase } from '@/hooks/incidents/base';
 import { Button } from '@/components/ui/button';
-import { MoreHorizontal } from 'lucide-react';
+import { MoreHorizontal, SkipBack, SkipForward } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -36,6 +36,10 @@ export function IncidentTable({
   showStatusModal,
   setShowStatusModal,
   toggleIncidentEscalation,
+  page,
+  totalPages,
+  nextPage,
+  prevPage,
 }: IncidentTableProps) {
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
@@ -58,7 +62,7 @@ export function IncidentTable({
 
   // ✅ Skeleton Rows Builder
   const renderSkeletonRows = () => {
-    return [...Array(5)].map((_, i) => (
+    return [...Array(10)].map((_, i) => (
       <TableRow key={i} className="border-gray-700">
         <TableCell>
           <Skeleton className="h-4 w-24 bg-gray-700" />
@@ -176,6 +180,30 @@ export function IncidentTable({
                 )}
               </TableBody>
             </Table>
+            <div className="flex justify-center items-center gap-4 my-6">
+              <Button
+                variant="outline"
+                onClick={prevPage}
+                disabled={page === 1}
+                className="p-2 bg-gray-700 rounded-lg flex disabled:opacity-50"
+              >
+                <SkipBack />
+                Prev
+              </Button>
+
+              <span className="text-white">
+                Page {page} of {totalPages || 1}
+              </span>
+
+              <Button
+                onClick={nextPage}
+                disabled={page >= totalPages}
+                className="px-4 py-2 bg-gray-700 rounded-lg flex disabled:opacity-50"
+              >
+                Next
+                <SkipForward />
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>

@@ -19,7 +19,6 @@ import { Button } from '@/components/ui/button';
 import { formatDateTime } from '@/utils/datetime';
 import { getSeverityBadge } from '@/utils/badge';
 import { useIncidentsBase } from '@/hooks/incidents/base';
-import { useAuth } from '@/components/auth';
 
 type IncidentDetailsProps = ReturnType<typeof useIncidentsBase>;
 
@@ -63,8 +62,6 @@ export function IncidentDetails({
     );
   };
 
-  const { role } = useAuth();
-
   return (
     <Dialog open={showDetailsModal} onOpenChange={setShowDetailsModal}>
       <DialogContent className="bg-gray-800 border-gray-700 text-white lg:max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -87,54 +84,45 @@ export function IncidentDetails({
                   {selectedIncident.title}
                 </p>
               </div>
-
               <div>
                 <Label className="text-gray-400 text-sm">Description</Label>
                 <p className="text-gray-300 text-sm mt-1">
                   {selectedIncident.description}
                 </p>
               </div>
-
               <div>
                 <Label className="text-gray-400 text-sm">Type</Label>
                 <p className="text-white font-medium mt-1">
                   {selectedIncident.incident_type}
                 </p>
               </div>
-
               <div>
                 <Label className="text-gray-400 text-sm">Severity</Label>
                 <p className="text-white font-medium mt-1">
                   {getSeverityBadge(selectedIncident.severity)}
                 </p>
               </div>
-
               <div>
                 <Label className="text-gray-400 text-sm">Location</Label>
                 <p className="text-white font-medium mt-1">
                   {selectedIncident.location}
                 </p>
               </div>
-
               <div>
                 <Label className="text-gray-400 text-sm">Created At</Label>
                 <p className="text-white font-medium mt-1">
                   {formatDateTime(selectedIncident.created_at || '')}
                 </p>
               </div>
-
-              {role === 'admin' ||
-                (role === 'regulator' && (
-                  <div>
-                    <Label className="text-gray-400 text-sm">
-                      Escalation Status
-                    </Label>
-                    <div className="mt-1">
-                      {getEscalationBadge(selectedIncident.escalated)}
-                    </div>
-                  </div>
-                ))}
-
+              <div>
+                <Label className="text-gray-400 text-sm">
+                  Escalation Status
+                </Label>
+                <div className="mt-1">
+                  {getEscalationBadge(selectedIncident.escalated)}
+                </div>
+              </div>
+              =
               <div>
                 <Label className="text-gray-400 text-sm">Current Status</Label>
                 <div className="mt-1">
