@@ -50,7 +50,7 @@ export default function UpdateIncident({
       setOpen(false); // close only after success
     } catch (err: any) {
       toast.error('Failed to update status', { id: 'incident-status' });
-      console.log(err)
+      console.log(err);
     } finally {
       setOpen(false);
     }
@@ -67,7 +67,7 @@ export default function UpdateIncident({
       setOpen(false);
     } catch (err) {
       toast.error('Failed to update escalation', { id: 'escalate' });
-      console.log(err)
+      console.log(err);
     } finally {
       setOpen(false);
     }
