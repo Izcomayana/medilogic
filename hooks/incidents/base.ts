@@ -19,6 +19,7 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
   const [reporting, setReporting] = useState(false);
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
   const [loadingAccidents, setLoadingAccidents] = useState(false);
+  const [showStatusModal, setShowStatusModal] = useState(false);
 
   const { role } = useAuth();
   const { user } = useProfile();
@@ -153,18 +154,18 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
     return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
   };
 
-  const fetchAdminIncidents = async () => {
+  const fetchIncidents = async () => {
     setLoadingAccidents(true);
 
     try {
       let endpoint = '';
 
       if (role === 'regulator') {
-        endpoint = '/incidents/';
+        endpoint = '/incidents/regulator';
       } else if (role === 'admin') {
         endpoint = '/incidents/incidents/admin';
       } else {
-        endpoint = '/incidents/user';
+        endpoint = '/incidents/driver/my-submissions';
       }
 
       await authorizedRequest(async (token) => {
@@ -183,7 +184,7 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
   };
 
   useEffect(() => {
-    fetchAdminIncidents();
+    fetchIncidents();
   }, []);
 
   const filteredIncidents = incidents.filter((incident: any) => {
@@ -202,9 +203,77 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
     return matchesSearch && matchesSeverity;
   });
 
+  const fetchIncidentDetails = async (incidentId: string) => {
+    try {
+      setSelectedIncident(null);
+      toast('Loading incident details...');
+
+      await authorizedRequest(async (token) => {
+        const response = await api.get(`/incidents/${incidentId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        setSelectedIncident(response.data);
+        setShowDetailsModal(true);
+      }, 'Failed to load incident details');
+    } catch (error) {
+      console.error('Error loading incident details:', error);
+      toast.error('Unable to load incident details');
+    }
+  };
+
   const handleViewDetails = (incident: Incident) => {
-    setSelectedIncident(incident);
-    setShowDetailsModal(true);
+    if (!incident?.id) {
+      toast.error('Invalid incident');
+      return;
+    }
+    fetchIncidentDetails(incident.id);
+  };
+
+  // const [modalState, setModalState] = useState({
+  //   newStatus: '',
+  //   internalNote: '',
+  // });
+
+  const updateIncidentStatus = async (
+    incidentId: string,
+    newStatus: string
+  ) => {
+    try {
+      await authorizedRequest(async (token) => {
+        const response = await api.patch(
+          `/incidents/${incidentId}/status`,
+          { status: newStatus }, // body
+          { headers: { Authorization: `Bearer ${token}` } } // ✅ correct placement
+        );
+        return response.data;
+      }, 'fail to update status');
+    } catch (err: any) {
+      console.error('Error updating status:', err?.response?.data || err);
+      throw err;
+    }
+  };
+
+  const toggleIncidentEscalation = async (
+    incidentId: string,
+    currentEscalated: boolean
+  ) => {
+    try {
+      await authorizedRequest(async (token) => {
+        const response = await api.patch(
+          `/incidents/${incidentId}/toggle-escalation`,
+          { escalated: !currentEscalated }, // body
+          { headers: { Authorization: `Bearer ${token}` } } // ✅ correct placement
+        );
+        return response.data;
+      }, 'fail to update status');
+    } catch (error: any) {
+      console.error(
+        'Error toggling escalation:',
+        error?.response?.data || error
+      );
+      throw error;
+    }
   };
 
   return {
@@ -220,6 +289,8 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
     reporting,
     isLoadingLocation,
     loadingAccidents,
+    showStatusModal,
+    setShowStatusModal,
     searchTerm,
     setSearchTerm,
     severityFilter,
@@ -231,6 +302,9 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
     handleGetLocation,
     formatFileSize,
     filteredIncidents,
+    fetchIncidentDetails,
     handleViewDetails,
+    updateIncidentStatus,
+    toggleIncidentEscalation,
   };
 }

@@ -1,6 +1,5 @@
 import { Input } from '@/components/ui/input';
 import { Filter, Search } from 'lucide-react';
-import { useAdminIncidents } from '@/hooks/incidents/adminIncidents';
 import {
   Select,
   SelectContent,
@@ -8,8 +7,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useIncidentsBase } from '@/hooks/incidents/base';
 
-type IncidentFiltersProps = ReturnType<typeof useAdminIncidents>;
+type IncidentFiltersProps = ReturnType<typeof useIncidentsBase>;
 
 export function IncidentFilters({
   searchTerm,
@@ -34,7 +34,7 @@ export function IncidentFilters({
           <Select value={severityFilter} onValueChange={setSeverityFilter}>
             <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
               <Filter className="h-4 w-4 mr-2" />
-              <SelectValue />
+              <SelectValue placeholder="Select severity" />
             </SelectTrigger>
             <SelectContent className="bg-gray-700 border-gray-600">
               <SelectItem value="all">All Severity</SelectItem>
@@ -44,22 +44,6 @@ export function IncidentFilters({
             </SelectContent>
           </Select>
         </div>
-
-        {/* <div>
-          <Select value={driverFilter} onValueChange={setDriverFilter}>
-            <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="bg-gray-700 border-gray-600">
-              <SelectItem value="all">All Drivers</SelectItem>
-              {drivers.map((driver) => (
-                <SelectItem key={driver.id} value={driver.id ?? ''}>
-                  {driver.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div> */}
       </div>
     </div>
   );

@@ -4,10 +4,9 @@ import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 import { AlertCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAdminIncidents } from '@/hooks/incidents/adminIncidents';
-// import { ReportIncident } from '@/app/(dashboard)/components/ReportIncident';
-import { IncidentFilters } from '@/app/(dashboard)/company-admin/(pages)/incidents/components/Filters';
-import { IncidentTable } from '@/app/(dashboard)/company-admin/(pages)/incidents/components/Table';
-import { IncidentDetails } from '@/app/(dashboard)/company-admin/(pages)/incidents/components/Details';
+import { IncidentFilters } from '@/app/(dashboard)/components/Incidents/Filters';
+import { IncidentTable } from '@/app/(dashboard)/components/Incidents/Table';
+import { IncidentDetails } from '@/app/(dashboard)/components/Incidents/Details';
 
 export default function AdminIncidentsPage() {
   const incidentState = useAdminIncidents();
@@ -30,8 +29,6 @@ export default function AdminIncidentsPage() {
                 <AlertCircle className="h-5 w-5" />
                 Incidents ({filteredIncidents.length})
               </CardTitle>
-
-              {/* <ReportIncident {...incidentState} /> */}
             </div>
           </CardHeader>
 

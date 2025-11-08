@@ -5,14 +5,10 @@ export type Incident = {
   severity: string;
   description: string;
   status: string;
+  escalated: boolean;
   created_at?: string;
   timestamp?: string;
-  photoUrl: string | null;
+  location?: string;
   adminResponse?: string | null;
   internalNotes?: string | null;
-  auditHistory?: {
-    action: string;
-    timestamp: string;
-    by: string;
-  }[];
 };
