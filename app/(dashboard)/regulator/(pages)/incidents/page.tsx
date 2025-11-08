@@ -4,7 +4,6 @@ import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 import { AlertCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAdminIncidents } from '@/hooks/incidents/adminIncidents';
-// import { ReportIncident } from '@/app/(dashboard)/components/ReportIncident';
 import { IncidentFilters } from '@/app/(dashboard)/components/Incidents/Filters';
 import { IncidentTable } from '@/app/(dashboard)/components/Incidents/Table';
 import { IncidentDetails } from '@/app/(dashboard)/components/Incidents/Details';

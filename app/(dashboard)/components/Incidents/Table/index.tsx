@@ -1,5 +1,4 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { useAdminIncidents } from '@/hooks/incidents/adminIncidents';
 import { AlertCircle, Calendar, Edit, Eye } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import {

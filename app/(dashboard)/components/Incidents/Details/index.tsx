@@ -123,7 +123,6 @@ export function IncidentDetails({
                 </p>
               </div>
 
-
               {role === 'admin' ||
                 (role === 'regulator' && (
                   <div>
