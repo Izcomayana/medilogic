@@ -1,6 +1,5 @@
 import { Input } from '@/components/ui/input';
 import { Filter, Search } from 'lucide-react';
-import { useAdminIncidents } from '@/hooks/incidents/adminIncidents';
 import {
   Select,
   SelectContent,
@@ -45,22 +44,6 @@ export function IncidentFilters({
             </SelectContent>
           </Select>
         </div>
-
-        {/* <div>
-          <Select value={driverFilter} onValueChange={setDriverFilter}>
-            <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="bg-gray-700 border-gray-600">
-              <SelectItem value="all">All Drivers</SelectItem>
-              {drivers.map((driver) => (
-                <SelectItem key={driver.id} value={driver.id ?? ''}>
-                  {driver.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div> */}
       </div>
     </div>
   );

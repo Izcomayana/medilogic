@@ -51,7 +51,6 @@ export function CreatePOD({
   setFormData,
   formatFileSize,
   handleCreatePod,
-  loadingTrips,
   driverTrips,
   driverID,
   loadingPods,

@@ -1,12 +1,10 @@
 'use client';
 
 import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
-import { Badge } from '@/components/ui/badge';
 import { useDriverIncidents } from '@/hooks/incidents/driver';
 import { ReportIncident } from '@/app/(dashboard)/components/Incidents/ReportIncident';
 import { IncidentFilters } from '@/app/(dashboard)/components/Incidents/Filters';
 import { IncidentTable } from '@/app/(dashboard)/components/Incidents/Table';
-import { useIncidentsBase } from '@/hooks/incidents/base';
 import { IncidentDetails } from '@/app/(dashboard)/components/Incidents/Details';
 
 export default function DriverIncidentsPage() {
