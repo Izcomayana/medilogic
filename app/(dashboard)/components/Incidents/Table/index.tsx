@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card, CardContent } from '@/components/ui/card';
 import { AlertCircle, Calendar, Edit, Eye } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 import {
   Table,
   TableBody,
@@ -23,6 +22,7 @@ import {
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
 import UpdateIncident from '../Update';
+import { getIncidentStatusBadge } from '@/utils/badge';
 
 type IncidentTableProps = ReturnType<typeof useIncidentsBase>;
 
@@ -40,26 +40,8 @@ export function IncidentTable({
   totalPages,
   nextPage,
   prevPage,
+  scope,
 }: IncidentTableProps) {
-  const getStatusBadge = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'pending':
-        return <Badge className="bg-blue-600 text-white">Pending</Badge>;
-      case 'under_review':
-        return <Badge className="bg-yellow-600 text-white">Under Review</Badge>;
-      case 'escalated':
-        return <Badge className="bg-orange-600 text-white">Escalated</Badge>;
-      case 'on_site':
-        return <Badge className="bg-gray-200 text-white">On Site</Badge>;
-      case 'resolved':
-        return <Badge className="bg-green-600 text-white">Resolved</Badge>;
-      case 'closed':
-        return <Badge className="bg-red-600 text-white">Closed</Badge>;
-      default:
-        return <Badge variant="outline">{status}</Badge>;
-    }
-  };
-
   // ✅ Skeleton Rows Builder
   const renderSkeletonRows = () => {
     return [...Array(10)].map((_, i) => (
@@ -133,7 +115,9 @@ export function IncidentTable({
                       <TableCell className="text-gray-300">
                         {getSeverityBadge(incident.severity)}
                       </TableCell>
-                      <TableCell>{getStatusBadge(incident.status)}</TableCell>
+                      <TableCell>
+                        {getIncidentStatusBadge(incident.status)}
+                      </TableCell>
                       <TableCell className="text-gray-300 text-sm">
                         <div className="flex items-center gap-1">
                           <Calendar className="h-3 w-3" />
@@ -214,6 +198,7 @@ export function IncidentTable({
         incident={selectedIncident}
         updateIncidentStatus={updateIncidentStatus}
         toggleIncidentEscalation={toggleIncidentEscalation}
+        scope={scope}
         onStatusUpdated={(newStatus) =>
           setSelectedIncident((prev: any) => ({ ...prev, status: newStatus }))
         }

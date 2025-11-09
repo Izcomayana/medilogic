@@ -1,3 +1,9 @@
+export type IncidentFile = {
+  id: string;
+  s3_key: string;
+  file_type: string;
+};
+
 export type Incident = {
   id: string;
   title: string;
@@ -11,4 +17,5 @@ export type Incident = {
   location?: string;
   adminResponse?: string | null;
   internalNotes?: string | null;
+  files?: IncidentFile[];
 };
