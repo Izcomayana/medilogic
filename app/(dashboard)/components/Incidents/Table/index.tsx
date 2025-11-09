@@ -23,6 +23,7 @@ import {
   DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
 import UpdateIncident from '../Update';
+import { getIncidentStatusBadge } from '@/utils/badge';
 
 type IncidentTableProps = ReturnType<typeof useIncidentsBase>;
 
@@ -40,6 +41,7 @@ export function IncidentTable({
   totalPages,
   nextPage,
   prevPage,
+  scope,
 }: IncidentTableProps) {
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
@@ -133,7 +135,9 @@ export function IncidentTable({
                       <TableCell className="text-gray-300">
                         {getSeverityBadge(incident.severity)}
                       </TableCell>
-                      <TableCell>{getStatusBadge(incident.status)}</TableCell>
+                      <TableCell>
+                        {getIncidentStatusBadge(incident.status)}
+                      </TableCell>
                       <TableCell className="text-gray-300 text-sm">
                         <div className="flex items-center gap-1">
                           <Calendar className="h-3 w-3" />
@@ -214,6 +218,7 @@ export function IncidentTable({
         incident={selectedIncident}
         updateIncidentStatus={updateIncidentStatus}
         toggleIncidentEscalation={toggleIncidentEscalation}
+        scope={scope}
         onStatusUpdated={(newStatus) =>
           setSelectedIncident((prev: any) => ({ ...prev, status: newStatus }))
         }

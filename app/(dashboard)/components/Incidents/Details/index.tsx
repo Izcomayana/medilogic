@@ -19,6 +19,7 @@ import { Button } from '@/components/ui/button';
 import { formatDateTime } from '@/utils/datetime';
 import { getSeverityBadge } from '@/utils/badge';
 import { useIncidentsBase } from '@/hooks/incidents/base';
+import { getIncidentStatusBadge } from '@/utils/badge';
 
 type IncidentDetailsProps = ReturnType<typeof useIncidentsBase>;
 
@@ -27,25 +28,6 @@ export function IncidentDetails({
   setShowDetailsModal,
   selectedIncident,
 }: IncidentDetailsProps) {
-  const getStatusBadge = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'pending':
-        return <Badge className="bg-blue-600 text-white">Pending</Badge>;
-      case 'under_review':
-        return <Badge className="bg-yellow-600 text-white">Under Review</Badge>;
-      case 'escalated':
-        return <Badge className="bg-orange-600 text-white">Escalated</Badge>;
-      case 'on_site':
-        return <Badge className="bg-gray-200 text-white">On Site</Badge>;
-      case 'resolved':
-        return <Badge className="bg-green-600 text-white">Resolved</Badge>;
-      case 'closed':
-        return <Badge className="bg-red-600 text-white">Closed</Badge>;
-      default:
-        return <Badge variant="outline">{status}</Badge>;
-    }
-  };
-
   const getEscalationBadge = (isEscalated: boolean) => {
     return isEscalated ? (
       <div className="flex items-center gap-2">
@@ -126,7 +108,7 @@ export function IncidentDetails({
               <div>
                 <Label className="text-gray-400 text-sm">Current Status</Label>
                 <div className="mt-1">
-                  {getStatusBadge(selectedIncident.status)}
+                  {getIncidentStatusBadge(selectedIncident.status)}
                 </div>
               </div>
             </div>
@@ -135,6 +117,68 @@ export function IncidentDetails({
               <Calendar className="h-4 w-4" />
               <span>{selectedIncident.timestamp}</span>
             </div>
+          </div>
+        )}
+
+        {/* Files Section */}
+        {selectedIncident?.files && (
+          <div>
+            <Label className="text-gray-400 text-sm">Attached Files</Label>
+            {selectedIncident.files.length > 0 ? (
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-3">
+                {selectedIncident.files.map((file: any) => {
+                  const fileUrl = `${file.s3_key}`;
+                  const isImage = [
+                    'jpg',
+                    'jpeg',
+                    'png',
+                    'gif',
+                    'webp',
+                  ].includes(file.file_type?.toLowerCase());
+
+                  return (
+                    <div
+                      key={file.id}
+                      className="relative border border-gray-700 rounded-lg overflow-hidden hover:shadow-lg transition"
+                    >
+                      {isImage ? (
+                        <a
+                          href={fileUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block"
+                        >
+                          <img
+                            src={fileUrl}
+                            alt={file.s3_key}
+                            className="w-full h-32 object-cover"
+                            loading="lazy"
+                          />
+                        </a>
+                      ) : (
+                        <div className="flex flex-col items-center justify-center h-32 bg-gray-900 text-gray-400 text-xs">
+                          <span className="truncate px-2">
+                            {file.file_type.toUpperCase()}
+                          </span>
+                          <a
+                            href={fileUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-400 hover:underline mt-2"
+                          >
+                            View File
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <p className="text-gray-400 text-sm mt-2 italic">
+                No files attached
+              </p>
+            )}
           </div>
         )}
 

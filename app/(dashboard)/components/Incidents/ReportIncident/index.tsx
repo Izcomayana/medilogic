@@ -177,8 +177,9 @@ export function ReportIncident({
               Visible to Regulator
             </Label>
           </div>
+
           {/* escalated */}
-          <div className="flex items-center space-x-2">
+          {/* <div className="flex items-center space-x-2">
             <Checkbox
               id="escalated"
               checked={formData.escalated}
@@ -192,7 +193,7 @@ export function ReportIncident({
             <Label htmlFor="escalated" className="text-gray-300">
               Escalate Incident
             </Label>
-          </div>
+          </div> */}
 
           <div>
             <Label className="text-gray-300 text-sm mb-2">Upload files</Label>

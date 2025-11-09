@@ -55,14 +55,13 @@ export function IncidentFilters({
         <div>
           <Select
             value={scope}
-            onValueChange={(value) => setScope(value as 'all' | 'mine' | 'org')}
+            onValueChange={(value) => setScope(value as 'mine' | 'org')}
           >
             <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
               <Users className="h-4 w-4 mr-2" />
               <SelectValue placeholder="Scope" />
             </SelectTrigger>
             <SelectContent className="bg-gray-700 border-gray-600">
-              <SelectItem value="all">All Incidents</SelectItem>
               <SelectItem value="mine">My Incidents</SelectItem>
               <SelectItem value="org">Organization Incidents</SelectItem>
             </SelectContent>

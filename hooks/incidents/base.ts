@@ -30,7 +30,7 @@ export function useIncidentsBase(initialIncidents: Incident[]) {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [severityFilter, setSeverityFilter] = useState('all');
-  const [scope, setScope] = useState<'all' | 'mine' | 'org'>('all');
+  const [scope, setScope] = useState<'mine' | 'org'>('mine');
 
   const [formData, setFormData] = useState({
     title: '',
