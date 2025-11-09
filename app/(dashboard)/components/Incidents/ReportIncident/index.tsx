@@ -23,6 +23,7 @@ import {
 import { Spinner } from '@/components/ui/spinner';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useIncidentsBase } from '@/hooks/incidents/base';
+import { useAuth } from '@/components/auth';
 
 type ReportIncidentProps = ReturnType<typeof useIncidentsBase>;
 
@@ -38,6 +39,8 @@ export function ReportIncident({
   formatFileSize,
   reporting,
 }: ReportIncidentProps) {
+  const { role } = useAuth();
+
   return (
     <AlertDialog open={showReportModal} onOpenChange={setShowReportModal}>
       <AlertDialogTrigger asChild>
@@ -161,22 +164,24 @@ export function ReportIncident({
               </Button>
             </div>
           </div>
-          {/* is_visible_to_regulator */}
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="isVisibleToRegulator"
-              checked={formData.isVisibleToRegulator}
-              onCheckedChange={(checked) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  isVisibleToRegulator: Boolean(checked),
-                }))
-              }
-            />
-            <Label htmlFor="isVisibleToRegulator" className="text-gray-300">
-              Visible to Regulator
-            </Label>
-          </div>
+
+          {role === 'admin' && (
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="isVisibleToRegulator"
+                checked={formData.isVisibleToRegulator}
+                onCheckedChange={(checked) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    isVisibleToRegulator: Boolean(checked),
+                  }))
+                }
+              />
+              <Label htmlFor="isVisibleToRegulator" className="text-gray-300">
+                Visible to Regulator
+              </Label>
+            </div>
+          )}
 
           {/* escalated */}
           {/* <div className="flex items-center space-x-2">

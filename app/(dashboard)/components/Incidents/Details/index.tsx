@@ -20,6 +20,7 @@ import { formatDateTime } from '@/utils/datetime';
 import { getSeverityBadge } from '@/utils/badge';
 import { useIncidentsBase } from '@/hooks/incidents/base';
 import { getIncidentStatusBadge } from '@/utils/badge';
+import { useAuth } from '@/components/auth';
 
 type IncidentDetailsProps = ReturnType<typeof useIncidentsBase>;
 
@@ -44,6 +45,8 @@ export function IncidentDetails({
     );
   };
 
+  const { role } = useAuth();
+
   return (
     <Dialog open={showDetailsModal} onOpenChange={setShowDetailsModal}>
       <DialogContent className="bg-gray-800 border-gray-700 text-white lg:max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -64,6 +67,12 @@ export function IncidentDetails({
                 <Label className="text-gray-400 text-sm">Title</Label>
                 <p className="text-white font-medium mt-1">
                   {selectedIncident.title}
+                </p>
+              </div>
+              <div>
+                <Label className="text-gray-400 text-sm">Submitted by</Label>
+                <p className="text-white font-medium mt-1">
+                  {selectedIncident.submitted_name}
                 </p>
               </div>
               <div>
@@ -96,15 +105,18 @@ export function IncidentDetails({
                   {formatDateTime(selectedIncident.created_at || '')}
                 </p>
               </div>
-              <div>
-                <Label className="text-gray-400 text-sm">
-                  Escalation Status
-                </Label>
-                <div className="mt-1">
-                  {getEscalationBadge(selectedIncident.escalated)}
+
+              {role === 'admin' && (
+                <div>
+                  <Label className="text-gray-400 text-sm">
+                    Escalation Status
+                  </Label>
+                  <div className="mt-1">
+                    {getEscalationBadge(selectedIncident.escalated)}
+                  </div>
                 </div>
-              </div>
-              =
+              )}
+
               <div>
                 <Label className="text-gray-400 text-sm">Current Status</Label>
                 <div className="mt-1">
