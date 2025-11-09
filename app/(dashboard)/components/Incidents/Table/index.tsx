@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card, CardContent } from '@/components/ui/card';
 import { AlertCircle, Calendar, Edit, Eye } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 import {
   Table,
   TableBody,
