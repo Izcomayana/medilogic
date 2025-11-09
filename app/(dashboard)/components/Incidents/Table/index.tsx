@@ -43,25 +43,6 @@ export function IncidentTable({
   prevPage,
   scope,
 }: IncidentTableProps) {
-  const getStatusBadge = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'pending':
-        return <Badge className="bg-blue-600 text-white">Pending</Badge>;
-      case 'under_review':
-        return <Badge className="bg-yellow-600 text-white">Under Review</Badge>;
-      case 'escalated':
-        return <Badge className="bg-orange-600 text-white">Escalated</Badge>;
-      case 'on_site':
-        return <Badge className="bg-gray-200 text-white">On Site</Badge>;
-      case 'resolved':
-        return <Badge className="bg-green-600 text-white">Resolved</Badge>;
-      case 'closed':
-        return <Badge className="bg-red-600 text-white">Closed</Badge>;
-      default:
-        return <Badge variant="outline">{status}</Badge>;
-    }
-  };
-
   // ✅ Skeleton Rows Builder
   const renderSkeletonRows = () => {
     return [...Array(10)].map((_, i) => (

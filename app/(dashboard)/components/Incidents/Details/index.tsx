@@ -1,4 +1,4 @@
-// src/components/IncidentDetails.tsx
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Dialog,
   DialogContent,
