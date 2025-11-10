@@ -18,5 +18,5 @@ export type Incident = {
   adminResponse?: string | null;
   internalNotes?: string | null;
   files?: IncidentFile[];
-  submitted_name?: string;
+  submitted_by_name?: string;
 };

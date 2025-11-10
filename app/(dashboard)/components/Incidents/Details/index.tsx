@@ -11,16 +11,16 @@ import { Label } from '@/components/ui/label';
 import {
   AlertCircle,
   Calendar,
-  ArrowUpCircle,
-  ArrowDownCircle,
+  // ArrowUpCircle,
+  // ArrowDownCircle,
 } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+// import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { formatDateTime } from '@/utils/datetime';
 import { getSeverityBadge } from '@/utils/badge';
 import { useIncidentsBase } from '@/hooks/incidents/base';
 import { getIncidentStatusBadge } from '@/utils/badge';
-import { useAuth } from '@/components/auth';
+// import { useAuth } from '@/components/auth';
 
 type IncidentDetailsProps = ReturnType<typeof useIncidentsBase>;
 
@@ -29,23 +29,23 @@ export function IncidentDetails({
   setShowDetailsModal,
   selectedIncident,
 }: IncidentDetailsProps) {
-  const getEscalationBadge = (isEscalated: boolean) => {
-    return isEscalated ? (
-      <div className="flex items-center gap-2">
-        <ArrowUpCircle className="text-orange-500 w-4 h-4" />
-        <Badge className="bg-orange-600 text-white">Escalated</Badge>
-      </div>
-    ) : (
-      <div className="flex items-center gap-2">
-        <ArrowDownCircle className="text-gray-400 w-4 h-4" />
-        <Badge variant="outline" className="text-gray-300 border-gray-600">
-          Not Escalated
-        </Badge>
-      </div>
-    );
-  };
+  // const getEscalationBadge = (isEscalated: boolean) => {
+  //   return isEscalated ? (
+  //     <div className="flex items-center gap-2">
+  //       <ArrowUpCircle className="text-orange-500 w-4 h-4" />
+  //       <Badge className="bg-orange-600 text-white">Escalated</Badge>
+  //     </div>
+  //   ) : (
+  //     <div className="flex items-center gap-2">
+  //       <ArrowDownCircle className="text-gray-400 w-4 h-4" />
+  //       <Badge variant="outline" className="text-gray-300 border-gray-600">
+  //         Not Escalated
+  //       </Badge>
+  //     </div>
+  //   );
+  // };
 
-  const { role } = useAuth();
+  // const { role } = useAuth();
 
   return (
     <Dialog open={showDetailsModal} onOpenChange={setShowDetailsModal}>
@@ -72,7 +72,7 @@ export function IncidentDetails({
               <div>
                 <Label className="text-gray-400 text-sm">Submitted by</Label>
                 <p className="text-white font-medium mt-1">
-                  {selectedIncident.submitted_name}
+                  {selectedIncident.submitted_by_name}
                 </p>
               </div>
               <div>
@@ -106,7 +106,7 @@ export function IncidentDetails({
                 </p>
               </div>
 
-              {role === 'admin' && (
+              {/* {role === 'admin' && (
                 <div>
                   <Label className="text-gray-400 text-sm">
                     Escalation Status
@@ -115,7 +115,7 @@ export function IncidentDetails({
                     {getEscalationBadge(selectedIncident.escalated)}
                   </div>
                 </div>
-              )}
+              )} */}
 
               <div>
                 <Label className="text-gray-400 text-sm">Current Status</Label>
