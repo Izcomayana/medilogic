@@ -18,5 +18,8 @@ export type Incident = {
   adminResponse?: string | null;
   internalNotes?: string | null;
   files?: IncidentFile[];
+  submitted_by_id?: string;
   submitted_by_name?: string;
+  organization_id?: string;
+  organization_name?: string;
 };
