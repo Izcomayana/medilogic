@@ -20,7 +20,7 @@ import { formatDateTime } from '@/utils/datetime';
 import { getSeverityBadge } from '@/utils/badge';
 import { useIncidentsBase } from '@/hooks/incidents/base';
 import { getIncidentStatusBadge } from '@/utils/badge';
-import { useAuth } from '@/components/auth';
+// import { useAuth } from '@/components/auth';
 
 type IncidentDetailsProps = ReturnType<typeof useIncidentsBase>;
 
@@ -29,23 +29,23 @@ export function IncidentDetails({
   setShowDetailsModal,
   selectedIncident,
 }: IncidentDetailsProps) {
-  const getEscalationBadge = (isEscalated: boolean) => {
-    return isEscalated ? (
-      <div className="flex items-center gap-2">
-        <ArrowUpCircle className="text-orange-500 w-4 h-4" />
-        <Badge className="bg-orange-600 text-white">Escalated</Badge>
-      </div>
-    ) : (
-      <div className="flex items-center gap-2">
-        <ArrowDownCircle className="text-gray-400 w-4 h-4" />
-        <Badge variant="outline" className="text-gray-300 border-gray-600">
-          Not Escalated
-        </Badge>
-      </div>
-    );
-  };
+  // const getEscalationBadge = (isEscalated: boolean) => {
+  //   return isEscalated ? (
+  //     <div className="flex items-center gap-2">
+  //       <ArrowUpCircle className="text-orange-500 w-4 h-4" />
+  //       <Badge className="bg-orange-600 text-white">Escalated</Badge>
+  //     </div>
+  //   ) : (
+  //     <div className="flex items-center gap-2">
+  //       <ArrowDownCircle className="text-gray-400 w-4 h-4" />
+  //       <Badge variant="outline" className="text-gray-300 border-gray-600">
+  //         Not Escalated
+  //       </Badge>
+  //     </div>
+  //   );
+  // };
 
-  const { role } = useAuth();
+  // const { role } = useAuth();
 
   return (
     <Dialog open={showDetailsModal} onOpenChange={setShowDetailsModal}>
