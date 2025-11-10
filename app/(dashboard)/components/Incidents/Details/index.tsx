@@ -72,7 +72,7 @@ export function IncidentDetails({
               <div>
                 <Label className="text-gray-400 text-sm">Submitted by</Label>
                 <p className="text-white font-medium mt-1">
-                  {selectedIncident.submitted_name}
+                  {selectedIncident.submitted_by_name}
                 </p>
               </div>
               <div>
@@ -106,7 +106,7 @@ export function IncidentDetails({
                 </p>
               </div>
 
-              {role === 'admin' && (
+              {/* {role === 'admin' && (
                 <div>
                   <Label className="text-gray-400 text-sm">
                     Escalation Status
@@ -115,7 +115,7 @@ export function IncidentDetails({
                     {getEscalationBadge(selectedIncident.escalated)}
                   </div>
                 </div>
-              )}
+              )} */}
 
               <div>
                 <Label className="text-gray-400 text-sm">Current Status</Label>
