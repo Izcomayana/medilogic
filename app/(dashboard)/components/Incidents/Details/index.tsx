@@ -20,7 +20,7 @@ import { formatDateTime } from '@/utils/datetime';
 import { getSeverityBadge } from '@/utils/badge';
 import { useIncidentsBase } from '@/hooks/incidents/base';
 import { getIncidentStatusBadge } from '@/utils/badge';
-// import { useAuth } from '@/components/auth';
+import { useAuth } from '@/components/auth';
 
 type IncidentDetailsProps = ReturnType<typeof useIncidentsBase>;
 
@@ -45,7 +45,7 @@ export function IncidentDetails({
   //   );
   // };
 
-  // const { role } = useAuth();
+  const { role } = useAuth();
 
   return (
     <Dialog open={showDetailsModal} onOpenChange={setShowDetailsModal}>
@@ -69,12 +69,53 @@ export function IncidentDetails({
                   {selectedIncident.title}
                 </p>
               </div>
-              <div>
-                <Label className="text-gray-400 text-sm">Submitted by</Label>
-                <p className="text-white font-medium mt-1">
-                  {selectedIncident.submitted_by_name}
-                </p>
-              </div>
+              {(role === 'admin' || role === 'regulator') && (
+                <div className="space-y-2">
+                  {selectedIncident.submitted_by_name && (
+                    <>
+                      <div>
+                        <Label className="text-gray-400 text-sm">
+                          Submitted by
+                        </Label>
+                        <p className="text-white font-medium mt-1">
+                          {selectedIncident.submitted_by_name ?? 'Unknown'}
+                        </p>
+                      </div>
+
+                      <div>
+                        <Label className="text-gray-400 text-sm">
+                          Submitted by ID
+                        </Label>
+                        <p className="text-white font-medium mt-1">
+                          {selectedIncident.submitted_by_id ?? 'Unknown'}
+                        </p>
+                      </div>
+                    </>
+                  )}
+
+                  {selectedIncident.organization_name && (
+                    <>
+                      <div>
+                        <Label className="text-gray-400 text-sm">
+                          Organization Name
+                        </Label>
+                        <p className="text-white font-medium mt-1">
+                          {selectedIncident.organization_id}
+                        </p>
+                      </div>
+
+                      <div>
+                        <Label className="text-gray-400 text-sm">
+                          Organization ID
+                        </Label>
+                        <p className="text-white font-medium mt-1">
+                          {selectedIncident.organization_name}
+                        </p>
+                      </div>
+                    </>
+                  )}
+                </div>
+              )}
               <div>
                 <Label className="text-gray-400 text-sm">Description</Label>
                 <p className="text-gray-300 text-sm mt-1">
@@ -82,7 +123,7 @@ export function IncidentDetails({
                 </p>
               </div>
               <div>
-                <Label className="text-gray-400 text-sm">Type</Label>
+                <Label className="text-gray-400 text-sm">Incident Type</Label>
                 <p className="text-white font-medium mt-1">
                   {selectedIncident.incident_type}
                 </p>
@@ -93,12 +134,12 @@ export function IncidentDetails({
                   {getSeverityBadge(selectedIncident.severity)}
                 </p>
               </div>
-              <div>
+              {/* <div>
                 <Label className="text-gray-400 text-sm">Location</Label>
                 <p className="text-white font-medium mt-1">
                   {selectedIncident.location}
                 </p>
-              </div>
+              </div> */}
               <div>
                 <Label className="text-gray-400 text-sm">Created At</Label>
                 <p className="text-white font-medium mt-1">
@@ -125,10 +166,10 @@ export function IncidentDetails({
               </div>
             </div>
 
-            <div className="flex items-center gap-4 text-sm text-gray-400">
+            {/* <div className="flex items-center gap-4 text-sm text-gray-400">
               <Calendar className="h-4 w-4" />
               <span>{selectedIncident.timestamp}</span>
-            </div>
+            </div> */}
           </div>
         )}
 
