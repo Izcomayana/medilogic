@@ -10,7 +10,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 // import { getRoleBadge } from '../RoleBadge';
-import { getActionBadge } from '../ActionBadge';
+import { getActionBadge } from '@/utils/badge';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 

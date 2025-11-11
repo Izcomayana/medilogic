@@ -77,6 +77,7 @@ const sidebarLinksByRole: Record<
       url: '/company-admin/assignments',
       icon: ClipboardList,
     },
+    { title: 'Activity Logs', url: '/company-admin/activity-logs', icon: Logs },
     { title: 'Settings', url: '/company-admin/settings', icon: Settings },
   ],
   regulator: [

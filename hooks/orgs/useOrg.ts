@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import axios from 'axios';
 import { Organization } from './org';
 import { useAuthorizedRequest } from '../useRequest';
+import { useAuth } from '@/components/auth';
 
 export function useOrganizations() {
   const [orgs, setOrgs] = useState<Organization[]>([]);
@@ -20,9 +21,11 @@ export function useOrganizations() {
   );
 
   const request = useAuthorizedRequest();
+  const { role } = useAuth();
 
   // Fetch organizations
   useEffect(() => {
+    if (role !== 'super_admin') return;
     let isMounted = true;
     setLoading(true);
 
