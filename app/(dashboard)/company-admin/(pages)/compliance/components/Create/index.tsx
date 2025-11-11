@@ -133,7 +133,11 @@ export function CreateCompliance({
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setIsCreateModalOpen(false)}>
+          <Button
+            variant="outline"
+            onClick={() => setIsCreateModalOpen(false)}
+            className="text-gray-800"
+          >
             Cancel
           </Button>
           <Button

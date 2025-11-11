@@ -77,7 +77,7 @@ export function ComplianceTable({
         return <Badge variant="outline">{status}</Badge>;
     }
   };
-  
+
   return (
     <Card className="dashboard-card">
       <CardContent className="p-0">
@@ -134,7 +134,7 @@ export function ComplianceTable({
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
-                          <Button
+                          {/* <Button
                             variant="outline"
                             size="sm"
                             onClick={() => handleViewRecord(record)}
@@ -142,7 +142,7 @@ export function ComplianceTable({
                           >
                             <Eye className="h-3 w-3 mr-1" />
                             View
-                          </Button>
+                          </Button> */}
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <Button

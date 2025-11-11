@@ -29,15 +29,15 @@ export function ComplianceFilters({
             <FileText className="h-5 w-5" />
             Organization Compliance Records ({filteredRecords.length})
           </CardTitle>
-        <div className="flex gap-2">
-          <Button
-            onClick={() => setIsCreateModalOpen(true)}
-            className="bg-[#15941f] hover:bg-[#0d7314] text-white"
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            Create Compliance Record
-          </Button>
-        </div>
+          <div className="flex gap-2">
+            <Button
+              onClick={() => setIsCreateModalOpen(true)}
+              className="bg-[#15941f] hover:bg-[#0d7314] text-white"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Create Compliance Record
+            </Button>
+          </div>
         </div>
       </CardHeader>
       <CardContent>

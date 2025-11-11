@@ -193,7 +193,11 @@ export function ComplianceDetails({
         )}
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => setShowDetailsModal(false)}>
+          <Button
+            variant="outline"
+            onClick={() => setShowDetailsModal(false)}
+            className="text-gray-800"
+          >
             Close
           </Button>
           <Button className="bg-[#15941f] hover:bg-[#0d7314] text-white">
