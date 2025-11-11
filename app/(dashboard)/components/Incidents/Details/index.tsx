@@ -100,7 +100,7 @@ export function IncidentDetails({
                           Organization Name
                         </Label>
                         <p className="text-white font-medium mt-1">
-                          {selectedIncident.organization_id}
+                          {selectedIncident.organization_name}
                         </p>
                       </div>
 
@@ -109,7 +109,7 @@ export function IncidentDetails({
                           Organization ID
                         </Label>
                         <p className="text-white font-medium mt-1">
-                          {selectedIncident.organization_name}
+                          {selectedIncident.organization_id}
                         </p>
                       </div>
                     </>
