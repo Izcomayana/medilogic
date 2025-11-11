@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { toast } from 'sonner';
-import { Switch } from '@/components/ui/switch';
+// import { Switch } from '@/components/ui/switch';
 import { useAuth } from '@/components/auth';
 import { getIncidentStatusBadge } from '@/utils/badge';
 
@@ -40,7 +40,7 @@ export default function UpdateIncident({
   incident,
   onStatusUpdated,
   updateIncidentStatus,
-  toggleIncidentEscalation,
+  // toggleIncidentEscalation,
   scope = 'mine',
 }: Props) {
   const { role } = useAuth();
@@ -61,22 +61,22 @@ export default function UpdateIncident({
     }
   };
 
-  const handleEscalationToggle = async (checked: boolean) => {
-    if (!incident) return;
-    toast.loading('Updating escalation...', { id: 'escalate' });
+  // const handleEscalationToggle = async (checked: boolean) => {
+  //   if (!incident) return;
+  //   toast.loading('Updating escalation...', { id: 'escalate' });
 
-    try {
-      await toggleIncidentEscalation(incident.id, checked);
-      toast.success('Escalation updated', { id: 'escalate' });
-      onStatusUpdated?.(checked ? 'escalated' : 'under_review');
-      setOpen(false);
-    } catch (err) {
-      toast.error('Failed to update escalation', { id: 'escalate' });
-      console.error(err);
-    } finally {
-      setOpen(false);
-    }
-  };
+  //   try {
+  //     await toggleIncidentEscalation(incident.id, checked);
+  //     toast.success('Escalation updated', { id: 'escalate' });
+  //     onStatusUpdated?.(checked ? 'escalated' : 'under_review');
+  //     setOpen(false);
+  //   } catch (err) {
+  //     toast.error('Failed to update escalation', { id: 'escalate' });
+  //     console.error(err);
+  //   } finally {
+  //     setOpen(false);
+  //   }
+  // };
 
   // 🔧 Define role/scope-based allowed status transitions
   const statusOptions: Record<string, string[]> = {
@@ -132,7 +132,7 @@ export default function UpdateIncident({
               </div>
             )}
 
-            {/* ✅ Escalation only for admin mine */}
+            {/* 
             {role === 'admin' && scope === 'mine' && (
               <div className="flex items-center justify-between mt-10">
                 <Label className="text-gray-300">Escalate Incident</Label>
@@ -141,7 +141,7 @@ export default function UpdateIncident({
                   onCheckedChange={handleEscalationToggle}
                 />
               </div>
-            )}
+            )}*/}
           </div>
         ) : (
           <p className="text-gray-400 text-sm py-8 text-center">
