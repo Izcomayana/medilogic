@@ -21,6 +21,7 @@ import { useOrganizations } from '@/hooks/orgs/useOrg';
 import { DateRangeFilter, useActivityLogs } from '@/hooks/useActivity';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { useAuth } from '@/components/auth';
 
 type FiltersProps = ReturnType<typeof useActivityLogs>;
 
@@ -39,6 +40,8 @@ export function Filters({
   actionFilter,
   setActionFilter,
 }: FiltersProps) {
+  const { role } = useAuth();
+
   const { orgs } = useOrganizations();
 
   const handleDateRangeChange = (value: string) => {
@@ -154,25 +157,26 @@ export function Filters({
             </Select>
           </div> */}
 
-          {/* Organization Filter */}
-          <div>
-            <Label className="text-gray-300 text-sm flex items-center gap-1">
-              <Building2 className="h-3 w-3" />
-              Organization
-            </Label>
-            <Select value={orgFilter} onValueChange={setOrgFilter}>
-              <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-gray-700 border-gray-600">
-                {orgs.map((org) => (
-                  <SelectItem key={org.id} value={org.name}>
-                    {org.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          {role === 'super_admin' && (
+            <div>
+              <Label className="text-gray-300 text-sm flex items-center gap-1">
+                <Building2 className="h-3 w-3" />
+                Organization
+              </Label>
+              <Select value={orgFilter} onValueChange={setOrgFilter}>
+                <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="bg-gray-700 border-gray-600">
+                  {orgs.map((org) => (
+                    <SelectItem key={org.id} value={org.name}>
+                      {org.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
           {/* Action Type Filter */}
           <div>
