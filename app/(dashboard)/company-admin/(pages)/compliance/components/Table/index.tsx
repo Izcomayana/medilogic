@@ -29,6 +29,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ComplianceFormModal } from '../Update';
+import { useAuth } from '@/components/auth';
 
 type CompTableProps = ReturnType<typeof useCompliance>;
 
@@ -51,25 +52,31 @@ export function ComplianceTable({
   formData,
   setFormData,
 }: CompTableProps) {
+  const { role } = useAuth();
+
   const renderSkeletonRows = () => (
     <TableBody>
       {[...Array(3)].map((_, i) => (
         <TableRow key={i} className="border-gray-700">
+          {role === 'regulator' && (
+            <TableCell>
+              <Skeleton className="h-4 w-36 bg-gray-700" />
+            </TableCell>
+          )}
           <TableCell>
-            <Skeleton className="h-4 w-24 bg-gray-700" />
+            <Skeleton className="h-4 w-20 bg-gray-700" />
           </TableCell>
           <TableCell>
-            <Skeleton className="h-4 w-36 bg-gray-700" />
+            <Skeleton className="h-4 w-28 bg-gray-700" />
           </TableCell>
-          {/* <TableCell>
-            <Skeleton className="h-5 w-8 bg-gray-700" />
-          </TableCell> */}
           <TableCell>
             <Skeleton className="h-5 w-12 bg-gray-700" />
           </TableCell>
-          <TableCell>
+          {role === 'admin' && (
+            <TableCell>
             <Skeleton className="h-4 w-16 bg-gray-700" />
           </TableCell>
+          )}
         </TableRow>
       ))}
     </TableBody>
@@ -118,6 +125,10 @@ export function ComplianceTable({
     <TableBody>
       {paginatedRecords.map((record) => (
         <TableRow key={record.id} className="border-gray-700 hover:bg-gray-800">
+          {role === 'regulator' && (
+            <TableCell>{record.organization_name}</TableCell>
+          )}
+
           <TableCell>{getStatusBadge(record.audit_status)}</TableCell>
 
           <TableCell className="text-gray-300 flex items-center gap-1">
@@ -140,8 +151,8 @@ export function ComplianceTable({
               <Badge variant="destructive">Off</Badge>
             )}
           </TableCell>
-
-          <TableCell>
+{role === 'admin' && (
+            <TableCell>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -193,6 +204,7 @@ export function ComplianceTable({
               </DropdownMenuContent>
             </DropdownMenu>
           </TableCell>
+)}
         </TableRow>
       ))}
     </TableBody>
@@ -206,13 +218,20 @@ export function ComplianceTable({
             <Table>
               <TableHeader>
                 <TableRow className="border-gray-700 hover:bg-gray-800">
+                  {role === 'regulator' && (
+                    <TableHead className="text-gray-300">
+                      Organization
+                    </TableHead>
+                  )}
                   <TableHead className="text-gray-300">Audit Status</TableHead>
                   <TableHead className="text-gray-300">Last Audit</TableHead>
                   {/* <TableHead className="text-gray-300">
                     Escalation Level
                   </TableHead> */}
                   <TableHead className="text-gray-300">Auto Alert</TableHead>
-                  <TableHead className="text-gray-300">Actions</TableHead>
+                  {role === 'admin' && (
+                    <TableHead className="text-gray-300">Actions</TableHead>
+                  )}
                 </TableRow>
               </TableHeader>
 

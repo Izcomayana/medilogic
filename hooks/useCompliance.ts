@@ -10,6 +10,7 @@ export function useCompliance() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [records, setRecords] = useState<any[]>([]);
+  const [totalRecords, setTotalRecords] = useState(0);
   const [updating, setUpdating] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [recordBeingEdited, setRecordBeingEdited] = useState<any | null>(null);
@@ -174,18 +175,66 @@ export function useCompliance() {
     }
   };
 
+  // const fetchCompliance = async () => {
+  //   if (!user?.organization?.id) return;
+
+  //   try {
+  //     await authorizedRequest(async (token) => {
+  //       const res = await api.get(`/compliance/${user.organization.id}`, {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       });
+
+  //       // Depending on API, might return an object or list — normalize
+  //       const data = Array.isArray(res.data) ? res.data : [res.data];
+  //       setRecords(data);
+  //     }, 'Failed to load compliance data');
+  //   } catch (err) {
+  //     console.error('Error fetching compliance:', err);
+  //     toast.error('Failed to load compliance data');
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  const fetchRegionalCompliance = async (skip = 0, limit = 20) => {
+    try {
+      await authorizedRequest(async (token) => {
+        const res = await api.get(`/compliance/regional`, {
+          params: { skip, limit },
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const { items, total } = res.data;
+
+        setRecords(items);
+        setTotalRecords(total);
+      }, 'Failed to load regional compliance data');
+    } catch (err) {
+      console.error('Error fetching regional compliance:', err);
+      toast.error('Failed to load compliance data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const fetchCompliance = async () => {
+    if (!user) return;
+
+    if (user.role === 'regulator') {
+      return fetchRegionalCompliance(0, 20);
+    }
+
+    // Admin flow
     if (!user?.organization?.id) return;
 
     try {
       await authorizedRequest(async (token) => {
         const res = await api.get(`/compliance/${user.organization.id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
 
-        // Depending on API, might return an object or list — normalize
         const data = Array.isArray(res.data) ? res.data : [res.data];
         setRecords(data);
       }, 'Failed to load compliance data');
@@ -212,6 +261,11 @@ export function useCompliance() {
 
     return matchesSearch && matchesStatus;
   });
+
+  const handlePageChange = (page: number) => {
+    const skip = (page - 1) * 20;
+    fetchRegionalCompliance(skip, 20);
+  };
 
   const totalPages = Math.ceil(filteredRecords.length / recordsPerPage);
   const startIndex = (currentPage - 1) * recordsPerPage;
