@@ -108,7 +108,9 @@ export default function CompliancePage() {
                         className="bg-gray-700 border border-yellow-600 rounded-lg p-4 flex items-start justify-between"
                       >
                         <div>
-                          <p className="text-white font-medium">{alert.alert}</p>
+                          <p className="text-white font-medium">
+                            {alert.alert}
+                          </p>
                           <p className="text-gray-400 text-xs mt-1">
                             Triggered: {alert.triggeredOn}
                           </p>

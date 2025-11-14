@@ -74,8 +74,8 @@ export function ComplianceTable({
           </TableCell>
           {role === 'admin' && (
             <TableCell>
-            <Skeleton className="h-4 w-16 bg-gray-700" />
-          </TableCell>
+              <Skeleton className="h-4 w-16 bg-gray-700" />
+            </TableCell>
           )}
         </TableRow>
       ))}
@@ -151,22 +151,22 @@ export function ComplianceTable({
               <Badge variant="destructive">Off</Badge>
             )}
           </TableCell>
-{role === 'admin' && (
+          {role === 'admin' && (
             <TableCell>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="h-8 w-8 p-0 text-gray-400 hover:bg-gray-700"
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="h-8 w-8 p-0 text-gray-400 hover:bg-gray-700"
+                  >
+                    <MoreHorizontal className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="end"
+                  className="bg-gray-700 border-gray-600"
                 >
-                  <MoreHorizontal className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align="end"
-                className="bg-gray-700 border-gray-600"
-              >
-                {/* <DropdownMenuItem
+                  {/* <DropdownMenuItem
                   className="text-gray-300 hover:bg-gray-600"
                   onClick={() => handleViewRecord(record)}
                 >
@@ -174,7 +174,7 @@ export function ComplianceTable({
                   View Details
                 </DropdownMenuItem> */}
 
-                {/* <DropdownMenuItem
+                  {/* <DropdownMenuItem
                   className="text-gray-300 hover:bg-gray-600"
                   onClick={() =>
                     record.iso_27001_certificate_url &&
@@ -186,14 +186,14 @@ export function ComplianceTable({
                   Download Certificate
                 </DropdownMenuItem> */}
 
-                <DropdownMenuItem
-                  className="text-gray-300 hover:bg-gray-600"
-                  onClick={() => handleEditRecord(record)}
-                >
-                  <FileText className="mr-2 h-4 w-4" />
-                  Edit Record
-                </DropdownMenuItem>
-                {/* 
+                  <DropdownMenuItem
+                    className="text-gray-300 hover:bg-gray-600"
+                    onClick={() => handleEditRecord(record)}
+                  >
+                    <FileText className="mr-2 h-4 w-4" />
+                    Edit Record
+                  </DropdownMenuItem>
+                  {/* 
                 <DropdownMenuItem
                   className="text-red-400 hover:bg-gray-600"
                   onClick={() => setRecordToDelete(record.id)}
@@ -201,10 +201,10 @@ export function ComplianceTable({
                   <Trash2 className="mr-2 h-4 w-4" />
                   Delete
                 </DropdownMenuItem> */}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </TableCell>
-)}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </TableCell>
+          )}
         </TableRow>
       ))}
     </TableBody>
