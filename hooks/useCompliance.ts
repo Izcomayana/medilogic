@@ -13,6 +13,8 @@ export function useCompliance() {
   const [updating, setUpdating] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [recordBeingEdited, setRecordBeingEdited] = useState<any | null>(null);
+  const [alertsList, setAlertsList] = useState<any[]>([]);
+  const [alertsLoading, setAlertsLoading] = useState(true);
   const [selectedRecord, setSelectedRecord] = useState<any | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -300,6 +302,46 @@ export function useCompliance() {
     }
   };
 
+  const fetchAlerts = async () => {
+    if (!user?.organization?.id) return;
+
+    setAlertsLoading(true);
+
+    try {
+      await authorizedRequest(async (token) => {
+        const res = await api.get(
+          `/compliance/compliance/${user.organization.id}/alerts`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        const { alerts } = res.data;
+
+        // Convert to UI format
+        const formatted = alerts.map((alert: string, index: number) => ({
+          id: index + 1,
+          alert,
+          organization: user.organization.name || 'Organization',
+          triggeredOn: new Date().toLocaleString(),
+        }));
+
+        setAlertsList(formatted);
+      }, 'Failed to load compliance alerts');
+    } catch (err) {
+      console.error('Error fetching alerts:', err);
+      toast.error('Failed to load compliance alerts');
+    } finally {
+      setAlertsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (user?.organization?.id) {
+      fetchAlerts();
+    }
+  }, [user?.organization?.id]);
+
   const handleViewRecord = (record: any) => {
     setSelectedRecord(record);
     setShowDetailsModal(true);
@@ -364,6 +406,9 @@ export function useCompliance() {
     startIndex,
     paginatedRecords,
     handleCreateRecord,
+    alertsList,
+    alertsLoading,
+    fetchAlerts,
     handleViewRecord,
     resetForm,
     handleDelete,

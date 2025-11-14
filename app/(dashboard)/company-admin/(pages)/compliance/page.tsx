@@ -1,9 +1,8 @@
 'use client';
 
 import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
-// import { AlertCircle } from 'lucide-react';
-// import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardTitle } from '@/components/ui/card';
+import { AlertCircle } from 'lucide-react';
+import { Card, CardContent, CardTitle, CardHeader } from '@/components/ui/card';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,19 +19,21 @@ import { CreateCompliance } from './components/Create';
 import { ComplianceDetails } from './components/Details';
 import { FileText, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 // import { ComplianceFilters } from './components/Filters';
 
 export default function CompliancePage() {
   const complianceState = useCompliance();
 
   const {
-    // alertsList,
+    alertsLoading,
     recordToDelete,
     setRecordToDelete,
     handleDelete,
     summaryCards,
     filteredRecords,
     setIsCreateModalOpen,
+    alertsList,
   } = complianceState;
 
   return (
@@ -68,7 +69,32 @@ export default function CompliancePage() {
         </div>
 
         {/* Alerts Panel */}
-        {/* {alertsList.length > 0 && (
+        {alertsLoading ? (
+          <Card className="dashboard-card mb-6 border-yellow-600 border">
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <div className="h-5 w-5 rounded-full bg-yellow-700/40 animate-pulse" />
+                <div className="h-4 w-40 bg-gray-700/40 rounded animate-pulse" />
+              </div>
+            </CardHeader>
+
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Skeleton Alert Card 1 */}
+                <div className="bg-gray-700 border border-yellow-600 rounded-lg p-4">
+                  <div className="h-4 w-3/4 bg-gray-600/40 rounded animate-pulse" />
+                  <div className="h-3 w-1/2 bg-gray-600/30 rounded mt-3 animate-pulse" />
+                </div>
+
+                {/* Skeleton Alert Card 2 */}
+                <div className="bg-gray-700 border border-yellow-600 rounded-lg p-4">
+                  <div className="h-4 w-2/3 bg-gray-600/40 rounded animate-pulse" />
+                  <div className="h-3 w-1/3 bg-gray-600/30 rounded mt-3 animate-pulse" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ) : alertsList.length > 0 ? (
           <Card className="dashboard-card mb-6 border-yellow-600 border">
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
@@ -85,26 +111,16 @@ export default function CompliancePage() {
                   >
                     <div>
                       <p className="text-white font-medium">{alert.alert}</p>
-                      <p className="text-gray-400 text-sm mt-1">
-                        {alert.organization}
-                      </p>
                       <p className="text-gray-400 text-xs mt-1">
                         Triggered: {alert.triggeredOn}
                       </p>
                     </div>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="border-gray-600 text-gray-300 hover:bg-gray-600 bg-transparent"
-                    >
-                      View
-                    </Button>
                   </div>
                 ))}
               </div>
             </CardContent>
           </Card>
-        )} */}
+        ) : null}
 
         <div className="flex flex-col justify-between mb-4 md:flex-row md:items-center">
           <CardTitle className="text-white flex items-center gap-2">

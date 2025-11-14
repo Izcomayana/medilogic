@@ -155,13 +155,13 @@ export function ComplianceTable({
                 align="end"
                 className="bg-gray-700 border-gray-600"
               >
-                <DropdownMenuItem
+                {/* <DropdownMenuItem
                   className="text-gray-300 hover:bg-gray-600"
                   onClick={() => handleViewRecord(record)}
                 >
                   <Eye className="mr-2 h-4 w-4" />
                   View Details
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
 
                 {/* <DropdownMenuItem
                   className="text-gray-300 hover:bg-gray-600"
@@ -182,14 +182,14 @@ export function ComplianceTable({
                   <FileText className="mr-2 h-4 w-4" />
                   Edit Record
                 </DropdownMenuItem>
-
+                {/* 
                 <DropdownMenuItem
                   className="text-red-400 hover:bg-gray-600"
                   onClick={() => setRecordToDelete(record.id)}
                 >
                   <Trash2 className="mr-2 h-4 w-4" />
                   Delete
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
               </DropdownMenuContent>
             </DropdownMenu>
           </TableCell>
