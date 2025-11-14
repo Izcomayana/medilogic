@@ -19,7 +19,6 @@ import { CreateCompliance } from './components/Create';
 import { ComplianceDetails } from './components/Details';
 import { FileText, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
 // import { ComplianceFilters } from './components/Filters';
 
 export default function CompliancePage() {

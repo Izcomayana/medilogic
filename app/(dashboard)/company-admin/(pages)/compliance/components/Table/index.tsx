@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  Eye,
+  // Eye,
   // Download,
   CheckCircle,
   AlertCircle,
   FileText,
   Calendar,
   MoreHorizontal,
-  Trash2,
+  // Trash2,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -35,8 +35,8 @@ type CompTableProps = ReturnType<typeof useCompliance>;
 export function ComplianceTable({
   filteredRecords,
   paginatedRecords,
-  handleViewRecord,
-  setRecordToDelete,
+  // handleViewRecord,
+  // setRecordToDelete,
   totalPages,
   startIndex,
   recordsPerPage,
