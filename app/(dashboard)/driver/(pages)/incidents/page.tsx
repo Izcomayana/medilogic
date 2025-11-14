@@ -1,14 +1,14 @@
 'use client';
 
 import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
-import { useDriverIncidents } from '@/hooks/incidents/driver';
 import { ReportIncident } from '@/app/(dashboard)/components/Incidents/ReportIncident';
 import { IncidentFilters } from '@/app/(dashboard)/components/Incidents/Filters';
 import { IncidentTable } from '@/app/(dashboard)/components/Incidents/Table';
 import { IncidentDetails } from '@/app/(dashboard)/components/Incidents/Details';
+import { useIncidents } from '@/hooks/incidents/base';
 
 export default function DriverIncidentsPage() {
-  const incidentState = useDriverIncidents();
+  const incidentState = useIncidents([]);
 
   return (
     <div className="flex flex-col h-screen bg-gray-900">

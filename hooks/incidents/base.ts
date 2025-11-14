@@ -9,7 +9,7 @@ import { useAuth } from '@/components/auth';
 
 const severity = ['low', 'moderate', 'critical'];
 
-export function useIncidentsBase(initialIncidents: Incident[]) {
+export function useIncidents(initialIncidents: Incident[]) {
   const [incidents, setIncidents] = useState<Incident[]>(initialIncidents);
   const [selectedIncident, setSelectedIncident] = useState<Incident | null>(
     null

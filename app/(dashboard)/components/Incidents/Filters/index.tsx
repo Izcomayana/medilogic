@@ -7,10 +7,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useIncidentsBase } from '@/hooks/incidents/base';
+import { useIncidents } from '@/hooks/incidents/base';
 import { useAuth } from '@/components/auth';
 
-type IncidentFiltersProps = ReturnType<typeof useIncidentsBase>;
+type IncidentFiltersProps = ReturnType<typeof useIncidents>;
 
 export function IncidentFilters({
   searchTerm,

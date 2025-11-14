@@ -12,7 +12,7 @@ import {
 import { formatDateTime } from '@/utils/datetime';
 import { getSeverityBadge } from '@/utils/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useIncidentsBase } from '@/hooks/incidents/base';
+import { useIncidents } from '@/hooks/incidents/base';
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal, SkipBack, SkipForward } from 'lucide-react';
 import {
@@ -24,7 +24,7 @@ import {
 import UpdateIncident from '../Update';
 import { getIncidentStatusBadge } from '@/utils/badge';
 
-type IncidentTableProps = ReturnType<typeof useIncidentsBase>;
+type IncidentTableProps = ReturnType<typeof useIncidents>;
 
 export function IncidentTable({
   filteredIncidents,

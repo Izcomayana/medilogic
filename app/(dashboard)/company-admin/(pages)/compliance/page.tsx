@@ -1,9 +1,9 @@
 'use client';
 
 import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
-import { AlertCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+// import { AlertCircle } from 'lucide-react';
+// import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,17 +18,21 @@ import { useCompliance } from '@/hooks/useCompliance';
 import { ComplianceTable } from './components/Table';
 import { CreateCompliance } from './components/Create';
 import { ComplianceDetails } from './components/Details';
-import { ComplianceFilters } from './components/Filters';
+import { FileText, Plus } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+// import { ComplianceFilters } from './components/Filters';
 
 export default function CompliancePage() {
   const complianceState = useCompliance();
 
   const {
-    alertsList,
+    // alertsList,
     recordToDelete,
     setRecordToDelete,
     handleDelete,
     summaryCards,
+    filteredRecords,
+    setIsCreateModalOpen,
   } = complianceState;
 
   return (
@@ -64,7 +68,7 @@ export default function CompliancePage() {
         </div>
 
         {/* Alerts Panel */}
-        {alertsList.length > 0 && (
+        {/* {alertsList.length > 0 && (
           <Card className="dashboard-card mb-6 border-yellow-600 border">
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
@@ -100,9 +104,24 @@ export default function CompliancePage() {
               </div>
             </CardContent>
           </Card>
-        )}
+        )} */}
 
-        <ComplianceFilters {...complianceState} />
+        <div className="flex flex-col justify-between mb-4 md:flex-row md:items-center">
+          <CardTitle className="text-white flex items-center gap-2">
+            <FileText className="h-5 w-5" />
+            Organization Compliance Records ({filteredRecords.length})
+          </CardTitle>
+          <div className="flex gap-2">
+            <Button
+              onClick={() => setIsCreateModalOpen(true)}
+              className="bg-[#15941f] hover:bg-[#0d7314] text-white"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Create Compliance Record
+            </Button>
+          </div>
+        </div>
+        {/* <ComplianceFilters {...complianceState} /> */}
 
         <ComplianceTable {...complianceState} />
       </main>

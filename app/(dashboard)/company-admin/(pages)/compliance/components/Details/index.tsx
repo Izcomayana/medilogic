@@ -150,7 +150,7 @@ export function ComplianceDetails({
               </h3>
               {selectedRecord.evidenceFiles.length > 0 ? (
                 <div className="space-y-2">
-                  {selectedRecord.evidenceFiles.map((file, idx) => (
+                  {selectedRecord.evidenceFiles.map((file: any, idx: any) => (
                     <div
                       key={idx}
                       className="flex items-center justify-between bg-gray-700 rounded p-3 border border-gray-600"
