@@ -18,11 +18,11 @@ import {
 import { Button } from '@/components/ui/button';
 import { formatDateTime } from '@/utils/datetime';
 import { getSeverityBadge } from '@/utils/badge';
-import { useIncidentsBase } from '@/hooks/incidents/base';
+import { useIncidents } from '@/hooks/incidents/base';
 import { getIncidentStatusBadge } from '@/utils/badge';
 import { useAuth } from '@/components/auth';
 
-type IncidentDetailsProps = ReturnType<typeof useIncidentsBase>;
+type IncidentDetailsProps = ReturnType<typeof useIncidents>;
 
 export function IncidentDetails({
   showDetailsModal,

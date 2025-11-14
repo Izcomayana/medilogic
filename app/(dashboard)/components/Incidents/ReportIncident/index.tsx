@@ -22,10 +22,10 @@ import {
 } from '@/components/ui/select';
 import { Spinner } from '@/components/ui/spinner';
 import { Checkbox } from '@/components/ui/checkbox';
-import { useIncidentsBase } from '@/hooks/incidents/base';
+import { useIncidents } from '@/hooks/incidents/base';
 import { useAuth } from '@/components/auth';
 
-type ReportIncidentProps = ReturnType<typeof useIncidentsBase>;
+type ReportIncidentProps = ReturnType<typeof useIncidents>;
 
 export function ReportIncident({
   showReportModal,
