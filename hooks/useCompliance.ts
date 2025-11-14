@@ -27,7 +27,9 @@ export function useCompliance() {
   const authorizedRequest = useAuthorizedRequest();
 
   const [formData, setFormData] = useState({
-    organization: user?.organization?.id || '',
+    organization_id: user?.organization?.id || '',
+
+    // compliance booleans
     iso_27001_certified: false,
     nhs_dsp_toolkit_complete: false,
     cyber_essentials_ready: false,
@@ -40,16 +42,22 @@ export function useCompliance() {
     transport_license_valid: false,
     environmental_permit_valid: false,
     data_protection_registration_valid: false,
+
+    // url fields
     iso_27001_certificate_url: '',
     waste_license_certificate_url: '',
     gdpr_certificate_url: '',
     environmental_permit_url: '',
     data_protection_registration_url: '',
     fire_risk_certificate_url: '',
+
+    // audit fields
     audit_status: 'pending',
     audit_remarks: '',
     last_audit_date: '',
     next_audit_due_date: '',
+
+    // metadata
     last_updated_by_user_id: user?.user_id || '',
     is_flagged_noncompliant: false,
     escalation_level: 'none',
@@ -59,7 +67,7 @@ export function useCompliance() {
 
   const resetForm = () => {
     setFormData({
-      organization: user?.organization?.id || '',
+      organization_id: user?.organization?.id || '',
       iso_27001_certified: false,
       nhs_dsp_toolkit_complete: false,
       cyber_essentials_ready: false,
@@ -78,10 +86,13 @@ export function useCompliance() {
       environmental_permit_url: '',
       data_protection_registration_url: '',
       fire_risk_certificate_url: '',
+      // audit fields
       audit_status: 'pending',
       audit_remarks: '',
       last_audit_date: '',
       next_audit_due_date: '',
+
+      // metadata
       last_updated_by_user_id: user?.user_id || '',
       is_flagged_noncompliant: false,
       escalation_level: 'none',
@@ -100,6 +111,8 @@ export function useCompliance() {
 
     try {
       const payload = {
+        organization_id: user.organization.id,
+
         iso_27001_certified: formData.iso_27001_certified,
         nhs_dsp_toolkit_complete: formData.nhs_dsp_toolkit_complete,
         cyber_essentials_ready: formData.cyber_essentials_ready,
@@ -126,14 +139,15 @@ export function useCompliance() {
 
         audit_status: formData.audit_status,
         audit_remarks: formData.audit_remarks || '',
-        last_audit_date: new Date().toISOString(),
-        next_audit_due_date: new Date().toISOString(),
+        last_audit_date: formData.last_audit_date || new Date().toISOString(),
+        next_audit_due_date:
+          formData.next_audit_due_date || new Date().toISOString(),
+
         last_updated_by_user_id: user.user_id,
         is_flagged_noncompliant: formData.is_flagged_noncompliant,
         escalation_level: formData.escalation_level,
         auto_alert_enabled: formData.auto_alert_enabled,
         is_visible_to_regulator: formData.is_visible_to_regulator,
-        organization_id: user.organization.id,
       };
 
       await authorizedRequest(async (token) => {
@@ -246,12 +260,10 @@ export function useCompliance() {
       return;
     }
 
-    // optional: validate required fields before sending (e.g., audit_status)
-    // if (!formData.audit_status) { toast.error('Audit status is required'); return; }
-
     try {
       await updateCompliance(recordBeingEdited.id, {
-        // send only fields expected by backend; optionally send entire formData
+        organization_id: formData.organization_id,
+
         iso_27001_certified: formData.iso_27001_certified,
         nhs_dsp_toolkit_complete: formData.nhs_dsp_toolkit_complete,
         cyber_essentials_ready: formData.cyber_essentials_ready,
@@ -278,11 +290,10 @@ export function useCompliance() {
 
         audit_status: formData.audit_status,
         audit_remarks: formData.audit_remarks || '',
-        last_audit_date: formData.last_audit_date || new Date().toISOString(),
-        next_audit_due_date:
-          formData.next_audit_due_date || new Date().toISOString(),
-        last_updated_by_user_id:
-          user?.user_id || formData.last_updated_by_user_id,
+        last_audit_date: formData.last_audit_date,
+        next_audit_due_date: formData.next_audit_due_date,
+
+        last_updated_by_user_id: user?.user_id,
         is_flagged_noncompliant: formData.is_flagged_noncompliant,
         escalation_level: formData.escalation_level,
         auto_alert_enabled: formData.auto_alert_enabled,
@@ -292,13 +303,10 @@ export function useCompliance() {
       toast.success('Compliance record updated');
       setIsEditModalOpen(false);
       setRecordBeingEdited(null);
-      // optionally: refetch or already updated in state by updateCompliance
-      // await fetchCompliance();
     } catch (err: any) {
-      console.error('Failed to update compliance', err);
-      // try to show backend error message if present
       const detail = err?.response?.data?.detail;
       toast.error(detail || 'Failed to update compliance record');
+      console.error(err);
     }
   };
 

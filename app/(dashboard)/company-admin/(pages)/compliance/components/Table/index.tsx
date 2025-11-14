@@ -61,9 +61,9 @@ export function ComplianceTable({
           <TableCell>
             <Skeleton className="h-4 w-36 bg-gray-700" />
           </TableCell>
-          <TableCell>
+          {/* <TableCell>
             <Skeleton className="h-5 w-8 bg-gray-700" />
-          </TableCell>
+          </TableCell> */}
           <TableCell>
             <Skeleton className="h-5 w-12 bg-gray-700" />
           </TableCell>
@@ -127,11 +127,11 @@ export function ComplianceTable({
               : '—'}
           </TableCell>
 
-          <TableCell>
+          {/* <TableCell>
             <Badge variant="outline" className="border-gray-600 text-gray-300">
               {record.escalation_level || 'none'}
             </Badge>
-          </TableCell>
+          </TableCell> */}
 
           <TableCell>
             {record.auto_alert_enabled ? (
@@ -208,9 +208,9 @@ export function ComplianceTable({
                 <TableRow className="border-gray-700 hover:bg-gray-800">
                   <TableHead className="text-gray-300">Audit Status</TableHead>
                   <TableHead className="text-gray-300">Last Audit</TableHead>
-                  <TableHead className="text-gray-300">
+                  {/* <TableHead className="text-gray-300">
                     Escalation Level
-                  </TableHead>
+                  </TableHead> */}
                   <TableHead className="text-gray-300">Auto Alert</TableHead>
                   <TableHead className="text-gray-300">Actions</TableHead>
                 </TableRow>
