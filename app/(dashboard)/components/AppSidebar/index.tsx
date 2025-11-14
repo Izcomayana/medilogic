@@ -77,7 +77,7 @@ const sidebarLinksByRole: Record<
       url: '/company-admin/assignments',
       icon: ClipboardList,
     },
-    { title: 'Compliance', url: '/company-admin/compliance', icon: Receipt },
+    { title: 'Compliance', url: '/company-admin/compliance', icon: Shield },
     { title: 'Activity Logs', url: '/company-admin/activity-logs', icon: Logs },
     { title: 'Settings', url: '/company-admin/settings', icon: Settings },
   ],
