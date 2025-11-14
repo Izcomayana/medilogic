@@ -98,7 +98,7 @@ export function CreateCompliance({
           </div>
 
           {/* Escalation Level */}
-          <div>
+          {/* <div>
             <Label className="text-gray-300">Escalation Level</Label>
             <Select
               onValueChange={(value) =>
@@ -116,22 +116,34 @@ export function CreateCompliance({
                 <SelectItem value="high">High</SelectItem>
               </SelectContent>
             </Select>
-          </div>
+          </div> */}
 
           {/* Compliance switches */}
           <div className="grid md:grid-cols-2 gap-3 border border-gray-700 p-3 rounded-lg">
             {[
               ['iso_27001_certified', 'ISO 27001 Certified'],
-              ['gdpr_policy_uploaded', 'GDPR Policy Uploaded'],
+              ['nhs_dsp_toolkit_complete', 'NHS DSP Toolkit Complete'],
+              ['cyber_essentials_ready', 'Cyber Essentials Ready'],
+              ['has_waste_license', 'Has Waste License'],
               [
                 'fire_risk_assessment_complete',
                 'Fire Risk Assessment Complete',
               ],
-              ['has_waste_license', 'Has Waste License'],
-              ['cyber_essentials_ready', 'Cyber Essentials Ready'],
+              ['gdpr_policy_uploaded', 'GDPR Policy Uploaded'],
+              [
+                'clinical_waste_policy_uploaded',
+                'Clinical Waste Policy Uploaded',
+              ],
+              ['sharps_policy_uploaded', 'Sharps Policy Uploaded'],
               [
                 'staff_training_records_uploaded',
                 'Staff Training Records Uploaded',
+              ],
+              ['transport_license_valid', 'Transport License Valid'],
+              ['environmental_permit_valid', 'Environmental Permit Valid'],
+              [
+                'data_protection_registration_valid',
+                'Data Protection Registration Valid',
               ],
             ].map(([key, label]) => (
               <div key={key} className="flex items-center justify-between">
@@ -145,6 +157,69 @@ export function CreateCompliance({
           </div>
 
           {/* URLs (optional) */}
+          {/* Waste License Certificate */}
+          <Label className="text-gray-300">Waste License Certificate URL</Label>
+          <Input
+            value={formData.waste_license_certificate_url}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                waste_license_certificate_url: e.target.value,
+              })
+            }
+            className="bg-gray-700 border-gray-600 text-white"
+          />
+
+          {/* GDPR Certificate */}
+          <Label className="text-gray-300 ">GDPR Certificate URL</Label>
+          <Input
+            value={formData.gdpr_certificate_url}
+            onChange={(e) =>
+              setFormData({ ...formData, gdpr_certificate_url: e.target.value })
+            }
+            className="bg-gray-700 border-gray-600 text-white"
+          />
+
+          {/* Environmental Permit */}
+          <Label className="text-gray-300 mt-3">Environmental Permit URL</Label>
+          <Input
+            value={formData.environmental_permit_url}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                environmental_permit_url: e.target.value,
+              })
+            }
+            className="bg-gray-700 border-gray-600 text-white"
+          />
+
+          {/* Data Protection Registration */}
+          <Label className="text-gray-300 ">
+            Data Protection Registration URL
+          </Label>
+          <Input
+            value={formData.data_protection_registration_url}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                data_protection_registration_url: e.target.value,
+              })
+            }
+            className="bg-gray-700 border-gray-600 text-white"
+          />
+
+          {/* Fire Risk Certificate */}
+          <Label className="text-gray-300 ">Fire Risk Certificate URL</Label>
+          <Input
+            value={formData.fire_risk_certificate_url}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                fire_risk_certificate_url: e.target.value,
+              })
+            }
+            className="bg-gray-700 border-gray-600 text-white"
+          />
           <div>
             <Label htmlFor="isoUrl" className="text-gray-300">
               ISO 27001 Certificate URL
