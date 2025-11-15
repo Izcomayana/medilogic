@@ -18,6 +18,7 @@ import {
   Link2,
   Receipt,
   BadgeAlert,
+  MessageSquare,
 } from 'lucide-react';
 import { useAuth } from '@/components/auth';
 import {
@@ -77,6 +78,7 @@ const sidebarLinksByRole: Record<
       url: '/company-admin/assignments',
       icon: ClipboardList,
     },
+    { title: 'Support', url: '/company-admin/support', icon: MessageSquare },
     { title: 'Compliance', url: '/company-admin/compliance', icon: Shield },
     { title: 'Activity Logs', url: '/company-admin/activity-logs', icon: Logs },
     { title: 'Settings', url: '/company-admin/settings', icon: Settings },
