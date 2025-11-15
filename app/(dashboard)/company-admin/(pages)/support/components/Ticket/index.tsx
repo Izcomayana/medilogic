@@ -101,11 +101,13 @@ const mockMessages = [
   },
 ];
 
-export default function TicketDetailsPage({
-  // params,
-}: {
-  params: { id: string };
-}) {
+export default function TicketDetailsPage(
+  {
+    // params,
+  }: {
+    params: { id: string };
+  }
+) {
   const [messages, setMessages] = useState(mockMessages);
   const [newMessage, setNewMessage] = useState('');
   const [ticketStatus, setTicketStatus] = useState(mockTicket.status);
