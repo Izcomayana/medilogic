@@ -165,7 +165,7 @@ export default function SupportPage() {
     return matchesSearch && matchesStatus && matchesUserType && matchesPriority;
   });
 
-  let sortedTickets = [...filteredTickets];
+  const sortedTickets = [...filteredTickets];
   if (sortBy === 'oldest') {
     sortedTickets.reverse();
   } else if (sortBy === 'priority') {
