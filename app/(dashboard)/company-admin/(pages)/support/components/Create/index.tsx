@@ -18,6 +18,7 @@ import { useSupport } from '@/hooks/useSupport';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { Spinner } from '@/components/ui/spinner';
 
 type CreateTicketProps = ReturnType<typeof useSupport>;
 
@@ -27,6 +28,7 @@ export function CreateTicket({
   formData,
   setFormData,
   handleCreateTicket,
+  creating,
 }: CreateTicketProps) {
   return (
     <Dialog open={showCreateModal} onOpenChange={setShowCreateModal}>
@@ -112,14 +114,18 @@ export function CreateTicket({
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => setShowCreateModal(false)}>
+          <Button
+            variant="outline"
+            onClick={() => setShowCreateModal(false)}
+            className="text-gray-700"
+          >
             Cancel
           </Button>
           <Button
             onClick={handleCreateTicket}
             className="bg-blue-600 hover:bg-blue-700 text-white"
           >
-            Create Ticket
+            {creating ? (<Spinner className="mx-10" />) : 'Create Ticket'}
           </Button>
         </DialogFooter>
       </DialogContent>

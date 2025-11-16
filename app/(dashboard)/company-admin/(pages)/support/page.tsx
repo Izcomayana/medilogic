@@ -7,6 +7,9 @@ import {
   CheckCircle,
   Clock,
   Inbox,
+  MoreHorizontal,
+  Eye,
+  FileText,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -23,6 +26,13 @@ import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 import { useSupport } from '@/hooks/useSupport';
 import { SupportFilters } from './components/Filters';
 import { CreateTicket } from './components/Create';
+import { formatDateTime } from '@/utils/datetime';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 export default function SupportPage() {
   const supportState = useSupport();
@@ -165,8 +175,6 @@ export default function SupportPage() {
                 <Table>
                   <TableHeader>
                     <TableRow className="border-gray-700 hover:bg-gray-800">
-                      <TableHead className="text-gray-300">Ticket ID</TableHead>
-                      <TableHead className="text-gray-300">Title</TableHead>
                       <TableHead className="text-gray-300">
                         Created By
                       </TableHead>
@@ -185,12 +193,6 @@ export default function SupportPage() {
                         key={ticket.id}
                         className="border-gray-700 hover:bg-gray-800"
                       >
-                        <TableCell className="font-medium text-white">
-                          {ticket.id}
-                        </TableCell>
-                        <TableCell className="text-gray-300">
-                          {ticket.title}
-                        </TableCell>
                         <TableCell className="text-gray-300">
                           <span className="text-sm">{ticket.createdBy}</span>
                           <p className="text-xs text-gray-500">
@@ -202,32 +204,48 @@ export default function SupportPage() {
                           {getPriorityBadge(ticket.priority)}
                         </TableCell>
                         <TableCell className="text-gray-300 text-sm">
-                          {ticket.lastUpdated}
+                          {formatDateTime(ticket.lastUpdated)}
                         </TableCell>
                         <TableCell className="text-gray-300 text-sm text-center">
                           {ticket.messages}
                         </TableCell>
                         <TableCell>
-                          <div className="flex gap-2">
-                            {/* <Link href={`/admin/support/tickets/${ticket.id}`}>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
                               <Button
-                                variant="outline"
-                                size="sm"
-                                className="border-gray-600 text-gray-300 hover:bg-gray-700"
+                                variant="ghost"
+                                className="h-8 w-8 p-0 text-gray-400 hover:bg-gray-700"
+                              >
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent
+                              align="end"
+                              className="bg-gray-700 border-gray-600"
+                            >
+                              <DropdownMenuItem
+                                className="text-gray-300 hover:bg-gray-600"
+                              // onClick={() => handleEditRecord(record)}
                               >
                                 <Eye className="h-3 w-3 mr-1" />
                                 View
-                              </Button>
-                            </Link> */}
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleDeleteTicket(ticket.id)}
-                              className="border-red-600 text-red-400 hover:bg-red-900/20"
-                            >
-                              <Trash2 className="h-3 w-3" />
-                            </Button>
-                          </div>
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                className="text-gray-300 hover:bg-gray-600"
+                              // onClick={() => handleEditRecord(record)}
+                              >
+                                <FileText className="mr-2 h-4 w-4" />
+                                Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                className="text-gray-300 hover:bg-gray-600"
+                                onClick={() => handleDeleteTicket}
+                              >
+                                <Trash2 className="h-3 w-3" />
+                                Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -240,6 +258,7 @@ export default function SupportPage() {
       </main>
 
       <CreateTicket {...supportState} />
+      
     </div>
   );
 }

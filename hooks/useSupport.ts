@@ -1,67 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
-
-const mockTickets = [
-  {
-    id: 'TCK-0921',
-    title: 'App not loading',
-    createdBy: 'John Driver',
-    userType: 'Driver',
-    status: 'Pending',
-    lastUpdated: '5m ago',
-    priority: 'Medium',
-    messages: 3,
-  },
-  {
-    id: 'TCK-0889',
-    title: 'Invoice help',
-    createdBy: 'Sarah Client',
-    userType: 'Client',
-    status: 'Resolved',
-    lastUpdated: '1 day ago',
-    priority: 'Low',
-    messages: 2,
-  },
-  {
-    id: 'TCK-0803',
-    title: 'Lost delivery proof',
-    createdBy: 'Mike Transport',
-    userType: 'Driver',
-    status: 'Open',
-    lastUpdated: '2 days ago',
-    priority: 'High',
-    messages: 5,
-  },
-  {
-    id: 'TCK-0776',
-    title: 'Payment not received',
-    createdBy: 'Alex Admin',
-    userType: 'Company Admin',
-    status: 'Pending',
-    lastUpdated: '3 hours ago',
-    priority: 'High',
-    messages: 4,
-  },
-  {
-    id: 'TCK-0745',
-    title: 'Route optimization request',
-    createdBy: 'Emma Driver',
-    userType: 'Driver',
-    status: 'Closed',
-    lastUpdated: '1 week ago',
-    priority: 'Low',
-    messages: 1,
-  },
-];
+import { api } from '@/lib/api';
+// import { useProfile } from './useProfile';
+import { useAuthorizedRequest } from '@/hooks/useRequest';
 
 export function useSupport() {
-  const [tickets, setTickets] = useState(mockTickets);
+  const [creating, setCreating] = useState(false);
+  const [tickets, setTickets] = useState<any[]>([]);
+const [loading, setLoading] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [userTypeFilter, setUserTypeFilter] = useState('all');
   const [priorityFilter, setPriorityFilter] = useState('all');
   const [sortBy, setSortBy] = useState('recent');
+
+  const authorizedRequest = useAuthorizedRequest();
 
   const [formData, setFormData] = useState({
     title: '',
@@ -70,38 +24,106 @@ export function useSupport() {
     priority: 'Medium',
   });
 
-  const handleCreateTicket = () => {
-    if (!formData.title || !formData.category || !formData.description) {
+  const handleCreateTicket = async () => {
+    if (!formData.title || !formData.description) {
       toast.error('Please fill in all required fields');
       return;
     }
 
-    const newTicket = {
-      id: `TCK-${Math.floor(Math.random() * 10000)}`,
-      title: formData.title,
-      createdBy: 'Admin User',
-      userType: 'Company Admin',
-      status: 'Open',
-      lastUpdated: 'now',
-      priority: formData.priority,
-      messages: 0,
-    };
+    try {
+      setCreating(true);
 
-    setTickets([newTicket, ...tickets]);
-    setFormData({
-      title: '',
-      category: '',
-      description: '',
-      priority: 'Medium',
-    });
-    setShowCreateModal(false);
-    toast.success('Support ticket created successfully');
+      const payload = {
+        subject: formData.title,
+        message: formData.description,
+      };
+
+      await authorizedRequest(async (token) => {
+        const res = await api.post('/support/tickets', payload, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+
+        const createdTicket = res.data;
+
+        // Add the created ticket to UI list
+        setTickets((prev) => [
+          {
+            id: createdTicket.id,
+            title: createdTicket.subject,
+            createdBy: createdTicket.user?.name || 'Unknown User',
+            userType: createdTicket.user?.role || 'User',
+            status: createdTicket.status || 'open',
+            lastUpdated: createdTicket.created_at,
+            priority: formData.priority,
+            messages: createdTicket.messages?.length || 0,
+          },
+          ...prev,
+        ]);
+      }, 'Failed to create support ticket');
+
+      toast.success('Support ticket created successfully');
+
+      // Reset form + close modal
+      setFormData({
+        title: '',
+        category: '',
+        description: '',
+        priority: 'Medium',
+      });
+
+      setShowCreateModal(false);
+    } catch (error: any) {
+      console.error('Error creating support ticket:', error);
+      toast.error(
+        error?.response?.data?.detail || 'Failed to create support ticket'
+      );
+    } finally {
+      setCreating(false);
+    }
   };
 
-  const handleDeleteTicket = (ticketId: string) => {
-    setTickets(tickets.filter((t) => t.id !== ticketId));
-    toast.success('Ticket deleted successfully');
-  };
+  const fetchTickets = async (skip = 0, limit = 20) => {
+  try {
+    setLoading(true);
+
+    await authorizedRequest(async (token) => {
+      const res = await api.get('/support/tickets', {
+        params: { skip, limit },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const items = res.data.items || [];
+
+      // Normalize → UI format
+      const normalized = items.map((t: any) => ({
+        id: t.id,
+        title: t.subject,
+        createdBy: t.user?.name || 'Unknown User',
+        userType: t.user?.role || 'User',
+        status: t.status || 'open',
+        lastUpdated: t.updated_at || t.created_at,
+        priority: 'Medium', // backend has no priority — keep UI default
+        messages: t.messages?.length || 0,
+      }));
+
+      setTickets(normalized);
+    }, 'Failed to fetch tickets');
+  } catch (error: any) {
+    console.error('Error fetching tickets:', error);
+    toast.error(error?.response?.data?.detail || 'Failed to fetch tickets');
+  } finally {
+    setLoading(false);
+  }
+};
+
+useEffect(() => {
+  fetchTickets();
+}, []);
 
   const filteredTickets = tickets.filter((ticket) => {
     const matchesSearch =
@@ -137,10 +159,17 @@ export function useSupport() {
   const pendingReply = tickets.filter((t) => t.status === 'Pending').length;
   const closedTickets = tickets.filter((t) => t.status === 'Closed').length;
 
+  const handleDeleteTicket = (ticketId: string) => {
+    setTickets(tickets.filter((t) => t.id !== ticketId));
+    toast.success('Ticket deleted successfully');
+  };
+
   return {
-    mockTickets,
+    creating,
     tickets,
     setTickets,
+    fetchTickets,
+    loading,
     showCreateModal,
     setShowCreateModal,
     searchTerm,
