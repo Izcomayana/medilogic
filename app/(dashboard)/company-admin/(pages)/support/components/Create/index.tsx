@@ -125,7 +125,7 @@ export function CreateTicket({
             onClick={handleCreateTicket}
             className="bg-blue-600 hover:bg-blue-700 text-white"
           >
-            {creating ? (<Spinner className="mx-10" />) : 'Create Ticket'}
+            {creating ? <Spinner className="mx-10" /> : 'Create Ticket'}
           </Button>
         </DialogFooter>
       </DialogContent>

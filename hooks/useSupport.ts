@@ -7,13 +7,22 @@ import { useAuthorizedRequest } from '@/hooks/useRequest';
 export function useSupport() {
   const [creating, setCreating] = useState(false);
   const [tickets, setTickets] = useState<any[]>([]);
-const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [userTypeFilter, setUserTypeFilter] = useState('all');
   const [priorityFilter, setPriorityFilter] = useState('all');
   const [sortBy, setSortBy] = useState('recent');
+  const [selectedTicket, setSelectedTicket] = useState<any>(null);
+  const [loadingTicket, setLoadingTicket] = useState(false);
+  const [ticketPendingDelete, setTicketPendingDelete] = useState<string | null>(
+    null
+  );
+  const [ticketPendingStatus, setTicketPendingStatus] = useState<{
+    id: string;
+    status: string;
+  } | null>(null);
 
   const authorizedRequest = useAuthorizedRequest();
 
@@ -86,44 +95,44 @@ const [loading, setLoading] = useState(false);
   };
 
   const fetchTickets = async (skip = 0, limit = 20) => {
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    await authorizedRequest(async (token) => {
-      const res = await api.get('/support/tickets', {
-        params: { skip, limit },
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await authorizedRequest(async (token) => {
+        const res = await api.get('/support/tickets', {
+          params: { skip, limit },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-      const items = res.data.items || [];
+        const items = res.data.items || [];
 
-      // Normalize → UI format
-      const normalized = items.map((t: any) => ({
-        id: t.id,
-        title: t.subject,
-        createdBy: t.user?.name || 'Unknown User',
-        userType: t.user?.role || 'User',
-        status: t.status || 'open',
-        lastUpdated: t.updated_at || t.created_at,
-        priority: 'Medium', // backend has no priority — keep UI default
-        messages: t.messages?.length || 0,
-      }));
+        // Normalize → UI format
+        const normalized = items.map((t: any) => ({
+          id: t.id,
+          title: t.subject,
+          createdBy: t.user?.name || 'Unknown User',
+          userType: t.user?.role || 'User',
+          status: t.status || 'open',
+          lastUpdated: t.updated_at || t.created_at,
+          priority: 'Medium', // backend has no priority — keep UI default
+          messages: t.messages?.length || 0,
+        }));
 
-      setTickets(normalized);
-    }, 'Failed to fetch tickets');
-  } catch (error: any) {
-    console.error('Error fetching tickets:', error);
-    toast.error(error?.response?.data?.detail || 'Failed to fetch tickets');
-  } finally {
-    setLoading(false);
-  }
-};
+        setTickets(normalized);
+      }, 'Failed to fetch tickets');
+    } catch (error: any) {
+      console.error('Error fetching tickets:', error);
+      toast.error(error?.response?.data?.detail || 'Failed to fetch tickets');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-useEffect(() => {
-  fetchTickets();
-}, []);
+  useEffect(() => {
+    fetchTickets();
+  }, []);
 
   const filteredTickets = tickets.filter((ticket) => {
     const matchesSearch =
@@ -156,12 +165,73 @@ useEffect(() => {
   const totalTickets = tickets.length;
   const openTickets = tickets.filter((t) => t.status === 'Open').length;
   const resolvedTickets = tickets.filter((t) => t.status === 'Resolved').length;
-  const pendingReply = tickets.filter((t) => t.status === 'Pending').length;
+  const pendingReply = tickets.filter((t) => t.status === 'in_progress').length;
   const closedTickets = tickets.filter((t) => t.status === 'Closed').length;
 
-  const handleDeleteTicket = (ticketId: string) => {
-    setTickets(tickets.filter((t) => t.id !== ticketId));
-    toast.success('Ticket deleted successfully');
+  const fetchTicketById = async (ticketId: string) => {
+    try {
+      setLoadingTicket(true);
+
+      await authorizedRequest(async (token) => {
+        const res = await api.get(`/support/tickets/${ticketId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setSelectedTicket(res.data);
+      }, 'Failed to fetch ticket');
+    } catch (error: any) {
+      console.error('Error fetching ticket:', error);
+      toast.error(error?.response?.data?.detail || 'Failed to fetch ticket');
+    } finally {
+      setLoadingTicket(false);
+    }
+  };
+
+  const handleDeleteTicket = async () => {
+    if (!ticketPendingDelete) return;
+
+    try {
+      await authorizedRequest(async (token) => {
+        await api.delete(`/support/tickets/${ticketPendingDelete}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+      }, 'fail to delete');
+
+      toast.success('Ticket deleted successfully');
+
+      // Refresh from backend
+      fetchTickets();
+    } catch (err: any) {
+      toast.error(err?.response?.data?.detail || 'Failed to delete ticket');
+    } finally {
+      setTicketPendingDelete(null);
+    }
+  };
+
+  const handleUpdateStatus = async (ticketId: string, newStatus: string) => {
+    if (!ticketId) return;
+    try {
+      await authorizedRequest(async (token) => {
+        await api.patch(
+          `/support/tickets/${ticketId}/status`,
+          {}, // body empty, status passed as query param
+          {
+            params: { status: newStatus },
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+      }, 'failed to update ticket status');
+      toast.success('Ticket status updated');
+      // refresh list
+      await fetchTickets();
+    } catch (err: any) {
+      console.error('Error updating status:', err);
+      toast.error(err?.response?.data?.detail || 'Failed to update status');
+    } finally {
+      setTicketPendingStatus(null);
+    }
   };
 
   return {
@@ -185,6 +255,12 @@ useEffect(() => {
     formData,
     setFormData,
     handleCreateTicket,
+    selectedTicket,
+    loadingTicket,
+    fetchTicketById,
+    setSelectedTicket,
+    ticketPendingDelete,
+    setTicketPendingDelete,
     handleDeleteTicket,
     filteredTickets,
     sortedTickets,
@@ -193,5 +269,8 @@ useEffect(() => {
     resolvedTickets,
     pendingReply,
     closedTickets,
+    ticketPendingStatus,
+    setTicketPendingStatus,
+    handleUpdateStatus,
   };
 }
