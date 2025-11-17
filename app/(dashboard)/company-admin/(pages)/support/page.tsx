@@ -25,13 +25,11 @@ export default function SupportPage() {
 
   const {
     handleDeleteTicket,
-    sortedTickets,
     totalTickets,
     openTickets,
     resolvedTickets,
     pendingReply,
     closedTickets,
-    fetchTicketById,
     selectedTicket,
     setSelectedTicket,
     ticketPendingDelete,
