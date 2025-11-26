@@ -20,7 +20,12 @@ import { formatDateTime } from '@/utils/datetime';
 import { useProfile } from '@/hooks/useProfile';
 import { useAuth } from '@/components/auth';
 
-export default function TicketPage({ ticketId }: { ticketId: string }) {
+export default function TicketPage({
+  params,
+}: {
+  params: { ticketId: string };
+}) {
+  const ticketId = params.ticketId;
   const {
     messages,
     newMessage,
