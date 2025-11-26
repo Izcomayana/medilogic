@@ -7,7 +7,6 @@ import {
   Send,
   Trash2,
   Clock,
-  Paperclip,
   MoreVertical,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -281,6 +280,7 @@ export default function Ticket({ params }: { params: { ticketId: string } }) {
                                       }
                                       setEditingId(null);
                                     } catch (err) {
+                                      console.log(err)
                                       // keep editing open on error (toast inside hook)
                                     }
                                   }}

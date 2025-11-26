@@ -30,7 +30,6 @@ export default function SupportPage() {
     resolvedTickets,
     pendingReply,
     closedTickets,
-    setSelectedTicket,
     ticketPendingDelete,
     setTicketPendingDelete,
     ticketPendingStatus,

@@ -4,7 +4,6 @@ import {
   MessageSquare,
   Trash2,
   MoreHorizontal,
-  Eye,
   FileText,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
