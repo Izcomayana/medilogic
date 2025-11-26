@@ -20,7 +20,7 @@ import { formatDateTime } from '@/utils/datetime';
 import { useProfile } from '@/hooks/useProfile';
 import { useAuth } from '@/components/auth';
 
-export default function Ticket({ ticketId }: { ticketId: string }) {
+export default function TicketPage({ ticketId }: { ticketId: string }) {
   const {
     messages,
     newMessage,
@@ -56,8 +56,6 @@ export default function Ticket({ ticketId }: { ticketId: string }) {
         scrollContainerRef.current!.scrollHeight;
     });
   };
-
-  // const ticketId = params?.ticketId;
 
   useEffect(() => {
     if (!ticketId) return;
