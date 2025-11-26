@@ -20,8 +20,8 @@ import { formatDateTime } from '@/utils/datetime';
 import { useProfile } from '@/hooks/useProfile';
 import { useAuth } from '@/components/auth';
 
-export default function TicketPage({ ticketId }: { ticketId: string }) {
-    const {
+export default function Ticket({ ticketId }: { ticketId: string }) {
+  const {
     messages,
     newMessage,
     setNewMessage,
@@ -290,8 +290,7 @@ export default function TicketPage({ ticketId }: { ticketId: string }) {
                                 {msg.message}
                               </p>
 
-                              <div className="flex justify-between gap-4 items-center mt-3">
-                                {/* Edit button (only for messages the current user sent) */}
+                              <div className="flex justify-between gap-4 items-center mt-2">
                                 {msg.senderId === user?.user_id && (
                                   <div className="flex justify-end pr-2">
                                     <Button

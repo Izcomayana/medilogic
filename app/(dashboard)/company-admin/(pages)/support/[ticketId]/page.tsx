@@ -1,9 +1,8 @@
-import Ticket from ".";
+import Ticket from './TicketPage';
 
 export default function Page({ params }: { params: { ticketId: string } }) {
   return <Ticket ticketId={params.ticketId} />;
 }
-
 
 // // app/(dashboard)/company-admin/(pages)/support/[ticketId]/page.tsx
 // 'use client';
