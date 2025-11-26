@@ -1,11 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { useSupport } from '@/hooks/useSupport';
-import {
-  MessageSquare,
-  Trash2,
-  MoreHorizontal,
-  FileText,
-} from 'lucide-react';
+import { MessageSquare, Trash2, MoreHorizontal, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Table,

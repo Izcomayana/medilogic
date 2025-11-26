@@ -2,13 +2,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import {
-  ArrowLeft,
-  Send,
-  Trash2,
-  Clock,
-  MoreVertical,
-} from 'lucide-react';
+import { ArrowLeft, Send, Trash2, Clock, MoreVertical } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -280,7 +274,7 @@ export default function Ticket({ params }: { params: { ticketId: string } }) {
                                       }
                                       setEditingId(null);
                                     } catch (err) {
-                                      console.log(err)
+                                      console.log(err);
                                       // keep editing open on error (toast inside hook)
                                     }
                                   }}
