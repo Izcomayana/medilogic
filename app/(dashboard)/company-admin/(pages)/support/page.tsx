@@ -6,7 +6,7 @@ import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 import { useSupport } from '@/hooks/useSupport';
 import { SupportFilters } from './components/Filters';
 import { CreateTicket } from './components/Create';
-import { TicketDetailsDialog } from './components/Ticket';
+// import { TicketDetailsDialog } from './components/Ticket';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -30,7 +30,6 @@ export default function SupportPage() {
     resolvedTickets,
     pendingReply,
     closedTickets,
-    selectedTicket,
     setSelectedTicket,
     ticketPendingDelete,
     setTicketPendingDelete,
@@ -127,18 +126,19 @@ export default function SupportPage() {
 
       <CreateTicket {...supportState} />
 
-      <TicketDetailsDialog
+      {/* <TicketDetailsDialog
         open={!!selectedTicket}
         ticket={selectedTicket}
         onClose={() => setSelectedTicket(null)}
-      />
+      /> */}
 
       <AlertDialog open={!!ticketPendingDelete}>
-        <AlertDialogContent>
+        <AlertDialogContent className="bg-gray-800 border-gray-700 text-white">
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Ticket?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This action is permanent and cannot be undone.
+            <AlertDialogDescription className="text-gray-400">
+              Are you sure you want to delete this ticket? This action cannot be
+              undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
 

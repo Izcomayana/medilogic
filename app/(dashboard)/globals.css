@@ -148,6 +148,57 @@
   background: #101828;
 }
 
+/* Fade/slide animation */
+@keyframes slideFromLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-18px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideFromRight {
+  0% {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-from-left {
+  animation: slideFromLeft 0.35s ease-out forwards;
+}
+
+.animate-from-right {
+  animation: slideFromRight 0.35s ease-out forwards;
+}
+
+.loader-bubble {
+  animation: pulseBubble 1.3s infinite ease-in-out;
+}
+
+@keyframes pulseBubble {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.edit-mode {
+  animation: fadeIn 0.2s ease;
+}
+
 /* Make the AlertDialog overlay not intercept clicks */
 /* [data-radix-dialog-overlay] {
   pointer-events: none !important;

@@ -175,29 +175,6 @@ export function useCompliance() {
     }
   };
 
-  // const fetchCompliance = async () => {
-  //   if (!user?.organization?.id) return;
-
-  //   try {
-  //     await authorizedRequest(async (token) => {
-  //       const res = await api.get(`/compliance/${user.organization.id}`, {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       });
-
-  //       // Depending on API, might return an object or list — normalize
-  //       const data = Array.isArray(res.data) ? res.data : [res.data];
-  //       setRecords(data);
-  //     }, 'Failed to load compliance data');
-  //   } catch (err) {
-  //     console.error('Error fetching compliance:', err);
-  //     toast.error('Failed to load compliance data');
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const fetchRegionalCompliance = async (skip = 0, limit = 20) => {
     try {
       await authorizedRequest(async (token) => {

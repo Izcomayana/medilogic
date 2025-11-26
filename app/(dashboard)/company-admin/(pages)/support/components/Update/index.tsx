@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useState } from 'react';
+import { Label } from '@/components/ui/label';
 
 export function UpdateStatusDialog({
   open,
@@ -30,7 +31,7 @@ export function UpdateStatusDialog({
 
   return (
     <Dialog open={open}>
-      <DialogContent>
+      <DialogContent className="bg-gray-800 border-gray-700 text-white">
         <DialogHeader>
           <DialogTitle>Update Ticket Status</DialogTitle>
           <DialogDescription>
@@ -39,12 +40,14 @@ export function UpdateStatusDialog({
         </DialogHeader>
 
         <div className="space-y-4 py-2">
-          <label className="text-sm font-medium">Status</label>
+          <Label className="ext-gray-300 text-sm font-medium mb-2">
+            Status
+          </Label>
           <Select value={status} onValueChange={setStatus}>
-            <SelectTrigger>
+            <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
               <SelectValue placeholder="Select status" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-gray-700 border-gray-600">
               <SelectItem value="open">Open</SelectItem>
               <SelectItem value="in_progress">In Progress</SelectItem>
               <SelectItem value="resolved">Resolved</SelectItem>

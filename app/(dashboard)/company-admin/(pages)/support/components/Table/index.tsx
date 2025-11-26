@@ -24,6 +24,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
+import { useRouter } from 'next/navigation';
 
 type TicketsTableProps = ReturnType<typeof useSupport>;
 
@@ -31,8 +32,14 @@ export function TicketsTable({
   sortedTickets,
   setTicketPendingDelete,
   setTicketPendingStatus,
-  fetchTicketById,
+  // fetchTicketById,
 }: TicketsTableProps) {
+  const router = useRouter();
+
+  const handleOpenTicket = (id: string) => {
+    router.push(`/company-admin/support/${id}`);
+  };
+
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
       case 'open':
@@ -62,7 +69,7 @@ export function TicketsTable({
   };
 
   return (
-    <Card className="dashboard-card">
+    <Card className="dashboard-card py-0 pt-4">
       <CardContent className="p-0">
         {sortedTickets.length === 0 ? (
           <div className="text-center py-12">
@@ -75,86 +82,105 @@ export function TicketsTable({
             </p>
           </div>
         ) : (
-          <div className="rounded-md border border-gray-700 overflow-hidden">
-            <Table>
-              <TableHeader>
-                <TableRow className="border-gray-700 hover:bg-gray-800">
-                  <TableHead className="text-gray-300">Created By</TableHead>
-                  <TableHead className="text-gray-300">Status</TableHead>
-                  <TableHead className="text-gray-300">Priority</TableHead>
-                  <TableHead className="text-gray-300">Last Updated</TableHead>
-                  <TableHead className="text-gray-300">Messages</TableHead>
-                  <TableHead className="text-gray-300">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {sortedTickets.map((ticket) => (
-                  <TableRow
-                    key={ticket.id}
-                    className="border-gray-700 hover:bg-gray-800"
-                  >
-                    <TableCell className="text-gray-300">
-                      <span className="text-sm">{ticket.createdBy}</span>
-                      <p className="text-xs text-gray-500">{ticket.userType}</p>
-                    </TableCell>
-                    <TableCell>{getStatusBadge(ticket.status)}</TableCell>
-                    <TableCell>{getPriorityBadge(ticket.priority)}</TableCell>
-                    <TableCell className="text-gray-300 text-sm">
-                      {formatDateTime(ticket.lastUpdated)}
-                    </TableCell>
-                    <TableCell className="text-gray-300 text-sm text-center">
-                      {ticket.messages}
-                    </TableCell>
-                    <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            className="h-8 w-8 p-0 text-gray-400 hover:bg-gray-700"
+          <>
+            <div className="flex pl-4">
+              <p className="text-xs text-gray-400 italic">
+                Click any ticket row to open its conversation
+              </p>
+            </div>
+            <div className="rounded-md border border-gray-700 overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow className="border-gray-700 hover:bg-gray-800">
+                    <TableHead className="text-gray-300">Created By</TableHead>
+                    <TableHead className="text-gray-300">Status</TableHead>
+                    <TableHead className="text-gray-300">Priority</TableHead>
+                    <TableHead className="text-gray-300">
+                      Last Updated
+                    </TableHead>
+                    <TableHead className="text-gray-300">Messages</TableHead>
+                    <TableHead className="text-gray-300">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {sortedTickets.map((ticket) => (
+                    <TableRow
+                      key={ticket.id}
+                      onClick={() => handleOpenTicket(ticket.id)}
+                      className="border-gray-700 cursor-pointer transition-colors hover:bg-gray-800"
+                    >
+                      <TableCell className="text-gray-300">
+                        <span className="text-sm">{ticket.createdBy}</span>
+                        <p className="text-xs text-gray-500">
+                          {ticket.userType}
+                        </p>
+                      </TableCell>
+
+                      <TableCell>{getStatusBadge(ticket.status)}</TableCell>
+                      <TableCell>{getPriorityBadge(ticket.priority)}</TableCell>
+
+                      <TableCell className="text-gray-300 text-sm">
+                        {formatDateTime(ticket.lastUpdated)}
+                      </TableCell>
+
+                      <TableCell className="text-gray-300 text-sm text-center">
+                        {ticket.messages}
+                      </TableCell>
+
+                      <TableCell
+                        onClick={(e) => e.stopPropagation()} // 👈 prevents row navigation
+                      >
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              className="h-8 w-8 p-0 text-gray-400 hover:bg-gray-700"
+                            >
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+
+                          <DropdownMenuContent
+                            align="end"
+                            className="bg-gray-700 border-gray-600"
                           >
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent
-                          align="end"
-                          className="bg-gray-700 border-gray-600"
-                        >
-                          <DropdownMenuItem
+                            {/* <DropdownMenuItem
                             className="text-gray-300 hover:bg-gray-600"
-                            onClick={() => {
-                              fetchTicketById(ticket.id);
-                            }}
+                            onClick={() => { fetchTicketById(ticket.id); }}
                           >
                             <Eye className="h-3 w-3 mr-1" />
                             View
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            className="text-gray-300 hover:bg-gray-600"
-                            onClick={() =>
-                              setTicketPendingStatus({
-                                id: ticket.id,
-                                status: ticket.status,
-                              })
-                            }
-                          >
-                            <FileText className="mr-2 h-4 w-4" />
-                            Update Status
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            className="text-gray-300 hover:bg-gray-600"
-                            onClick={() => setTicketPendingDelete(ticket.id)}
-                          >
-                            <Trash2 className="h-3 w-3" />
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+                          </DropdownMenuItem> */}
+
+                            <DropdownMenuItem
+                              className="text-gray-300 hover:bg-gray-600"
+                              onClick={() =>
+                                setTicketPendingStatus({
+                                  id: ticket.id,
+                                  status: ticket.status,
+                                })
+                              }
+                            >
+                              <FileText className="h-4 w-4" />
+                              Update Status
+                            </DropdownMenuItem>
+
+                            <DropdownMenuItem
+                              className="text-gray-300 hover:bg-gray-600"
+                              onClick={() => setTicketPendingDelete(ticket.id)}
+                            >
+                              <Trash2 className="h-3 w-3" />
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          </>
         )}
       </CardContent>
     </Card>
