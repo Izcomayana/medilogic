@@ -1,8 +1,15 @@
 import TicketPage from './TicketPage';
 
-export default function Page(props: { params: { ticketId: string } }) {
-  return <TicketPage {...props} />;
+export default function Page({ params }: { params: { ticketId: string } }) {
+  return <TicketPage params={params} />;
 }
+
+
+// import TicketPage from './TicketPage';
+
+// export default function Page(props: { params: { ticketId: string } }) {
+//   return <TicketPage {...props} />;
+// }
 
 // // app/(dashboard)/company-admin/(pages)/support/[ticketId]/page.tsx
 // 'use client';
