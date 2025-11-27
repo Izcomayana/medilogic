@@ -58,7 +58,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "components/Providers"
+    "components/Providers", "app", "components", "lib", "hooks"
   ],
-  "exclude": ["node_modules"]
+  // "exclude": ["node_modules"],
+  "exclude": ["node_modules", ".next", "dist"]
 }

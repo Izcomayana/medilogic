@@ -83,9 +83,9 @@ export default function TicketPage({
     if (editingId === null) scrollToBottom();
   }, [editingId]);
 
-  if (loadingTicket) return <PageHeader title="Loading..." subtitle="" />;
-  if (!selectedTicket) return <PageHeader title="Loading..." subtitle="" />;
-  if (!user) return <PageHeader title="Loading user..." subtitle="" />;
+  if (loadingTicket) return <PageHeader title="Loading..." subtitle="loading" />;
+  if (!selectedTicket) return <PageHeader title="Loading..." subtitle="loading2" />;
+  if (!user) return <PageHeader title="Loading user..." subtitle="loading3" />;
 
   const getStatusBadge = (status: string) => {
     switch (status?.toLowerCase()) {
