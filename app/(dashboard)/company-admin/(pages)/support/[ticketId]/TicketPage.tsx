@@ -20,12 +20,13 @@ import { formatDateTime } from '@/utils/datetime';
 import { useProfile } from '@/hooks/useProfile';
 import { useAuth } from '@/components/auth';
 
-export default function TicketPage({
-  params,
-}: {
-  params: { ticketId: string };
-}) {
-  const ticketId = params.ticketId;
+export default function TicketPage({ ticketId }: { ticketId: string }) {
+  // export default function TicketPage({
+  //   params,
+  // }: {
+  //   params: { ticketId: string };
+  // }) {
+  // const ticketId = params.ticketId;
   const {
     messages,
     newMessage,
@@ -81,11 +82,21 @@ export default function TicketPage({
 
   useEffect(() => {
     if (editingId === null) scrollToBottom();
+    console.log(
+      'ticketId"',
+      ticketId,
+      'selectedTicket:',
+      selectedTicket,
+      'loadingTicket:',
+      loadingTicket,
+      'user:',
+      user
+    );
   }, [editingId]);
 
-  if (loadingTicket) return <PageHeader title="Loading..." subtitle="loading" />;
-  if (!selectedTicket) return <PageHeader title="Loading..." subtitle="loading2" />;
-  if (!user) return <PageHeader title="Loading user..." subtitle="loading3" />;
+  if (loadingTicket) return <PageHeader title="Loading..." subtitle="" />;
+  if (!selectedTicket) return <PageHeader title="Loading..." subtitle="" />;
+  if (!user) return <PageHeader title="Loading user..." subtitle="" />;
 
   const getStatusBadge = (status: string) => {
     switch (status?.toLowerCase()) {

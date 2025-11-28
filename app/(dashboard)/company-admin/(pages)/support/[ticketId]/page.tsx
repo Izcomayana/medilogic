@@ -1,9 +1,13 @@
+// import TicketPage from './TicketPage';
+
+// export default function Page({ params }: { params: { ticketId: string } }) {
+//   return <TicketPage params={params} />;
+// }
 import TicketPage from './TicketPage';
 
 export default function Page({ params }: { params: { ticketId: string } }) {
-  return <TicketPage params={params} />;
+  return <TicketPage ticketId={params.ticketId} />;
 }
-
 
 // import TicketPage from './TicketPage';
 
@@ -11,7 +15,7 @@ export default function Page({ params }: { params: { ticketId: string } }) {
 //   return <TicketPage {...props} />;
 // }
 
-// // app/(dashboard)/company-admin/(pages)/support/[ticketId]/page.tsx
+// app/(dashboard)/company-admin/(pages)/support/[ticketId]/page.tsx
 // 'use client';
 
 // import React, { useEffect, useRef } from 'react';
@@ -94,9 +98,9 @@ export default function Page({ params }: { params: { ticketId: string } }) {
 //     if (editingId === null) scrollToBottom();
 //   }, [editingId]);
 
-//   if (loadingTicket) return <PageHeader title="Loading..." subtitle="" />;
-//   if (!selectedTicket) return <PageHeader title="Loading..." subtitle="" />;
-//   if (!user) return <PageHeader title="Loading user..." subtitle="" />;
+// if (loadingTicket) return <PageHeader title="Loading..." subtitle="" />;
+// if (!selectedTicket) return <PageHeader title="Loading..." subtitle="" />;
+// if (!user) return <PageHeader title="Loading user..." subtitle="" />;
 
 //   const getStatusBadge = (status: string) => {
 //     switch (status?.toLowerCase()) {
