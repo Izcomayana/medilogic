@@ -1,10 +1,3 @@
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import {
   Dialog,
@@ -42,74 +35,30 @@ export function CreateTicket({
 
         <div className="space-y-4 py-4">
           <div>
-            <Label className="text-gray-300 text-sm mb-2 block">Title *</Label>
+            <Label className="text-gray-300 text-sm mb-2 block">Subjetc</Label>
             <Input
-              value={formData.title}
+              value={formData.subject}
               onChange={(e) =>
-                setFormData({ ...formData, title: e.target.value })
+                setFormData({ ...formData, subject: e.target.value })
               }
-              placeholder="Ticket title"
+              placeholder="Ticket subject"
               className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"
             />
           </div>
 
           <div>
             <Label className="text-gray-300 text-sm mb-2 block">
-              Category *
-            </Label>
-            <Select
-              value={formData.category}
-              onValueChange={(value) =>
-                setFormData({ ...formData, category: value })
-              }
-            >
-              <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
-                <SelectValue placeholder="Select category" />
-              </SelectTrigger>
-              <SelectContent className="bg-gray-700 border-gray-600">
-                <SelectItem value="Technical">Technical</SelectItem>
-                <SelectItem value="Billing">Billing</SelectItem>
-                <SelectItem value="Delivery">Delivery</SelectItem>
-                <SelectItem value="Compliance">Compliance</SelectItem>
-                <SelectItem value="Other">Other</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div>
-            <Label className="text-gray-300 text-sm mb-2 block">
-              Description *
+              Message *
             </Label>
             <Textarea
-              value={formData.description}
+              value={formData.message}
               onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
+                setFormData({ ...formData, message: e.target.value })
               }
               placeholder="Describe the issue or request..."
               className="bg-gray-700 border-gray-600 text-white placeholder-gray-400"
               rows={4}
             />
-          </div>
-
-          <div>
-            <Label className="text-gray-300 text-sm mb-2 block">
-              Priority *
-            </Label>
-            <Select
-              value={formData.priority}
-              onValueChange={(value) =>
-                setFormData({ ...formData, priority: value })
-              }
-            >
-              <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent className="bg-gray-700 border-gray-600">
-                <SelectItem value="Low">Low</SelectItem>
-                <SelectItem value="Medium">Medium</SelectItem>
-                <SelectItem value="High">High</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
         </div>
 

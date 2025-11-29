@@ -118,11 +118,11 @@ export default function TicketPage({ ticketId }: { ticketId: string }) {
       <PageHeader title={'Ticket'} subtitle={selectedTicket.id} />
 
       <div className="flex justify-between items-center px-4 pt-4">
-        <Link href="/admin/support">
+        <Link href="/company-admin/support">
           <Button
             variant="ghost"
             size="sm"
-            className="text-gray-300 hover:text-white"
+            className="text-gray-300 hover:text-gray-800"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Tickets

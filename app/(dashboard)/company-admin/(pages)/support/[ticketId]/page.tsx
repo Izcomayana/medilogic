@@ -1,8 +1,3 @@
-// import TicketPage from './TicketPage';
-
-// export default function Page({ params }: { params: { ticketId: string } }) {
-//   return <TicketPage params={params} />;
-// }
 import TicketPage from './TicketPage';
 
 export default function Page({ params }: { params: { ticketId: string } }) {

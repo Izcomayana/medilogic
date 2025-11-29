@@ -101,14 +101,12 @@ export function useSupport() {
   const authorizedRequest = useAuthorizedRequest();
 
   const [formData, setFormData] = useState({
-    title: '',
-    category: '',
-    description: '',
-    priority: 'Medium',
+    subject: '',
+    message: '',
   });
 
   const handleCreateTicket = async () => {
-    if (!formData.title || !formData.description) {
+    if (!formData.subject || !formData.message) {
       toast.error('Please fill in all required fields');
       return;
     }
@@ -117,8 +115,8 @@ export function useSupport() {
       setCreating(true);
 
       const payload = {
-        subject: formData.title,
-        message: formData.description,
+        subject: formData.subject,
+        message: formData.message,
       };
 
       await authorizedRequest(async (token) => {
@@ -135,12 +133,11 @@ export function useSupport() {
         setTickets((prev) => [
           {
             id: createdTicket.id,
-            title: createdTicket.subject,
+            subject: createdTicket.subject,
             createdBy: createdTicket.user?.name || 'Unknown User',
             userType: createdTicket.user?.role || 'User',
             status: createdTicket.status || 'open',
             lastUpdated: createdTicket.created_at,
-            priority: formData.priority,
             messages: createdTicket.messages?.length || 0,
           },
           ...prev,
@@ -151,10 +148,8 @@ export function useSupport() {
 
       // Reset form + close modal
       setFormData({
-        title: '',
-        category: '',
-        description: '',
-        priority: 'Medium',
+        subject: '',
+        message: '',
       });
 
       setShowCreateModal(false);
@@ -185,7 +180,7 @@ export function useSupport() {
         // Normalize → UI format
         const normalized = items.map((t: any) => ({
           id: t.id,
-          title: t.subject,
+          subject: t.subject,
           createdBy: t.user?.name || 'Unknown User',
           userType: t.user?.role || 'User',
           status: t.status || 'open',
@@ -208,58 +203,10 @@ export function useSupport() {
     fetchTickets();
   }, []);
 
-  const searchTickets = async () => {
-    try {
-      setLoading(true);
-
-      await authorizedRequest(async (token) => {
-        const params: any = {
-          skip: 0,
-          limit: 50,
-        };
-
-        // Map UI filters → backend filters
-        if (searchTerm.trim()) params.user_name = searchTerm.trim();
-        if (statusFilter !== 'all') params.status = statusFilter;
-        if (userTypeFilter !== 'all') params.user_type = userTypeFilter;
-        if (priorityFilter !== 'all') params.priority = priorityFilter;
-
-        const res = await api.get('/support/tickets/search', {
-          params,
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        const items = res.data.items || [];
-
-        const normalized = items.map((t: any) => ({
-          id: t.id,
-          title: t.subject,
-          createdBy: t.user?.name || 'Unknown User',
-          userType: t.user?.role || 'User',
-          status: t.status || 'open',
-          lastUpdated: t.updated_at || t.created_at,
-          priority: 'Medium', // backend has no priority
-          messages: (t.messages?.length || 0) + (t.replies?.length || 0),
-        }));
-
-        setTickets(normalized);
-      }, 'Failed to search tickets');
-    } catch (error: any) {
-      console.error('Error searching tickets:', error);
-      toast.error(error?.response?.data?.detail || 'Search failed');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // useEffect(() => {
-  //   searchTickets();
-  // }, [searchTerm, statusFilter, userTypeFilter, priorityFilter]);
-
   const filteredTickets = tickets.filter((ticket) => {
     const matchesSearch =
       ticket.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ticket.title.toLowerCase().includes(searchTerm.toLowerCase());
+      ticket.subject.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesStatus =
       statusFilter === 'all' ||
@@ -287,8 +234,7 @@ export function useSupport() {
   const totalTickets = tickets.length;
   const openTickets = tickets.filter((t) => t.status === 'Open').length;
   const resolvedTickets = tickets.filter((t) => t.status === 'Resolved').length;
-  const pendingReply = tickets.filter((t) => t.status === 'in_progress').length;
-  const closedTickets = tickets.filter((t) => t.status === 'Closed').length;
+  const inProgress = tickets.filter((t) => t.status === 'in_progress').length;
 
   const handleDeleteTicket = async () => {
     if (!ticketPendingDelete) return;
@@ -601,7 +547,6 @@ export function useSupport() {
     tickets,
     setTickets,
     fetchTickets,
-    searchTickets,
     loading,
     showCreateModal,
     setShowCreateModal,
@@ -630,8 +575,7 @@ export function useSupport() {
     totalTickets,
     openTickets,
     resolvedTickets,
-    pendingReply,
-    closedTickets,
+    inProgress,
     ticketPendingStatus,
     setTicketPendingStatus,
     handleUpdateStatus,

@@ -26,7 +26,6 @@ export function TicketsTable({
   sortedTickets,
   setTicketPendingDelete,
   setTicketPendingStatus,
-  // fetchTicketById,
 }: TicketsTableProps) {
   const router = useRouter();
 
