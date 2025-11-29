@@ -6,7 +6,6 @@ import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 import { useSupport } from '@/hooks/useSupport';
 import { SupportFilters } from './components/Filters';
 import { CreateTicket } from './components/Create';
-// import { TicketDetailsDialog } from './components/Ticket';
 import {
   AlertDialog,
   AlertDialogContent,
