@@ -28,8 +28,7 @@ export default function SupportPage() {
     totalTickets,
     openTickets,
     resolvedTickets,
-    pendingReply,
-    closedTickets,
+    inProgress,
     ticketPendingDelete,
     setTicketPendingDelete,
     ticketPendingStatus,
@@ -93,26 +92,12 @@ export default function SupportPage() {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-400 text-sm">Pending Reply</p>
+                  <p className="text-gray-400 text-sm">In Progress</p>
                   <p className="text-2xl font-bold text-white mt-1">
-                    {pendingReply}
+                    {inProgress}
                   </p>
                 </div>
                 <Clock className="h-8 w-8 text-yellow-500" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="dashboard-card">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-gray-400 text-sm">Closed</p>
-                  <p className="text-2xl font-bold text-white mt-1">
-                    {closedTickets}
-                  </p>
-                </div>
-                <CheckCircle className="h-8 w-8 text-gray-500" />
               </div>
             </CardContent>
           </Card>
