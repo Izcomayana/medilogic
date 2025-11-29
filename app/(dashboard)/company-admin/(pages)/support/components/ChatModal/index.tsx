@@ -6,8 +6,6 @@ import {
   AlertDialogContent,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogFooter,
   AlertDialogCancel,
 } from '@/components/ui/alert-dialog';
 

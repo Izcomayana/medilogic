@@ -18,7 +18,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { TicketChatModal } from '../ChatModal';
 
@@ -29,7 +28,6 @@ export function TicketsTable({
   setTicketPendingDelete,
   setTicketPendingStatus,
 }: TicketsTableProps) {
-  const router = useRouter();
   const [openChat, setOpenChat] = useState(false);
   const [activeTicketId, setActiveTicketId] = useState<string | null>(null);
 

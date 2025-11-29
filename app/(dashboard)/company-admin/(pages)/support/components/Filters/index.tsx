@@ -21,12 +21,6 @@ export function SupportFilters({
   setSearchTerm,
   statusFilter,
   setStatusFilter,
-  userTypeFilter,
-  setUserTypeFilter,
-  priorityFilter,
-  setPriorityFilter,
-  sortBy,
-  setSortBy,
 }: SupportFiltersProps) {
   return (
     <Card className="dashboard-card mb-6">
