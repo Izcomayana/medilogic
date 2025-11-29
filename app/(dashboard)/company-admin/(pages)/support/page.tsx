@@ -77,12 +77,12 @@ export default function SupportPage() {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-400 text-sm">Resolved</p>
+                  <p className="text-gray-400 text-sm">In Progress</p>
                   <p className="text-2xl font-bold text-white mt-1">
-                    {resolvedTickets}
+                    {inProgress}
                   </p>
                 </div>
-                <CheckCircle className="h-8 w-8 text-green-500" />
+                <Clock className="h-8 w-8 text-yellow-500" />
               </div>
             </CardContent>
           </Card>
@@ -91,12 +91,12 @@ export default function SupportPage() {
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-400 text-sm">In Progress</p>
+                  <p className="text-gray-400 text-sm">Resolved</p>
                   <p className="text-2xl font-bold text-white mt-1">
-                    {inProgress}
+                    {resolvedTickets}
                   </p>
                 </div>
-                <Clock className="h-8 w-8 text-yellow-500" />
+                <CheckCircle className="h-8 w-8 text-green-500" />
               </div>
             </CardContent>
           </Card>
@@ -109,12 +109,6 @@ export default function SupportPage() {
 
       <CreateTicket {...supportState} />
 
-      {/* <TicketDetailsDialog
-        open={!!selectedTicket}
-        ticket={selectedTicket}
-        onClose={() => setSelectedTicket(null)}
-      /> */}
-
       <AlertDialog open={!!ticketPendingDelete}>
         <AlertDialogContent className="bg-gray-800 border-gray-700 text-white">
           <AlertDialogHeader>
@@ -126,7 +120,10 @@ export default function SupportPage() {
           </AlertDialogHeader>
 
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setTicketPendingDelete(null)}>
+            <AlertDialogCancel
+              onClick={() => setTicketPendingDelete(null)}
+              className="text-gray-800"
+            >
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction onClick={handleDeleteTicket}>
