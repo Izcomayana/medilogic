@@ -39,7 +39,7 @@ export function SupportFilters({
 
           <Button
             onClick={() => setShowCreateModal(true)}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
+            className="bg-blue-600 hover:bg-blue-700 text-white mt-3 lg:mt-3"
           >
             <Plus className="h-4 w-4 mr-2" />
             Create Ticket
@@ -68,14 +68,13 @@ export function SupportFilters({
                 <SelectContent className="bg-gray-700 border-gray-600">
                   <SelectItem value="all">All Statuses</SelectItem>
                   <SelectItem value="open">Open</SelectItem>
-                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="in_progress">In Progress</SelectItem>
                   <SelectItem value="resolved">Resolved</SelectItem>
-                  <SelectItem value="closed">Closed</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
-            <div>
+            {/* <div>
               <Label className="text-gray-300 mb-2 block text-sm">
                 User Type
               </Label>
@@ -90,9 +89,9 @@ export function SupportFilters({
                   <SelectItem value="Company Admin">Company Admin</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
+            </div> */}
 
-            <div>
+            {/* <div>
               <Label className="text-gray-300 mb-2 block text-sm">
                 Priority
               </Label>
@@ -107,9 +106,9 @@ export function SupportFilters({
                   <SelectItem value="Low">Low</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
+            </div> */}
 
-            <div>
+            {/* <div>
               <Label className="text-gray-300 mb-2 block text-sm">
                 Sort By
               </Label>
@@ -123,7 +122,7 @@ export function SupportFilters({
                   <SelectItem value="priority">Highest Priority</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
+            </div> */}
           </div>
         </div>
       </CardContent>

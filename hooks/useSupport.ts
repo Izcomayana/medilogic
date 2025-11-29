@@ -232,8 +232,8 @@ export function useSupport() {
   }
 
   const totalTickets = tickets.length;
-  const openTickets = tickets.filter((t) => t.status === 'Open').length;
-  const resolvedTickets = tickets.filter((t) => t.status === 'Resolved').length;
+  const openTickets = tickets.filter((t) => t.status === 'open').length;
+  const resolvedTickets = tickets.filter((t) => t.status === 'resolved').length;
   const inProgress = tickets.filter((t) => t.status === 'in_progress').length;
 
   const handleDeleteTicket = async () => {
