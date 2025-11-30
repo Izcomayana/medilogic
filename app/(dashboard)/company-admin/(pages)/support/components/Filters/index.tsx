@@ -25,11 +25,11 @@ export function SupportFilters({
 }: SupportFiltersProps) {
   const { role } = useAuth();
 
-const placeholder =
-  role === "super_admin"
-    ? "Search by user name or organization ID..."
-    : "Search by user name...";
-    
+  const placeholder =
+    role === 'super_admin'
+      ? 'Search by user name or organization ID...'
+      : 'Search by user name...';
+
   return (
     <Card className="dashboard-card mb-6">
       <CardHeader>
@@ -75,8 +75,6 @@ const placeholder =
                 </SelectContent>
               </Select>
             </div>
-
-          
           </div>
         </div>
       </CardContent>

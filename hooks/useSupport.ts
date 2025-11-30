@@ -207,15 +207,15 @@ export function useSupport() {
     fetchTickets();
   }, []);
 
-    const filteredTickets = tickets.filter((ticket) => {
+  const filteredTickets = tickets.filter((ticket) => {
     const matchesSearch =
       ticket.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
       ticket.status.toLowerCase().includes(searchTerm) ||
       ticket.createdBy?.toLowerCase().includes(searchTerm);
 
-      if (role === 'super_admin') {
-        ticket.organizationId?.toLowerCase().includes(searchTerm);
-      }
+    if (role === 'super_admin') {
+      ticket.organizationId?.toLowerCase().includes(searchTerm);
+    }
 
     const matchesStatus =
       statusFilter === 'all' ||
