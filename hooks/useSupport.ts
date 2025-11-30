@@ -3,6 +3,7 @@ import { toast } from 'sonner';
 import { api } from '@/lib/api';
 import { useAuthorizedRequest } from '@/hooks/useRequest';
 import { formatDateTime } from '@/utils/datetime';
+import { useAuth } from '@/components/auth';
 
 export type Message = {
   id: string;
@@ -79,7 +80,7 @@ export function useSupport() {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [userTypeFilter, setUserTypeFilter] = useState('all');
-  const [priorityFilter, setPriorityFilter] = useState('all');
+  const [orgFilter, setOrgFilter] = useState('all');
   const [sortBy, setSortBy] = useState('recent');
   const [selectedTicket, setSelectedTicket] = useState<Ticket | null>(null);
   const [loadingTicket, setLoadingTicket] = useState(false);
@@ -98,6 +99,7 @@ export function useSupport() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingText, setEditingText] = useState('');
 
+  const { role } = useAuth();
   const authorizedRequest = useAuthorizedRequest();
 
   const [formData, setFormData] = useState({
@@ -185,8 +187,10 @@ export function useSupport() {
           userType: t.user?.role || 'User',
           status: t.status || 'open',
           lastUpdated: t.updated_at || t.created_at,
-          priority: 'Medium', // backend has no priority — keep UI default
+          priority: 'Medium',
           messages: t.messages?.length || 0,
+          organizationId: t.organization?.id ?? t.organization_id ?? null,
+          // organizationId: t.organization?.id || null,
         }));
 
         setTickets(normalized);
@@ -206,30 +210,19 @@ export function useSupport() {
   const filteredTickets = tickets.filter((ticket) => {
     const matchesSearch =
       ticket.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ticket.subject.toLowerCase().includes(searchTerm.toLowerCase());
+      ticket.status.toLowerCase().includes(searchTerm) ||
+      ticket.createdBy?.toLowerCase().includes(searchTerm);
+
+    if (role === 'super_admin') {
+      ticket.organizationId?.toLowerCase().includes(searchTerm);
+    }
 
     const matchesStatus =
       statusFilter === 'all' ||
       ticket.status.toLowerCase() === statusFilter.toLowerCase();
-    const matchesUserType =
-      userTypeFilter === 'all' || ticket.userType === userTypeFilter;
-    const matchesPriority =
-      priorityFilter === 'all' || ticket.priority === priorityFilter;
 
-    return matchesSearch && matchesStatus && matchesUserType && matchesPriority;
+    return matchesSearch && matchesStatus;
   });
-
-  const sortedTickets = [...filteredTickets];
-  if (sortBy === 'oldest') {
-    sortedTickets.reverse();
-  } else if (sortBy === 'priority') {
-    const priorityOrder = { High: 0, Medium: 1, Low: 2 };
-    sortedTickets.sort(
-      (a, b) =>
-        priorityOrder[a.priority as keyof typeof priorityOrder] -
-        priorityOrder[b.priority as keyof typeof priorityOrder]
-    );
-  }
 
   const totalTickets = tickets.length;
   const openTickets = tickets.filter((t) => t.status === 'open').length;
@@ -556,8 +549,8 @@ export function useSupport() {
     setStatusFilter,
     userTypeFilter,
     setUserTypeFilter,
-    priorityFilter,
-    setPriorityFilter,
+    orgFilter,
+    setOrgFilter,
     sortBy,
     setSortBy,
     formData,
@@ -571,7 +564,6 @@ export function useSupport() {
     setTicketPendingDelete,
     handleDeleteTicket,
     filteredTickets,
-    sortedTickets,
     totalTickets,
     openTickets,
     resolvedTickets,

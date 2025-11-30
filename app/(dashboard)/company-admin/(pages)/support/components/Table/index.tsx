@@ -24,7 +24,7 @@ import { TicketChatModal } from '../ChatModal';
 type TicketsTableProps = ReturnType<typeof useSupport>;
 
 export function TicketsTable({
-  sortedTickets,
+  filteredTickets,
   setTicketPendingDelete,
   setTicketPendingStatus,
 }: TicketsTableProps) {
@@ -50,7 +50,7 @@ export function TicketsTable({
     <>
       <Card className="dashboard-card py-0 pt-4">
         <CardContent className="p-0">
-          {sortedTickets.length === 0 ? (
+          {filteredTickets.length === 0 ? (
             <div className="text-center py-12">
               <MessageSquare className="h-12 w-12 text-gray-600 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-white mb-2">
@@ -83,7 +83,7 @@ export function TicketsTable({
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {sortedTickets.map((ticket) => (
+                    {filteredTickets.map((ticket) => (
                       <TableRow
                         key={ticket.id}
                         className="border-gray-700 transition-colors hover:bg-gray-800"

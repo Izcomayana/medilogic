@@ -11,24 +11,32 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useAuth } from '@/components/auth';
 
 type SupportFiltersProps = ReturnType<typeof useSupport>;
 
 export function SupportFilters({
-  sortedTickets,
+  filteredTickets,
   setShowCreateModal,
   searchTerm,
   setSearchTerm,
   statusFilter,
   setStatusFilter,
 }: SupportFiltersProps) {
+  const { role } = useAuth();
+
+  const placeholder =
+    role === 'super_admin'
+      ? 'Search by user name or organization ID...'
+      : 'Search by user name...';
+
   return (
     <Card className="dashboard-card mb-6">
       <CardHeader>
         <div className="flex flex-col md:flex-row justify-between md:items-center">
           <CardTitle className="text-white flex items-center gap-2">
             <Filter className="h-5 w-5" />
-            Filters ({sortedTickets.length})
+            Filters ({filteredTickets.length})
           </CardTitle>
 
           <Button
@@ -45,7 +53,7 @@ export function SupportFilters({
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
             <Input
-              placeholder="Search by ticket ID or keyword..."
+              placeholder={placeholder}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10 bg-gray-700 border-gray-600 text-white placeholder-gray-400"
@@ -67,56 +75,6 @@ export function SupportFilters({
                 </SelectContent>
               </Select>
             </div>
-
-            {/* <div>
-              <Label className="text-gray-300 mb-2 block text-sm">
-                User Type
-              </Label>
-              <Select value={userTypeFilter} onValueChange={setUserTypeFilter}>
-                <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-700 border-gray-600">
-                  <SelectItem value="all">All Users</SelectItem>
-                  <SelectItem value="Driver">Driver</SelectItem>
-                  <SelectItem value="Client">Client</SelectItem>
-                  <SelectItem value="Company Admin">Company Admin</SelectItem>
-                </SelectContent>
-              </Select>
-            </div> */}
-
-            {/* <div>
-              <Label className="text-gray-300 mb-2 block text-sm">
-                Priority
-              </Label>
-              <Select value={priorityFilter} onValueChange={setPriorityFilter}>
-                <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-700 border-gray-600">
-                  <SelectItem value="all">All Priorities</SelectItem>
-                  <SelectItem value="High">High</SelectItem>
-                  <SelectItem value="Medium">Medium</SelectItem>
-                  <SelectItem value="Low">Low</SelectItem>
-                </SelectContent>
-              </Select>
-            </div> */}
-
-            {/* <div>
-              <Label className="text-gray-300 mb-2 block text-sm">
-                Sort By
-              </Label>
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="bg-gray-700 border-gray-600 text-white">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-700 border-gray-600">
-                  <SelectItem value="recent">Most Recent</SelectItem>
-                  <SelectItem value="oldest">Oldest</SelectItem>
-                  <SelectItem value="priority">Highest Priority</SelectItem>
-                </SelectContent>
-              </Select>
-            </div> */}
           </div>
         </div>
       </CardContent>
