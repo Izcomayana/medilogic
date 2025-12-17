@@ -10,7 +10,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { formatDateTime } from '@/utils/datetime';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -75,9 +74,7 @@ export function TicketsTable({
                         Created By
                       </TableHead>
                       <TableHead className="text-gray-300">Status</TableHead>
-                      <TableHead className="text-gray-300">
-                        Last Updated
-                      </TableHead>
+                      <TableHead className="text-gray-300">Subject</TableHead>
                       <TableHead className="text-gray-300">Messages</TableHead>
                       <TableHead className="text-gray-300">Actions</TableHead>
                     </TableRow>
@@ -98,7 +95,7 @@ export function TicketsTable({
                         <TableCell>{getStatusBadge(ticket.status)}</TableCell>
 
                         <TableCell className="text-gray-300 text-sm">
-                          {formatDateTime(ticket.lastUpdated)}
+                          {ticket.subject}
                         </TableCell>
 
                         <TableCell className="text-gray-300 text-sm flex justify-start gap-2">

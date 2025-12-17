@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { api } from '@/lib/api';
 import { useAuthorizedRequest } from '@/hooks/useRequest';
-import { formatDateTime } from '@/utils/datetime';
 import { useAuth } from '@/components/auth';
 
 export type Message = {
@@ -45,6 +44,8 @@ export type Ticket = {
     message: string;
     created_at: string;
   }[];
+
+  subject: string;
 
   // messages endpoint & inline messages return this structure
   messages: {
@@ -317,6 +318,7 @@ export function useSupport() {
         });
 
         setSelectedTicket(res.data);
+        console.log('selected ticket:', selectedTicket);
       }, 'Failed to fetch ticket');
     } catch (error: any) {
       console.error('Error fetching ticket:', error);
