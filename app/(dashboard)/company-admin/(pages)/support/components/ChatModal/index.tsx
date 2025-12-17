@@ -134,7 +134,7 @@ export function TicketChatModal({
           <Card className="dashboard-card flex-1 flex flex-col overflow-auto py-3 gap-2">
             <CardHeader className="px-3">
               <CardTitle className="text-white">
-                Conversation ({messages.length})
+                {selectedTicket.subject}
               </CardTitle>
             </CardHeader>
 
