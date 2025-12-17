@@ -10,7 +10,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { formatDateTime } from '@/utils/datetime';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -97,7 +96,6 @@ export function TicketsTable({
 
                         <TableCell className="text-gray-300 text-sm">
                           {ticket.subject}
-                          {/* {formatDateTime(ticket.lastUpdated)} */}
                         </TableCell>
 
                         <TableCell className="text-gray-300 text-sm flex justify-start gap-2">
