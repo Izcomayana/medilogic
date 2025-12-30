@@ -1,10 +1,10 @@
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from '@/components/ui/dialog';
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import {
   Select,
@@ -30,16 +30,16 @@ export function UpdateStatusDialog({
   const [status, setStatus] = useState(currentStatus);
 
   return (
-    <Dialog open={open}>
-      <DialogContent className="bg-gray-800 border-gray-700 text-white">
-        <DialogHeader>
-          <DialogTitle>Update Ticket Status</DialogTitle>
-          <DialogDescription>
+    <AlertDialog open={open}>
+      <AlertDialogContent className="bg-gray-800 border-gray-700 text-white">
+        <AlertDialogHeader>
+          <AlertDialogTitle>Update Ticket Status</AlertDialogTitle>
+          <AlertDialogDescription>
             Change the status of this support ticket.
-          </DialogDescription>
-        </DialogHeader>
+          </AlertDialogDescription>
+        </AlertDialogHeader>
 
-        <div className="space-y-4 py-2">
+        <div className="space-y-4">
           <Label className="ext-gray-300 text-sm font-medium mb-2">
             Status
           </Label>
@@ -55,13 +55,17 @@ export function UpdateStatusDialog({
           </Select>
         </div>
 
-        <div className="flex justify-end gap-2 mt-4">
-          <Button variant="outline" onClick={onCancel}>
+        <div className="flex justify-end gap-2">
+          <Button
+            variant="outline"
+            onClick={onCancel}
+            className="text-gray-700"
+          >
             Cancel
           </Button>
           <Button onClick={() => onSave(status)}>Save</Button>
         </div>
-      </DialogContent>
-    </Dialog>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }

@@ -4,8 +4,8 @@ import { AlertCircle, CheckCircle, Clock, Inbox } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 import { useSupport } from '@/hooks/useSupport';
-import { SupportFilters } from '../../../components/Support/Filters';
-import { CreateTicket } from './components/Create';
+import { SupportFilters } from '@/app/(dashboard)/components/Support/Filters';
+import { CreateTicket } from '@/app/(dashboard)/company-admin/(pages)/support/components/Create';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -16,24 +16,24 @@ import {
   AlertDialogTitle,
   AlertDialogDescription,
 } from '@/components/ui/alert-dialog';
-import { UpdateStatusDialog } from '../../../components/Support/Update';
-import { TicketsTable } from '../../../components/Support/Table';
+// import { UpdateStatusDialog } from './components/Update';
+// import { TicketsTable } from './components/Table';
 
 export default function SupportPage() {
   const supportState = useSupport();
 
-  const {
-    handleDeleteTicket,
-    totalTickets,
-    openTickets,
-    resolvedTickets,
-    inProgress,
-    ticketPendingDelete,
-    setTicketPendingDelete,
-    ticketPendingStatus,
-    setTicketPendingStatus,
-    handleUpdateStatus,
-  } = supportState;
+  // const {
+  //   handleDeleteTicket,
+  //   totalTickets,
+  //   openTickets,
+  //   resolvedTickets,
+  //   inProgress,
+  //   ticketPendingDelete,
+  //   setTicketPendingDelete,
+  //   ticketPendingStatus,
+  //   setTicketPendingStatus,
+  //   handleUpdateStatus,
+  // } = supportState;
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
@@ -44,7 +44,7 @@ export default function SupportPage() {
 
       <main className="flex-1 p-4">
         {/* Support Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+        {/* <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
           <Card className="dashboard-card">
             <CardContent className="p-4">
               <div className="flex items-center justify-between">
@@ -100,16 +100,16 @@ export default function SupportPage() {
               </div>
             </CardContent>
           </Card>
-        </div>
+        </div> */}
 
         <SupportFilters {...supportState} />
 
-        <TicketsTable {...supportState} />
+        {/* <TicketsTable {...supportState} /> */}
       </main>
 
       <CreateTicket {...supportState} />
 
-      <AlertDialog open={!!ticketPendingDelete}>
+      {/* <AlertDialog open={!!ticketPendingDelete}>
         <AlertDialogContent className="bg-gray-800 border-gray-700 text-white">
           <AlertDialogHeader>
             <AlertDialogTitle>Delete Ticket?</AlertDialogTitle>
@@ -131,9 +131,9 @@ export default function SupportPage() {
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
-      </AlertDialog>
+      </AlertDialog> */}
 
-      <UpdateStatusDialog
+      {/* <UpdateStatusDialog
         open={!!ticketPendingStatus}
         currentStatus={ticketPendingStatus?.status ?? 'open'}
         onCancel={() => setTicketPendingStatus(null)}
@@ -141,7 +141,7 @@ export default function SupportPage() {
           if (!ticketPendingStatus) return;
           handleUpdateStatus(ticketPendingStatus.id, newStatus);
         }}
-      />
+      /> */}
     </div>
   );
 }

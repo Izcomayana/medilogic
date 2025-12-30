@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
 import { useState } from 'react';
-import { TicketChatModal } from '../ChatModal';
+import { TicketChatModal } from '../../../company-admin/(pages)/support/components/ChatModal';
 
 type TicketsTableProps = ReturnType<typeof useSupport>;
 
