@@ -20,6 +20,7 @@ import { useSupport } from '@/hooks/useSupport';
 import { useProfile } from '@/hooks/useProfile';
 import { useAuth } from '@/components/auth';
 import { Send } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 
 export function TicketChatModal({
   ticketId,
@@ -275,12 +276,12 @@ export function TicketChatModal({
                   <Label className="text-gray-300 text-sm mb-3 block">
                     Your Reply
                   </Label>
-                  <Textarea
-                    value={newMessage}
+                  <Input 
+                    value={newMessage} 
                     onChange={(e) => setNewMessage(e.target.value)}
+                    type="email" 
                     placeholder="Type your message here... (Ctrl+Enter to send)"
-                    className="bg-gray-700 border-gray-600 text-white placeholder-gray-400 resize-none focus:border-blue-500"
-                    rows={4}
+                    className="border-gray-600 text-white placeholder-gray-400"
                   />
                 </div>
                 <div className="flex flex-col md:flex-row gap-3 justify-between items-center">

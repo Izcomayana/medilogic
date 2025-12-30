@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 import { useSupport } from '@/hooks/useSupport';
 import { SupportFilters } from '../../../components/Support/Filters';
-import { CreateTicket } from './components/Create';
+// import { CreateTicket } from './components/Create';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -16,8 +16,8 @@ import {
   AlertDialogTitle,
   AlertDialogDescription,
 } from '@/components/ui/alert-dialog';
-import { UpdateStatusDialog } from '../../../components/Support/Update';
-import { TicketsTable } from '../../../components/Support/Table';
+import { UpdateStatusDialog } from '@/app/(dashboard)/components/Support/Update';
+import { TicketsTable } from '@/app/(dashboard)/components/Support/Table';
 
 export default function SupportPage() {
   const supportState = useSupport();
@@ -107,7 +107,7 @@ export default function SupportPage() {
         <TicketsTable {...supportState} />
       </main>
 
-      <CreateTicket {...supportState} />
+      {/* <CreateTicket {...supportState} /> */}
 
       <AlertDialog open={!!ticketPendingDelete}>
         <AlertDialogContent className="bg-gray-800 border-gray-700 text-white">

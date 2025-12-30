@@ -39,15 +39,19 @@ export function SupportFilters({
             Filters ({filteredTickets.length})
           </CardTitle>
 
-          <Button
+          {role !== 'super_admin' && 
+            <Button
             onClick={() => setShowCreateModal(true)}
             className="bg-blue-600 hover:bg-blue-700 text-white mt-3 lg:mt-3"
           >
             <Plus className="h-4 w-4 mr-2" />
             Create Ticket
           </Button>
+          }
         </div>
       </CardHeader>
+
+      {(role === 'super_admin' || role === 'admin') && 
       <CardContent>
         <div className="flex flex-col gap-4">
           <div className="relative">
@@ -78,6 +82,7 @@ export function SupportFilters({
           </div>
         </div>
       </CardContent>
+      }
     </Card>
   );
 }

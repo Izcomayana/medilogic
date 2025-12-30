@@ -55,6 +55,7 @@ const sidebarLinksByRole: Record<
       icon: AppWindow,
     },
     { title: 'Activity Logs', url: '/super-admin/activity-logs', icon: Logs },
+    { title: 'Support', url: '/super-admin/support', icon: MessageSquare },
     // { title: 'Notifications', url: '/super-admin/notifications', icon: Bell },
   ],
   admin: [
@@ -94,12 +95,14 @@ const sidebarLinksByRole: Record<
     { title: 'Settings', url: '/client/settings', icon: Settings },
     { title: 'Invoices', url: '/client/invoices', icon: Receipt },
     { title: 'My Trips', url: '/client/#', icon: ClipboardList },
+    { title: 'Support', url: '/client/support', icon: MessageSquare },
   ],
   driver: [
     { title: 'Dashboard', url: '/driver', icon: Home },
     { title: 'PODs', url: '/driver/pods', icon: FileText },
     { title: 'COC', url: '/driver/coc', icon: Link2 },
     { title: 'Incidents', url: '/driver/incidents', icon: ClipboardList },
+    { title: 'Support', url: '/driver/support', icon: MessageSquare },
     { title: 'Settings', url: '/driver/settings', icon: Settings },
   ],
 };

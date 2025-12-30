@@ -209,21 +209,21 @@ export function useSupport() {
   }, []);
 
   const filteredTickets = tickets.filter((ticket) => {
-    const matchesSearch =
-      ticket.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ticket.status.toLowerCase().includes(searchTerm) ||
-      ticket.createdBy?.toLowerCase().includes(searchTerm);
+  const search = searchTerm.trim().toLowerCase();
 
-    if (role === 'super_admin') {
-      ticket.organizationId?.toLowerCase().includes(searchTerm);
-    }
+  const matchesSearch =
+    ticket.id.toLowerCase().includes(search) ||
+    ticket.status.toLowerCase().includes(search) ||
+    ticket.createdBy?.toLowerCase().includes(search) ||
+    (role === 'super_admin' &&
+      ticket.organizationId?.toString().toLowerCase().includes(search));
 
-    const matchesStatus =
-      statusFilter === 'all' ||
-      ticket.status.toLowerCase() === statusFilter.toLowerCase();
+  const matchesStatus =
+    statusFilter === 'all' ||
+    ticket.status.toLowerCase() === statusFilter.toLowerCase();
 
-    return matchesSearch && matchesStatus;
-  });
+  return matchesSearch && matchesStatus;
+});
 
   const totalTickets = tickets.length;
   const openTickets = tickets.filter((t) => t.status === 'open').length;
