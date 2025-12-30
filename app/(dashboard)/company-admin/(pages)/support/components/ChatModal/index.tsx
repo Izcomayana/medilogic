@@ -276,10 +276,10 @@ export function TicketChatModal({
                   <Label className="text-gray-300 text-sm mb-3 block">
                     Your Reply
                   </Label>
-                  <Input 
-                    value={newMessage} 
+                  <Input
+                    value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
-                    type="email" 
+                    type="email"
                     placeholder="Type your message here... (Ctrl+Enter to send)"
                     className="border-gray-600 text-white placeholder-gray-400"
                   />

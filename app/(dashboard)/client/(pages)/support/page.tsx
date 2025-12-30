@@ -8,7 +8,7 @@ import { CreateTicket } from '@/app/(dashboard)/company-admin/(pages)/support/co
 export default function SupportPage() {
   const supportState = useSupport();
 
-   return (
+  return (
     <div className="flex flex-col min-h-screen bg-gray-900">
       <PageHeader
         title="Support Tickets"
@@ -21,5 +21,5 @@ export default function SupportPage() {
 
       <CreateTicket {...supportState} />
     </div>
-  )
+  );
 }

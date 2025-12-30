@@ -56,7 +56,11 @@ export function UpdateStatusDialog({
         </div>
 
         <div className="flex justify-end gap-2">
-          <Button variant="outline" onClick={onCancel} className='text-gray-700'>
+          <Button
+            variant="outline"
+            onClick={onCancel}
+            className="text-gray-700"
+          >
             Cancel
           </Button>
           <Button onClick={() => onSave(status)}>Save</Button>
