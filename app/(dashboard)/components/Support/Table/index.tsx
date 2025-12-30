@@ -19,6 +19,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { useState } from 'react';
 import { TicketChatModal } from '../../../company-admin/(pages)/support/components/ChatModal';
+import { useAuth } from '@/components/auth';
 
 type TicketsTableProps = ReturnType<typeof useSupport>;
 
@@ -29,6 +30,7 @@ export function TicketsTable({
 }: TicketsTableProps) {
   const [openChat, setOpenChat] = useState(false);
   const [activeTicketId, setActiveTicketId] = useState<string | null>(null);
+  const { role } = useAuth();
 
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
@@ -76,7 +78,9 @@ export function TicketsTable({
                       <TableHead className="text-gray-300">Status</TableHead>
                       <TableHead className="text-gray-300">Subject</TableHead>
                       <TableHead className="text-gray-300">Messages</TableHead>
-                      <TableHead className="text-gray-300">Actions</TableHead>
+                      {(role === 'super_admin' || role === 'admin') && (
+                        <TableHead className="text-gray-300">Actions</TableHead>
+                      )}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -110,46 +114,48 @@ export function TicketsTable({
                           />
                         </TableCell>
 
-                        <TableCell onClick={(e) => e.stopPropagation()}>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                className="h-8 w-8 p-0 text-gray-400 hover:bg-gray-700"
-                              >
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
+                        {(role === 'super_admin' || role === 'admin') && (
+                          <TableCell onClick={(e) => e.stopPropagation()}>
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  className="h-8 w-8 p-0 text-gray-400 hover:bg-gray-700"
+                                >
+                                  <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                              </DropdownMenuTrigger>
 
-                            <DropdownMenuContent
-                              align="end"
-                              className="bg-gray-700 border-gray-600"
-                            >
-                              <DropdownMenuItem
-                                className="text-gray-300 hover:bg-gray-600"
-                                onClick={() =>
-                                  setTicketPendingStatus({
-                                    id: ticket.id,
-                                    status: ticket.status,
-                                  })
-                                }
+                              <DropdownMenuContent
+                                align="end"
+                                className="bg-gray-700 border-gray-600"
                               >
-                                <FileText className="h-4 w-4" />
-                                Update Status
-                              </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  className="text-gray-300 hover:bg-gray-600"
+                                  onClick={() =>
+                                    setTicketPendingStatus({
+                                      id: ticket.id,
+                                      status: ticket.status,
+                                    })
+                                  }
+                                >
+                                  <FileText className="h-4 w-4" />
+                                  Update Status
+                                </DropdownMenuItem>
 
-                              <DropdownMenuItem
-                                className="text-gray-300 hover:bg-gray-600"
-                                onClick={() =>
-                                  setTicketPendingDelete(ticket.id)
-                                }
-                              >
-                                <Trash2 className="h-3 w-3" />
-                                Delete
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </TableCell>
+                                <DropdownMenuItem
+                                  className="text-gray-300 hover:bg-gray-600"
+                                  onClick={() =>
+                                    setTicketPendingDelete(ticket.id)
+                                  }
+                                >
+                                  <Trash2 className="h-3 w-3" />
+                                  Delete
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        )}
                       </TableRow>
                     ))}
                   </TableBody>
