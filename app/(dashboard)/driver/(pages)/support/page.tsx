@@ -17,7 +17,7 @@ import {
   AlertDialogDescription,
 } from '@/components/ui/alert-dialog';
 // import { UpdateStatusDialog } from './components/Update';
-// import { TicketsTable } from './components/Table';
+import { TicketsTable } from '@/app/(dashboard)/components/Support/Table';
 
 export default function SupportPage() {
   const supportState = useSupport();
@@ -104,7 +104,7 @@ export default function SupportPage() {
 
         <SupportFilters {...supportState} />
 
-        {/* <TicketsTable {...supportState} /> */}
+        <TicketsTable {...supportState} />
       </main>
 
       <CreateTicket {...supportState} />

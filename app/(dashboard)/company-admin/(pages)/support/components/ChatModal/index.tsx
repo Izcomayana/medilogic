@@ -176,7 +176,7 @@ export function TicketChatModal({
                           <p
                             className={`text-xs font-semibold px-4 ${isMe ? 'text-right text-blue-300' : 'text-left text-gray-400'}`}
                           >
-                            {msg.sendeRole}
+                            {msg.sender}
                           </p>
 
                           <div
