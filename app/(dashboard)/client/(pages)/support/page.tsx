@@ -4,6 +4,7 @@ import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 import { useSupport } from '@/hooks/useSupport';
 import { SupportFilters } from '@/app/(dashboard)/components/Support/Filters';
 import { CreateTicket } from '@/app/(dashboard)/company-admin/(pages)/support/components/Create';
+import { TicketsTable } from '@/app/(dashboard)/components/Support/Table';
 
 export default function SupportPage() {
   const supportState = useSupport();
@@ -17,6 +18,7 @@ export default function SupportPage() {
 
       <main className="flex-1 p-4">
         <SupportFilters {...supportState} />
+        <TicketsTable {...supportState} />
       </main>
 
       <CreateTicket {...supportState} />

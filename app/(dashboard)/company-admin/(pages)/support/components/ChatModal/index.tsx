@@ -49,6 +49,7 @@ export function TicketChatModal({
     setEditingText,
     updateMessage,
     updateReply,
+    createMessage,
   } = useSupport();
 
   const { user } = useProfile();
@@ -90,6 +91,8 @@ export function TicketChatModal({
       </AlertDialog>
     );
   }
+
+  const canSend = selectedTicket.status !== 'resolved';
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
@@ -176,7 +179,7 @@ export function TicketChatModal({
                           <p
                             className={`text-xs font-semibold px-4 ${isMe ? 'text-right text-blue-300' : 'text-left text-gray-400'}`}
                           >
-                            {msg.sendeRole}
+                            {msg.sender}
                           </p>
 
                           <div
@@ -199,7 +202,7 @@ export function TicketChatModal({
                                 <div className="flex justify-end gap-2 text-xs mt-2 pr-2 pb-2">
                                   <Button
                                     onClick={() => setEditingId(null)}
-                                    className="text-gray-400 text-gray-200 hover:bg-transparent"
+                                    className="text-gray-300 hover:bg-transparent"
                                     variant="ghost"
                                     size="sm"
                                   >
@@ -226,7 +229,7 @@ export function TicketChatModal({
                                         // keep editing open on error (toast inside hook)
                                       }
                                     }}
-                                    className="text-gray-700 hover:text-blue-300 font-medium bg-transparent hover:bg-transparent"
+                                    className="text-gray-300 hover:text-blue-300 font-medium bg-transparent hover:bg-transparent"
                                     size="sm"
                                   >
                                     Save
@@ -292,7 +295,28 @@ export function TicketChatModal({
                   <div className="text-xs text-gray-500">
                     {newMessage?.length} / 5000 characters
                   </div>
-                  {(role === 'admin' || role === 'super_admin') && (
+                  {role === 'admin' || role === 'super_admin' ? (
+                    <Button
+                      onClick={() => createReply(selectedTicket.id, newMessage)}
+                      disabled={!newMessage.trim() || !canSend}
+                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                    >
+                      <Send className="h-4 w-4 mr-2" />
+                      Reply
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() =>
+                        createMessage(selectedTicket.id, newMessage)
+                      }
+                      disabled={!newMessage.trim() || !canSend}
+                      className="bg-green-600 hover:bg-green-700 text-white"
+                    >
+                      <Send className="h-4 w-4 mr-2" />
+                      Send
+                    </Button>
+                  )}
+                  {/* {(role === 'admin' || role === 'super_admin') && (
                     <Button
                       onClick={() => createReply(selectedTicket.id, newMessage)}
                       className="bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-50 disabled:cursor-not-allowed"
@@ -301,7 +325,7 @@ export function TicketChatModal({
                       <Send className="h-4 w-4 mr-2" />
                       Reply
                     </Button>
-                  )}
+                  )} */}
                 </div>
               </div>
             </CardContent>
