@@ -120,7 +120,8 @@ export function TicketChatModal({
               <CardContent className="px-3">
                 <Label className="text-xs lg:text-sm">Created By</Label>
                 <p className="text-white mt-2 text-sm">
-                  {selectedTicket.user.name}
+                  {selectedTicket.user.name} <br />
+                  {selectedTicket.organization?.name}
                 </p>
               </CardContent>
             </Card>
@@ -133,6 +134,17 @@ export function TicketChatModal({
                 </p>
               </CardContent>
             </Card>
+
+            {/* {role === 'super_admin' && 
+              <Card className="dashboard-card py-3">
+              <CardContent className="px-3">
+                <Label className="text-xs lg:text-sm">Org Name</Label>
+                <p className="text-white mt-2 text-sm">
+                  {selectedTicket.organization?.name}
+                </p>
+              </CardContent>
+            </Card>
+            } */}
           </div>
 
           <Card className="dashboard-card flex-1 flex flex-col overflow-auto py-3 gap-2">
@@ -179,7 +191,7 @@ export function TicketChatModal({
                           <p
                             className={`text-xs font-semibold px-4 ${isMe ? 'text-right text-blue-300' : 'text-left text-gray-400'}`}
                           >
-                            {msg.sender}
+                            {msg.sendeRole}
                           </p>
 
                           <div
