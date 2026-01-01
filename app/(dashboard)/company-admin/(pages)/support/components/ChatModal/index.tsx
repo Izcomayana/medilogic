@@ -134,17 +134,6 @@ export function TicketChatModal({
                 </p>
               </CardContent>
             </Card>
-
-            {/* {role === 'super_admin' && 
-              <Card className="dashboard-card py-3">
-              <CardContent className="px-3">
-                <Label className="text-xs lg:text-sm">Org Name</Label>
-                <p className="text-white mt-2 text-sm">
-                  {selectedTicket.organization?.name}
-                </p>
-              </CardContent>
-            </Card>
-            } */}
           </div>
 
           <Card className="dashboard-card flex-1 flex flex-col overflow-auto py-3 gap-2">
