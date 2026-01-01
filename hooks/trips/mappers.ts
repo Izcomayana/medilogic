@@ -6,12 +6,12 @@ export type Trip = {
   delivery_type: string;
   scheduled_time: string | null;
   cost: string | null;
+  distance_km: string | null;
   client_name: string | null;
   client_id: string;
   organization_id: string | null;
   pickup_location: string | null;
   dropoff_location: string | null;
-  distance_km: string | null;
   status: string | null;
   vehicle_type: string | null;
   location_zone: string | null;
