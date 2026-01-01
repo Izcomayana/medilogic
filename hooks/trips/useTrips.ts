@@ -12,7 +12,6 @@ import {
   partialUpdateTripRequest,
   updateTripRequest,
 } from './api';
-// import { formatDateTime } from '../utils';
 import { clients, drivers } from './constants';
 import { formatDateEnd, formatDateStart } from '@/utils/datetime';
 
@@ -479,7 +478,6 @@ export function useTrips(tripsPerPage = 10) {
     setTripToDelete,
     setCurrentPage,
     handleCreateTrip,
-    // formatDateTime,
     handleViewDetails,
     handleEdit,
     handleDeleteTrip,
