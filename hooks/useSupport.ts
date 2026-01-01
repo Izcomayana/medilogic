@@ -189,9 +189,11 @@ export function useSupport() {
           status: t.status || 'open',
           lastUpdated: t.updated_at || t.created_at,
           priority: 'Medium',
-          messages: t.messages?.length || 0,
+          messages:
+  (t.messages?.length || 0) +
+  (t.replies?.length || 0),
+          // messages: t.messages?.length || 0,
           organizationId: t.organization?.id ?? t.organization_id ?? null,
-          // organizationId: t.organization?.id || null,
         }));
 
         setTickets(normalized);
