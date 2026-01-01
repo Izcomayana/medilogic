@@ -427,13 +427,13 @@ export function useTrips(tripsPerPage = 10) {
       scheduled_time: formData.dateTime
         ? new Date(formData.dateTime).toISOString()
         : undefined,
-      cost: formData.cost,
+      cost: formData.cost || undefined,
+      distance_km: formData.distanceKm || undefined,
       client_id: formData.clientId,
       client_name: formData.clientName,
       organization_id: user?.organization?.id || undefined,
       pickup_location: formData.pickupLocation || undefined,
       dropoff_location: formData.dropoffLocation || undefined,
-      distance_km: formData.distanceKm,
       status: formData.status,
       vehicle_type: formData.vehicleType || undefined,
       location_zone: formData.locationZone || undefined,
