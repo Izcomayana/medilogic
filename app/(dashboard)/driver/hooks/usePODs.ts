@@ -12,6 +12,7 @@ import {
   formatDateEnd,
   DateRangeLocal,
 } from '@/app/(dashboard)/components/DateRange';
+import React from 'react';
 
 export function usePods() {
   const [loadingPods, setLoadingPods] = useState(false);
@@ -34,6 +35,10 @@ export function usePods() {
   const [loadingTrips, setLoadingTrips] = useState(false);
   const [open, setOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [status, setStatus] = React.useState<string | undefined>();
+  const [dateRange, setDateRange] = React.useState<
+    DateRangeLocal | undefined
+  >();
 
   const driverID = user?.user_id ?? '';
 
@@ -53,9 +58,18 @@ export function usePods() {
 
     try {
       setLoadingTrips(true);
+
       await authorizedRequest(async (token) => {
+        const params: Record<string, string> = {};
+
+        if (status) params.status = status;
+        if (dateRange?.from)
+          params.start_date = formatDateStart(dateRange.from);
+        if (dateRange?.to) params.end_date = formatDateEnd(dateRange.to);
+
         const res = await api.get(`/drivers/driver/${driverID}/trips`, {
           headers: { Authorization: `Bearer ${token}` },
+          params,
         });
 
         setDriverTrips(res.data.assigned_trips);
@@ -68,10 +82,9 @@ export function usePods() {
     }
   };
 
-  // Call once on mount (if driverId exists)
   useEffect(() => {
     fetchDriverTrips();
-  }, [driverID]);
+  }, [driverID, status, dateRange]);
 
   const handleCreatePod = async () => {
     if (!formData.tripId) {
@@ -456,6 +469,9 @@ export function usePods() {
     open,
     setOpen,
     deleting,
+    setStatus,
+    dateRange,
+    setDateRange,
     driverTrips,
     formData,
     setFormData,

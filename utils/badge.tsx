@@ -162,3 +162,15 @@ export const getActionBadge = (action: string) => {
     </Badge>
   );
 };
+
+export const formatDeliveryType = (trip: any) => {
+  if (trip.delivery_type === 'other') {
+    return trip.custom_delivery_description || 'Other';
+  }
+
+  return (
+    trip.delivery_type
+      ?.replaceAll('_', ' ')
+      .replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Unknown Type'
+  );
+};

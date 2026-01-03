@@ -65,7 +65,8 @@ export function useCOC() {
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user } = useProfile();
-  const { loadingTrips, driverTrips, loadingPods } = usePods();
+  const { loadingTrips, driverTrips, loadingPods, fetchDriverTrips } =
+    usePods();
   const [analyticsData, setAnalyticsData] = useState<CustodyAnalyticsPoint[]>(
     []
   );
@@ -468,6 +469,7 @@ export function useCOC() {
     handleRefresh,
     handleExport,
     eventTypes,
+    fetchDriverTrips,
     driverTrips,
     loadingPods,
     loadingTrips,

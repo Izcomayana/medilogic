@@ -1,10 +1,14 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { useDriverTrips } from '../../../hooks/useTrips';
+import { useProfile } from '@/hooks/useProfile';
+import { toast } from 'sonner';
+import { formatDeliveryType, getTripStatusBadge } from '@/utils/badge';
 import {
   ArrowLeft,
   Clock,
-  User,
   Building2,
   QrCode,
   Share2,
@@ -12,13 +16,11 @@ import {
   CheckCircle2,
   ExternalLink,
 } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { formatDateTime } from '@/utils/datetime';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { toast } from 'sonner';
-import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
+import { Badge } from '@/components/ui/badge';
 
-// Mock detail data
 const MOCK_TRIP_DETAILS = {
   id: 'TRIP-001',
   status: 'In Progress',
@@ -44,10 +46,20 @@ const MOCK_TRIP_DETAILS = {
   created_at: '2024-05-18 02:15 PM',
 };
 
-export default function TripDetailsPage() {
-  const params = useParams();
+export default function TripPage() {
+  const { tripId } = useParams<{ tripId: string }>();
   const router = useRouter();
-  const tripId = params.id as string;
+  const { trip, fetchTripById } = useDriverTrips();
+
+  const { user } = useProfile();
+  const driverId = user?.user_id;
+  const org = user?.organization.name;
+
+  useEffect(() => {
+    if (!tripId || !driverId) return;
+
+    fetchTripById(tripId);
+  }, [tripId, driverId, fetchTripById]);
 
   const copyConfirmationUrl = () => {
     const url = `https://portal.example.com/confirm/${tripId}`;
@@ -56,6 +68,14 @@ export default function TripDetailsPage() {
       description: 'Confirmation link has been copied to clipboard.',
     });
   };
+
+  if (!trip) {
+    return (
+      <div className="flex h-screen bg-gray-900 items-center justify-center text-gray-400">
+        Loading trip…
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen bg-gray-900">
@@ -76,16 +96,7 @@ export default function TripDetailsPage() {
                 <h1 className="text-3xl font-bold text-white">
                   Trip #{tripId}
                 </h1>
-                <Badge
-                  variant="outline"
-                  className={
-                    MOCK_TRIP_DETAILS.status === 'Delivered'
-                      ? 'bg-green-900/50 text-green-400 border-green-800'
-                      : 'bg-blue-900/50 text-blue-400 border-blue-800'
-                  }
-                >
-                  {MOCK_TRIP_DETAILS.status}
-                </Badge>
+                {getTripStatusBadge(trip.status)}
               </div>
             </div>
           </div>
@@ -104,40 +115,28 @@ export default function TripDetailsPage() {
                   <div className="grid grid-cols-2 gap-y-4 gap-x-8">
                     <div className="space-y-1">
                       <p className="text-sm text-gray-500 flex items-center gap-2">
-                        <User className="h-3 w-3" /> Driver
-                      </p>
-                      <p className="font-medium">
-                        {MOCK_TRIP_DETAILS.driver_name}
-                      </p>
-                    </div>
-                    <div className="space-y-1">
-                      <p className="text-sm text-gray-500 flex items-center gap-2">
                         <Building2 className="h-3 w-3" /> Client
                       </p>
-                      <p className="font-medium">
-                        {MOCK_TRIP_DETAILS.client_name}
-                      </p>
+                      <p className="font-medium">{trip.client_name}</p>
                     </div>
                     <div className="space-y-1">
                       <p className="text-sm text-gray-500">Delivery Type</p>
                       <p className="font-medium">
-                        {MOCK_TRIP_DETAILS.delivery_type}
+                        {formatDeliveryType(trip.delivery_type)}
                       </p>
                     </div>
                     <div className="space-y-1">
                       <p className="text-sm text-gray-500">Scheduled Time</p>
                       <p className="font-medium">
-                        {MOCK_TRIP_DETAILS.scheduled_time}
+                        {formatDateTime(trip.scheduled_time)}
                       </p>
                     </div>
-                    {MOCK_TRIP_DETAILS.wtn_code && (
-                      <div className="space-y-1">
-                        <p className="text-sm text-gray-500">WTN Code</p>
-                        <p className="font-medium text-blue-400">
-                          {MOCK_TRIP_DETAILS.wtn_code}
-                        </p>
-                      </div>
-                    )}
+                    <div className="space-y-1">
+                      <p className="text-sm text-gray-500">ID</p>
+                      <p className="font-medium text-blue-400">
+                        {trip.trip_id}
+                      </p>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -165,11 +164,11 @@ export default function TripDetailsPage() {
                             Pickup
                           </p>
                           <p className="font-medium mb-1">
-                            {MOCK_TRIP_DETAILS.pickup.address}
+                            {trip.pickup_location}
                           </p>
                           <div className="flex items-center text-sm text-gray-400 gap-2">
                             <Clock className="h-3.5 w-3.5" />
-                            Scheduled: {MOCK_TRIP_DETAILS.pickup.scheduled_time}
+                            Scheduled: {formatDateTime(trip.scheduled_time)}
                           </div>
                         </div>
                         {MOCK_TRIP_DETAILS.pickup.actual_time && (
@@ -195,18 +194,11 @@ export default function TripDetailsPage() {
                             Dropoff
                           </p>
                           <p className="font-medium mb-1">
-                            {MOCK_TRIP_DETAILS.dropoff.address}
+                            {trip.dropoff_location}
                           </p>
-                          {MOCK_TRIP_DETAILS.dropoff.facility && (
-                            <p className="text-sm text-gray-400 mb-1 flex items-center gap-1">
-                              <Building2 className="h-3.5 w-3.5" />
-                              {MOCK_TRIP_DETAILS.dropoff.facility}
-                            </p>
-                          )}
                           <div className="flex items-center text-sm text-gray-400 gap-2">
                             <Clock className="h-3.5 w-3.5" />
-                            Scheduled:{' '}
-                            {MOCK_TRIP_DETAILS.dropoff.scheduled_time}
+                            Scheduled: {formatDateTime(trip.scheduled_time)}
                           </div>
                         </div>
                       </div>
@@ -341,14 +333,12 @@ export default function TripDetailsPage() {
               <div className="p-4 bg-gray-800/50 rounded-lg border border-gray-800 space-y-3">
                 <div className="flex justify-between text-xs">
                   <span className="text-gray-500">Organization</span>
-                  <span className="text-gray-300">
-                    {MOCK_TRIP_DETAILS.organization}
-                  </span>
+                  <span className="text-gray-300">{org}</span>
                 </div>
                 <div className="flex justify-between text-xs">
                   <span className="text-gray-500">Created At</span>
                   <span className="text-gray-300">
-                    {MOCK_TRIP_DETAILS.created_at}
+                    {formatDateTime(trip.created_at)}
                   </span>
                 </div>
                 <div className="pt-2 border-t border-gray-700">
@@ -356,7 +346,9 @@ export default function TripDetailsPage() {
                     Internal Notes
                   </p>
                   <p className="text-xs text-gray-400 italic">
-                    No notes attached to this trip.
+                    {trip.notes?.trim()
+                      ? trip.notes
+                      : 'No notes attached to this trip.'}
                   </p>
                 </div>
               </div>
