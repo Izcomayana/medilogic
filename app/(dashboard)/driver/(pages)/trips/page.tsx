@@ -28,23 +28,11 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { formatDateTime } from '@/utils/datetime';
-import { getTripStatusBadge } from '@/utils/badge';
 import DateRangeFilter from '@/app/(dashboard)/components/DateRange';
+import { formatDeliveryType, getTripStatusBadge } from '@/utils/badge';
 
 export default function DriverTripsPage() {
   const { driverTrips, setStatus, dateRange, setDateRange } = usePods();
-
-  const formatDeliveryType = (trip: any) => {
-    if (trip.delivery_type === 'other') {
-      return trip.custom_delivery_description || 'Other';
-    }
-
-    return (
-      trip.delivery_type
-        ?.replaceAll('_', ' ')
-        .replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Unknown Type'
-    );
-  };
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
@@ -131,7 +119,7 @@ export default function DriverTripsPage() {
                             variant="ghost"
                             className="text-blue-400 hover:text-blue-300 hover:bg-blue-900/20"
                           >
-                            <Link href={`/driver/trips/${trip.id}`}>
+                            <Link href={`/driver/trips/${trip.trip_id}`}>
                               View Trip
                               <ChevronRight className="ml-1 h-4 w-4" />
                             </Link>
@@ -148,7 +136,7 @@ export default function DriverTripsPage() {
                 {driverTrips.map((trip) => (
                   <Link
                     key={trip.id}
-                    href={`/driver/trips/${trip.id}`}
+                    href={`/driver/trips/${trip.trip_id}`}
                     className="block p-4 hover:bg-gray-750"
                   >
                     <div className="flex justify-between items-start mb-2">
