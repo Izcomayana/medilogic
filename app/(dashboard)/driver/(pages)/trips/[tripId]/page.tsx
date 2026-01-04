@@ -236,7 +236,7 @@ export default function TripPage() {
                         {trip.requires_pin || trip.pin_required ? 'Yes' : 'No'}
                       </p>
                     </div>
-                    <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-700">
+                    {/* <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-700">
                       <p className="text-xs text-gray-500 mb-1 uppercase font-bold">
                         Pickup Time
                       </p>
@@ -245,7 +245,7 @@ export default function TripPage() {
                           ? confirmation.pickup_at.split(' ')[1]
                           : '--:--'}
                       </p>
-                    </div>
+                    </div> */}
                   </div>
                 </CardContent>
               </Card>
