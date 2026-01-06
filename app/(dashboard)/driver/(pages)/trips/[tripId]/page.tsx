@@ -14,7 +14,6 @@ import {
   Share2,
   Copy,
   CheckCircle2,
-  ExternalLink,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { formatDateTime } from '@/utils/datetime';
@@ -107,13 +106,13 @@ export default function TripPage() {
             {/* Left Column - Info Sections */}
             <div className="lg:col-span-2 space-y-6">
               {/* Summary Card */}
-              <Card className="bg-gray-800 border-gray-700 text-white">
-                <CardHeader className="border-b border-gray-700">
+              <Card className="bg-gray-800 border-gray-700 text-white gap-2">
+                <CardHeader className="border-b border-gray-700 !pb-2">
                   <CardTitle className="text-lg font-semibold">
                     Trip Summary
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="pt-6">
+                <CardContent className="pt-2">
                   <div className="grid grid-cols-2 gap-y-4 gap-x-8">
                     <div className="space-y-1">
                       <p className="text-sm text-gray-500 flex items-center gap-2">
@@ -144,13 +143,13 @@ export default function TripPage() {
               </Card>
 
               {/* Locations Section */}
-              <Card className="bg-gray-800 border-gray-700 text-white">
-                <CardHeader className="border-b border-gray-700">
+              <Card className="bg-gray-800 border-gray-700 text-white gap-2">
+                <CardHeader className="border-b border-gray-700 !pb-2">
                   <CardTitle className="text-lg font-semibold">
                     Route Locations
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="pt-6">
+                <CardContent className="pt-2">
                   <div className="space-y-8 relative">
                     {/* Vertical line connecting pickups */}
                     <div className="absolute left-2.5 top-3 bottom-3 w-0.5 bg-gray-700"></div>
@@ -210,20 +209,20 @@ export default function TripPage() {
               </Card>
 
               {/* Delivery Status Section */}
-              <Card className="bg-gray-800 border-gray-700 text-white">
-                <CardHeader className="border-b border-gray-700">
+              <Card className="bg-gray-800 border-gray-700 text-white gap-2">
+                <CardHeader className="border-b border-gray-700 !pb-2">
                   <CardTitle className="text-lg font-semibold">
                     Delivery Status
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="pt-6">
+                <CardContent className="">
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-700">
                       <p className="text-xs text-gray-500 mb-1 uppercase font-bold">
                         Delivered
                       </p>
                       <p
-                        className={`text-lg font-bold ${trip.is_delivered ? 'text-green-400' : 'text-gray-400'}`}
+                        className={`text-lg font-bold ${trip.is_delivered ? 'text-green-400' : 'text-gray-200'}`}
                       >
                         {trip.is_delivered ? 'Yes' : 'No'}
                       </p>
@@ -236,7 +235,7 @@ export default function TripPage() {
                         {trip.requires_pin || trip.pin_required ? 'Yes' : 'No'}
                       </p>
                     </div>
-                    <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-700">
+                    {/* <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-700">
                       <p className="text-xs text-gray-500 mb-1 uppercase font-bold">
                         Pickup Time
                       </p>
@@ -245,7 +244,7 @@ export default function TripPage() {
                           ? confirmation.pickup_at.split(' ')[1]
                           : '--:--'}
                       </p>
-                    </div>
+                    </div> */}
                   </div>
                 </CardContent>
               </Card>
@@ -316,7 +315,7 @@ export default function TripPage() {
                               navigator.clipboard.writeText(
                                 confirmation.confirmation_url
                               );
-                              toast.success('Confirmation link copied');
+                              toast('Confirmation link copied');
                             }}
                           >
                             <Copy className="h-4 w-4 mr-2" />

@@ -99,11 +99,11 @@ const sidebarLinksByRole: Record<
   ],
   driver: [
     { title: 'Dashboard', url: '/driver', icon: Home },
+    { title: 'My Trips', url: '/driver/trips', icon: ClipboardList },
     { title: 'PODs', url: '/driver/pods', icon: FileText },
     { title: 'COC', url: '/driver/coc', icon: Link2 },
     { title: 'Incidents', url: '/driver/incidents', icon: ClipboardList },
     { title: 'Support', url: '/driver/support', icon: MessageSquare },
-    { title: 'My Trips', url: '/driver/trips', icon: ClipboardList },
     { title: 'Settings', url: '/driver/settings', icon: Settings },
   ],
 };
