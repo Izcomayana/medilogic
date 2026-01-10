@@ -153,7 +153,7 @@ export function ViewProfileDropdown() {
               {user.user_short_id && (
                 <div className="flex items-center gap-2">
                   <IdCard className="h-4 w-4 text-gray-400" />
-                  <span className="text-[10px]">ID: {user.user_short_id}</span>
+                  <span className="">ID: {user.user_short_id}</span>
                 </div>
               )}
             </div>

@@ -3,8 +3,9 @@ import './globals.css';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/app/(dashboard)/components/AppSidebar';
 import { AuthProvider } from '@/components/auth';
+import DashboardShell from './dashboard-shell';
 
-export default function RootLayout({
+export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -13,9 +14,7 @@ export default function RootLayout({
     <AuthProvider>
       <SidebarProvider>
         <AppSidebar />
-        <main className="flex-1 bg-gray-900 min-h-screen max-w-dvw">
-          {children}
-        </main>
+        <DashboardShell>{children}</DashboardShell>
       </SidebarProvider>
     </AuthProvider>
   );
