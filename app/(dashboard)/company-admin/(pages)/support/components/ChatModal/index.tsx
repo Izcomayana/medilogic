@@ -100,7 +100,7 @@ export function TicketChatModal({
         <AlertDialogHeader>
           <div className="flex justify-between items-center">
             <AlertDialogTitle className="text-white">
-              Ticket: {selectedTicket.id}
+              Ticket: {selectedTicket.short_id}
             </AlertDialogTitle>
 
             <AlertDialogCancel className="p-3">X</AlertDialogCancel>

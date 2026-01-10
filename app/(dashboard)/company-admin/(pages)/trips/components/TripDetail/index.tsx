@@ -23,8 +23,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-// import { formatDateTime } from '@/hooks/utils';
-import { getTripStatusBadge } from '../../../../../../../utils/badge';
+import { getTripStatusBadge } from '@/utils/badge';
 import { formatDateTime } from '@/utils/datetime';
 
 type TripsDetailsProps = ReturnType<typeof useTrips>;
@@ -60,7 +59,6 @@ export function TripsDetailModal({
   isDetailsModalOpen,
   setIsDetailsModalOpen,
   selectedTrip,
-  // formatDateTime,
 }: TripsDetailsProps) {
   if (!selectedTrip) return null;
 
@@ -72,7 +70,7 @@ export function TripsDetailModal({
             <MapPin className="h-5 w-5 text-blue-400" />
             Trip Details
             <span className="text-gray-400 text-sm font-normal">
-              #{selectedTrip.id}
+              #{selectedTrip.shortId}
             </span>
           </DialogTitle>
           <DialogDescription className="text-gray-400">

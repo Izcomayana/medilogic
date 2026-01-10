@@ -107,8 +107,6 @@ export default function SupportPage() {
         <TicketsTable {...supportState} />
       </main>
 
-      {/* <CreateTicket {...supportState} /> */}
-
       <AlertDialog open={!!ticketPendingDelete}>
         <AlertDialogContent className="bg-gray-800 border-gray-700 text-white">
           <AlertDialogHeader>

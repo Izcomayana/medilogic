@@ -10,6 +10,7 @@ export interface PodFile {
 
 export interface Pod {
   id: string;
+  shortId?: string;
   tripId: string;
   deliveredTo: string;
   notes: string;

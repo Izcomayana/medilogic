@@ -1,4 +1,3 @@
-// components/CookiePopup.tsx
 import React from 'react';
 
 interface CookiePopupProps {

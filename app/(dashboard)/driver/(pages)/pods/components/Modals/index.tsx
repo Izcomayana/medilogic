@@ -372,7 +372,7 @@ export function ViewPOD({
                 <div>
                   <Label className="text-gray-400 text-sm">POD ID</Label>
                   <p className="text-white font-medium mt-1">
-                    {selectedPod.id}
+                    {selectedPod.shortId || '-'}
                   </p>
                 </div>
                 <div>

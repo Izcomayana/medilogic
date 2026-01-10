@@ -150,12 +150,10 @@ export function ViewProfileDropdown() {
                   </div>
                 )}
 
-              {user.organization.id && (
+              {user.user_short_id && (
                 <div className="flex items-center gap-2">
                   <IdCard className="h-4 w-4 text-gray-400" />
-                  <span className="text-[10px]">
-                    ID: {user.organization.id}
-                  </span>
+                  <span className="text-[10px]">ID: {user.user_short_id}</span>
                 </div>
               )}
             </div>

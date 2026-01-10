@@ -17,6 +17,7 @@ export type Message = {
 
 export type Ticket = {
   id: string;
+  short_id: string;
 
   user: {
     id: string;
@@ -183,6 +184,7 @@ export function useSupport() {
         // Normalize → UI format
         const normalized = items.map((t: any) => ({
           id: t.id,
+          short_id: t.short_id,
           subject: t.subject,
           createdBy: t.user?.name || 'Unknown User',
           userType: t.user?.role || 'User',

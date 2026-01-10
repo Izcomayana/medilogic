@@ -26,13 +26,13 @@ import {
 import { formatDate, getRoleBadge, getStatusBadge } from '../../utils';
 import { UsersTableSkeleton } from './userSekeleton';
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from '@/components/ui/dialog';
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+} from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
 
 type ActiveUsersProps = ReturnType<typeof useUsers>;
@@ -149,17 +149,24 @@ export function UsersTab({
       </TabsContent>
 
       {/* User Details Modal */}
-      <Dialog open={isDetailsModalOpen} onOpenChange={setIsDetailsModalOpen}>
-        <DialogContent className="bg-gray-800 border border-gray-700 text-white max-w-lg">
-          <DialogHeader>
-            <DialogTitle>User Details</DialogTitle>
-            <DialogDescription className="text-gray-400">
+      <AlertDialog
+        open={isDetailsModalOpen}
+        onOpenChange={setIsDetailsModalOpen}
+      >
+        <AlertDialogContent className="bg-gray-800 border border-gray-700 text-white max-w-lg">
+          <AlertDialogHeader>
+            <AlertDialogTitle>User Details</AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-400">
               Information about the selected user
-            </DialogDescription>
-          </DialogHeader>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
 
           {selectedUser ? (
             <div className="space-y-4">
+              <div>
+                <p className="text-sm text-gray-400">ID:</p>
+                <p className="text-base font-medium">{selectedUser.short_id}</p>
+              </div>
               <div>
                 <p className="text-sm text-gray-400">Name</p>
                 <p className="text-base font-medium">{selectedUser.name}</p>
@@ -220,7 +227,7 @@ export function UsersTab({
             <p className="text-gray-400">No user selected</p>
           )}
 
-          <DialogFooter>
+          <AlertDialogFooter>
             <Button
               variant="secondary"
               onClick={() => setIsDetailsModalOpen(false)}
@@ -228,9 +235,9 @@ export function UsersTab({
             >
               Close
             </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 }

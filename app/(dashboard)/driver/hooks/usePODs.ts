@@ -170,6 +170,7 @@ export function usePods() {
         // normalize the response
         const formattedPods = res.data.map((pod: any) => ({
           id: pod.id,
+          shortId: pod.short_id,
           tripId: pod.trip_id,
           deliveredTo: pod.delivered_to,
           notes: pod.notes,
@@ -285,6 +286,7 @@ export function usePods() {
 
         fetchedPod = {
           id: pod.id,
+          shortId: pod.short_id,
           tripId: pod.trip_id,
           deliveredTo: pod.delivered_to,
           notes: pod.notes,

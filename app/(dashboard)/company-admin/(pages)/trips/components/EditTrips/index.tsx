@@ -58,7 +58,9 @@ export function EditTripModal({
       <AlertDialogContent className="bg-gray-800 border-gray-700 text-white lg:max-w-2xl ">
         <AlertDialogHeader>
           <div className="flex justify-between">
-            <AlertDialogTitle>Edit Trip - {selectedTrip?.id}</AlertDialogTitle>
+            <AlertDialogTitle>
+              Edit Trip - {selectedTrip?.shortId}
+            </AlertDialogTitle>
             <AlertDialogCancel
               className="text-gray-700"
               onClick={() => setIsEditModalOpen(false)}

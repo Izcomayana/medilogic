@@ -74,11 +74,11 @@ const sidebarLinksByRole: Record<
     },
     { title: 'Invoices', url: '/company-admin/invoices', icon: Receipt },
     { title: 'Incidents', url: '/company-admin/incidents', icon: BadgeAlert },
-    {
-      title: 'Assignments',
-      url: '/company-admin/assignments',
-      icon: ClipboardList,
-    },
+    // {
+    //   title: 'Assignments',
+    //   url: '/company-admin/assignments',
+    //   icon: ClipboardList,
+    // },
     { title: 'Support', url: '/company-admin/support', icon: MessageSquare },
     { title: 'Compliance', url: '/company-admin/compliance', icon: Shield },
     { title: 'Activity Logs', url: '/company-admin/activity-logs', icon: Logs },

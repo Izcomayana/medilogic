@@ -124,7 +124,7 @@ export function ViewRegulatorDialog({ open, onClose, reg }: ViewDialogProps) {
                 reganization ID
               </Label>
               <div className="mt-1 flex items-center gap-2 text-base text-gray-200">
-                <Hash className="h-4 w-4" /> {reg.id}
+                <Hash className="h-4 w-4" /> {reg.shortId}
               </div>
             </div>
 

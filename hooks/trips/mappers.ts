@@ -21,6 +21,7 @@ export type Trip = {
   priority: string | null;
   custom_delivery_description: string | null;
   id: string;
+  short_id: string;
   created_at: string;
   notes: string;
 };
@@ -28,6 +29,7 @@ export type Trip = {
 export function mapApiTripToUiTrip(apiTrip: Trip) {
   return {
     id: apiTrip.id,
+    shortId: apiTrip.short_id,
     clientName: apiTrip.client_name,
     clientId: apiTrip.client_id,
     deliveryType: apiTrip.delivery_type,

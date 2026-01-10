@@ -19,7 +19,7 @@ import { BarChart3, PieChartIcon } from 'lucide-react';
 
 type ChartsProps = ReturnType<typeof useTripAnalytics>;
 
-const COLORS = ['#15941f', '#3b82f6', '#eab308'];
+const COLORS = ['#15941f', '#3b82f6', '#eab308', '#c91818', '#df3ef7'];
 
 export default function Charts({
   loading,

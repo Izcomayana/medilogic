@@ -6,6 +6,7 @@ export type IncidentFile = {
 
 export type Incident = {
   id: string;
+  short_id: string;
   title: string;
   incident_type: string;
   severity: string;
