@@ -53,7 +53,7 @@ export function IncidentDetails({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <AlertCircle className="h-5 w-5" />
-            {selectedIncident?.id}
+            {selectedIncident?.short_id}
           </DialogTitle>
           <DialogDescription className="text-gray-400">
             Review and manage incident details
@@ -62,6 +62,12 @@ export function IncidentDetails({
 
         {selectedIncident && (
           <div className="space-y-6 py-4">
+            <div>
+              <Label className="text-gray-400 text-sm">ID</Label>
+              <p className="text-white font-medium mt-1">
+                {selectedIncident.short_id}
+              </p>
+            </div>
             <div className="flex flex-col gap-4">
               <div>
                 <Label className="text-gray-400 text-sm">Title</Label>
@@ -81,15 +87,6 @@ export function IncidentDetails({
                           {selectedIncident.submitted_by_name ?? 'Unknown'}
                         </p>
                       </div>
-
-                      <div>
-                        <Label className="text-gray-400 text-sm">
-                          Submitted by ID
-                        </Label>
-                        <p className="text-white font-medium mt-1">
-                          {selectedIncident.submitted_by_id ?? 'Unknown'}
-                        </p>
-                      </div>
                     </>
                   )}
 
@@ -101,15 +98,6 @@ export function IncidentDetails({
                         </Label>
                         <p className="text-white font-medium mt-1">
                           {selectedIncident.organization_name}
-                        </p>
-                      </div>
-
-                      <div>
-                        <Label className="text-gray-400 text-sm">
-                          Organization ID
-                        </Label>
-                        <p className="text-white font-medium mt-1">
-                          {selectedIncident.organization_id}
                         </p>
                       </div>
                     </>

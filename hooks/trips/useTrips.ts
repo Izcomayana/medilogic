@@ -12,7 +12,6 @@ import {
   partialUpdateTripRequest,
   updateTripRequest,
 } from './api';
-import { clients, drivers } from './constants';
 import { formatDateEnd, formatDateStart } from '@/utils/datetime';
 
 export type DateRangeLocal = { from?: Date; to?: Date };
@@ -448,8 +447,6 @@ export function useTrips(tripsPerPage = 10) {
 
   return {
     loading,
-    clients,
-    drivers,
     searchTerm,
     statusFilter,
     dateRange,

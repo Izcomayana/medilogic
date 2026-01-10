@@ -30,7 +30,6 @@ export function CreateTrips({
   // filteredTrips,
   formData,
   setFormData,
-  drivers,
   handleCreateTrip,
   loading,
   handleExport,
@@ -91,11 +90,7 @@ export function CreateTrips({
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        <TripForm
-          formData={formData}
-          setFormData={setFormData}
-          drivers={drivers}
-        />
+        <TripForm formData={formData} setFormData={setFormData} />
 
         <AlertDialogFooter className="border-t border-gray-700 pt-4 bg-gray-800 sticky z-20">
           <Button

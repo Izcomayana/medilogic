@@ -1,5 +1,6 @@
 export interface Regulators {
   id: string;
+  shortId: string;
   name: string;
   is_active?: boolean;
   email?: string;

@@ -31,6 +31,7 @@ export function useRegulators() {
 
       type RegApi = {
         id: string;
+        short_id: string;
         name: string;
         email: string;
         is_active: boolean;
@@ -40,6 +41,7 @@ export function useRegulators() {
 
       const mapped: Regulators[] = (res.data as RegApi[]).map((r) => ({
         id: r.id,
+        shortId: r.short_id,
         name: r.name,
         email: r.email,
         status: r.is_active ? 'active' : 'inactive',
@@ -99,6 +101,7 @@ export function useRegulators() {
         ...prev,
         {
           id: res.data.id,
+          shortId: res.data.short_id,
           name: res.data.name,
           email: res.data.email,
           password: res.data.password,
@@ -126,6 +129,7 @@ export function useRegulators() {
 
       const mappedReg: Regulators = {
         id: data.id,
+        shortId: data.short_id,
         name: data.name,
         email: data.email,
         status: data.is_active ? 'active' : 'inactive',

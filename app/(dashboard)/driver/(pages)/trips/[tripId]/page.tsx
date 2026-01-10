@@ -135,7 +135,7 @@ export default function TripPage() {
                     <div className="space-y-1">
                       <p className="text-sm text-gray-500">ID</p>
                       <p className="font-medium text-blue-400">
-                        {trip.trip_id}
+                        {trip.trip_short_id}
                       </p>
                     </div>
                   </div>

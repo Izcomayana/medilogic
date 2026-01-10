@@ -10,8 +10,10 @@ type UserProfile = {
   role: string;
   is_verified: boolean;
   user_id: string;
+  user_short_id: string;
   organization: {
     id: string | null;
+    short_id: string;
     name: string | null;
     address: string | null;
     phone_number: string | null;

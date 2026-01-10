@@ -7,6 +7,7 @@ import axios from 'axios';
 
 type User = {
   id: string;
+  short_id: string;
   name: string;
   email: string;
   phone: string;
@@ -20,6 +21,7 @@ type User = {
 
 interface DeletedUser {
   id: string;
+  short_id: string;
   code: string;
   name: string;
   email: string;
@@ -82,6 +84,7 @@ export function useUsers() {
       const mapped: User[] = [...driversRes.data, ...clientsRes.data].map(
         (u: any) => ({
           id: u.id,
+          short_id: u.short_id,
           name: u.name,
           email: u.email,
           phone: u.phone_number || '',
