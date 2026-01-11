@@ -34,6 +34,11 @@ export function CreateTrips({
   loading,
   handleExport,
 }: CreateTripProps) {
+  const isSubmitDisabled =
+  loading ||
+  !formData.clientId ||
+  !formData.dateTime;
+
   return (
     <AlertDialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
       <div className="flex flex-col md:flex-row mt-4 lg:mt-0 gap-2">
@@ -103,7 +108,7 @@ export function CreateTrips({
           <Button
             onClick={handleCreateTrip}
             className="primary-button"
-            disabled={loading}
+            disabled={isSubmitDisabled}
           >
             {loading ? <Spinner className="mx-8" /> : 'Create Trip'}
           </Button>
