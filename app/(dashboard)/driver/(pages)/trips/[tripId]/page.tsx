@@ -18,32 +18,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { formatDateTime } from '@/utils/datetime';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-
-const MOCK_TRIP_DETAILS = {
-  id: 'TRIP-001',
-  status: 'In Progress',
-  client_name: 'Acme Corp',
-  driver_name: 'John Doe',
-  delivery_type: 'Standard',
-  scheduled_time: '2024-05-20 09:00 AM',
-  wtn_code: 'WTN-12345',
-  pickup: {
-    address: '123 Industrial Way, Springfield, IL 62704',
-    scheduled_time: '2024-05-20 08:30 AM',
-    actual_time: '2024-05-20 08:45 AM',
-  },
-  dropoff: {
-    address: '456 Logistic Blvd, Springfield, IL 62705',
-    facility: 'Distribution Hub A',
-    scheduled_time: '2024-05-20 10:30 AM',
-    actual_time: null,
-  },
-  delivered: false,
-  pin_required: true,
-  organization: 'Springfield Logistics',
-  created_at: '2024-05-18 02:15 PM',
-};
 
 export default function TripPage() {
   const { tripId } = useParams<{ tripId: string }>();
@@ -123,7 +97,12 @@ export default function TripPage() {
                     <div className="space-y-1">
                       <p className="text-sm text-gray-500">Delivery Type</p>
                       <p className="font-medium">
-                        {formatDeliveryType(trip.delivery_type)}
+                        <p className="font-medium">
+                          {formatDeliveryType(
+                            trip.delivery_type,
+                            trip.custom_delivery_description
+                          )}
+                        </p>
                       </p>
                     </div>
                     <div className="space-y-1">
@@ -133,9 +112,11 @@ export default function TripPage() {
                       </p>
                     </div>
                     <div className="space-y-1">
-                      <p className="text-sm text-gray-500">ID</p>
+                      <p className="text-sm text-gray-500">
+                        {trip.wtn_code ? 'WTN Code' : 'Trip ID'}
+                      </p>
                       <p className="font-medium text-blue-400">
-                        {trip.trip_short_id}
+                        {trip.wtn_code ?? trip.trip_short_id}
                       </p>
                     </div>
                   </div>
@@ -172,15 +153,6 @@ export default function TripPage() {
                             Scheduled: {formatDateTime(trip.scheduled_time)}
                           </div>
                         </div>
-                        {MOCK_TRIP_DETAILS.pickup.actual_time && (
-                          <Badge
-                            variant="outline"
-                            className="bg-green-900/20 text-green-400 border-green-900"
-                          >
-                            Arrived{' '}
-                            {MOCK_TRIP_DETAILS.pickup.actual_time.split(' ')[1]}
-                          </Badge>
-                        )}
                       </div>
                     </div>
 
@@ -204,47 +176,6 @@ export default function TripPage() {
                         </div>
                       </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Delivery Status Section */}
-              <Card className="bg-gray-800 border-gray-700 text-white gap-2">
-                <CardHeader className="border-b border-gray-700 !pb-2">
-                  <CardTitle className="text-lg font-semibold">
-                    Delivery Status
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="">
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-700">
-                      <p className="text-xs text-gray-500 mb-1 uppercase font-bold">
-                        Delivered
-                      </p>
-                      <p
-                        className={`text-lg font-bold ${trip.is_delivered ? 'text-green-400' : 'text-gray-200'}`}
-                      >
-                        {trip.is_delivered ? 'Yes' : 'No'}
-                      </p>
-                    </div>
-                    <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-700">
-                      <p className="text-xs text-gray-500 mb-1 uppercase font-bold">
-                        PIN Required
-                      </p>
-                      <p className="text-lg font-bold text-white">
-                        {trip.requires_pin || trip.pin_required ? 'Yes' : 'No'}
-                      </p>
-                    </div>
-                    {/* <div className="bg-gray-900/50 p-4 rounded-lg border border-gray-700">
-                      <p className="text-xs text-gray-500 mb-1 uppercase font-bold">
-                        Pickup Time
-                      </p>
-                      <p className="text-sm font-medium text-white">
-                        {confirmation.pickup_at
-                          ? confirmation.pickup_at.split(' ')[1]
-                          : '--:--'}
-                      </p>
-                    </div> */}
                   </div>
                 </CardContent>
               </Card>

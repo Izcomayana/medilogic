@@ -120,11 +120,6 @@ export default function PickupConfirmForm({ token }: { token: string }) {
   };
 
   const handleSubmit = async () => {
-    if (!clientSignature) {
-      toast.error('Client signature is required');
-      return;
-    }
-
     setLoading(true);
 
     const formData = new FormData();
@@ -230,17 +225,14 @@ export default function PickupConfirmForm({ token }: { token: string }) {
                 onChange={(e) => setWtnCode(e.target.value)}
               />
             )}
-            {/* <Input
-              placeholder="WTN Code"
-              value={wtnCode}
-              onChange={(e) => setWtnCode(e.target.value)}
-            /> */}
 
-            <Input
-              placeholder="Pickup PIN"
-              value={pin}
-              onChange={(e) => setPin(e.target.value)}
-            />
+            {requiresPin && (
+              <Input
+                placeholder="Pickup PIN"
+                value={pin}
+                onChange={(e) => setPin(e.target.value)}
+              />
+            )}
           </section>
 
           <Separator />
