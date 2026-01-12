@@ -104,7 +104,10 @@ export default function DriverTripsPage() {
                           {trip.client_name}
                         </TableCell>
                         <TableCell className="px-6 py-4 text-gray-300">
-                          {formatDeliveryType(trip)}
+                          {formatDeliveryType(
+                            trip.delivery_type,
+                            trip.custom_delivery_description
+                          )}
                         </TableCell>
 
                         <TableCell className="px-6 py-4 text-gray-300 text-sm">
