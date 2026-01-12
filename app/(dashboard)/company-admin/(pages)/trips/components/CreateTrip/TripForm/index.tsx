@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react';
+
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import {
@@ -435,7 +435,7 @@ export default function TripForm({ formData, setFormData }: any) {
         </div>
 
         {/* Shift + Compliance + Recurrence */}
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <div>
             <Label htmlFor="shiftWindow" className="text-gray-300">
               Shift Window
@@ -514,7 +514,71 @@ export default function TripForm({ formData, setFormData }: any) {
               </SelectContent>
             </Select>
           </div>
+          <div>
+            <Label className="text-gray-300 mb-2">Delivery Pin</Label>
+            <Select
+              value={formData.deliveryPin ? 'yes' : 'no'}
+              onValueChange={(v) =>
+                setFormData((p: any) => ({ ...p, deliveryPin: v === 'yes' }))
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Delivery pin?" />
+              </SelectTrigger>
+
+              <SelectContent>
+                <SelectItem value="yes">Yes</SelectItem>
+                <SelectItem value="no">No</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
+
+        {/* Delivery Pin */}
+        <div className="">
+          <div>
+            {/* WTN Required */}
+            <Label className="text-gray-300 mb-2">WTN Required</Label>
+            <Select
+              value={formData.wtnRequired ? 'yes' : 'no'}
+              onValueChange={(v) =>
+                setFormData((p: { wtnSerialNumber: any }) => ({
+                  ...p,
+                  wtnRequired: v === 'yes',
+                  wtnSerialNumber: v === 'yes' ? p.wtnSerialNumber : '',
+                }))
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="WTN required?" />
+              </SelectTrigger>
+
+              <SelectContent>
+                <SelectItem value="yes">Yes</SelectItem>
+                <SelectItem value="no">No</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        {/* WTN Serial Dropdown (only if yes) */}
+        {formData.wtnRequired && (
+          <Select
+            value={formData.wtnSerialNumber}
+            onValueChange={(v) =>
+              setFormData((p: any) => ({ ...p, wtnSerialNumber: v }))
+            }
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select WTN serial number" />
+            </SelectTrigger>
+
+            <SelectContent>
+              <SelectItem value="WTN-0001">WTN-0001</SelectItem>
+              <SelectItem value="WTN-0002">WTN-0002</SelectItem>
+            </SelectContent>
+          </Select>
+        )}
 
         {/* Notes */}
         <div>
