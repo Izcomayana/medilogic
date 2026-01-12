@@ -179,6 +179,45 @@ export default function TripPage() {
                   </div>
                 </CardContent>
               </Card>
+
+              {/* Delivery Status */}
+              <Card className="bg-gray-800 border-gray-700 text-white pt-0 gap-2">
+                <CardHeader className="border-b border-gray-700 py-5 [.border-b]:pb-0">
+                  <CardTitle className="text-base font-semibold">
+                    Delivery Status
+                  </CardTitle>
+                </CardHeader>
+
+                <CardContent className="pt-4">
+                  <div className="flex flex-wrap gap-3">
+                    {/* Delivered */}
+                    <div
+                      className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold
+        ${
+          isDelivered
+            ? 'bg-green-500/15 text-green-400 border border-green-500/30'
+            : 'bg-gray-700/40 text-gray-400 border border-gray-600'
+        }`}
+                    >
+                      <CheckCircle2 className="h-4 w-4" />
+                      {isDelivered ? 'Delivered' : 'Not Delivered'}
+                    </div>
+
+                    {/* PIN Required */}
+                    <div
+                      className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium
+        ${
+          trip.requires_pin
+            ? 'bg-yellow-500/15 text-yellow-400 border border-yellow-500/30'
+            : 'bg-gray-700/40 text-gray-400 border border-gray-600'
+        }`}
+                    >
+                      <QrCode className="h-4 w-4" />
+                      {trip.requires_pin ? 'PIN Required' : 'No PIN'}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
 
             {/* Right Column - Confirmation Section */}
