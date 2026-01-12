@@ -257,9 +257,7 @@ export function useTrips(tripsPerPage = 10) {
         // ✅ NEW
         requires_pin: formData.deliveryPin,
         requires_wtn: formData.wtnRequired,
-        wtn_serial: formData.wtnRequired
-          ? formData.wtnSerialNumber
-          : null,
+        wtn_serial: formData.wtnRequired ? formData.wtnSerialNumber : null,
 
         custom_delivery_description:
           formData.deliveryType === 'other'

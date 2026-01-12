@@ -34,10 +34,7 @@ export function CreateTrips({
   loading,
   handleExport,
 }: CreateTripProps) {
-  const isSubmitDisabled =
-  loading ||
-  !formData.clientId ||
-  !formData.dateTime;
+  const isSubmitDisabled = loading || !formData.clientId || !formData.dateTime;
 
   return (
     <AlertDialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>

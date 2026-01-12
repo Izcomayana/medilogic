@@ -536,15 +536,13 @@ export default function TripForm({ formData, setFormData }: any) {
 
         {/* Delivery Pin */}
         <div className="">
-          
-
           <div>
             {/* WTN Required */}
             <Label className="text-gray-300 mb-2">WTN Required</Label>
             <Select
               value={formData.wtnRequired ? 'yes' : 'no'}
               onValueChange={(v) =>
-                setFormData((p: { wtnSerialNumber: any; }) => ({
+                setFormData((p: { wtnSerialNumber: any }) => ({
                   ...p,
                   wtnRequired: v === 'yes',
                   wtnSerialNumber: v === 'yes' ? p.wtnSerialNumber : '',
