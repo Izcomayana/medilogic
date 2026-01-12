@@ -163,14 +163,31 @@ export const getActionBadge = (action: string) => {
   );
 };
 
-export const formatDeliveryType = (trip: any) => {
-  if (trip.delivery_type === 'other') {
-    return trip.custom_delivery_description || 'Other';
+export const formatDeliveryType = (
+  deliveryType?: unknown,
+  customDescription?: string
+) => {
+  if (deliveryType === 'other') {
+    return customDescription || 'Other';
   }
 
-  return (
-    trip.delivery_type
-      ?.replaceAll('_', ' ')
-      .replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Unknown Type'
-  );
+  if (typeof deliveryType !== 'string') {
+    return 'Unknown Type';
+  }
+
+  return deliveryType
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, (l) => l.toUpperCase());
 };
+
+// export const formatDeliveryType = (trip: any) => {
+//   if (trip.delivery_type === 'other') {
+//     return trip.custom_delivery_description || 'Other';
+//   }
+
+//   return (
+//     trip.delivery_type
+//       ?.replaceAll('_', ' ')
+//       .replace(/\b\w/g, (l: string) => l.toUpperCase()) || 'Unknown Type'
+//   );
+// };

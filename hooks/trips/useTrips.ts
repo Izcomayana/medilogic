@@ -58,28 +58,6 @@ export function useTrips(tripsPerPage = 10) {
     wtnSerialNumber: '',
   });
 
-  // const [formData, setFormData] = useState({
-  //   clientName: '',
-  //   clientId: '',
-  //   pickupLocation: '',
-  //   dropoffLocation: '',
-  //   driverName: '',
-  //   driverId: '',
-  //   dateTime: '',
-  //   notes: '',
-  //   status: 'pending',
-  //   priority: '',
-  //   deliveryType: 'clinical_waste',
-  //   customDeliveryDescription: '',
-  //   cost: '',
-  //   distanceKm: '',
-  //   vehicleType: '',
-  //   locationZone: '',
-  //   shiftWindow: '',
-  //   complianceFlag: false,
-  //   recurrenceRule: 'none',
-  // });
-
   const authorizedRequest = useAuthorizedRequest();
 
   const resetForm = () => {
@@ -264,33 +242,6 @@ export function useTrips(tripsPerPage = 10) {
             ? formData.customDeliveryDescription
             : formData.notes || undefined,
       };
-      // const payload = {
-      //   delivery_type: formData.deliveryType,
-      //   organization_id: user.organization.id,
-      //   status: formData.status || 'pending',
-      //   priority: formData.priority || 'normal',
-      //   driver_id: formData.driverId || undefined,
-      //   driver_name: formData.driverName || undefined,
-      //   scheduled_time: formData.dateTime
-      //     ? new Date(formData.dateTime).toISOString()
-      //     : undefined,
-      //   client_name: formData.clientName,
-      //   client_id: formData.clientId,
-      //   pickup_location: formData.pickupLocation || undefined,
-      //   dropoff_location: formData.dropoffLocation || undefined,
-      //   notes: formData.notes,
-      //   cost: formData.cost || null,
-      //   distance_km: formData.distanceKm || null,
-      //   vehicle_type: formData.vehicleType || undefined,
-      //   location_zone: formData.locationZone || undefined,
-      //   shift_window: formData.shiftWindow || undefined,
-      //   compliance_flag: formData.complianceFlag || false,
-      //   recurrence_rule: formData.recurrenceRule || 'none',
-      //   custom_delivery_description:
-      //     formData.deliveryType === 'other'
-      //       ? formData.customDeliveryDescription
-      //       : formData.notes || undefined,
-      // };
 
       const created = await authorizedRequest<Trip>(
         (token) => createTripRequest(token, payload),

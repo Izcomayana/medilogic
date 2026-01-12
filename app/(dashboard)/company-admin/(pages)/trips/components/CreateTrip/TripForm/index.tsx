@@ -563,21 +563,19 @@ export default function TripForm({ formData, setFormData }: any) {
 
         {/* WTN Serial Dropdown (only if yes) */}
         {formData.wtnRequired && (
-          <Select
-            value={formData.wtnSerialNumber}
-            onValueChange={(v) =>
-              setFormData((p: any) => ({ ...p, wtnSerialNumber: v }))
-            }
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select WTN serial number" />
-            </SelectTrigger>
-
-            <SelectContent>
-              <SelectItem value="WTN-0001">WTN-0001</SelectItem>
-              <SelectItem value="WTN-0002">WTN-0002</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="space-y-2">
+            <Label>WTN Serial Number</Label>
+            <Input
+              placeholder="Enter WTN serial number"
+              value={formData.wtnSerialNumber}
+              onChange={(e) =>
+                setFormData((p: any) => ({
+                  ...p,
+                  wtnSerialNumber: e.target.value,
+                }))
+              }
+            />
+          </div>
         )}
 
         {/* Notes */}
