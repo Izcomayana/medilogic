@@ -193,11 +193,11 @@ export default function TripPage() {
                     {/* Delivered */}
                     <div
                       className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold
-        ${
-          isDelivered
-            ? 'bg-green-500/15 text-green-400 border border-green-500/30'
-            : 'bg-gray-700/40 text-gray-400 border border-gray-600'
-        }`}
+                        ${
+                          isDelivered
+                            ? 'bg-green-500/15 text-green-400 border border-green-500/30'
+                            : 'bg-gray-700/40 text-gray-400 border border-gray-600'
+                        }`}
                     >
                       <CheckCircle2 className="h-4 w-4" />
                       {isDelivered ? 'Delivered' : 'Not Delivered'}
@@ -206,11 +206,11 @@ export default function TripPage() {
                     {/* PIN Required */}
                     <div
                       className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium
-        ${
-          trip.requires_pin
-            ? 'bg-yellow-500/15 text-yellow-400 border border-yellow-500/30'
-            : 'bg-gray-700/40 text-gray-400 border border-gray-600'
-        }`}
+                      ${
+                        trip.requires_pin
+                          ? 'bg-yellow-500/15 text-yellow-400 border border-yellow-500/30'
+                          : 'bg-gray-700/40 text-gray-400 border border-gray-600'
+                      }`}
                     >
                       <QrCode className="h-4 w-4" />
                       {trip.requires_pin ? 'PIN Required' : 'No PIN'}
