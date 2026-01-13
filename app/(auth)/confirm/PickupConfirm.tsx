@@ -65,12 +65,24 @@ export default function PickupConfirmForm({ token }: { token: string }) {
   };
 
   const dataURLToFile = (dataUrl: string, filename: string) => {
+    if (!dataUrl.startsWith('data:')) {
+      throw new Error('Invalid signature data');
+    }
+
     const arr = dataUrl.split(',');
-    const mime = arr[0].match(/:(.*?);/)![1];
+    const mimeMatch = arr[0].match(/:(.*?);/);
+    if (!mimeMatch) {
+      throw new Error('Invalid signature format');
+    }
+
+    const mime = mimeMatch[1];
     const bstr = atob(arr[1]);
-    let n = bstr.length;
-    const u8arr = new Uint8Array(n);
-    while (n--) u8arr[n] = bstr.charCodeAt(n);
+    const u8arr = new Uint8Array(bstr.length);
+
+    for (let i = 0; i < bstr.length; i++) {
+      u8arr[i] = bstr.charCodeAt(i);
+    }
+
     return new File([u8arr], filename, { type: mime });
   };
 
@@ -133,10 +145,12 @@ export default function PickupConfirmForm({ token }: { token: string }) {
     if (longitude) formData.append('longitude', longitude);
     if (notes) formData.append('extra_notes', notes);
 
-    formData.append(
-      'signature_image',
-      dataURLToFile(clientSignature, 'client-signature.png')
-    );
+    if (clientSignature) {
+      formData.append(
+        'signature_image',
+        dataURLToFile(clientSignature, 'client-signature.png')
+      );
+    }
 
     if (facilitySignature) {
       formData.append(
@@ -181,7 +195,10 @@ export default function PickupConfirmForm({ token }: { token: string }) {
           canvasProps={{
             className: 'rounded-lg w-full h-40',
           }}
-          onEnd={() => onChange(sigRef.current?.toDataURL() || '')}
+          // onEnd={() => onChange(sigRef.current?.toDataURL() || '')}
+          onEnd={() =>
+            onChange(sigRef.current?.toDataURL('image/jpeg', 0.8) || '')
+          }
         />
       </div>
       <div className="flex justify-between mt-2">
@@ -201,8 +218,11 @@ export default function PickupConfirmForm({ token }: { token: string }) {
   );
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4 py-10">
-      <Card className="w-full max-w-2xl bg-gray-800 border-gray-700 text-white">
+    <div
+      className="min-h-screen  bg-center flex items-center justify-center px-4 py-10"
+      style={{ backgroundImage: "url('/auth2.png')" }}
+    >
+      <Card className="w-full max-w-2xl bg-gray-800 opacity-80 border-gray-700 text-white">
         <CardHeader>
           <CardTitle className="text-xl text-center">
             Pickup Confirmation

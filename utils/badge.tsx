@@ -33,6 +33,13 @@ export function getTripStatusBadge(status: string | null) {
           Cancelled
         </Badge>
       );
+    case 'delivered':
+      return (
+        <Badge className="bg-[#15941f] text-white">
+          <CheckCircle className="h-3 w-3 mr-1" />
+          Delivered
+        </Badge>
+      );
     default:
       return <Badge variant="outline">{status}</Badge>;
   }
