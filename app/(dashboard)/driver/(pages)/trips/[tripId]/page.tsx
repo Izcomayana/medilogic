@@ -113,10 +113,10 @@ export default function TripPage() {
                     </div>
                     <div className="space-y-1">
                       <p className="text-sm text-gray-500">
-                        {trip.wtn_code ? 'WTN Code' : 'Trip ID'}
+                        {trip.requires_wtn ? 'WTN Code' : 'Trip ID'}
                       </p>
                       <p className="font-medium text-blue-400">
-                        {trip.wtn_code ?? trip.trip_short_id}
+                        {trip.wtn_serial ?? trip.trip_short_id}
                       </p>
                     </div>
                   </div>
