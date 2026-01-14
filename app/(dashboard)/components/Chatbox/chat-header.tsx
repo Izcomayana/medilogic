@@ -12,7 +12,7 @@ export function ChatHeader({ onClose }: ChatHeaderProps) {
       <div>
         <div className="flex gap-2 items-center">
           <MessageCircle className="h-5 w-5 text-blue-500" />
-          <h2 className="font-semibold text-white">Admin Assistant</h2>
+          <h2 className="font-semibold text-white">Chatbot Assistant</h2>
         </div>
         <p className="text-xs text-gray-400">Organization-scoped support</p>
       </div>
