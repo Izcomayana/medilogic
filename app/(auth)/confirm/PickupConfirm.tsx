@@ -9,10 +9,18 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { useEffect, useRef, useState } from 'react';
 import SignatureCanvas from 'react-signature-canvas';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { Spinner } from '@/components/ui/spinner';
 
 export default function PickupConfirmForm({ token }: { token: string }) {
   const [loading, setLoading] = useState(false);
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
+  const [saved, setSaved] = useState<any>(null);
 
   const clientSigRef = useRef<SignatureCanvas | null>(null);
   const facilitySigRef = useRef<SignatureCanvas | null>(null);
@@ -86,17 +94,32 @@ export default function PickupConfirmForm({ token }: { token: string }) {
     return new File([u8arr], filename, { type: mime });
   };
 
+  const canConfirm = Boolean(dropoffPhoto || saved?.has_dropoff_photo);
+
+  const missingRequirements = [];
+  if (!canConfirm) missingRequirements.push('Dropoff photo');
+
   useEffect(() => {
     if (!token) return;
 
     fetch(`https://medilogic-backend.onrender.com/confirm?token=${token}`)
       .then((res) => res.json())
       .then((data) => {
+        setSaved(data.saved ?? {});
         setClientName(data.client_name ?? '');
         setClientEmail(data.client_email ?? '');
-        setWtnCode(data.wtn_serial ?? '');
         setRequiresPin(Boolean(data.requires_pin));
         setRequiresWtn(Boolean(data.requires_wtn));
+
+        const saved = data.saved ?? {};
+
+        setWtnCode(saved.wtn_serial ?? '');
+        // setWtnCode(saved.wtn_code ?? '');
+        setLatitude(saved.latitude ?? '');
+        setLongitude(saved.longitude ?? '');
+        setNotes(saved.extra_notes ?? '');
+        setFacilitytName(saved.disposal_facility_name ?? '');
+        setFacilitytAddress(saved.disposal_facility_address ?? '');
       })
       .catch(() => toast.error('Invalid or expired confirmation link'));
   }, [token]);
@@ -145,6 +168,14 @@ export default function PickupConfirmForm({ token }: { token: string }) {
     if (longitude) formData.append('longitude', longitude);
     if (notes) formData.append('extra_notes', notes);
 
+    if (facilitytName) {
+      formData.append('disposal_facility_name', facilitytName);
+    }
+
+    if (facilitytAddress) {
+      formData.append('disposal_facility_address', facilitytAddress);
+    }
+
     if (clientSignature) {
       formData.append(
         'signature_image',
@@ -176,7 +207,15 @@ export default function PickupConfirmForm({ token }: { token: string }) {
         throw new Error(message);
       }
 
-      toast.success('Pickup confirmed successfully');
+      if (canConfirm) {
+        toast.success('Delivery confirmed successfully');
+      } else {
+        toast.message('Progress saved', {
+          description:
+            'You can finish this later once all required details are provided.',
+        });
+      }
+      // toast.success('Pickup confirmed successfully');
     } catch (err: any) {
       toast.error(err.message);
     } finally {
@@ -184,29 +223,49 @@ export default function PickupConfirmForm({ token }: { token: string }) {
     }
   };
 
-  const SignatureBlock = ({ label, sigRef, onChange, value, onClear }: any) => (
+  const SignatureBlock = ({
+    label,
+    sigRef,
+    onChange,
+    value,
+    onClear,
+    hasSaved,
+    previewUrl,
+  }: any) => (
     <>
       <Label>{label}</Label>
+
+      {hasSaved && !value && (
+        <p className="text-xs text-green-400 mb-1">
+          Signature already captured ✓
+        </p>
+      )}
+
+      {previewUrl && !value && (
+        <img
+          src={previewUrl}
+          className="rounded-md mb-2 max-h-40 border border-gray-600"
+        />
+      )}
+
       <div className="border border-gray-600 bg-gray-700 rounded-lg p-2">
         <SignatureCanvas
           ref={sigRef}
           penColor="white"
           backgroundColor="#374151"
-          canvasProps={{
-            className: 'rounded-lg w-full h-40',
-          }}
-          // onEnd={() => onChange(sigRef.current?.toDataURL() || '')}
+          canvasProps={{ className: 'rounded-lg w-full h-40' }}
           onEnd={() =>
             onChange(sigRef.current?.toDataURL('image/jpeg', 0.8) || '')
           }
         />
       </div>
+
       <div className="flex justify-between mt-2">
         <Button
           type="button"
           variant="outline"
-          className="text-sm text-gray-700"
           onClick={onClear}
+          className="text-gray-800"
         >
           Clear
         </Button>
@@ -232,6 +291,17 @@ export default function PickupConfirmForm({ token }: { token: string }) {
         <p className="text-sm text-gray-400 text-center">
           Please confirm pickup details below.
         </p>
+
+        {!canConfirm && (
+          <div className="text-xs text-amber-400 bg-amber-400/10 border border-amber-400/20 rounded-md p-2 mx-4">
+            To confirm delivery, please upload:
+            <ul className="list-disc list-inside mt-1">
+              {missingRequirements.map((req) => (
+                <li key={req}>{req}</li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <CardContent className="space-y-6">
           {/* Trip Info */}
@@ -277,7 +347,7 @@ export default function PickupConfirmForm({ token }: { token: string }) {
             />
 
             <SignatureBlock
-              label="Client Signature *"
+              label="Client Signature"
               sigRef={clientSigRef}
               value={clientSignature}
               onChange={setClientSignature}
@@ -285,6 +355,8 @@ export default function PickupConfirmForm({ token }: { token: string }) {
                 clientSigRef.current?.clear();
                 setClientSignature('');
               }}
+              hasSaved={saved?.has_signature_image}
+              previewUrl={saved?.signature_image_url}
             />
 
             <Label>Pickup Photo</Label>
@@ -292,6 +364,12 @@ export default function PickupConfirmForm({ token }: { token: string }) {
               type="file"
               onChange={(e) => setPickupPhoto(e.target.files?.[0] ?? null)}
             />
+            {saved?.pickup_photo_url && !pickupPhoto && (
+              <img
+                src={saved.pickup_photo_url}
+                className="mt-2 rounded-md max-h-40 border border-gray-600"
+              />
+            )}
           </section>
 
           <Separator />
@@ -352,6 +430,8 @@ export default function PickupConfirmForm({ token }: { token: string }) {
                 facilitySigRef.current?.clear();
                 setFacilitySignature('');
               }}
+              hasSaved={saved?.has_facility_signature}
+              previewUrl={saved?.facility_signature_url}
             />
 
             <Label>Dropoff Photo</Label>
@@ -369,13 +449,36 @@ export default function PickupConfirmForm({ token }: { token: string }) {
             onChange={(e) => setNotes(e.target.value)}
           />
 
-          <Button
-            disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700"
-            onClick={handleSubmit}
-          >
-            {loading ? 'Submitting…' : 'Confirm Pickup'}
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  disabled={loading}
+                  className="w-full bg-blue-600 hover:bg-blue-700"
+                  onClick={canConfirm ? handleSubmit : handleSubmit}
+                >
+                  {loading ? (
+                    <span className="flex gap-2">
+                      <Spinner /> Processing
+                    </span>
+                  ) : canConfirm ? (
+                    'Confirm Delivery'
+                  ) : (
+                    'Save Progress'
+                  )}
+                </Button>
+              </TooltipTrigger>
+
+              {!canConfirm && (
+                <TooltipContent side="top">
+                  <p className="text-sm max-w-xs">
+                    Delivery can only be confirmed once a dropoff photo is
+                    uploaded. Until then, your progress will be saved.
+                  </p>
+                </TooltipContent>
+              )}
+            </Tooltip>
+          </TooltipProvider>
         </CardContent>
       </Card>
     </div>
