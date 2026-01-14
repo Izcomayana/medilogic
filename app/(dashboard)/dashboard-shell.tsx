@@ -26,7 +26,7 @@ export default function DashboardShell({
               setChatOpen(true);
               setUnreadCount(0);
             }}
-            className="pointer-events-auto absolute bottom-6 right-6 h-12 w-12 rounded-full bg-blue-600 hover:bg-blue-500 shadow-lg flex items-center justify-center"
+            className="pointer-events-auto cursor-pointer absolute bottom-6 right-6 h-12 w-12 rounded-full bg-blue-600 hover:bg-blue-500 shadow-lg flex items-center justify-center"
           >
             <MessageSquare className="h-6 w-6 text-white" />
 
@@ -41,10 +41,10 @@ export default function DashboardShell({
         {/* Chat popup */}
         <div
           className={`
-      pointer-events-auto absolute bottom-6 right-6 w-80 h-[90vh]
-      transition-all duration-300 ease-out
-      ${chatOpen ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'}
-    `}
+            pointer-events-auto absolute bottom-6 right-6 w-sm h-[90vh]
+            transition-all duration-300 ease-out
+            ${chatOpen ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-4 scale-95 pointer-events-none'}
+          `}
         >
           <div className="h-full bg-gray-800 rounded-lg shadow-lg border border-gray-700 flex flex-col">
             <ChatContainer

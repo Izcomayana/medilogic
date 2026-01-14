@@ -4,6 +4,8 @@ import { useState, useRef, useEffect } from 'react';
 import { ChatHeader } from './chat-header';
 import { MessageList } from './message-list';
 import { ChatInputBar } from './chat-input-bar';
+import { api } from '@/lib/api';
+import { useAuthorizedRequest } from '@/hooks/useRequest';
 
 export interface ChatMessage {
   id: string;
@@ -23,6 +25,8 @@ export function ChatContainer({
   onClose,
   onNewBotMessage,
 }: ChatContainerProps) {
+  const authorizedRequest = useAuthorizedRequest();
+
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: 'welcome',
@@ -44,7 +48,7 @@ export function ChatContainer({
   }, [messages]);
 
   const handleSendMessage = async (text: string) => {
-    if (!text.trim()) return;
+    if (!text.trim() || isLoading) return;
 
     const userMessage: ChatMessage = {
       id: Date.now().toString(),
@@ -56,41 +60,46 @@ export function ChatContainer({
     setMessages((prev) => [...prev, userMessage]);
     setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      const botMessage: ChatMessage = {
-        id: (Date.now() + 1).toString(),
+    try {
+      await authorizedRequest(async (token) => {
+        const res = await api.post(
+          '/chatbot',
+          { message: text },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        const botMessage: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          type: 'bot',
+          content: res.data.reply,
+          timestamp: new Date(),
+          options: res.data.options,
+          data: res.data.data,
+        };
+
+        setMessages((prev) => [...prev, botMessage]);
+        onNewBotMessage?.();
+      }, 'Failed to send chat message');
+    } catch (error: any) {
+      const errorMessage: ChatMessage = {
+        id: (Date.now() + 2).toString(),
         type: 'bot',
-        content: `Processing your request: "${text}"`,
+        content:
+          error?.response?.data?.detail?.[0]?.msg ||
+          'Something went wrong. Please try again.',
         timestamp: new Date(),
-        options: ['View Details', 'Export', 'Cancel'],
       };
-      setMessages((prev) => [...prev, botMessage]);
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   const handleOptionClick = (option: string) => {
     handleSendMessage(option);
   };
-
-  // for future purpose to activate the new message dot notification
-  //   const handleSendMessage = async (text: string) => {
-
-  //   setTimeout(() => {
-  //     const botMessage: ChatMessage = {
-  //       id: (Date.now() + 1).toString(),
-  //       type: "bot",
-  //       content: `Processing your request: "${text}"`,
-  //       timestamp: new Date(),
-  //       options: ["View Details", "Export", "Cancel"],
-  //     }
-
-  //     setMessages((prev) => [...prev, botMessage])
-  //     setIsLoading(false)
-  //     onNewBotMessage()
-  //   }, 1000)
-  // }
 
   return (
     <div className="flex flex-col h-full bg-gray-900 text-white">
