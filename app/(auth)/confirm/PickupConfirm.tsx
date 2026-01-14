@@ -113,8 +113,8 @@ export default function PickupConfirmForm({ token }: { token: string }) {
 
         const saved = data.saved ?? {};
 
-        setWtnCode(saved.wtn_serial ?? '');
-        // setWtnCode(saved.wtn_code ?? '');
+        // setWtnCode(saved.wtn_serial ?? '');
+        setWtnCode(saved.wtn_code ?? '');
         setLatitude(saved.latitude ?? '');
         setLongitude(saved.longitude ?? '');
         setNotes(saved.extra_notes ?? '');
