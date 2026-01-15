@@ -22,9 +22,9 @@ export default function Navbar() {
   };
 
   const applyLinks = [
-    { name: 'Apply as an Organization', href: '/apply/organization' },
-    { name: 'Apply as a Regulator', href: '/apply/regulator' },
-    { name: 'Apply as a Driver', href: '/apply/driver' },
+    { name: 'Apply as an Organization', href: '/apply' },
+    { name: 'Apply as a Regulator', href: '/apply' },
+    { name: 'Apply as a Driver', href: '/apply' },
   ];
 
   const navLinks = [
