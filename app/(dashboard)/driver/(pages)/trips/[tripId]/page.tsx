@@ -38,7 +38,10 @@ export default function TripPage() {
     fetchTripConfirmation(tripId);
   }, [tripId, driverId, fetchTripById]);
 
-  const isDelivered = confirmation?.status !== 'pending';
+  // const isDelivered = confirmation?.status !== 'pending';
+
+  const isDelivered = confirmation?.status === 'completed';
+  const hasReceipt = Boolean(confirmation?.receipt_url);
 
   const qrSrc = confirmation?.qr_code_base64
     ? `data:image/png;base64,${confirmation.qr_code_base64}`
@@ -250,9 +253,18 @@ export default function TripPage() {
                         This trip has been successfully confirmed by the client.
                       </p>
 
-                      <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold">
-                        View Receipt
-                      </Button>
+                      {hasReceipt && (
+                        <>
+                          <Button
+                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold"
+                            onClick={() =>
+                              window.open(confirmation.receipt_url, '_blank')
+                            }
+                          >
+                            View Receipt (PDF)
+                          </Button>
+                        </>
+                      )}
                     </div>
                   ) : (
                     /* ⏳ PENDING */

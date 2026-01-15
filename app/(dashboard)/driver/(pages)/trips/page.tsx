@@ -30,9 +30,17 @@ import {
 import { formatDateTime } from '@/utils/datetime';
 import DateRangeFilter from '@/app/(dashboard)/components/DateRange';
 import { formatDeliveryType, getTripStatusBadge } from '@/utils/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function DriverTripsPage() {
-  const { driverTrips, setStatus, dateRange, setDateRange } = usePods();
+  const {
+    driverTrips,
+    setStatus,
+    dateRange,
+    setDateRange,
+    loadingTrips,
+    loadingPods,
+  } = usePods();
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
@@ -74,64 +82,112 @@ export default function DriverTripsPage() {
             {/* Trips List */}
             <div className="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
               <div className="hidden md:block">
-                <Table className="w-full text-left">
-                  <TableHeader>
-                    <TableRow className="border-b border-gray-700 text-gray-400 text-sm">
-                      <TableHead className="text-gray-200 px-6 py-4 font-medium">
-                        Client
-                      </TableHead>
-                      <TableHead className="text-gray-200 px-6 py-4 font-medium">
-                        Type
-                      </TableHead>
-                      <TableHead className="text-gray-200 px-6 py-4 font-medium">
-                        Scheduled Time
-                      </TableHead>
-                      <TableHead className="text-gray-200 px-6 py-4 font-medium">
-                        Status
-                      </TableHead>
-                      <TableHead className="text-gray-200 px-6 py-4 font-medium text-center">
-                        Action
-                      </TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody className="divide-y divide-gray-700">
-                    {driverTrips.map((trip) => (
-                      <TableRow
-                        key={trip.id}
-                        className="hover:bg-gray-750/50 transition-colors"
-                      >
-                        <TableCell className="px-6 py-4 text-gray-300">
-                          {trip.client_name}
-                        </TableCell>
-                        <TableCell className="px-6 py-4 text-gray-300">
-                          {formatDeliveryType(
-                            trip.delivery_type,
-                            trip.custom_delivery_description
-                          )}
-                        </TableCell>
-
-                        <TableCell className="px-6 py-4 text-gray-300 text-sm">
-                          {formatDateTime(trip.scheduled_time)}
-                        </TableCell>
-                        <TableCell className="px-6 py-4">
-                          {getTripStatusBadge(trip.status)}
-                        </TableCell>
-                        <TableCell className="py-4 text-right">
-                          <Button
-                            asChild
-                            variant="ghost"
-                            className="text-blue-400 hover:text-blue-300 hover:bg-blue-900/20"
-                          >
-                            <Link href={`/driver/trips/${trip.trip_id}`}>
-                              View Trip
-                              <ChevronRight className="ml-1 h-4 w-4" />
-                            </Link>
-                          </Button>
-                        </TableCell>
+                {loadingTrips ? (
+                  /* 1️⃣ LOADING */
+                  <div className="p-6">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="border-gray-700 bg-gray-800">
+                          <TableHead className="text-gray-200 px-6 py-4">
+                            Client
+                          </TableHead>
+                          <TableHead className="text-gray-200 px-6 py-4">
+                            Type
+                          </TableHead>
+                          <TableHead className="text-gray-200 px-6 py-4">
+                            Scheduled Time
+                          </TableHead>
+                          <TableHead className="text-gray-200 px-6 py-4">
+                            Status
+                          </TableHead>
+                          <TableHead className="text-gray-200 px-6 py-4 text-center">
+                            Action
+                          </TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {Array.from({ length: 6 }).map((_, i) => (
+                          <TableRow key={i} className="border-gray-700">
+                            <TableCell className="px-3 py-2">
+                              <Skeleton className="h-4 w-32 bg-gray-700" />
+                            </TableCell>
+                            <TableCell className="px-3 py-2">
+                              <Skeleton className="h-4 w-20 bg-gray-700" />
+                            </TableCell>
+                            <TableCell className="px-3 py-2">
+                              <Skeleton className="h-4 w-64 bg-gray-700" />
+                            </TableCell>
+                            <TableCell className="px-3 py-2">
+                              <Skeleton className="h-4 w-16 bg-gray-700" />
+                            </TableCell>
+                            <TableCell className="py-2 text-right">
+                              <Skeleton className="h-4 w-24 bg-gray-700" />
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                ) : (
+                  <Table className="w-full text-left">
+                    <TableHeader>
+                      <TableRow className="border-b border-gray-700 text-gray-400 text-sm">
+                        <TableHead className="text-gray-200 px-6 py-4 font-medium">
+                          Client
+                        </TableHead>
+                        <TableHead className="text-gray-200 px-6 py-4 font-medium">
+                          Type
+                        </TableHead>
+                        <TableHead className="text-gray-200 px-6 py-4 font-medium">
+                          Scheduled Time
+                        </TableHead>
+                        <TableHead className="text-gray-200 px-6 py-4 font-medium">
+                          Status
+                        </TableHead>
+                        <TableHead className="text-gray-200 px-6 py-4 font-medium text-center">
+                          Action
+                        </TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody className="divide-y divide-gray-700">
+                      {driverTrips.map((trip) => (
+                        <TableRow
+                          key={trip.id}
+                          className="hover:bg-gray-750/50 transition-colors"
+                        >
+                          <TableCell className="px-3 py-2 text-gray-300">
+                            {trip.client_name}
+                          </TableCell>
+                          <TableCell className="px-3 py-2 text-gray-300">
+                            {formatDeliveryType(
+                              trip.delivery_type,
+                              trip.custom_delivery_description
+                            )}
+                          </TableCell>
+
+                          <TableCell className="px-3 py-2 text-gray-300 text-sm">
+                            {formatDateTime(trip.scheduled_time)}
+                          </TableCell>
+                          <TableCell className="px-3 py-2">
+                            {getTripStatusBadge(trip.status)}
+                          </TableCell>
+                          <TableCell className="py- text-right">
+                            <Button
+                              asChild
+                              variant="ghost"
+                              className="text-blue-400 hover:text-blue-300 hover:bg-blue-900/20"
+                            >
+                              <Link href={`/driver/trips/${trip.trip_id}`}>
+                                View Trip
+                                <ChevronRight className="ml-1 h-4 w-4" />
+                              </Link>
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                )}
               </div>
 
               {/* Mobile View - Cards */}
@@ -171,7 +227,7 @@ export default function DriverTripsPage() {
                 ))}
               </div>
 
-              {driverTrips.length === 0 && (
+              {driverTrips.length === 0 && !loadingTrips && (
                 <div className="p-12 text-center">
                   <div className="bg-gray-700 h-12 w-12 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Search className="h-6 w-6 text-gray-400" />
