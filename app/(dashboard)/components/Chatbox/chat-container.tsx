@@ -6,6 +6,7 @@ import { MessageList } from './message-list';
 import { ChatInputBar } from './chat-input-bar';
 import { api } from '@/lib/api';
 import { useAuthorizedRequest } from '@/hooks/useRequest';
+import { useProfile } from '@/hooks/useProfile';
 
 export interface ChatMessage {
   id: string;
@@ -26,12 +27,16 @@ export function ChatContainer({
   onNewBotMessage,
 }: ChatContainerProps) {
   const authorizedRequest = useAuthorizedRequest();
+  const { user } = useProfile();
+  const userName = user?.role || undefined;
+
+  console.log('user:', userName);
 
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: 'welcome',
       type: 'bot',
-      content: 'Hello Admin — how can I help?',
+      content: `Hello ${userName} — how can I help?`,
       timestamp: new Date(),
       options: ['show all org trips', 'urgent trips', 'help'],
     },
