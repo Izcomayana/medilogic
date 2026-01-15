@@ -32,7 +32,7 @@ export function usePods() {
   const authorizedRequest = useAuthorizedRequest();
   const { user } = useProfile();
   const [driverTrips, setDriverTrips] = useState<any[]>([]);
-  const [loadingTrips, setLoadingTrips] = useState(false);
+  const [loadingTrips, setLoadingTrips] = useState(true);
   const [open, setOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [status, setStatus] = React.useState<string | undefined>();
@@ -56,9 +56,10 @@ export function usePods() {
   const fetchDriverTrips = async () => {
     if (!driverID) return;
 
-    try {
-      setLoadingTrips(true);
+    // setLoadingTrips(true);
+    //   setDriverTrips([]);
 
+    try {
       await authorizedRequest(async (token) => {
         const params: Record<string, string> = {};
 
