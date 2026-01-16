@@ -8,9 +8,9 @@ import axios from 'axios';
 export interface FormDataBase {
   name: string;
   email: string;
-  password: string;
-  confirmPassword: string;
-  adminMessage: string;
+  password?: string;
+  confirmPassword?: string;
+  adminMessage?: string;
   acceptTerms: boolean;
   acceptCookies: boolean;
   [key: string]: any;
@@ -19,8 +19,9 @@ export interface FormDataBase {
 export type UseApplicationFormOptions<T extends FormDataBase> = {
   initialState: T;
   validate: (data: T) => Partial<Record<keyof T | 'general', string>>;
-  transformSubmit: (data: T) => any;
-  role: string;
+  transformSubmit?: (data: T) => any;
+  role?: string;
+  submit: (data: T) => Promise<void>;
 };
 
 export const useApplicationForm = <T extends FormDataBase>({
@@ -28,6 +29,7 @@ export const useApplicationForm = <T extends FormDataBase>({
   validate,
   transformSubmit,
   role,
+  submit
 }: UseApplicationFormOptions<T>) => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -46,53 +48,83 @@ export const useApplicationForm = <T extends FormDataBase>({
   }, [formData.acceptCookies]);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError({});
+  e.preventDefault();
+  setError({});
 
-    const validation = validate(formData);
-    if (Object.keys(validation).length > 0) {
-      setError(validation);
-      return;
-    }
+  const validation = validate(formData);
+  if (Object.keys(validation).length > 0) {
+    setError(validation);
+    return;
+  }
 
-    setLoading(true);
-    try {
-      const payload = {
-        ...transformSubmit(formData),
-        role,
-        status: 'pending',
-        submitted_at: new Date().toISOString(),
-      };
+  setLoading(true);
+  try {
+    await submit(formData);
 
-      const response = await axios.post(
-        'https://medilogic-backend.onrender.com/apply',
-        payload,
-        {
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
+    toast.success('Signup successful!', {
+      description: 'Awaiting Super Admin approval.',
+    });
 
-      if (response.status === 200 || response.status === 201) {
-        toast.success('Signup successful!', {
-          description: 'Awaiting Super Admin approval.',
-        });
-        setFormData({ ...initialState, acceptCookies: formData.acceptCookies });
-        setShowSuccessModal(true);
-      } else {
-        setError((prev) => ({
-          ...prev,
-          general: 'Something went wrong. Please try again later.',
-        }));
-      }
-    } catch (err: any) {
-      toast.error('Error', {
-        description:
-          err?.response?.data?.detail || 'Network error. Please try again.',
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+    setFormData({ ...initialState, acceptCookies: formData.acceptCookies });
+    setShowSuccessModal(true);
+  } catch (err: any) {
+    toast.error('Error', {
+      description:
+        err?.response?.data?.detail || 'Network error. Please try again.',
+    });
+  } finally {
+    setLoading(false);
+  }
+};
+
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   setError({});
+
+  //   const validation = validate(formData);
+  //   if (Object.keys(validation).length > 0) {
+  //     setError(validation);
+  //     return;
+  //   }
+
+  //   setLoading(true);
+  //   try {
+  //     const payload = {
+  //       ...transformSubmit(formData),
+  //       role,
+  //       status: 'pending',
+  //       submitted_at: new Date().toISOString(),
+  //     };
+
+  //     const response = await axios.post(
+  //       'https://medilogic-backend.onrender.com/apply',
+  //       payload,
+  //       {
+  //         headers: { 'Content-Type': 'application/json' },
+  //       }
+  //     );
+
+  //     if (response.status === 200 || response.status === 201) {
+  //       toast.success('Signup successful!', {
+  //         description: 'Awaiting Super Admin approval.',
+  //       });
+  //       setFormData({ ...initialState, acceptCookies: formData.acceptCookies });
+  //       setShowSuccessModal(true);
+  //     } else {
+  //       setError((prev) => ({
+  //         ...prev,
+  //         general: 'Something went wrong. Please try again later.',
+  //       }));
+  //     }
+  //   } catch (err: any) {
+  //     toast.error('Error', {
+  //       description:
+  //         err?.response?.data?.detail || 'Network error. Please try again.',
+  //     });
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleChange = (
     e: React.ChangeEvent<
