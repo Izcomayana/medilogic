@@ -94,14 +94,6 @@ export const DriverTab = () => {
       ),
     },
     {
-      label: 'State',
-      name: 'state',
-      placeholder: 'England',
-      icon: (
-        <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-      ),
-    },
-    {
       label: 'Region',
       name: 'region',
       placeholder: 'London',
@@ -118,52 +110,11 @@ export const DriverTab = () => {
       ),
     },
     {
-      label: 'Zip Code',
+      label: 'Postal Code',
       name: 'zip_code',
       placeholder: 'NW1 6XE',
       icon: (
         <Hash className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-      ),
-    },
-    {
-      label: 'License Number',
-      name: 'license_number',
-      placeholder: 'DRV-123456',
-      icon: (
-        <Hash className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-      ),
-    },
-    {
-      label: 'License Expiry Date',
-      name: 'license_expiry',
-      type: 'date',
-      icon: (
-        <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-      ),
-    },
-    {
-      label: 'Vehicle Type',
-      name: 'vehicle_type',
-      placeholder: 'Van / Bike / Truck',
-      icon: (
-        <Car className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-      ),
-    },
-    {
-      label: 'Preferred Role',
-      name: 'preferred_role',
-      placeholder: 'Medical Courier',
-      icon: (
-        <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-      ),
-    },
-    {
-      label: 'Years of Experience',
-      name: 'experience_years',
-      type: 'number',
-      placeholder: '3',
-      icon: (
-        <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
       ),
     },
   ];
