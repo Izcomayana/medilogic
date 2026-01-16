@@ -48,7 +48,7 @@ type ApplicationFormProps = {
   loading: boolean;
   handleChange: (e: any) => void;
   handleSubmit: (e: React.FormEvent) => void;
-  acceptTerms: boolean;
+  acceptTerms?: boolean;
   handleCheckboxChange: (name: string, value: boolean) => void;
   showCookiePopup: boolean;
   handleAcceptCookies: () => void;

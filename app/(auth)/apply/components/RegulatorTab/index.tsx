@@ -104,8 +104,8 @@ export const RegulatorTab = () => {
 
   return (
     <ApplicationForm
-      title="Admin Application"
-      description="Submit your details to request access as a clinic or waste company admin."
+      title="Regulator Application"
+      description="Submit your details to request access as a region or state regulator"
       fields={fields}
       formData={formData}
       error={error}

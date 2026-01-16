@@ -1,5 +1,6 @@
 'use client';
 
+import axios from 'axios';
 import { useApplicationForm } from '../ApplicationForm/useApplicationForm';
 
 const initialRegulatorFormData = {
@@ -57,10 +58,20 @@ const transformRegulatorForm = (data: RegulatorFormData) => ({
   message: data.adminMessage,
 });
 
+const submitRegulator = async (data: RegulatorFormData) => {
+  await axios.post('https://medilogic-backend.onrender.com/apply', {
+    ...transformRegulatorForm(data),
+    role: 'admin',
+    status: 'pending',
+    submitted_at: new Date().toISOString(),
+  });
+};
+
 export const useApplyRegulator = () =>
   useApplicationForm<RegulatorFormData>({
     initialState: initialRegulatorFormData,
     validate: validateRegulatorForm,
     transformSubmit: transformRegulatorForm,
     role: 'regulator',
+    submit: submitRegulator,
   });

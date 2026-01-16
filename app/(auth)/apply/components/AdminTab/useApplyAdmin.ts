@@ -1,5 +1,6 @@
 'use client';
 
+import axios from 'axios';
 import { useApplicationForm } from '../ApplicationForm/useApplicationForm';
 
 const initialAdminState = {
@@ -76,10 +77,20 @@ const transformAdminData = (formData: AdminForm) => ({
   message: formData.adminMessage,
 });
 
+const submitAdmin = async (data: AdminForm) => {
+  await axios.post('https://medilogic-backend.onrender.com/apply', {
+    ...transformAdminData(data),
+    role: 'admin',
+    status: 'pending',
+    submitted_at: new Date().toISOString(),
+  });
+};
+
 export const useApplyAdmin = () =>
   useApplicationForm<AdminForm>({
     initialState: initialAdminState,
     validate: validateAdmin,
     transformSubmit: transformAdminData,
     role: 'admin',
+    submit: submitAdmin,
   });
