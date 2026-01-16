@@ -1,9 +1,5 @@
 'use client';
 
-import { useEffect, useState } from "react"
-import axios from "axios"
-import { api } from '@/lib/api';
-import { useAuthorizedRequest } from '@/hooks/useRequest';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Users,
@@ -11,10 +7,7 @@ import {
   Clock,
   AlertCircle,
   Eye,
-  Check,
-  X,
 } from 'lucide-react';
-import { toast } from 'sonner';
 import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 import {
   Table,
@@ -25,51 +18,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { Label } from "@/components/ui/label";
-
-export type BackendDriver = {
-  id: string
-  short_id: string
-  created_at: string
-  updated_at: string
-  is_active: boolean
-  is_verified: boolean
-  name: string
-  email: string
-  phone_number: string
-  country: string
-  state: string
-  region: string
-  address: string
-  zip_code: string
-  license_number: string
-  license_expiry: string
-  vehicle_type: string
-  preferred_role: string
-  experience_years: number
-  status: "submitted" | "approved" | "rejected"
-  subscription_status: string
-  subscription_plan: string
-  badge_type: string
-}
-
-type PendingDriver = {
-  id: string;
-  name: string;
-  email: string;
-  submittedDate: string;
-  status: 'pending';
-};
-
-type ApprovedDriver = {
-  id: string;
-  name: string;
-  email: string;
-  approvedDate: string;
-  status: 'approved';
-};
-
-type Driver = PendingDriver | ApprovedDriver;
+import { useDrivers } from "@/hooks/useDrivers";
+import { Driver } from './Driver';
 
 const driverStats = [
   {
@@ -103,101 +53,18 @@ const driverStats = [
 ];
 
 export default function DriversPage() {
-  const [drivers, setDrivers] = useState<Driver[]>([])
-  const [loading, setLoading] = useState(true)
-  const [selectedDriver, setSelectedDriver] = useState<Driver | null>(null);
-  const [showDetailsModal, setShowDetailsModal] = useState(false);
-  const authorizedRequest = useAuthorizedRequest();
 
-  const mapBackendDriverToUI = (d: BackendDriver): Driver | null => {
-  if (d.status === "submitted") {
-    return {
-      id: d.short_id || d.id,
-      name: d.name,
-      email: d.email,
-      status: "pending",
-      submittedDate: d.created_at.split("T")[0],
-    }
-  }
-
-  if (d.status === "approved") {
-    return {
-      id: d.short_id || d.id,
-      name: d.name,
-      email: d.email,
-      status: "approved",
-      approvedDate: d.updated_at.split("T")[0],
-    }
-  }
-
-  // Ignore rejected for now (or handle later)
-  return null
-}
-
-useEffect(() => {
-  const fetchDrivers = async () => {
-    try {
-      await authorizedRequest(async (token) => {
-              const res = await axios.get<BackendDriver[]>(
-        "https://medilogic-backend.onrender.com/Medilogic_drivers/",
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-          },
-        }
-      )
-
-      const mappedDrivers = res.data
-        .map(mapBackendDriverToUI)
-        .filter((d): d is Driver => d !== null)
-
-      setDrivers(mappedDrivers)
-      }, 'failed to get drivers')
-    } catch (error) {
-      toast.error("Failed to fetch drivers")
-      console.error(error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  fetchDrivers()
-}, [])
-
-  const handleApprove = (driverId: string) => {
-    setDrivers((prev) =>
-      prev.map((d) =>
-        d.id === driverId && d.status === 'pending' ? approveDriver(d) : d
-      )
-    );
-
-    toast.success('Driver approved successfully');
-    setShowDetailsModal(false);
-  };
-
-  const approveDriver = (d: PendingDriver): ApprovedDriver => ({
-    id: d.id,
-    name: d.name,
-    email: d.email,
-    status: 'approved',
-    approvedDate: new Date().toISOString().split('T')[0],
-  });
-
-  const handleReject = (driverId: string) => {
-    setDrivers(drivers.filter((d) => d.id !== driverId));
-    toast.success('Driver rejected');
-    setShowDetailsModal(false);
-  };
-
-  const viewDriver = (driver: any) => {
-    setSelectedDriver(driver);
-    setShowDetailsModal(true);
-  };
-
-const pendingList = drivers.filter(
-  (d): d is PendingDriver => d.status === "pending"
-)
+  const {
+    drivers,
+    loading,
+    pendingList,
+    viewDriver,
+    detailsOpen,
+    setDetailsOpen,
+    selectedDriver,
+    handleApprove,
+    handleReject,
+  } = useDrivers();
 
 {loading && (
   <div className="text-center py-10 text-gray-400">
@@ -362,63 +229,14 @@ const pendingList = drivers.filter(
         </Card>
       </main>
 
-      {/* Details Modal */}
-      {showDetailsModal && selectedDriver && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <Card className="w-full max-w-md bg-gray-800 border-gray-700">
-            <CardHeader>
-              <CardTitle className="text-white">Driver Application</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <Label className="text-xs text-gray-400">Driver ID</Label>
-                <p className="text-white font-medium">{selectedDriver.id}</p>
-              </div>
-              <div>
-                <Label className="text-xs text-gray-400">Full Name</Label>
-                <p className="text-white font-medium">{selectedDriver.name}</p>
-              </div>
-              <div>
-                <Label className="text-xs text-gray-400">Email</Label>
-                <p className="text-white font-medium">{selectedDriver.email}</p>
-              </div>
-              {selectedDriver.status === 'approved' && (
-                <div>
-                  <Label className="text-xs text-gray-400">
-                    Submitted Date
-                  </Label>
-                  <p>{selectedDriver.approvedDate}</p>
-                </div>
-              )}
-              {selectedDriver.status === 'pending' && (
-                <div className="flex gap-2 mt-6">
-                  <Button
-                    onClick={() => handleReject(selectedDriver.id)}
-                    className="flex-1 px-4 py-2 rounded bg-red-600 hover:bg-red-700 text-white text-sm font-medium flex items-center justify-center gap-2"
-                  >
-                    <X className="h-4 w-4" />
-                    Reject
-                  </Button>
-                  <Button
-                    onClick={() => handleApprove(selectedDriver.id)}
-                    className="flex-1 px-4 py-2 rounded bg-[#15941f] hover:bg-green-700 text-white text-sm font-medium flex items-center justify-center gap-2"
-                  >
-                    <Check className="h-4 w-4" />
-                    Approve
-                  </Button>
-                </div>
-              )}
+            <Driver
+        open={detailsOpen}
+        onOpenChange={setDetailsOpen}
+        driver={selectedDriver}
+        onApprove={handleApprove}
+        onReject={handleReject}
+      />
 
-              <Button
-                onClick={() => setShowDetailsModal(false)}
-                className="w-full px-4 py-2 rounded border border-gray-600 hover:bg-gray-700 text-gray-300 text-sm font-medium"
-              >
-                Close
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      )}
     </div>
   );
 }
