@@ -19,6 +19,7 @@ import {
   Receipt,
   BadgeAlert,
   MessageSquare,
+  CarFront,
 } from 'lucide-react';
 import { useAuth } from '@/components/auth';
 import {
@@ -49,6 +50,7 @@ const sidebarLinksByRole: Record<
       url: '/super-admin/organizations',
       icon: Building2,
     },
+    { title: 'Drivers', url: '/super-admin/drivers', icon: CarFront },
     {
       title: 'Pending Applications',
       url: '/super-admin/pending-applications',

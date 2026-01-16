@@ -59,15 +59,12 @@ const transformRegulatorForm = (data: RegulatorFormData) => ({
 });
 
 const submitRegulator = async (data: RegulatorFormData) => {
-  await axios.post(
-    'https://medilogic-backend.onrender.com/apply',
-    {
-      ...transformRegulatorForm(data),
-      role: 'admin',
-      status: 'pending',
-      submitted_at: new Date().toISOString(),
-    }
-  );
+  await axios.post('https://medilogic-backend.onrender.com/apply', {
+    ...transformRegulatorForm(data),
+    role: 'admin',
+    status: 'pending',
+    submitted_at: new Date().toISOString(),
+  });
 };
 
 export const useApplyRegulator = () =>

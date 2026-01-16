@@ -78,15 +78,12 @@ const transformAdminData = (formData: AdminForm) => ({
 });
 
 const submitAdmin = async (data: AdminForm) => {
-  await axios.post(
-    'https://medilogic-backend.onrender.com/apply',
-    {
-      ...transformAdminData(data),
-      role: 'admin',
-      status: 'pending',
-      submitted_at: new Date().toISOString(),
-    }
-  );
+  await axios.post('https://medilogic-backend.onrender.com/apply', {
+    ...transformAdminData(data),
+    role: 'admin',
+    status: 'pending',
+    submitted_at: new Date().toISOString(),
+  });
 };
 
 export const useApplyAdmin = () =>

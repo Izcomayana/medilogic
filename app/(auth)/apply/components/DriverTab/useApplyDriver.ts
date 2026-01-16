@@ -89,8 +89,7 @@ const validateDriverForm = (data: DriverFormData) => {
   if (data.experience_years < 0)
     errors.experience_years = 'Experience must be valid';
 
-  if (!data.acceptTerms)
-    errors.acceptTerms = 'You must accept the terms';
+  if (!data.acceptTerms) errors.acceptTerms = 'You must accept the terms';
 
   return errors;
 };
@@ -131,98 +130,3 @@ export const useApplyDriver = () =>
     validate: validateDriverForm,
     submit: submitDriver,
   });
-
-
-
-
-
-
-// 'use client';
-
-// import axios from 'axios';
-// import { useApplicationForm } from '../ApplicationForm/useApplicationForm';
-
-// const initialDriverFormData = {
-//   name: '',
-//   email: '',
-//   phone_number: '',
-//   password: '',
-//   confirmPassword: '',
-//   regCountry: '',
-//   regState: '',
-//   regRegion: '',
-//   adminMessage: '',
-//   acceptTerms: false,
-//   acceptCookies: false,
-// };
-
-// type DriverFormData = typeof initialDriverFormData;
-
-// const validateDriverForm = (data: DriverFormData) => {
-//   const errors: Partial<Record<keyof DriverFormData, string>> & {
-//     general?: string;
-//   } = {};
-
-//   if (!data.name.trim()) errors.name = 'Full name is required';
-//   if (!data.email.trim()) {
-//     errors.email = 'Email is required';
-//   } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-//     errors.email = 'Enter a valid email';
-//   }
-//   if (!data.password.trim()) {
-//     errors.password = 'Password is required';
-//   } else if (data.password.length < 6) {
-//     errors.password = 'Password must be at least 6 characters';
-//   }
-//   if (!data.confirmPassword.trim()) {
-//     errors.confirmPassword = 'Please confirm your password';
-//   } else if (data.password !== data.confirmPassword) {
-//     errors.confirmPassword = 'Passwords do not match';
-//   }
-//   if (!data.regCountry.trim()) errors.regCountry = 'Country is required';
-//   if (!data.regState.trim()) errors.regState = 'State is required';
-//   if (!data.regRegion.trim()) errors.regRegion = 'Region is required';
-//   if (!data.acceptTerms)
-//     errors.acceptTerms = 'You must accept the terms and conditions';
-
-//   return errors;
-// };
-
-// const transformDriverForm = (data: DriverFormData) => ({
-//   full_name: data.name,
-//   email: data.email,
-//   password: data.password,
-//   regulated_country: data.regCountry,
-//   regulated_state: data.regState,
-//   regulated_region: data.regRegion,
-//   message: data.adminMessage,
-// });
-
-// const submitDriver = async (data: DriverFormData) => {
-//   await axios.post(
-//     'https://medilogic-backend.onrender.com/Medilogic_drivers/basic',
-//     {
-//       name: data.name,
-//       email: data.email,
-//       password: data.password,
-//       phone_number: data.phone_number ?? '',
-//       country: data.regCountry,
-//       state: data.regState,
-//       region: data.regRegion,
-//       accept_terms: data.acceptTerms,
-//       status: 'submitted',
-//       subscription_plan: 'free',
-//       badge_type: 'none',
-//     },
-//     { headers: { 'Content-Type': 'application/json' } }
-//   );
-// };
-
-// export const useApplyDriver = () =>
-//   useApplicationForm<DriverFormData>({
-//     initialState: initialDriverFormData,
-//     validate: validateDriverForm,
-// transformSubmit: transformDriverForm,
-// role: 'driver',
-//     submit: submitDriver,
-//   });

@@ -29,7 +29,7 @@ export const useApplicationForm = <T extends FormDataBase>({
   validate,
   transformSubmit,
   role,
-  submit
+  submit,
 }: UseApplicationFormOptions<T>) => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -48,34 +48,34 @@ export const useApplicationForm = <T extends FormDataBase>({
   }, [formData.acceptCookies]);
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setError({});
+    e.preventDefault();
+    setError({});
 
-  const validation = validate(formData);
-  if (Object.keys(validation).length > 0) {
-    setError(validation);
-    return;
-  }
+    const validation = validate(formData);
+    if (Object.keys(validation).length > 0) {
+      setError(validation);
+      return;
+    }
 
-  setLoading(true);
-  try {
-    await submit(formData);
+    setLoading(true);
+    try {
+      await submit(formData);
 
-    toast.success('Signup successful!', {
-      description: 'Awaiting Super Admin approval.',
-    });
+      toast.success('Signup successful!', {
+        description: 'Awaiting Super Admin approval.',
+      });
 
-    setFormData({ ...initialState, acceptCookies: formData.acceptCookies });
-    setShowSuccessModal(true);
-  } catch (err: any) {
-    toast.error('Error', {
-      description:
-        err?.response?.data?.detail || 'Network error. Please try again.',
-    });
-  } finally {
-    setLoading(false);
-  }
-};
+      setFormData({ ...initialState, acceptCookies: formData.acceptCookies });
+      setShowSuccessModal(true);
+    } catch (err: any) {
+      toast.error('Error', {
+        description:
+          err?.response?.data?.detail || 'Network error. Please try again.',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // const handleSubmit = async (e: React.FormEvent) => {
   //   e.preventDefault();

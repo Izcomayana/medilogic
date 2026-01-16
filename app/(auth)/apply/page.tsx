@@ -9,7 +9,10 @@ import { DriverTab } from './components/DriverTab';
 
 const Apply = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center px-4 pt-8 pb-12" style={{ backgroundImage: "url('/auth2.png')" }}>
+    <div
+      className="min-h-screen bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center px-4 pt-8 pb-12"
+      style={{ backgroundImage: "url('/auth2.png')" }}
+    >
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <HomeLogo />
@@ -38,7 +41,7 @@ const Apply = () => {
             <TabsContent value="regulator">
               <RegulatorTab />
             </TabsContent>
-            
+
             {/* Driver Form */}
             <TabsContent value="driver">
               <DriverTab />
