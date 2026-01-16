@@ -21,39 +21,7 @@ import { Button } from '@/components/ui/button';
 import { useDrivers } from "@/hooks/useDrivers";
 import { Driver } from './Driver';
 
-const driverStats = [
-  {
-    title: 'Total Drivers',
-    value: '48',
-    change: '+5 this month',
-    icon: Users,
-    trend: 'up',
-  },
-  {
-    title: 'Pending Approval',
-    value: '7',
-    change: 'Requires attention',
-    icon: Clock,
-    trend: 'warning',
-  },
-  {
-    title: 'Approved',
-    value: '38',
-    change: '+3 this month',
-    icon: CheckCircle,
-    trend: 'up',
-  },
-  {
-    title: 'Rejected',
-    value: '3',
-    change: 'This month',
-    icon: AlertCircle,
-    trend: 'neutral',
-  },
-];
-
 export default function DriversPage() {
-
   const {
     drivers,
     loading,
@@ -66,11 +34,49 @@ export default function DriversPage() {
     handleReject,
   } = useDrivers();
 
-{loading && (
-  <div className="text-center py-10 text-gray-400">
-    Loading drivers...
-  </div>
-)}
+  const totalDrivers = drivers.length
+  const pendingCount = pendingList.length
+  const approvedCount = drivers.filter(d => d.status === "approved").length
+  const rejectedCount = 0;
+
+  const driverStats = [
+    {
+      title: 'Total Drivers',
+      value: totalDrivers,
+      change: 'All drivers',
+      icon: Users,
+      trend: 'up',
+    },
+    {
+      title: 'Pending Approval',
+      value: pendingCount,
+      change: 'Requires attention',
+      icon: Clock,
+      trend: pendingCount > 0 ? 'warning' : 'up',
+    },
+    {
+      title: 'Approved',
+      value: approvedCount,
+      change: 'Active drivers',
+      icon: CheckCircle,
+      trend: 'up',
+    },
+    {
+      title: 'Rejected',
+      value: rejectedCount,
+      change: 'Not approved',
+      icon: AlertCircle,
+      trend: 'neutral',
+    },
+  ]
+
+  {
+    loading && (
+      <div className="text-center py-10 text-gray-400">
+        Loading drivers...
+      </div>
+    )
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
@@ -229,7 +235,7 @@ export default function DriversPage() {
         </Card>
       </main>
 
-            <Driver
+      <Driver
         open={detailsOpen}
         onOpenChange={setDetailsOpen}
         driver={selectedDriver}

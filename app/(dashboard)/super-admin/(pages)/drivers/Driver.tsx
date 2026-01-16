@@ -8,7 +8,6 @@ import {
   AlertDialogCancel,
 } from "@/components/ui/alert-dialog"
 import { Button } from '@/components/ui/button';
-import { useDrivers } from "@/hooks/useDrivers";
 import { Check, X } from "lucide-react";
 
 type DriverProps = {
