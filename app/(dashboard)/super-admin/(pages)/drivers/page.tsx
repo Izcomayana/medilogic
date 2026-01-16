@@ -1,7 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { SidebarTrigger } from '@/components/ui/sidebar';
+import { useEffect, useState } from "react"
+import axios from "axios"
+import { api } from '@/lib/api';
+import { useAuthorizedRequest } from '@/hooks/useRequest';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Users,
@@ -14,6 +16,42 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+import { Label } from "@/components/ui/label";
+
+export type BackendDriver = {
+  id: string
+  short_id: string
+  created_at: string
+  updated_at: string
+  is_active: boolean
+  is_verified: boolean
+  name: string
+  email: string
+  phone_number: string
+  country: string
+  state: string
+  region: string
+  address: string
+  zip_code: string
+  license_number: string
+  license_expiry: string
+  vehicle_type: string
+  preferred_role: string
+  experience_years: number
+  status: "submitted" | "approved" | "rejected"
+  subscription_status: string
+  subscription_plan: string
+  badge_type: string
+}
 
 type PendingDriver = {
   id: string;
@@ -64,61 +102,68 @@ const driverStats = [
   },
 ];
 
-const pendingDrivers: PendingDriver[] = [
-  {
-    id: 'MDR001',
-    name: 'James Wilson',
-    email: 'james.wilson@email.com',
-    submittedDate: '2024-01-15',
-    status: 'pending',
-  },
-  {
-    id: 'MDR002',
-    name: 'Sarah Anderson',
-    email: 'sarah.anderson@email.com',
-    submittedDate: '2024-01-14',
-    status: 'pending',
-  },
-  {
-    id: 'MDR003',
-    name: 'Michael Brown',
-    email: 'michael.brown@email.com',
-    submittedDate: '2024-01-13',
-    status: 'pending',
-  },
-];
-
-const approvedDrivers: ApprovedDriver[] = [
-  {
-    id: 'MDR010',
-    name: 'John Smith',
-    email: 'john.smith@email.com',
-    approvedDate: '2024-01-10',
-    status: 'approved',
-  },
-  {
-    id: 'MDR011',
-    name: 'Emma Davis',
-    email: 'emma.davis@email.com',
-    approvedDate: '2024-01-09',
-    status: 'approved',
-  },
-  {
-    id: 'MDR012',
-    name: 'David Martinez',
-    email: 'david.martinez@email.com',
-    approvedDate: '2024-01-08',
-    status: 'approved',
-  },
-];
-
 export default function DriversPage() {
-  const [drivers, setDrivers] = useState<Driver[]>([
-    ...pendingDrivers,
-    ...approvedDrivers,
-  ]);
+  const [drivers, setDrivers] = useState<Driver[]>([])
+  const [loading, setLoading] = useState(true)
   const [selectedDriver, setSelectedDriver] = useState<Driver | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const authorizedRequest = useAuthorizedRequest();
+
+  const mapBackendDriverToUI = (d: BackendDriver): Driver | null => {
+  if (d.status === "submitted") {
+    return {
+      id: d.short_id || d.id,
+      name: d.name,
+      email: d.email,
+      status: "pending",
+      submittedDate: d.created_at.split("T")[0],
+    }
+  }
+
+  if (d.status === "approved") {
+    return {
+      id: d.short_id || d.id,
+      name: d.name,
+      email: d.email,
+      status: "approved",
+      approvedDate: d.updated_at.split("T")[0],
+    }
+  }
+
+  // Ignore rejected for now (or handle later)
+  return null
+}
+
+useEffect(() => {
+  const fetchDrivers = async () => {
+    try {
+      await authorizedRequest(async (token) => {
+              const res = await axios.get<BackendDriver[]>(
+        "https://medilogic-backend.onrender.com/Medilogic_drivers/",
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          },
+        }
+      )
+
+      const mappedDrivers = res.data
+        .map(mapBackendDriverToUI)
+        .filter((d): d is Driver => d !== null)
+
+      setDrivers(mappedDrivers)
+      }, 'failed to get drivers')
+    } catch (error) {
+      toast.error("Failed to fetch drivers")
+      console.error(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  fetchDrivers()
+}, [])
 
   const handleApprove = (driverId: string) => {
     setDrivers((prev) =>
@@ -150,9 +195,15 @@ export default function DriversPage() {
     setShowDetailsModal(true);
   };
 
-  const pendingList = drivers.filter(
-    (d): d is PendingDriver => d.status === 'pending'
-  );
+const pendingList = drivers.filter(
+  (d): d is PendingDriver => d.status === "pending"
+)
+
+{loading && (
+  <div className="text-center py-10 text-gray-400">
+    Loading drivers...
+  </div>
+)}
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
@@ -195,53 +246,53 @@ export default function DriversPage() {
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-gray-700">
-                    <th className="text-left py-3 px-4 text-gray-400 font-medium">
+              <Table className="w-full text-sm">
+                <TableHeader>
+                  <TableRow className="border-b border-gray-700">
+                    <TableHead className="text-left py-3 px-4 text-gray-400 font-medium">
                       Driver ID
-                    </th>
-                    <th className="text-left py-3 px-4 text-gray-400 font-medium">
+                    </TableHead>
+                    <TableHead className="text-left py-3 px-4 text-gray-400 font-medium">
                       Name
-                    </th>
-                    <th className="text-left py-3 px-4 text-gray-400 font-medium">
+                    </TableHead>
+                    <TableHead className="text-left py-3 px-4 text-gray-400 font-medium">
                       Email
-                    </th>
-                    <th className="text-left py-3 px-4 text-gray-400 font-medium">
+                    </TableHead>
+                    <TableHead className="text-left py-3 px-4 text-gray-400 font-medium">
                       Submitted
-                    </th>
-                    <th className="text-left py-3 px-4 text-gray-400 font-medium">
+                    </TableHead>
+                    <TableHead className="text-left py-3 px-4 text-gray-400 font-medium">
                       Action
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   {pendingList.map((driver) => (
-                    <tr
+                    <TableRow
                       key={driver.id}
                       className="border-b border-gray-700 hover:bg-gray-800"
                     >
-                      <td className="py-3 px-4 text-gray-300">{driver.id}</td>
-                      <td className="py-3 px-4 text-white">{driver.name}</td>
-                      <td className="py-3 px-4 text-gray-400">
+                      <TableCell className="py-3 px-4 text-gray-300">{driver.id}</TableCell>
+                      <TableCell className="py-3 px-4 text-white">{driver.name}</TableCell>
+                      <TableCell className="py-3 px-4 text-gray-400">
                         {driver.email}
-                      </td>
-                      <td className="py-3 px-4 text-gray-400">
+                      </TableCell>
+                      <TableCell className="py-3 px-4 text-gray-400">
                         {driver.submittedDate}
-                      </td>
-                      <td className="py-3 px-4">
-                        <button
+                      </TableCell>
+                      <TableCell className="py-3 px-4">
+                        <Button
                           onClick={() => viewDriver(driver)}
                           className="flex items-center gap-1 px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white text-xs"
                         >
                           <Eye className="h-3 w-3" />
                           View
-                        </button>
-                      </td>
-                    </tr>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
                   ))}
-                </tbody>
-              </table>
+                </TableBody>
+              </Table>
             </div>
             {pendingList.length === 0 && (
               <div className="text-center py-8 text-gray-400">
@@ -261,51 +312,51 @@ export default function DriversPage() {
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-gray-700">
-                    <th className="text-left py-3 px-4 text-gray-400 font-medium">
+              <Table className="w-full text-sm">
+                <TableHeader>
+                  <TableRow className="border-b border-gray-700">
+                    <TableHead className="text-left py-3 px-4 text-gray-400 font-medium">
                       Driver ID
-                    </th>
-                    <th className="text-left py-3 px-4 text-gray-400 font-medium">
+                    </TableHead>
+                    <TableHead className="text-left py-3 px-4 text-gray-400 font-medium">
                       Name
-                    </th>
-                    <th className="text-left py-3 px-4 text-gray-400 font-medium">
+                    </TableHead>
+                    <TableHead className="text-left py-3 px-4 text-gray-400 font-medium">
                       Email
-                    </th>
-                    <th className="text-left py-3 px-4 text-gray-400 font-medium">
+                    </TableHead>
+                    <TableHead className="text-left py-3 px-4 text-gray-400 font-medium">
                       Approved Date
-                    </th>
-                    <th className="text-left py-3 px-4 text-gray-400 font-medium">
+                    </TableHead>
+                    <TableHead className="text-left py-3 px-4 text-gray-400 font-medium">
                       Status
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   {drivers
                     .filter((d) => d.status === 'approved')
                     .map((driver) => (
-                      <tr
+                      <TableRow
                         key={driver.id}
                         className="border-b border-gray-700 hover:bg-gray-800"
                       >
-                        <td className="py-3 px-4 text-gray-300">{driver.id}</td>
-                        <td className="py-3 px-4 text-white">{driver.name}</td>
-                        <td className="py-3 px-4 text-gray-400">
+                        <TableCell className="py-3 px-4 text-gray-300">{driver.id}</TableCell>
+                        <TableCell className="py-3 px-4 text-white">{driver.name}</TableCell>
+                        <TableCell className="py-3 px-4 text-gray-400">
                           {driver.email}
-                        </td>
-                        <td className="py-3 px-4 text-gray-400">
+                        </TableCell>
+                        <TableCell className="py-3 px-4 text-gray-400">
                           {driver.approvedDate}
-                        </td>
-                        <td className="py-3 px-4">
+                        </TableCell>
+                        <TableCell className="py-3 px-4">
                           <span className="px-2 py-1 rounded text-xs bg-[#15941f] text-white">
                             Approved
                           </span>
-                        </td>
-                      </tr>
+                        </TableCell>
+                      </TableRow>
                     ))}
-                </tbody>
-              </table>
+                </TableBody>
+              </Table>
             </div>
           </CardContent>
         </Card>
@@ -320,50 +371,50 @@ export default function DriversPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <label className="text-xs text-gray-400">Driver ID</label>
+                <Label className="text-xs text-gray-400">Driver ID</Label>
                 <p className="text-white font-medium">{selectedDriver.id}</p>
               </div>
               <div>
-                <label className="text-xs text-gray-400">Full Name</label>
+                <Label className="text-xs text-gray-400">Full Name</Label>
                 <p className="text-white font-medium">{selectedDriver.name}</p>
               </div>
               <div>
-                <label className="text-xs text-gray-400">Email</label>
+                <Label className="text-xs text-gray-400">Email</Label>
                 <p className="text-white font-medium">{selectedDriver.email}</p>
               </div>
               {selectedDriver.status === 'approved' && (
                 <div>
-                  <label className="text-xs text-gray-400">
+                  <Label className="text-xs text-gray-400">
                     Submitted Date
-                  </label>
+                  </Label>
                   <p>{selectedDriver.approvedDate}</p>
                 </div>
               )}
               {selectedDriver.status === 'pending' && (
                 <div className="flex gap-2 mt-6">
-                  <button
+                  <Button
                     onClick={() => handleReject(selectedDriver.id)}
                     className="flex-1 px-4 py-2 rounded bg-red-600 hover:bg-red-700 text-white text-sm font-medium flex items-center justify-center gap-2"
                   >
                     <X className="h-4 w-4" />
                     Reject
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     onClick={() => handleApprove(selectedDriver.id)}
                     className="flex-1 px-4 py-2 rounded bg-[#15941f] hover:bg-green-700 text-white text-sm font-medium flex items-center justify-center gap-2"
                   >
                     <Check className="h-4 w-4" />
                     Approve
-                  </button>
+                  </Button>
                 </div>
               )}
 
-              <button
+              <Button
                 onClick={() => setShowDetailsModal(false)}
                 className="w-full px-4 py-2 rounded border border-gray-600 hover:bg-gray-700 text-gray-300 text-sm font-medium"
               >
                 Close
-              </button>
+              </Button>
             </CardContent>
           </Card>
         </div>
