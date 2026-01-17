@@ -20,6 +20,8 @@ import {
   BadgeAlert,
   MessageSquare,
   CarFront,
+  BarChart3,
+  UserRoundPen,
 } from 'lucide-react';
 import { useAuth } from '@/components/auth';
 import {
@@ -87,6 +89,16 @@ const sidebarLinksByRole: Record<
     { title: 'Activity Logs', url: '/company-admin/activity-logs', icon: Logs },
     { title: 'Settings', url: '/company-admin/settings', icon: Settings },
   ],
+  driver: [
+    { title: 'Dashboard', url: '/driver', icon: Home },
+    { title: 'My Trips', url: '/driver/trips', icon: ClipboardList },
+    { title: 'PODs', url: '/driver/pods', icon: FileText },
+    { title: 'COC', url: '/driver/coc', icon: Link2 },
+    { title: 'Incidents', url: '/driver/incidents', icon: ClipboardList },
+    { title: 'Support', url: '/driver/support', icon: MessageSquare },
+    { title: 'Profile & Subs', url: '/driver/profile', icon: UserRoundPen, },
+    { title: 'Settings', url: '/driver/settings', icon: Settings },
+  ],
   regulator: [
     { title: 'Dashboard', url: '/regulator', icon: Home },
 
@@ -99,15 +111,6 @@ const sidebarLinksByRole: Record<
     { title: 'Invoices', url: '/client/invoices', icon: Receipt },
     { title: 'My Trips', url: '/client/#', icon: ClipboardList },
     { title: 'Support', url: '/client/support', icon: MessageSquare },
-  ],
-  driver: [
-    { title: 'Dashboard', url: '/driver', icon: Home },
-    { title: 'My Trips', url: '/driver/trips', icon: ClipboardList },
-    { title: 'PODs', url: '/driver/pods', icon: FileText },
-    { title: 'COC', url: '/driver/coc', icon: Link2 },
-    { title: 'Incidents', url: '/driver/incidents', icon: ClipboardList },
-    { title: 'Support', url: '/driver/support', icon: MessageSquare },
-    { title: 'Settings', url: '/driver/settings', icon: Settings },
   ],
 };
 
