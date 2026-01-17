@@ -69,6 +69,7 @@ const sidebarLinksByRole: Record<
       url: '/company-admin/tripsanalytics',
       icon: Waypoints,
     },
+    { title: 'Drivers', url: '/company-admin/drivers', icon: CarFront },
     {
       title: 'Charts',
       url: '/company-admin/charts',

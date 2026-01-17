@@ -242,7 +242,6 @@ export default function DriversPage() {
         onApprove={handleApprove}
         onReject={handleReject}
       />
-
     </div>
   );
 }
