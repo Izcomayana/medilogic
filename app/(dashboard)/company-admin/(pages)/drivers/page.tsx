@@ -1,13 +1,7 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Users,
-  CheckCircle,
-  Clock,
-  AlertCircle,
-  Eye,
-} from 'lucide-react';
+import { Users, CheckCircle, Clock, AlertCircle, Eye } from 'lucide-react';
 import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 import {
   Table,
@@ -18,8 +12,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { useDrivers } from "@/hooks/useDrivers";
-import { Driver } from '@/app/(dashboard)/components/SingleDriver'; 
+import { useDrivers } from '@/hooks/useDrivers';
+import { Driver } from '@/app/(dashboard)/components/SingleDriver';
 
 export default function DriversPage() {
   const {
@@ -34,9 +28,9 @@ export default function DriversPage() {
     handleReject,
   } = useDrivers();
 
-  const totalDrivers = drivers.length
-  const pendingCount = pendingList.length
-  const approvedCount = drivers.filter(d => d.status === "approved").length
+  const totalDrivers = drivers.length;
+  const pendingCount = pendingList.length;
+  const approvedCount = drivers.filter((d) => d.status === 'approved').length;
   const rejectedCount = 0;
 
   const driverStats = [
@@ -68,14 +62,12 @@ export default function DriversPage() {
       icon: AlertCircle,
       trend: 'neutral',
     },
-  ]
+  ];
 
   {
     loading && (
-      <div className="text-center py-10 text-gray-400">
-        Loading drivers...
-      </div>
-    )
+      <div className="text-center py-10 text-gray-400">Loading drivers...</div>
+    );
   }
 
   return (
@@ -145,8 +137,12 @@ export default function DriversPage() {
                       key={driver.id}
                       className="border-b border-gray-700 hover:bg-gray-800"
                     >
-                      <TableCell className="py-3 px-4 text-gray-300">{driver.id}</TableCell>
-                      <TableCell className="py-3 px-4 text-white">{driver.name}</TableCell>
+                      <TableCell className="py-3 px-4 text-gray-300">
+                        {driver.id}
+                      </TableCell>
+                      <TableCell className="py-3 px-4 text-white">
+                        {driver.name}
+                      </TableCell>
                       <TableCell className="py-3 px-4 text-gray-400">
                         {driver.email}
                       </TableCell>
@@ -213,8 +209,12 @@ export default function DriversPage() {
                         key={driver.id}
                         className="border-b border-gray-700 hover:bg-gray-800"
                       >
-                        <TableCell className="py-3 px-4 text-gray-300">{driver.id}</TableCell>
-                        <TableCell className="py-3 px-4 text-white">{driver.name}</TableCell>
+                        <TableCell className="py-3 px-4 text-gray-300">
+                          {driver.id}
+                        </TableCell>
+                        <TableCell className="py-3 px-4 text-white">
+                          {driver.name}
+                        </TableCell>
                         <TableCell className="py-3 px-4 text-gray-400">
                           {driver.email}
                         </TableCell>

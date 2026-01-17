@@ -1,4 +1,4 @@
-import { Label } from "@/components/ui/label";
+import { Label } from '@/components/ui/label';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -6,18 +6,18 @@ import {
   AlertDialogTitle,
   AlertDialogFooter,
   AlertDialogCancel,
-} from "@/components/ui/alert-dialog"
+} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { Check, X } from "lucide-react";
-import { useAuth } from "@/components/auth";
+import { Check, X } from 'lucide-react';
+import { useAuth } from '@/components/auth';
 
 type DriverProps = {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  driver: any | null
-  onApprove: (id: string) => void
-  onReject: (id: string) => void
-}
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  driver: any | null;
+  onApprove: (id: string) => void;
+  onReject: (id: string) => void;
+};
 
 export function Driver({
   open,
@@ -60,8 +60,7 @@ export function Driver({
             <div>
               <Label className="text-gray-400">Location</Label>
               <p>
-                {driver.country}, {driver.state},{" "}
-                {driver.region}
+                {driver.country}, {driver.state}, {driver.region}
               </p>
             </div>
 
@@ -78,7 +77,7 @@ export function Driver({
         )}
 
         <AlertDialogFooter className="mt-6 gap-2">
-          {driver?.status === "submitted" && (
+          {driver?.status === 'submitted' && (
             <>
               {role === 'super_admin' && (
                 <>
@@ -108,5 +107,5 @@ export function Driver({
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  )
+  );
 }
