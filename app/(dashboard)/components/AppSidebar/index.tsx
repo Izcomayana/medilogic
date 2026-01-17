@@ -96,7 +96,7 @@ const sidebarLinksByRole: Record<
     { title: 'COC', url: '/driver/coc', icon: Link2 },
     { title: 'Incidents', url: '/driver/incidents', icon: ClipboardList },
     { title: 'Support', url: '/driver/support', icon: MessageSquare },
-    { title: 'Profile & Subs', url: '/driver/profile', icon: UserRoundPen, },
+    { title: 'Profile & Subs', url: '/driver/profile', icon: UserRoundPen },
     { title: 'Settings', url: '/driver/settings', icon: Settings },
   ],
   regulator: [
