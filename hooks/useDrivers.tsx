@@ -94,6 +94,7 @@ export function useDrivers() {
   const [selectedDriver, setSelectedDriver] =
     useState<BackendDriverFull | null>(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
+  // const [driver, setDriver] = useState
 
   const mapBackendDriverToUI = (d: BackendDriver): Driver | null => {
     if (d.status === 'submitted') {

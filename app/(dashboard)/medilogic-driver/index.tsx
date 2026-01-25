@@ -2,91 +2,112 @@
 
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { User, Truck, Save, CreditCard } from "lucide-react";
+import { CreditCard } from "lucide-react";
 import { toast } from "sonner";
 import { PageHeader } from "@/app/(dashboard)/components/PageHeader";
-import { useDrivers } from "@/hooks/useDrivers";
+import { api } from "@/lib/api";
+import { useAuthorizedRequest } from "@/hooks/useRequest";
+import ProfileTab from "./tabs/Profile";
+
+type UpdateDriverResponse = {
+  driver: DriverProfile
+  analytics: any | null
+  client_secret: string | null;
+  payment_id: string | null;
+};
+
+type DriverProfile = {
+  id: string;
+  name: string;
+  email: string;
+  phone_number: string;
+  country: string;
+  state: string;
+  address: string;
+  zip_code: string;
+  date_of_birth?: string;
+  license_number?: string;
+  license_expiry?: string;
+  vehicle_type?: string;
+  preferred_role?: string;
+  experience_years?: number;
+  subscription_plan: string;
+  subscription_status: string;
+};
 
 export function MedilogicDriver() {
-  const {
-    selectedDriver,
-    fetchDriverById,
-    updateDriver,
-  } = useDrivers();
+  const authorizedRequest = useAuthorizedRequest();
 
-  const [formData, setFormData] = useState<Record<string, any>>({});
-  const [isEditing, setIsEditing] = useState(false);
-  const [activeTab, setActiveTab] = useState("profile");
+  const [profile, setProfile] = useState<DriverProfile | null>(null);
+  const [formData, setFormData] = useState<Partial<DriverProfile>>({})
 
-  const [subscriptionData, setSubscriptionData] = useState({ 
-    plan: "Pro", 
-    status: "active", 
-    renewalDate: "2024-02-15", 
-    monthlyFee: 15000, 
-  })
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<"profile" | "subscription">(
+    "profile"
+  );
 
-    useEffect(() => {
-    if (selectedDriver) {
-      setFormData({
-        name: selectedDriver.name,
-        email: selectedDriver.email,
-        phone_number: selectedDriver.phone_number,
-        country: selectedDriver.country,
-        state: selectedDriver.state,
-        address: selectedDriver.address,
-        zip_code: selectedDriver.zip_code,
-        date_of_birth: selectedDriver.date_of_birth,
-        license_number: selectedDriver.license_number,
-        license_expiry: selectedDriver.license_expiry,
-        vehicle_type: selectedDriver.vehicle_type,
-        preferred_role: selectedDriver.preferred_role,
-        experience_years: selectedDriver.experience_years,
-      });
+  const [subscriptionData, setSubscriptionData] = useState({
+    plan: "Pro",
+    status: "active",
+    renewalDate: "2024-02-15",
+    monthlyFee: 200,
+  });
+
+  const normalizeDriver = (data: any): DriverProfile => {
+    return "driver" in data ? data.driver : data
+  }
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        await authorizedRequest(async (token) => {
+          const res = await api.get<DriverProfile>(
+            "/Medilogic_drivers/me",
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          )
+
+          console.log("GET /me:", res.data)
+
+          const driver = normalizeDriver(res.data)
+          setProfile(driver)
+          setFormData(driver)
+        }, "Failed to load profile")
+      } catch {
+        toast.error("Unable to load profile")
+      } finally {
+        setLoading(false)
+      }
     }
-  }, [selectedDriver]);
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((p) => ({ ...p, [name]: value }));
-  };
+    fetchProfile()
+  }, [])
 
-  const handleSaveProfile = async () => {
-    if (!selectedDriver) return;
+  const handleChangePlan = async (plan: string) => {
+    const payload = new FormData()
+    payload.append("plan", plan)
 
-    await updateDriver(selectedDriver.id, formData);
-    setIsEditing(false);
-    toast.success("Profile updated");
-  };
+    try {
+      await authorizedRequest(async (token) => {
+        const res = await api.put(
+          "/Medilogic_drivers/me",
+          payload,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        )
 
-  // const handleChangePlan = async (plan: string) => {
-  //   const payload = new FormData()
-  //   payload.append("plan", plan)
-
-  //   try {
-  //     await authorizedRequest(async (token) => {
-  //       const res = await api.put(
-  //         "/Medilogic_drivers/me",
-  //         payload,
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${token}`,
-  //             "Content-Type": "multipart/form-data",
-  //           },
-  //         }
-  //       )
-
-  //       setProfile(res.data)
-  //       setFormData(res.data)
-  //       toast.success(`Subscription updated to ${plan}`)
-  //     }, "Plan update failed")
-  //   } catch {
-  //     toast.error("Unable to change subscription")
-  //   }
-  // }
-
-  const handleChangePlan = (newPlan: string) => {
-    setSubscriptionData((prev) => ({ ...prev, plan: newPlan }))
-    toast.success(`Subscription upgraded to ${newPlan}`)
+        setProfile(res.data)
+        setFormData(res.data)
+        toast.success(`Subscription updated to ${plan}`)
+      }, "Plan update failed")
+    } catch {
+      toast.error("Unable to change subscription")
+    }
   }
 
   const handleCancelSubscription = () => {
@@ -96,20 +117,12 @@ export function MedilogicDriver() {
     }
   }
 
-  // if (loading || !profile) {
-  //   return (
-  //     <div className="flex items-center justify-center h-screen text-gray-400">
-  //       Loading profile...
-  //     </div>
-  //   )
-  // }
-
-  if (!selectedDriver) {
+  if (loading) {
     return (
       <div className="flex items-center justify-center h-screen text-gray-400">
         Loading profile...
       </div>
-    );
+    )
   }
 
   return (
@@ -139,86 +152,7 @@ export function MedilogicDriver() {
 
           {/* Profile Tab */}
           {activeTab === "profile" && (
-            <div className="max-w-2xl">
-          <Card className="bg-gray-800 border-gray-700">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-white flex items-center gap-2">
-                <User className="h-5 w-5" />
-                Personal Information
-              </CardTitle>
-              <button
-                onClick={() => setIsEditing(!isEditing)}
-                className={`px-3 py-1 rounded text-sm font-medium ${
-                  isEditing
-                    ? "bg-gray-700 text-gray-300"
-                    : "bg-[#15941f] text-white"
-                }`}
-              >
-                {isEditing ? "Cancel" : "Edit"}
-              </button>
-            </CardHeader>
-
-            <CardContent className="space-y-4">
-              <input
-                name="name"
-                value={formData.name || ""}
-                onChange={handleInputChange}
-                disabled={!isEditing}
-                placeholder="Full name"
-              />
-
-              <input
-                name="email"
-                value={formData.email || ""}
-                onChange={handleInputChange}
-                disabled={!isEditing}
-                placeholder="Email"
-              />
-
-              <input
-                name="phone_number"
-                value={formData.phone_number || ""}
-                onChange={handleInputChange}
-                disabled={!isEditing}
-                placeholder="Phone number"
-              />
-
-              <input
-                name="vehicle_type"
-                value={formData.vehicle_type || ""}
-                onChange={handleInputChange}
-                disabled={!isEditing}
-                placeholder="Vehicle type"
-              />
-
-              {isEditing && (
-                <button
-                  onClick={handleSaveProfile}
-                  className="w-full px-4 py-2 rounded bg-[#15941f] text-white flex items-center justify-center gap-2"
-                >
-                  <Save className="h-4 w-4" />
-                  Save Changes
-                </button>
-              )}
-            </CardContent>
-          </Card>
-
-          <Card className="bg-gray-800 border-gray-700 mt-6">
-            <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <Truck className="h-5 w-5" />
-                Vehicle Info
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <input
-                value={selectedDriver.vehicle_type}
-                disabled
-                className="opacity-50"
-              />
-            </CardContent>
-          </Card>
-        </div>
+            <ProfileTab />
           )}
 
           {/* Subscription Tab */}
@@ -248,7 +182,7 @@ export function MedilogicDriver() {
                     <div className="space-y-3 text-sm">
                       <div className="flex justify-between">
                         <span className="text-gray-400">Monthly Fee</span>
-                        <span className="text-white font-medium">₦{subscriptionData.monthlyFee.toLocaleString()}</span>
+                        <span className="text-white font-medium">£{subscriptionData.monthlyFee.toLocaleString()}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-400">Renewal Date</span>
