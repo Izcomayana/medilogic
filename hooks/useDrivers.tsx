@@ -146,7 +146,7 @@ export function useDrivers() {
     fetchDrivers();
   }, []);
 
-    const viewDriver = async (driver: Driver) => {
+  const viewDriver = async (driver: Driver) => {
     try {
       await authorizedRequest(async (token) => {
         const res = await api.get<BackendDriverFull>(
@@ -261,7 +261,7 @@ export function useDrivers() {
     }
   };
 
-    const pendingList = drivers.filter(
+  const pendingList = drivers.filter(
     (d): d is PendingDriver => d.status === 'pending'
   );
 
@@ -279,9 +279,6 @@ export function useDrivers() {
     pendingList,
   };
 }
-
-
-
 
 // 'use client';
 
@@ -350,7 +347,7 @@ export function useDrivers() {
 // export type Driver = PendingDriver | ApprovedDriver;
 
 // export function useDrivers() {
-  // const authorizedRequest = useAuthorizedRequest();
+// const authorizedRequest = useAuthorizedRequest();
 //   const [drivers, setDrivers] = useState<Driver[]>([]);
 //   const [loading, setLoading] = useState(true);
 //   const [selectedDriver, setSelectedDriver] =
@@ -411,25 +408,25 @@ export function useDrivers() {
 //     fetchDrivers();
 //   }, []);
 
-  // const viewDriver = async (driver: Driver) => {
-  //   try {
-  //     await authorizedRequest(async (token) => {
-  //       const res = await api.get<BackendDriverFull>(
-  //         `/Medilogic_drivers/${driver.backendId}`,
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${token}`,
-  //           },
-  //         }
-  //       );
+// const viewDriver = async (driver: Driver) => {
+//   try {
+//     await authorizedRequest(async (token) => {
+//       const res = await api.get<BackendDriverFull>(
+//         `/Medilogic_drivers/${driver.backendId}`,
+//         {
+//           headers: {
+//             Authorization: `Bearer ${token}`,
+//           },
+//         }
+//       );
 
-  //       setSelectedDriver(res.data);
-  //       setDetailsOpen(true);
-  //     }, 'Failed to fetch driver');
-  //   } catch {
-  //     toast.error('Unable to load driver details');
-  //   }
-  // };
+//       setSelectedDriver(res.data);
+//       setDetailsOpen(true);
+//     }, 'Failed to fetch driver');
+//   } catch {
+//     toast.error('Unable to load driver details');
+//   }
+// };
 
 //   const handleApprove = async (backendId: string) => {
 //     try {
@@ -497,9 +494,9 @@ export function useDrivers() {
 //     }
 //   };
 
-  // const pendingList = drivers.filter(
-  //   (d): d is PendingDriver => d.status === 'pending'
-  // );
+// const pendingList = drivers.filter(
+//   (d): d is PendingDriver => d.status === 'pending'
+// );
 
 //   return {
 //     drivers,

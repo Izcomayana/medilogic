@@ -71,7 +71,11 @@ const sidebarLinksByRole: Record<
       url: '/company-admin/tripsanalytics',
       icon: Waypoints,
     },
-    { title: 'Medilogic Drivers', url: '/company-admin/medilogic-drivers', icon: CarFront },
+    {
+      title: 'Medilogic Drivers',
+      url: '/company-admin/medilogic-drivers',
+      icon: CarFront,
+    },
     {
       title: 'Charts',
       url: '/company-admin/charts',
@@ -90,7 +94,7 @@ const sidebarLinksByRole: Record<
     { title: 'Settings', url: '/company-admin/settings', icon: Settings },
   ],
   medilogic_driver: [
-    { title: 'Dashboard', url: '/medilogic-driver', icon: Home }
+    { title: 'Dashboard', url: '/medilogic-driver', icon: Home },
   ],
   driver: [
     { title: 'Dashboard', url: '/driver', icon: Home },

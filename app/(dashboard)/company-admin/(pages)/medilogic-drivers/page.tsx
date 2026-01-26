@@ -230,14 +230,14 @@ export default function DriversPage() {
                           </span>
                         </TableCell>
                         <TableCell className="py-3 px-4">
-                        <Button
-                          onClick={() => viewDriver(driver)}
-                          className="flex items-center gap-1 px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white text-xs"
-                        >
-                          <Eye className="h-3 w-3" />
-                          View
-                        </Button>
-                      </TableCell>
+                          <Button
+                            onClick={() => viewDriver(driver)}
+                            className="flex items-center gap-1 px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white text-xs"
+                          >
+                            <Eye className="h-3 w-3" />
+                            View
+                          </Button>
+                        </TableCell>
                       </TableRow>
                     ))}
                 </TableBody>

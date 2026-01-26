@@ -1,6 +1,11 @@
-import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import { stripePromise } from "@/lib/stripe";
-import { useState } from "react";
+import {
+  Elements,
+  PaymentElement,
+  useStripe,
+  useElements,
+} from '@stripe/react-stripe-js';
+import { stripePromise } from '@/lib/stripe';
+import { useState } from 'react';
 
 type Props = {
   clientSecret: string;
@@ -11,7 +16,7 @@ export function StripePaymentModal({ clientSecret, onSuccess }: Props) {
   return (
     <Elements
       stripe={stripePromise}
-      options={{ clientSecret, appearance: { theme: "night" } }}
+      options={{ clientSecret, appearance: { theme: 'night' } }}
     >
       <CheckoutForm onSuccess={onSuccess} />
     </Elements>
@@ -31,7 +36,7 @@ function CheckoutForm({ onSuccess }: { onSuccess: () => void }) {
 
     const { error } = await stripe.confirmPayment({
       elements,
-      redirect: "if_required",
+      redirect: 'if_required',
     });
 
     setLoading(false);
@@ -51,7 +56,7 @@ function CheckoutForm({ onSuccess }: { onSuccess: () => void }) {
         disabled={!stripe || loading}
         className="w-full py-2 rounded bg-[#15941f] text-white"
       >
-        {loading ? "Processing..." : "Confirm Payment"}
+        {loading ? 'Processing...' : 'Confirm Payment'}
       </button>
     </form>
   );
