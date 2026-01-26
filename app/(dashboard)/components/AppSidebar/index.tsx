@@ -52,7 +52,7 @@ const sidebarLinksByRole: Record<
       url: '/super-admin/organizations',
       icon: Building2,
     },
-    { title: 'Drivers', url: '/super-admin/drivers', icon: CarFront },
+    { title: 'Medilogic Drivers', url: '/super-admin/drivers', icon: CarFront },
     {
       title: 'Pending Applications',
       url: '/super-admin/pending-applications',
@@ -71,7 +71,7 @@ const sidebarLinksByRole: Record<
       url: '/company-admin/tripsanalytics',
       icon: Waypoints,
     },
-    { title: 'Drivers', url: '/company-admin/drivers', icon: CarFront },
+    { title: 'Medilogic Drivers', url: '/company-admin/medilogic-drivers', icon: CarFront },
     {
       title: 'Charts',
       url: '/company-admin/charts',
