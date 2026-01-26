@@ -20,6 +20,8 @@ import {
   BadgeAlert,
   MessageSquare,
   CarFront,
+  BarChart3,
+  UserRoundPen,
 } from 'lucide-react';
 import { useAuth } from '@/components/auth';
 import {
@@ -50,7 +52,7 @@ const sidebarLinksByRole: Record<
       url: '/super-admin/organizations',
       icon: Building2,
     },
-    { title: 'Drivers', url: '/super-admin/drivers', icon: CarFront },
+    { title: 'Medilogic Drivers', url: '/super-admin/drivers', icon: CarFront },
     {
       title: 'Pending Applications',
       url: '/super-admin/pending-applications',
@@ -69,7 +71,11 @@ const sidebarLinksByRole: Record<
       url: '/company-admin/tripsanalytics',
       icon: Waypoints,
     },
-    { title: 'Drivers', url: '/company-admin/drivers', icon: CarFront },
+    {
+      title: 'Medilogic Drivers',
+      url: '/company-admin/medilogic-drivers',
+      icon: CarFront,
+    },
     {
       title: 'Charts',
       url: '/company-admin/charts',
@@ -87,6 +93,18 @@ const sidebarLinksByRole: Record<
     { title: 'Activity Logs', url: '/company-admin/activity-logs', icon: Logs },
     { title: 'Settings', url: '/company-admin/settings', icon: Settings },
   ],
+  medilogic_driver: [
+    { title: 'Dashboard', url: '/medilogic-driver', icon: Home },
+  ],
+  driver: [
+    { title: 'Dashboard', url: '/driver', icon: Home },
+    { title: 'My Trips', url: '/driver/trips', icon: ClipboardList },
+    { title: 'PODs', url: '/driver/pods', icon: FileText },
+    { title: 'COC', url: '/driver/coc', icon: Link2 },
+    { title: 'Incidents', url: '/driver/incidents', icon: ClipboardList },
+    { title: 'Support', url: '/driver/support', icon: MessageSquare },
+    { title: 'Settings', url: '/driver/settings', icon: Settings },
+  ],
   regulator: [
     { title: 'Dashboard', url: '/regulator', icon: Home },
 
@@ -99,15 +117,6 @@ const sidebarLinksByRole: Record<
     { title: 'Invoices', url: '/client/invoices', icon: Receipt },
     { title: 'My Trips', url: '/client/#', icon: ClipboardList },
     { title: 'Support', url: '/client/support', icon: MessageSquare },
-  ],
-  driver: [
-    { title: 'Dashboard', url: '/driver', icon: Home },
-    { title: 'My Trips', url: '/driver/trips', icon: ClipboardList },
-    { title: 'PODs', url: '/driver/pods', icon: FileText },
-    { title: 'COC', url: '/driver/coc', icon: Link2 },
-    { title: 'Incidents', url: '/driver/incidents', icon: ClipboardList },
-    { title: 'Support', url: '/driver/support', icon: MessageSquare },
-    { title: 'Settings', url: '/driver/settings', icon: Settings },
   ],
 };
 

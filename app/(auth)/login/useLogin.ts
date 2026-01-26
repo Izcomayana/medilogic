@@ -190,6 +190,9 @@ export function useLogin() {
           case 'regulator':
             destination = '/regulator';
             break;
+          case 'medilogic_driver':
+            destination = 'medilogic-driver';
+            break;
           case 'driver':
             destination = '/driver';
             break;

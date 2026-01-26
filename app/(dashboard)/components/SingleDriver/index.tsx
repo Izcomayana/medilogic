@@ -65,8 +65,8 @@ export function Driver({
             </div>
 
             <div>
-              <Label className="text-gray-400">Experience</Label>
-              <p>{driver.experience_years} years</p>
+              <Label className="text-gray-400">Postal Code</Label>
+              <p>{driver.zip_code}</p>
             </div>
 
             <div>

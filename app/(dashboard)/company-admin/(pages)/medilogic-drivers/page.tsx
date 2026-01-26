@@ -1,7 +1,7 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Users, CheckCircle, Clock, AlertCircle, Eye } from 'lucide-react';
+import { Eye } from 'lucide-react';
 import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 import {
   Table,
@@ -19,7 +19,7 @@ export default function DriversPage() {
   const {
     drivers,
     loading,
-    pendingList,
+    // pendingList,
     viewDriver,
     detailsOpen,
     setDetailsOpen,
@@ -28,41 +28,41 @@ export default function DriversPage() {
     handleReject,
   } = useDrivers();
 
-  const totalDrivers = drivers.length;
-  const pendingCount = pendingList.length;
-  const approvedCount = drivers.filter((d) => d.status === 'approved').length;
-  const rejectedCount = 0;
+  // const totalDrivers = drivers.length;
+  // const pendingCount = pendingList.length;
+  // const approvedCount = drivers.filter((d) => d.status === 'approved').length;
+  // const rejectedCount = 0;
 
-  const driverStats = [
-    {
-      title: 'Total Drivers',
-      value: totalDrivers,
-      change: 'All drivers',
-      icon: Users,
-      trend: 'up',
-    },
-    {
-      title: 'Pending Approval',
-      value: pendingCount,
-      change: 'Requires attention',
-      icon: Clock,
-      trend: pendingCount > 0 ? 'warning' : 'up',
-    },
-    {
-      title: 'Approved',
-      value: approvedCount,
-      change: 'Active drivers',
-      icon: CheckCircle,
-      trend: 'up',
-    },
-    {
-      title: 'Rejected',
-      value: rejectedCount,
-      change: 'Not approved',
-      icon: AlertCircle,
-      trend: 'neutral',
-    },
-  ];
+  // const driverStats = [
+  //   {
+  //     title: 'Total Drivers',
+  //     value: totalDrivers,
+  //     change: 'All drivers',
+  //     icon: Users,
+  //     trend: 'up',
+  //   },
+  //   {
+  //     title: 'Pending Approval',
+  //     value: pendingCount,
+  //     change: 'Requires attention',
+  //     icon: Clock,
+  //     trend: pendingCount > 0 ? 'warning' : 'up',
+  //   },
+  //   {
+  //     title: 'Approved',
+  //     value: approvedCount,
+  //     change: 'Active drivers',
+  //     icon: CheckCircle,
+  //     trend: 'up',
+  //   },
+  //   {
+  //     title: 'Rejected',
+  //     value: rejectedCount,
+  //     change: 'Not approved',
+  //     icon: AlertCircle,
+  //     trend: 'neutral',
+  //   },
+  // ];
 
   {
     loading && (
@@ -79,7 +79,7 @@ export default function DriversPage() {
 
       <main className="flex-1 p-6">
         {/* Stats Cards */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
+        {/* <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 mb-8">
           {driverStats.map((stat, index) => (
             <Card key={index} className="dashboard-card">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -100,10 +100,10 @@ export default function DriversPage() {
               </CardContent>
             </Card>
           ))}
-        </div>
+        </div> */}
 
         {/* Pending Drivers Table */}
-        <Card className="dashboard-card mb-8">
+        {/* <Card className="dashboard-card mb-8">
           <CardHeader>
             <CardTitle className="text-white">
               Pending Approvals ({pendingList.length})
@@ -169,7 +169,7 @@ export default function DriversPage() {
               </div>
             )}
           </CardContent>
-        </Card>
+        </Card> */}
 
         {/* Approved Drivers Table */}
         <Card className="dashboard-card">
@@ -199,6 +199,9 @@ export default function DriversPage() {
                     <TableHead className="text-left py-3 px-4 text-gray-400 font-medium">
                       Status
                     </TableHead>
+                    <TableHead className="text-left py-3 px-4 text-gray-400 font-medium">
+                      Action
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -225,6 +228,15 @@ export default function DriversPage() {
                           <span className="px-2 py-1 rounded text-xs bg-[#15941f] text-white">
                             Approved
                           </span>
+                        </TableCell>
+                        <TableCell className="py-3 px-4">
+                          <Button
+                            onClick={() => viewDriver(driver)}
+                            className="flex items-center gap-1 px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white text-xs"
+                          >
+                            <Eye className="h-3 w-3" />
+                            View
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))}
