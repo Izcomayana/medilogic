@@ -13,7 +13,7 @@ import { EnquiryModal } from '@/components/Enquiry';
 import { useState } from 'react';
 
 export default function HomePage() {
-  const [openEnquiry, setOpenEnquiry] = useState(false)
+  const [openEnquiry, setOpenEnquiry] = useState(false);
 
   return (
     <>
@@ -58,10 +58,7 @@ export default function HomePage() {
         />
       </div>
 
-      <EnquiryModal
-        open={openEnquiry}
-        onClose={() => setOpenEnquiry(false)}
-      />
+      <EnquiryModal open={openEnquiry} onClose={() => setOpenEnquiry(false)} />
     </>
   );
 }

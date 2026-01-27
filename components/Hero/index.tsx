@@ -21,7 +21,7 @@ type HeroProps = {
   CTABtnIcon?: React.ReactNode;
   CTABtn2?: string;
   CTABtn2Icon?: React.ReactNode;
-  onCTAClick?: () => void
+  onCTAClick?: () => void;
 };
 
 export const Hero: React.FC<HeroProps> = ({
@@ -121,15 +121,15 @@ export const Hero: React.FC<HeroProps> = ({
               style={{ transitionDelay: '1000ms' }}
             >
               {CTABtn && (
-  <Button
-    size="lg"
-    onClick={onCTAClick}
-    className="bg-[#15941f] hover:bg-[#15941f]/90 text-white px-8 py-4 text-lg font-semibold rounded-xl shadow-lg"
-  >
-    {CTABtn}
-    {CTABtnIcon}
-  </Button>
-)}
+                <Button
+                  size="lg"
+                  onClick={onCTAClick}
+                  className="bg-[#15941f] hover:bg-[#15941f]/90 text-white px-8 py-4 text-lg font-semibold rounded-xl shadow-lg"
+                >
+                  {CTABtn}
+                  {CTABtnIcon}
+                </Button>
+              )}
               {/* {CTABtn && (
                 <Button
                   size="lg"

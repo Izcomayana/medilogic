@@ -52,11 +52,10 @@ export default function SubmitTestimonialSection() {
         toast.success('Thank you! Your testimonial was submitted 🎉');
         setForm({ name: '', content: '' });
         setOpen(false);
-      }, 'filed to submit testimony')
+      }, 'filed to submit testimony');
     } catch (err: any) {
       toast.error(
-        err?.response?.data?.detail?.[0]?.msg ??
-        'Failed to submit testimonial'
+        err?.response?.data?.detail?.[0]?.msg ?? 'Failed to submit testimonial'
       );
     } finally {
       setLoading(false);
@@ -70,10 +69,11 @@ export default function SubmitTestimonialSection() {
     >
       <div className="container mx-auto max-w-4xl text-center">
         <div
-          className={`${fadeInUp} ${submitInView
+          className={`${fadeInUp} ${
+            submitInView
               ? 'opacity-100 translate-y-0 scale-100'
               : 'opacity-0 translate-y-12 scale-95'
-            }`}
+          }`}
         >
           <div className="inline-flex items-center gap-2 bg-[#15941f]/10 text-[#15941f] px-4 py-2 rounded-full text-sm font-medium mb-6">
             <MessageSquare className="w-4 h-4" />
@@ -151,9 +151,6 @@ export default function SubmitTestimonialSection() {
     </section>
   );
 }
-
-
-
 
 // 'use client';
 
