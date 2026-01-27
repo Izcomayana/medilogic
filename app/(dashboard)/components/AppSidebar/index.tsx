@@ -52,7 +52,11 @@ const sidebarLinksByRole: Record<
       url: '/super-admin/organizations',
       icon: Building2,
     },
-    { title: 'Medilogic Drivers', url: '/super-admin/drivers', icon: CarFront },
+    {
+      title: 'Medilogic Drivers',
+      url: '/super-admin/medilogic-drivers',
+      icon: CarFront,
+    },
     {
       title: 'Pending Applications',
       url: '/super-admin/pending-applications',

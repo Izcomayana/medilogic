@@ -199,6 +199,9 @@ export default function DriversPage() {
                     <TableHead className="text-left py-3 px-4 text-gray-400 font-medium">
                       Status
                     </TableHead>
+                    <TableHead className="text-left py-3 px-4 text-gray-400 font-medium">
+                      Action
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -225,6 +228,15 @@ export default function DriversPage() {
                           <span className="px-2 py-1 rounded text-xs bg-[#15941f] text-white">
                             Approved
                           </span>
+                        </TableCell>
+                        <TableCell className="py-3 px-4">
+                          <Button
+                            onClick={() => viewDriver(driver)}
+                            className="flex items-center gap-1 px-3 py-1 rounded bg-blue-600 hover:bg-blue-700 text-white text-xs"
+                          >
+                            <Eye className="h-3 w-3" />
+                            View
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))}
