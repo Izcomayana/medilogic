@@ -2,7 +2,6 @@
 
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
-import React from 'react';
 
 export const Footer = () => {
   const LegalLinks = [
@@ -50,7 +49,7 @@ export const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-3">
-              {['Features', 'Solutions', 'Testimonials', 'Contact'].map(
+              {['Features', 'Solutions', 'Testimonials', 'Contacts'].map(
                 (link) => (
                   <li key={link}>
                     <Link
