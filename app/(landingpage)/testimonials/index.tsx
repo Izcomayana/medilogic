@@ -2,7 +2,6 @@
 
 import { Hero } from '@/components/Hero';
 import { Star, Users } from 'lucide-react';
-import React from 'react';
 import GridSection from './components/GridSection';
 import SubmitSection from './components/SubmitSection';
 import Verification from './components/Verification';
