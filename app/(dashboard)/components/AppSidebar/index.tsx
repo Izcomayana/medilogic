@@ -9,7 +9,7 @@ import {
   ClipboardList,
   FileText,
   Logs,
-  // Bell,
+  Bell,
   AppWindow,
   Route,
   Settings,
@@ -64,7 +64,7 @@ const sidebarLinksByRole: Record<
     },
     { title: 'Activity Logs', url: '/super-admin/activity-logs', icon: Logs },
     { title: 'Support', url: '/super-admin/support', icon: MessageSquare },
-    // { title: 'Notifications', url: '/super-admin/notifications', icon: Bell },
+    { title: 'Notifications', url: '/super-admin/notifications', icon: Bell },
   ],
   admin: [
     { title: 'Dashboard', url: '/company-admin', icon: Home },

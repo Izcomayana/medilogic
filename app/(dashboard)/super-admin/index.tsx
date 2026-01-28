@@ -19,12 +19,14 @@ import { CreateRegulatorDialog } from './(pages)/regulators/components/CreateReg
 import { CreateAdmin } from './(pages)/admins/components/CreateAdmin';
 import { usePendingApplications } from '@/hooks/usePendingApplications';
 import { PageHeader } from '../components/PageHeader';
+import { useEnquiries } from "@/hooks/useEnquiry"
 
 export default function Dashboard() {
   const { filteredAdmins, createAdmin } = useAdmin();
   const { filteredRegs, createReg } = useRegulators();
   const { filteredOrgs, createOrg } = useOrganizations();
   const { sortedApplications } = usePendingApplications();
+   const { recent: enquiries, total: totalEnquiries, loading } = useEnquiries()
 
   const stats = [
     {
@@ -150,6 +152,53 @@ export default function Dashboard() {
             </CardContent>
           </Card>
         </div>
+      <div className="mt-8">
+  <Card className="dashboard-card">
+    <CardHeader className="flex flex-row items-center justify-between">
+      <CardTitle className="text-white">
+        New Enquiries
+        <span className="ml-2 text-sm text-gray-400">
+          ({totalEnquiries})
+        </span>
+      </CardTitle>
+    </CardHeader>
+
+    <CardContent>
+      {loading ? (
+        <p className="text-gray-400 text-sm">Loading enquiries...</p>
+      ) : enquiries.length === 0 ? (
+        <p className="text-gray-400 text-sm">No enquiries yet</p>
+      ) : (
+        <div className="space-y-4">
+          {enquiries.map((enquiry) => (
+            <div
+              key={enquiry.id}
+              className="border border-gray-700 rounded-lg p-4 hover:bg-gray-800 transition"
+            >
+              <div className="flex justify-between items-start">
+                <div>
+                  <p className="text-white font-medium">
+                    {enquiry.name}
+                  </p>
+                  <p className="text-xs text-gray-400">
+                    {enquiry.email}
+                  </p>
+                </div>
+                <p className="text-xs text-gray-500">
+                  {new Date(enquiry.created_at).toLocaleDateString()}
+                </p>
+              </div>
+
+              <p className="mt-2 text-sm text-gray-300 line-clamp-2">
+                {enquiry.message}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
+    </CardContent>
+  </Card>
+</div>
       </main>
     </div>
   );
