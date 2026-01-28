@@ -11,9 +11,11 @@ import { KeyFeatures } from './components/KeyFeatures';
 import { ArrowRight, Award, Phone, Play, Shield } from 'lucide-react';
 import { EnquiryModal } from '@/components/Enquiry';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function HomePage() {
   const [openEnquiry, setOpenEnquiry] = useState(false);
+  const router = useRouter();
 
   return (
     <>
@@ -36,6 +38,7 @@ export default function HomePage() {
             <Play className="mr-2 w-5 h-5 group-hover:scale-110 transition-transform" />
           }
           CTABtn2="Learn How It Works"
+          onCTABtn2Click={() => router.push('/about')}
         />
         <BFHP />
         <KeyFeatures />

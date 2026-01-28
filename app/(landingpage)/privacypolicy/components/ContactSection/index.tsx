@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { MessageCircle, Mail, MapPin } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export default function ContactSection() {
   return (
@@ -105,12 +106,14 @@ export default function ContactSection() {
               For specific data protection inquiries or to exercise your GDPR
               rights, please contact us directly.
             </p>
-            <Button
-              className="bg-[#15941f] hover:bg-[#0f6b17] text-white"
-              onClick={() => (window.location.href = '/contact')}
-            >
-              Visit Contact Page
-            </Button>
+            <Link href="/contacts">
+              <Button
+                className="bg-[#15941f] hover:bg-[#0f6b17] text-white"
+                onClick={() => (window.location.href = '/contact')}
+              >
+                Visit Contact Page
+              </Button>
+            </Link>
           </motion.div>
         </motion.div>
       </div>
