@@ -17,11 +17,14 @@ type HeroProps = {
   descBadgeIcon2: React.ReactNode;
   descBadgeText2: string;
   descSubText?: string;
+
   CTABtn?: string;
   CTABtnIcon?: React.ReactNode;
+  onCTAClick?: () => void;
+
   CTABtn2?: string;
   CTABtn2Icon?: React.ReactNode;
-  onCTAClick?: () => void;
+  onCTABtn2Click?: () => void;
 };
 
 export const Hero: React.FC<HeroProps> = ({
@@ -41,6 +44,7 @@ export const Hero: React.FC<HeroProps> = ({
   CTABtn2Icon,
   descSubText,
   onCTAClick,
+  onCTABtn2Click,
 }) => {
   const [heroRef, heroInView] = useInView(0.1);
 
@@ -130,16 +134,19 @@ export const Hero: React.FC<HeroProps> = ({
                   {CTABtnIcon}
                 </Button>
               )}
-              {/* {CTABtn && (
-                <Button
-                  size="lg"
-                  className="bg-[#15941f] hover:bg-[#15941f]/90 text-white px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group hover:scale-105"
-                >
-                  {CTABtn}
-                  {CTABtnIcon}
-                </Button>
-              )} */}
               {CTABtn2 && (
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={onCTABtn2Click}
+                  className="border-[#15941f] text-[#15941f] hover:bg-[#15941f] hover:text-white px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300 group bg-transparent hover:scale-105"
+                >
+                  {CTABtn2Icon}
+                  {CTABtn2}
+                </Button>
+              )}
+
+              {/* {CTABtn2 && (
                 <Button
                   variant="outline"
                   size="lg"
@@ -148,7 +155,7 @@ export const Hero: React.FC<HeroProps> = ({
                   {CTABtn2Icon}
                   {CTABtn2}
                 </Button>
-              )}
+              )} */}
             </div>
           )}
 

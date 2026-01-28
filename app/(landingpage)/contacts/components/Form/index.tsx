@@ -1,36 +1,42 @@
 'use client';
 
-import type React from 'react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { MessageSquareText, MessageCircle } from 'lucide-react';
 import { useInView } from '@/app/(landingpage)/hooks/useInView';
 import { fadeInUp } from '@/app/(landingpage)/hooks/annimation';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { api } from '@/lib/api';
 
 export default function ContactForm() {
   const [formRef, formInView] = useInView(0.1);
 
-  // form submission logic
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    // const formData = new FormData(event.currentTarget);
-    // const response = await fetch('/api/contact', {
-    //   method: 'POST',
-    //   body: JSON.stringify(Object.fromEntries(formData)),
-    //   headers: { 'Content-Type': 'application/json' },
-    // });
-    // const result = await response.json();
-    // console.log(result);
-    alert('Message sent! (This is a demo, no actual email was sent.)');
+  const [loading, setLoading] = useState(false);
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    message: '',
+  });
+
+  const submit = async () => {
+    if (!form.name || !form.email || !form.message) {
+      toast.error('Please fill all fields');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await api.post('/enquiries/', form);
+      toast.success('Enquiry submitted. We’ll contact you shortly.');
+      setForm({ name: '', email: '', message: '' });
+    } catch (e) {
+      toast.error('Failed to submit enquiry');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -51,8 +57,7 @@ export default function ContactForm() {
           </h2>
         </div>
 
-        <form
-          onSubmit={handleSubmit}
+        <div
           className={`grid grid-cols-1 md:grid-cols-2 gap-6 bg-white p-8 rounded-xl shadow-lg ${fadeInUp} ${formInView ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-12 scale-95'}`}
           style={{ transitionDelay: '200ms' }}
         >
@@ -66,6 +71,8 @@ export default function ContactForm() {
               placeholder="Full Name"
               required
               className="h-12"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
             />
           </div>
           <div className="md:col-span-1">
@@ -78,34 +85,9 @@ export default function ContactForm() {
               placeholder="Email Address"
               required
               className="h-12"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
             />
-          </div>
-          <div className="md:col-span-1">
-            <Label htmlFor="organization" className="sr-only">
-              Organization Name
-            </Label>
-            <Input
-              id="organization"
-              type="text"
-              placeholder="Organization Name (Optional)"
-              className="h-12"
-            />
-          </div>
-          <div className="md:col-span-1">
-            <Label htmlFor="contactReason" className="sr-only">
-              I’m contacting about…
-            </Label>
-            <Select required name="contactReason">
-              <SelectTrigger className="h-12">
-                <SelectValue placeholder="I’m contacting about…" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="support">Support</SelectItem>
-                <SelectItem value="partnership">Partnership</SelectItem>
-                <SelectItem value="sales">Sales/Demo</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
           <div className="md:col-span-2">
             <Label htmlFor="message" className="sr-only">
@@ -117,18 +99,22 @@ export default function ContactForm() {
               rows={5}
               required
               className="min-h-[120px]"
+              value={form.message}
+              onChange={(e) => setForm({ ...form, message: e.target.value })}
             />
           </div>
           <div className="md:col-span-2 text-center">
             <Button
+              onClick={submit}
+              disabled={loading}
               type="submit"
               size="lg"
               className="bg-[#15941f] hover:bg-[#15941f]/90 text-white px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group hover:scale-105"
             >
-              Send Message
+              {loading ? 'Sending...' : 'Send Message'}
             </Button>
           </div>
-        </form>
+        </div>
       </div>
       {/* Optional Live Chat Widget Placeholder */}
       <div className="fixed bottom-4 right-4 z-50">
