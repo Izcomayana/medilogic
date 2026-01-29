@@ -1,11 +1,18 @@
-"use client"
+'use client';
 
 import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Badge } from "@/components/ui/badge"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 import {
   Dialog,
   DialogContent,
@@ -13,8 +20,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Label } from "@/components/ui/label"
+} from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 import {
   Star,
   Search,
@@ -23,79 +30,79 @@ import {
   Calendar,
   User,
   MessageSquare,
-} from "lucide-react"
-import { useState } from "react"
-import { toast } from "sonner"
-import { useEffect } from "react"
-import { api } from "@/lib/api"
+} from 'lucide-react';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { useEffect } from 'react';
+import { api } from '@/lib/api';
 import { useAuthorizedRequest } from '@/hooks/useRequest';
 import { formatDateTime } from '@/utils/datetime';
 
 type Testimonial = {
-  id: string
-  short_id: string
-  name: string
-  content: string
-  is_approved: boolean
-  created_at: string
-}
+  id: string;
+  short_id: string;
+  name: string;
+  content: string;
+  is_approved: boolean;
+  created_at: string;
+};
 
 export default function TestimonialsPage() {
-  const [testimonialsList, setTestimonialsList] = useState<Testimonial[]>([])
-  const [loading, setLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState("")
+  const [testimonialsList, setTestimonialsList] = useState<Testimonial[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
   const [selectedTestimonial, setSelectedTestimonial] =
-    useState<Testimonial | null>(null)
+    useState<Testimonial | null>(null);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
-  const [approving, setApproving] = useState(false)
+  const [approving, setApproving] = useState(false);
 
   const authorizedRequest = useAuthorizedRequest();
 
   useEffect(() => {
     const fetchTestimonials = async () => {
       try {
-        setLoading(true)
+        setLoading(true);
 
         await authorizedRequest(async (token) => {
-          const res = await api.get<Testimonial[]>("/testimonials/", {
+          const res = await api.get<Testimonial[]>('/testimonials/', {
             headers: {
               Authorization: `Bearer ${token}`,
               'Content-Type': 'application/json',
             },
-          })
-          setTestimonialsList(res.data)
+          });
+          setTestimonialsList(res.data);
         }, 'failed to get testimonies');
       } catch (err) {
-        toast.error("Failed to load testimonials")
+        toast.error('Failed to load testimonials');
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchTestimonials()
-  }, [])
+    fetchTestimonials();
+  }, []);
 
   const filteredTestimonials = testimonialsList.filter((testimonial) => {
-    const term = searchTerm.toLowerCase()
+    const term = searchTerm.toLowerCase();
     return (
       testimonial.name.toLowerCase().includes(term) ||
       testimonial.content.toLowerCase().includes(term)
-    )
-  })
+    );
+  });
 
-  const pendingCount = testimonialsList.filter((t) => !t.is_approved).length
-  const approvedCount = testimonialsList.filter((t) => t.is_approved).length
+  const pendingCount = testimonialsList.filter((t) => !t.is_approved).length;
+  const approvedCount = testimonialsList.filter((t) => t.is_approved).length;
 
   const totalTestimonials = testimonialsList.length;
 
   const handleViewDetails = (testimonial: Testimonial) => {
-    setSelectedTestimonial(testimonial)
-    setIsDetailsModalOpen(true)
-  }
+    setSelectedTestimonial(testimonial);
+    setIsDetailsModalOpen(true);
+  };
 
   const handleApprove = async (testimonialId: string) => {
     try {
-      setApproving(true)
+      setApproving(true);
 
       await authorizedRequest(async (token) => {
         const res = await api.patch<Testimonial>(
@@ -106,57 +113,69 @@ export default function TestimonialsPage() {
               Authorization: `Bearer ${token}`,
             },
           }
-        )
+        );
 
         setTestimonialsList((prev) =>
-          prev.map((t) =>
-            t.id === testimonialId ? res.data : t
-          )
-        )
+          prev.map((t) => (t.id === testimonialId ? res.data : t))
+        );
 
-        toast.success("Testimonial approved successfully ✅")
-        setIsDetailsModalOpen(false)
-        setSelectedTestimonial(null)
-      }, "Failed to approve testimonial")
+        toast.success('Testimonial approved successfully ✅');
+        setIsDetailsModalOpen(false);
+        setSelectedTestimonial(null);
+      }, 'Failed to approve testimonial');
     } catch (err: any) {
       toast.error(
-        err?.response?.data?.detail?.[0]?.msg ??
-        "Failed to approve testimonial"
-      )
+        err?.response?.data?.detail?.[0]?.msg ?? 'Failed to approve testimonial'
+      );
     } finally {
-      setApproving(false)
+      setApproving(false);
     }
-  }
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
-      <PageHeader title="Testimonials" subtitle={`Pending approvals: ${pendingCount}`} />
+      <PageHeader
+        title="Testimonials"
+        subtitle={`Pending approvals: ${pendingCount}`}
+      />
 
       <main className="flex-1 p-6">
         {/* Stats Row */}
         <div className="grid gap-4 md:grid-cols-3 mb-6">
           <Card className="dashboard-card">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-gray-300">Total Testimonials</CardTitle>
+              <CardTitle className="text-sm font-medium text-gray-300">
+                Total Testimonials
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-white">{totalTestimonials}</div>
+              <div className="text-3xl font-bold text-white">
+                {totalTestimonials}
+              </div>
             </CardContent>
           </Card>
           <Card className="dashboard-card">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-gray-300">Pending</CardTitle>
+              <CardTitle className="text-sm font-medium text-gray-300">
+                Pending
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-yellow-500">{pendingCount}</div>
+              <div className="text-3xl font-bold text-yellow-500">
+                {pendingCount}
+              </div>
             </CardContent>
           </Card>
           <Card className="dashboard-card">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm font-medium text-gray-300">Approved</CardTitle>
+              <CardTitle className="text-sm font-medium text-gray-300">
+                Approved
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-[#15941f]">{approvedCount}</div>
+              <div className="text-3xl font-bold text-[#15941f]">
+                {approvedCount}
+              </div>
             </CardContent>
           </Card>
         </div>
@@ -192,13 +211,15 @@ export default function TestimonialsPage() {
             ) : filteredTestimonials.length === 0 ? (
               <div className="text-center py-12">
                 <MessageSquare className="h-12 w-12 text-gray-600 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-white mb-2">No testimonials found</h3>
+                <h3 className="text-lg font-medium text-white mb-2">
+                  No testimonials found
+                </h3>
                 <p className="text-gray-400">
                   {searchTerm
-                    ? "Try adjusting your search term."
+                    ? 'Try adjusting your search term.'
                     : totalTestimonials === 0
-                      ? "No testimonials submitted yet."
-                      : "All testimonials are approved! 🎉"}
+                      ? 'No testimonials submitted yet.'
+                      : 'All testimonials are approved! 🎉'}
                 </p>
               </div>
             ) : (
@@ -215,7 +236,10 @@ export default function TestimonialsPage() {
                   </TableHeader>
                   <TableBody>
                     {filteredTestimonials.map((testimonial) => (
-                      <TableRow key={testimonial.id} className="border-gray-700 hover:bg-gray-800">
+                      <TableRow
+                        key={testimonial.id}
+                        className="border-gray-700 hover:bg-gray-800"
+                      >
                         <TableCell className="font-medium text-white flex items-center gap-2">
                           <User className="h-4 w-4 text-gray-400" />
                           {testimonial.name}
@@ -231,9 +255,13 @@ export default function TestimonialsPage() {
                         </TableCell>
                         <TableCell>
                           {testimonial.is_approved ? (
-                            <Badge className="bg-[#15941f] text-white">Approved</Badge>
+                            <Badge className="bg-[#15941f] text-white">
+                              Approved
+                            </Badge>
                           ) : (
-                            <Badge className="bg-yellow-600 text-white">Pending</Badge>
+                            <Badge className="bg-yellow-600 text-white">
+                              Pending
+                            </Badge>
                           )}
                         </TableCell>
                         <TableCell>
@@ -282,7 +310,9 @@ export default function TestimonialsPage() {
                   </p>
                 </div>
                 <div>
-                  <Label className="text-gray-400 text-sm">Submitted Date</Label>
+                  <Label className="text-gray-400 text-sm">
+                    Submitted Date
+                  </Label>
                   <p className="text-white mt-1 flex items-center gap-2">
                     <Calendar className="h-4 w-4" />
                     {formatDateTime(selectedTestimonial.created_at)}
@@ -292,12 +322,18 @@ export default function TestimonialsPage() {
                   <Label className="text-gray-400 text-sm">Status</Label>
                   <div className="mt-1">
                     {selectedTestimonial.is_approved ? (
-                      <Badge variant="secondary" className="bg-[#15941f] text-white">
+                      <Badge
+                        variant="secondary"
+                        className="bg-[#15941f] text-white"
+                      >
                         <Check className="h-3 w-3 mr-1" />
                         Approved
                       </Badge>
                     ) : (
-                      <Badge variant="secondary" className="bg-yellow-600 text-white">
+                      <Badge
+                        variant="secondary"
+                        className="bg-yellow-600 text-white"
+                      >
                         Pending
                       </Badge>
                     )}
@@ -307,9 +343,13 @@ export default function TestimonialsPage() {
 
               {/* Testimonial Content */}
               <div className="space-y-2">
-                <Label className="text-gray-400 text-sm">Testimonial Content</Label>
+                <Label className="text-gray-400 text-sm">
+                  Testimonial Content
+                </Label>
                 <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
-                  <p className="text-gray-100 leading-relaxed italic">{selectedTestimonial.content}</p>
+                  <p className="text-gray-100 leading-relaxed italic">
+                    {selectedTestimonial.content}
+                  </p>
                 </div>
               </div>
             </div>
@@ -323,7 +363,7 @@ export default function TestimonialsPage() {
                 className="primary-button"
               >
                 {approving ? (
-                  "Approving..."
+                  'Approving...'
                 ) : (
                   <>
                     <Check className="h-4 w-4 mr-2" />
@@ -344,5 +384,5 @@ export default function TestimonialsPage() {
         </DialogContent>
       </Dialog>
     </div>
-  )
+  );
 }
