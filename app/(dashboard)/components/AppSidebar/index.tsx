@@ -20,8 +20,9 @@ import {
   BadgeAlert,
   MessageSquare,
   CarFront,
-  BarChart3,
-  UserRoundPen,
+  // BarChart3,
+  // UserRoundPen,
+  Star,
 } from 'lucide-react';
 import { useAuth } from '@/components/auth';
 import {
@@ -61,6 +62,11 @@ const sidebarLinksByRole: Record<
       title: 'Pending Applications',
       url: '/super-admin/pending-applications',
       icon: AppWindow,
+    },
+    {
+      title: 'Testimonials',
+      url: '/super-admin/testimonials',
+      icon: Star,
     },
     { title: 'Activity Logs', url: '/super-admin/activity-logs', icon: Logs },
     { title: 'Support', url: '/super-admin/support', icon: MessageSquare },
