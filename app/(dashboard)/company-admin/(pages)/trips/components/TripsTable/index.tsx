@@ -78,8 +78,8 @@ export function TripsTable({
         return <Badge className="bg-orange-500 text-white">High</Badge>;
       case 'normal':
         return <Badge className="bg-green-600 text-white">Normal</Badge>;
-      case 'low':
-        return <Badge className="bg-blue-600 text-white">Low</Badge>;
+      case 'stat':
+        return <Badge className="bg-blue-600 text-white">Stat</Badge>;
       default:
         return (
           <Badge variant="outline" className="text-gray-300 border-gray-600">
@@ -111,10 +111,6 @@ export function TripsTable({
                 <Table>
                   <TableHeader>
                     <TableRow className="border-gray-700 hover:bg-gray-800">
-                      {/* <TableHead className="text-gray-300">Trip ID</TableHead> */}
-                      {/* <TableHead className="text-gray-300">
-                      Organization
-                    </TableHead> */}
                       <TableHead className="text-gray-300">Driver</TableHead>
                       <TableHead className="text-gray-300">Priority</TableHead>
                       <TableHead className="text-gray-300">Route</TableHead>
