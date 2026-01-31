@@ -12,7 +12,7 @@ import {
 import { useTrips } from '@/hooks/trips/useTrips';
 import { Download, Plus, X, Package, Link2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import TripForm from './TripForm';
+import TripForm, { TripFormData } from './TripForm';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -22,18 +22,20 @@ import {
 import Link from 'next/link';
 import { Spinner } from '@/components/ui/spinner';
 
-type CreateTripProps = ReturnType<typeof useTrips>;
+type CreateTripsProps = ReturnType<typeof useTrips> & {
+  formData: TripFormData;
+  setFormData: React.Dispatch<React.SetStateAction<TripFormData>>;
+};
 
 export function CreateTrips({
   isCreateModalOpen,
   setIsCreateModalOpen,
-  // filteredTrips,
   formData,
   setFormData,
   handleCreateTrip,
   loading,
   handleExport,
-}: CreateTripProps) {
+}: CreateTripsProps) {
   const isSubmitDisabled = loading || !formData.clientId || !formData.dateTime;
 
   return (
@@ -76,7 +78,7 @@ export function CreateTrips({
         </AlertDialogTrigger>
       </div>
 
-      <AlertDialogContent className="bg-gray-800 border-gray-700 text-white lg:max-w-2xl">
+      <AlertDialogContent className="bg-gray-800 border-gray-700 text-white lg:max-w-3xl">
         <AlertDialogHeader>
           <div className="flex justify-between">
             <AlertDialogTitle>Create New Trip</AlertDialogTitle>

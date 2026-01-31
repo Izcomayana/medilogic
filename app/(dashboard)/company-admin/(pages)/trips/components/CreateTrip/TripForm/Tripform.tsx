@@ -48,7 +48,7 @@ export default function TripForm({ formData, setFormData }: Props) {
   } = useSysConfig();
 
   return (
-    <div className="grid gap-6 max-h-[70vh] overflow-y-auto">
+    <div className="grid gap-6 max-h-[65vh] overflow-y-auto">
       <TripBasics formData={formData} setFormData={setFormData} />
       <AssignmentSection formData={formData} setFormData={setFormData} />
       <LocationSection formData={formData} setFormData={setFormData} />
