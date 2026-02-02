@@ -1,7 +1,7 @@
+import { EditTripFormData } from '..';
 import { LocationZone } from '../../Fields/LocationZone';
 import { ShiftWindowSelect } from '../../Fields/ShiftWindow';
 import { VehicleTypeSelect } from '../../Fields/VehicleType';
-import { EditTripFormData } from '../EditTripModal';
 
 type Props = {
   formData: EditTripFormData;

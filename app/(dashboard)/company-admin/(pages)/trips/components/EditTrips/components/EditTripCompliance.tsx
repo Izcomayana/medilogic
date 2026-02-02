@@ -7,7 +7,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { EditTripFormData } from '../EditTripModal';
+import { EditTripFormData } from '..';
 
 type Props = {
   formData: EditTripFormData;

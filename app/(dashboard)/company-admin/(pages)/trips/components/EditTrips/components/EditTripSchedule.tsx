@@ -1,6 +1,6 @@
+import { EditTripFormData } from '..';
 import { StatusSelect } from '../../Fields/Status';
 import { TripTime } from '../../Fields/TripTime';
-import { EditTripFormData } from '../EditTripModal';
 
 type Props = {
   formData: EditTripFormData;

@@ -1,9 +1,9 @@
 import { useUsers } from '@/hooks/useUsers';
-import { EditTripFormData } from '../EditTripModal';
 import { ClientSelect } from '../../Fields/ClientSelect';
 import { DriverSelect } from '../../Fields/DriverSelect';
 import { DeliveryTypeSelect } from '../../Fields/DeliveryTypeSelect';
 import { PrioritySelect } from '../../Fields/PrioritySelect';
+import { EditTripFormData } from '..';
 
 type Props = {
   formData: EditTripFormData;
