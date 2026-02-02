@@ -47,7 +47,7 @@ export const createEmptyTripForm = (): TripFormBase => ({
   dateTime: '',
   status: 'pending',
 
-  cost: 0,
+  cost: '',
   distanceKm: '',
 
   vehicleType: '',

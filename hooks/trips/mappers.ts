@@ -84,7 +84,7 @@ export type TripFormBase = {
   dateTime: string;
   status: string;
 
-  cost: atring;
+  cost: string;
   distanceKm: string;
 
   vehicleType: string;
