@@ -1,10 +1,10 @@
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { TripFormData } from '../CreateTrip/TripForm';
+import { CreateTripFormData } from '../CreateTrip/TripForm';
 
 type Props = {
-  formData: TripFormData;
-  setFormData: React.Dispatch<React.SetStateAction<TripFormData>>;
+  formData: CreateTripFormData;
+  setFormData: React.Dispatch<React.SetStateAction<CreateTripFormData>>;
 };
 
 export const NoteArea = ({ formData, setFormData }: Props) => {

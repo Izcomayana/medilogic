@@ -6,11 +6,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { TripFormData } from '../CreateTrip/TripForm';
+import { CreateTripFormData } from '../CreateTrip/TripForm';
 
 type Props = {
-  formData: TripFormData;
-  setFormData: React.Dispatch<React.SetStateAction<TripFormData>>;
+  formData: CreateTripFormData;
+  setFormData: React.Dispatch<React.SetStateAction<CreateTripFormData>>;
 };
 
 export const Compliance = ({ formData, setFormData }: Props) => {

@@ -1,4 +1,3 @@
-import { TripFormData } from '../CreateTrip/TripForm';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -7,10 +6,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { CreateTripFormData } from '../CreateTrip/TripForm';
 
 type Props = {
-  formData: TripFormData;
-  setFormData: React.Dispatch<React.SetStateAction<TripFormData>>;
+  formData: CreateTripFormData;
+  setFormData: React.Dispatch<React.SetStateAction<CreateTripFormData>>;
 };
 
 export const StatusSelect = ({ formData, setFormData }: Props) => {

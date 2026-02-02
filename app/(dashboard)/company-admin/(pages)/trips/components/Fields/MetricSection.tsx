@@ -18,9 +18,7 @@ export const MetricSection = ({ formData, setFormData }: Props) => {
           id="cost"
           type="number"
           value={formData.cost}
-          onChange={(e) =>
-            setFormData({ ...formData, cost: e.target.value})
-          }
+          onChange={(e) => setFormData({ ...formData, cost: e.target.value })}
           placeholder="Enter cost"
           className="bg-gray-700 border-gray-600 text-white mt-2"
         />
