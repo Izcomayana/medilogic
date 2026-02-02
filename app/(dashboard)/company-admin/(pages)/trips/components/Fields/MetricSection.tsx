@@ -1,10 +1,10 @@
-import { TripFormData } from './Tripform';
+import { CreateTripFormData } from '../CreateTrip/TripForm';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 
 type Props = {
-  formData: TripFormData;
-  setFormData: React.Dispatch<React.SetStateAction<TripFormData>>;
+  formData: CreateTripFormData;
+  setFormData: React.Dispatch<React.SetStateAction<CreateTripFormData>>;
 };
 
 export const MetricSection = ({ formData, setFormData }: Props) => {
@@ -19,7 +19,7 @@ export const MetricSection = ({ formData, setFormData }: Props) => {
           type="number"
           value={formData.cost}
           onChange={(e) =>
-            setFormData({ ...formData, cost: Number(e.target.value) })
+            setFormData({ ...formData, cost: e.target.value})
           }
           placeholder="Enter cost"
           className="bg-gray-700 border-gray-600 text-white mt-2"
@@ -31,12 +31,12 @@ export const MetricSection = ({ formData, setFormData }: Props) => {
         </Label>
         <Input
           id="distanceKm"
-          type="text"
+          type="number"
           value={formData.distanceKm}
           onChange={(e) =>
             setFormData({
               ...formData,
-              distanceKm: Number(e.target.value),
+              distanceKm: e.target.value,
             })
           }
           placeholder="Enter distance in km"

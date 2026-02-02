@@ -12,7 +12,7 @@ import {
 import { useTrips } from '@/hooks/trips/useTrips';
 import { Download, Plus, X, Package, Link2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import TripForm, { TripFormData } from './TripForm';
+import TripForm, { CreateTripFormData } from './TripForm';
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -23,8 +23,8 @@ import Link from 'next/link';
 import { Spinner } from '@/components/ui/spinner';
 
 type CreateTripsProps = ReturnType<typeof useTrips> & {
-  formData: TripFormData;
-  setFormData: React.Dispatch<React.SetStateAction<TripFormData>>;
+  formData: CreateTripFormData;
+  setFormData: React.Dispatch<React.SetStateAction<CreateTripFormData>>;
 };
 
 export function CreateTrips({

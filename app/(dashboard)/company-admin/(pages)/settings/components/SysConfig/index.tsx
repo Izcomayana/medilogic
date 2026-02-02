@@ -3,7 +3,7 @@ import { Truck, Flag, Clock, MapPin } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { useSysConfig } from '@/hooks/settings/useSysConfg';
 import { VehicleTypeTab } from './components/VehicleTypes';
-import { PriorityLevelsTab } from './components/PriorityLevels';
+// import { PriorityLevelsTab } from './components/PriorityLevels';
 import { ShiftWindowsTab } from './components/ShiftWindows';
 import { ZonesTab } from './components/Zones';
 
@@ -92,7 +92,7 @@ export function SystemConfigTab({
 
             <VehicleTypeTab {...sysConfigState} />
 
-            <PriorityLevelsTab {...sysConfigState} />
+            {/* <PriorityLevelsTab {...sysConfigState} /> */}
 
             <ShiftWindowsTab {...sysConfigState} />
 

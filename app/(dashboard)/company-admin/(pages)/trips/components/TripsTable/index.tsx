@@ -43,6 +43,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { useState } from 'react';
+import { formatDateTime } from '@/utils/datetime';
 
 type TableProps = ReturnType<typeof useTrips>;
 
@@ -160,7 +161,7 @@ export function TripsTable({
                         <TableCell className="text-gray-300">
                           <div className="flex items-center gap-1">
                             <Clock className="h-3 w-3" />
-                            {trip.dateTime}
+                            {formatDateTime(trip.dateTime)}
                           </div>
                         </TableCell>
                         <TableCell>{getTripStatusBadge(trip.status)}</TableCell>

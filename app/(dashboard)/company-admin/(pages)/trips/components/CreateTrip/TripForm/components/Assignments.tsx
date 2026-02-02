@@ -1,12 +1,12 @@
-import { TripFormData } from './Tripform';
+import { CreateTripFormData } from '..';
 import { useUsers } from '@/hooks/useUsers';
-import { useDrivers } from './useDrivers';
-import { ClientSelect } from './Fields/ClientSelect';
-import { DriverSelect } from './Fields/DriverSelect';
+import { useDrivers } from '../useDrivers';
+import { ClientSelect } from '../../../Fields/ClientSelect';
+import { DriverSelect } from '../../../Fields/DriverSelect';
 
 type Props = {
-  formData: TripFormData;
-  setFormData: React.Dispatch<React.SetStateAction<TripFormData>>;
+  formData: CreateTripFormData;
+  setFormData: React.Dispatch<React.SetStateAction<CreateTripFormData>>;
 };
 
 export function AssignmentSection({ formData, setFormData }: Props) {

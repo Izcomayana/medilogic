@@ -1,4 +1,4 @@
-import { TripFormData } from './Tripform';
+import { CreateTripFormData } from '..';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import {
@@ -11,8 +11,8 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 
 type Props = {
-  formData: TripFormData;
-  setFormData: React.Dispatch<React.SetStateAction<TripFormData>>;
+  formData: CreateTripFormData;
+  setFormData: React.Dispatch<React.SetStateAction<CreateTripFormData>>;
 };
 
 export const ComplianceSection = ({ formData, setFormData }: Props) => {

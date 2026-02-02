@@ -49,7 +49,10 @@ const Register: React.FC = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center px-4 pt-8 pb-12">
+      <div
+        className="min-h-screen bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center px-4 pt-8 pb-12"
+        style={{ backgroundImage: "url('/auth2.png')" }}
+      >
         <div className="w-full max-w-md">
           {/* Logo and Header */}
           <RegisterFormHeader />

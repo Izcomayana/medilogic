@@ -23,7 +23,6 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { getTripStatusBadge } from '@/utils/badge';
 import { formatDateTime } from '@/utils/datetime';
 
 type TripsDetailsProps = ReturnType<typeof useTrips>;
@@ -191,7 +190,7 @@ export function TripsDetailModal({
               </div>
               <div className="flex items-center gap-2 bg-gray-800 p-3 rounded-lg">
                 <Gauge className="h-5 w-5 text-yellow-400" />
-                <span>{selectedTrip.distance || '0'} km</span>
+                <span>{selectedTrip.distanceKm || '0'} km</span>
               </div>
               <div className="flex items-center gap-2 bg-gray-800 p-3 rounded-lg">
                 <Flag className="h-5 w-5 text-purple-400" />
@@ -209,31 +208,6 @@ export function TripsDetailModal({
               </div>
             </div>
           </div>
-
-          {/* Status Timeline */}
-          {selectedTrip.statusHistory?.length > 0 && (
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold border-b border-gray-700 pb-2">
-                Status Timeline
-              </h3>
-              <div className="space-y-3">
-                {selectedTrip.statusHistory.map((entry, index) => (
-                  <div
-                    key={index}
-                    className="flex flex-col gap-3 p-3 bg-gray-800 rounded-lg border border-gray-700"
-                  >
-                    {getTripStatusBadge(entry.status)}
-                    <div className="flex flex-col gap-3">
-                      <p className="text-white text-sm">{entry.note}</p>
-                      <p className="text-gray-400 text-xs">
-                        {formatDateTime(entry.timestamp)}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
 
         <DialogFooter>

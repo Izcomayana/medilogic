@@ -1,10 +1,10 @@
-import { DeliveryTypeSelect } from './Fields/DeliveryTypeSelect';
-import { PrioritySelect } from './Fields/PrioritySelect';
-import { TripFormData } from './Tripform';
+import { DeliveryTypeSelect } from '../../../Fields/DeliveryTypeSelect';
+import { PrioritySelect } from '../../../Fields/PrioritySelect';
+import { CreateTripFormData } from '..';
 
 type Props = {
-  formData: TripFormData;
-  setFormData: React.Dispatch<React.SetStateAction<TripFormData>>;
+  formData: CreateTripFormData;
+  setFormData: React.Dispatch<React.SetStateAction<CreateTripFormData>>;
 };
 
 export function TripBasics({ formData, setFormData }: Props) {

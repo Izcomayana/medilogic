@@ -46,11 +46,12 @@ export function mapApiTripToUiTrip(apiTrip: Trip) {
     driverName: apiTrip.driver_name,
     status: apiTrip.status,
     priority: apiTrip.priority,
-    dateTime: formatDateTime(apiTrip.scheduled_time || '-'),
+    dateTime: apiTrip.scheduled_time ? apiTrip.scheduled_time.slice(0, 16) : '',
+    // dateTime: formatDateTime(apiTrip.scheduled_time || '-'),
     vehicleType: apiTrip.vehicle_type,
     shiftWindow: apiTrip.shift_window,
     cost: apiTrip.cost,
-    distance: apiTrip.distance_km,
+    distanceKm: apiTrip.distance_km,
     locationZone: apiTrip.location_zone,
     complianceFlag: apiTrip.compliance_flag,
     recurrenceRule: apiTrip.recurrence_rule,
@@ -62,15 +63,38 @@ export function mapApiTripToUiTrip(apiTrip: Trip) {
     deliveryPin: apiTrip.delivery_pin,
     wtnRequired: apiTrip.wtn_required,
     wtnSerialNumber: apiTrip.wtn_serial_number,
-
-    statusHistory: [
-      {
-        status: apiTrip.status,
-        timestamp: apiTrip.created_at,
-        note: apiTrip.notes || '',
-      },
-    ],
   };
 }
 
 export type UiTrip = ReturnType<typeof mapApiTripToUiTrip>;
+
+export type TripFormBase = {
+  clientId: string;
+  clientName: string;
+  driverId: string;
+  driverName: string;
+
+  deliveryType: string;
+  customDeliveryDescription?: string;
+
+  priority: 'normal' | 'urgent' | 'stat';
+
+  pickupLocation: string;
+  dropoffLocation: string;
+  dateTime: string;
+  status: string;
+
+  cost: atring;
+  distanceKm: string;
+
+  vehicleType: string;
+  locationZone: string;
+  shiftWindow: string;
+
+  complianceFlag: boolean;
+  recurrenceRule: string;
+
+  notes: string;
+};
+
+export type PriorityLevel = TripFormBase['priority'];

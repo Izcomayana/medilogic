@@ -1,5 +1,5 @@
 import { Label } from '@/components/ui/label';
-import { TripFormData } from '../Tripform';
+import { CreateTripFormData } from '../CreateTrip/TripForm';
 import {
   Select,
   SelectContent,
@@ -7,17 +7,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { PriorityLevel } from '@/hooks/trips/mappers';
 
 type Props = {
-  formData: TripFormData;
-  setFormData: React.Dispatch<React.SetStateAction<TripFormData>>;
+  formData: CreateTripFormData;
+  setFormData: React.Dispatch<React.SetStateAction<CreateTripFormData>>;
 };
 
-const PRIORITY_LEVELS = [
+const PRIORITY_LEVELS: { value: PriorityLevel; label: string }[] = [
   { value: 'normal', label: 'Normal' },
   { value: 'urgent', label: 'Urgent' },
-  { value: 'stat', label: 'stat' },
+  { value: 'stat', label: 'Stat' },
 ];
+
+// const PRIORITY_LEVELS = [
+//   { value: 'normal', label: 'Normal' },
+//   { value: 'urgent', label: 'Urgent' },
+//   { value: 'stat', label: 'Stat' },
+// ];
 
 export const PrioritySelect = ({ formData, setFormData }: Props) => {
   return (
@@ -27,10 +34,10 @@ export const PrioritySelect = ({ formData, setFormData }: Props) => {
       <Select
         value={formData.priority}
         onValueChange={(value) =>
-          setFormData({
-            ...formData,
-            priority: value,
-          })
+          setFormData((prev) => ({
+            ...prev,
+            priority: value as PriorityLevel,
+          }))
         }
       >
         <SelectTrigger className="bg-gray-700 border-gray-600 text-white mt-2">

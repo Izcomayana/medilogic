@@ -1,40 +1,22 @@
 import { useSysConfig } from '@/hooks/settings/useSysConfg';
-import { AssignmentSection } from './Assignments';
-import { ConfigSection } from './ConfigSection';
-import { LocationSection } from './LocationSection';
-import { MetricSection } from './MetricSection';
-import { ScheduleSection } from './ScheduleSection';
-import { TripBasics } from './TripBasics';
-import { ComplianceSection } from './ComplianceSection';
+import { AssignmentSection } from './components/Assignments';
+import { ConfigSection } from './components/ConfigSection';
+import { LocationSection } from '../../Fields/LocationSection';
+import { MetricSection } from '../../Fields/MetricSection';
+import { ScheduleSection } from './components/ScheduleSection';
+import { TripBasics } from './components/TripBasics';
+import { ComplianceSection } from './components/ComplianceSection';
+import { TripFormBase } from '@/hooks/trips/mappers';
 
-export type TripFormData = {
-  deliveryType: string;
-  priority: string;
-  clientId: string;
-  clientName: string;
-  driverId: string;
-  driverName: string;
-  pickupLocation: string;
-  dropoffLocation: string;
-  dateTime: string;
-  status: string;
-  cost: number;
-  distanceKm: number;
-  vehicleType: string;
-  locationZone: string;
-  shiftWindow: string;
-  complianceFlag: boolean;
-  recurrenceRule: string;
-  deliveryPin: boolean;
-  wtnRequired: boolean;
-  wtnSerialNumber: string;
-  notes: string;
-  customDeliveryDescription: string;
+export type CreateTripFormData = TripFormBase & {
+  deliveryPin?: boolean;
+  wtnRequired?: boolean;
+  wtnSerialNumber?: string;
 };
 
 type Props = {
-  formData: TripFormData;
-  setFormData: React.Dispatch<React.SetStateAction<TripFormData>>;
+  formData: CreateTripFormData;
+  setFormData: React.Dispatch<React.SetStateAction<CreateTripFormData>>;
 };
 
 export default function TripForm({ formData, setFormData }: Props) {
