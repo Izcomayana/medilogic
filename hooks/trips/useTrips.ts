@@ -13,6 +13,8 @@ import {
   updateTripRequest,
 } from './api';
 import { formatDateEnd, formatDateStart } from '@/utils/datetime';
+import { EditTripFormData } from '@/app/(dashboard)/company-admin/(pages)/trips/components/EditTrips';
+import { CreateTripFormData } from '@/app/(dashboard)/company-admin/(pages)/trips/components/CreateTrip/TripForm';
 
 export type DateRangeLocal = { from?: Date; to?: Date };
 
@@ -31,7 +33,7 @@ export function useTrips(tripsPerPage = 10) {
   const [, setTripToDelete] = useState<string | null>(null);
   const { user, loading: userLoading } = useProfile();
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<CreateTripFormData>({
     clientName: '',
     clientId: '',
     pickupLocation: '',
@@ -41,9 +43,15 @@ export function useTrips(tripsPerPage = 10) {
     dateTime: '',
     notes: '',
     status: 'pending',
-    priority: '',
+
+    // ✅ MUST be a valid union value
+    priority: 'normal',
+
     deliveryType: 'clinical_waste',
-    customDeliveryDescription: '',
+
+    // ✅ match optional type
+    customDeliveryDescription: undefined,
+
     cost: '',
     distanceKm: '',
     vehicleType: '',
@@ -52,11 +60,37 @@ export function useTrips(tripsPerPage = 10) {
     complianceFlag: false,
     recurrenceRule: 'none',
 
-    // ✅ NEW
     deliveryPin: false,
     wtnRequired: false,
     wtnSerialNumber: '',
   });
+
+  // const [formData, setFormData] = useState({
+  //   clientName: '',
+  //   clientId: '',
+  //   pickupLocation: '',
+  //   dropoffLocation: '',
+  //   driverName: '',
+  //   driverId: '',
+  //   dateTime: '',
+  //   notes: '',
+  //   status: 'pending',
+  //   priority: 'normal',
+  //   deliveryType: 'clinical_waste',
+  //   customDeliveryDescription: '',
+  //   cost: '',
+  //   distanceKm: '',
+  //   vehicleType: '',
+  //   locationZone: '',
+  //   shiftWindow: '',
+  //   complianceFlag: false,
+  //   recurrenceRule: 'none',
+
+  //   // ✅ NEW
+  //   deliveryPin: false,
+  //   wtnRequired: false,
+  //   wtnSerialNumber: '',
+  // });
 
   const authorizedRequest = useAuthorizedRequest();
 
@@ -71,7 +105,7 @@ export function useTrips(tripsPerPage = 10) {
       dateTime: '',
       notes: '',
       status: 'pending',
-      priority: '',
+      priority: 'normal',
       deliveryType: 'clinical_waste',
       customDeliveryDescription: '',
       cost: '',
@@ -377,7 +411,7 @@ export function useTrips(tripsPerPage = 10) {
       deliveryType: trip.deliveryType || 'clinical_waste',
       customDeliveryDescription: trip.customDeliveryDescription || '',
       cost: trip.cost || '',
-      distanceKm: trip.distance || '',
+      distanceKm: trip.distanceKm || '',
       vehicleType: trip.vehicleType || '',
       locationZone: trip.locationZone || '',
       shiftWindow: trip.shiftWindow || '',
@@ -420,47 +454,77 @@ export function useTrips(tripsPerPage = 10) {
     }
   };
 
-  const handleUpdateTrip = async () => {
+  const handleUpdateTrip = async (data: EditTripFormData) => {
     if (!selectedTrip) return;
 
-    if (userLoading) {
-      toast(
-        'Organization info is still loading, please try again after few seconds.'
-      );
-      return;
-    }
-
-    if (!user?.organization.id) {
-      toast.error('No organization found for this user');
-      return;
-    }
-
     const payload: Partial<Trip> = {
-      driver_name: formData.driverName || undefined,
-      driver_id: formData.driverId || undefined,
-      delivery_type: formData.deliveryType,
-      scheduled_time: formData.dateTime
-        ? new Date(formData.dateTime).toISOString()
+      driver_name: data.driverName || undefined,
+      driver_id: data.driverId || undefined,
+      delivery_type: data.deliveryType,
+      scheduled_time: data.dateTime
+        ? new Date(data.dateTime).toISOString()
         : undefined,
-      cost: formData.cost || undefined,
-      distance_km: formData.distanceKm || undefined,
-      client_id: formData.clientId,
-      client_name: formData.clientName,
-      organization_id: user?.organization?.id || undefined,
-      pickup_location: formData.pickupLocation || undefined,
-      dropoff_location: formData.dropoffLocation || undefined,
-      status: formData.status,
-      vehicle_type: formData.vehicleType || undefined,
-      location_zone: formData.locationZone || undefined,
-      shift_window: formData.shiftWindow || undefined,
-      compliance_flag: formData.complianceFlag,
-      recurrence_rule: formData.recurrenceRule,
-      priority: formData.priority,
-      custom_delivery_description: formData.customDeliveryDescription,
+      cost: data.cost ? String(data.cost) : undefined,
+      distance_km: data.distanceKm || undefined,
+      client_id: data.clientId,
+      client_name: data.clientName,
+      organization_id: user?.organization?.id,
+      pickup_location: data.pickupLocation,
+      dropoff_location: data.dropoffLocation,
+      status: data.status,
+      vehicle_type: data.vehicleType,
+      location_zone: data.locationZone,
+      shift_window: data.shiftWindow,
+      compliance_flag: data.complianceFlag,
+      recurrence_rule: data.recurrenceRule,
+      priority: data.priority,
+      custom_delivery_description: data.customDeliveryDescription,
     };
 
     await updateTrip(selectedTrip.id, payload);
   };
+
+  // const handleUpdateTrip = async () => {
+  //   if (!selectedTrip) return;
+
+  //   if (userLoading) {
+  //     toast(
+  //       'Organization info is still loading, please try again after few seconds.'
+  //     );
+  //     return;
+  //   }
+
+  //   if (!user?.organization.id) {
+  //     toast.error('No organization found for this user');
+  //     return;
+  //   }
+
+  //   const payload: Partial<Trip> = {
+  //     driver_name: formData.driverName || undefined,
+  //     driver_id: formData.driverId || undefined,
+  //     delivery_type: formData.deliveryType,
+  //     scheduled_time: formData.dateTime
+  //       ? new Date(formData.dateTime).toISOString()
+  //       : undefined,
+  //     cost: formData.cost || undefined,
+  //     distance_km: formData.distanceKm || undefined,
+  //     client_id: formData.clientId,
+  //     client_name: formData.clientName,
+  //     organization_id: user?.organization?.id || undefined,
+  //     pickup_location: formData.pickupLocation || undefined,
+  //     dropoff_location: formData.dropoffLocation || undefined,
+  //     status: formData.status,
+  //     vehicle_type: formData.vehicleType || undefined,
+  //     location_zone: formData.locationZone || undefined,
+  //     shift_window: formData.shiftWindow || undefined,
+  //     compliance_flag: formData.complianceFlag,
+  //     recurrence_rule: formData.recurrenceRule,
+  //     priority: formData.priority,
+  //     custom_delivery_description: formData.customDeliveryDescription,
+  //   };
+
+  //   await updateTrip(selectedTrip.id, payload);
+  // };
 
   return {
     loading,
