@@ -14,6 +14,7 @@ import {
 } from './api';
 import { formatDateEnd, formatDateStart } from '@/utils/datetime';
 import { EditTripFormData } from '@/app/(dashboard)/company-admin/(pages)/trips/components/EditTrips';
+import { CreateTripFormData } from '@/app/(dashboard)/company-admin/(pages)/trips/components/CreateTrip/TripForm';
 
 export type DateRangeLocal = { from?: Date; to?: Date };
 
@@ -32,32 +33,64 @@ export function useTrips(tripsPerPage = 10) {
   const [, setTripToDelete] = useState<string | null>(null);
   const { user, loading: userLoading } = useProfile();
 
-  const [formData, setFormData] = useState({
-    clientName: '',
-    clientId: '',
-    pickupLocation: '',
-    dropoffLocation: '',
-    driverName: '',
-    driverId: '',
-    dateTime: '',
-    notes: '',
-    status: 'pending',
-    priority: '',
-    deliveryType: 'clinical_waste',
-    customDeliveryDescription: '',
-    cost: '',
-    distanceKm: '',
-    vehicleType: '',
-    locationZone: '',
-    shiftWindow: '',
-    complianceFlag: false,
-    recurrenceRule: 'none',
+  const [formData, setFormData] = useState<CreateTripFormData>({
+  clientName: '',
+  clientId: '',
+  pickupLocation: '',
+  dropoffLocation: '',
+  driverName: '',
+  driverId: '',
+  dateTime: '',
+  notes: '',
+  status: 'pending',
 
-    // ✅ NEW
-    deliveryPin: false,
-    wtnRequired: false,
-    wtnSerialNumber: '',
-  });
+  // ✅ MUST be a valid union value
+  priority: 'normal',
+
+  deliveryType: 'clinical_waste',
+
+  // ✅ match optional type
+  customDeliveryDescription: undefined,
+
+  cost: '',
+  distanceKm: '',
+  vehicleType: '',
+  locationZone: '',
+  shiftWindow: '',
+  complianceFlag: false,
+  recurrenceRule: 'none',
+
+  deliveryPin: false,
+  wtnRequired: false,
+  wtnSerialNumber: '',
+});
+
+  // const [formData, setFormData] = useState({
+  //   clientName: '',
+  //   clientId: '',
+  //   pickupLocation: '',
+  //   dropoffLocation: '',
+  //   driverName: '',
+  //   driverId: '',
+  //   dateTime: '',
+  //   notes: '',
+  //   status: 'pending',
+  //   priority: 'normal',
+  //   deliveryType: 'clinical_waste',
+  //   customDeliveryDescription: '',
+  //   cost: '',
+  //   distanceKm: '',
+  //   vehicleType: '',
+  //   locationZone: '',
+  //   shiftWindow: '',
+  //   complianceFlag: false,
+  //   recurrenceRule: 'none',
+
+  //   // ✅ NEW
+  //   deliveryPin: false,
+  //   wtnRequired: false,
+  //   wtnSerialNumber: '',
+  // });
 
   const authorizedRequest = useAuthorizedRequest();
 
@@ -72,7 +105,7 @@ export function useTrips(tripsPerPage = 10) {
       dateTime: '',
       notes: '',
       status: 'pending',
-      priority: '',
+      priority: 'normal',
       deliveryType: 'clinical_waste',
       customDeliveryDescription: '',
       cost: '',

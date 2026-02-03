@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin, Search, Filter } from 'lucide-react';
-import { useTrips } from '@/hooks/trips/useTrips';
+import { DateRangeLocal, useTrips } from '@/hooks/trips/useTrips';
 import {
   Select,
   SelectContent,
@@ -9,8 +9,8 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import { CreateTrips } from '../CreateTrip/indes';
 import DateRangeFilter from '../../../../../components/DateRange';
+import { CreateTrips } from '../CreateTrip';
 
 type FiltersProps = ReturnType<typeof useTrips>;
 
@@ -35,6 +35,10 @@ export function Filters({
           </CardTitle>
 
           <CreateTrips {...tripState} />
+          {/* <CreateTrips
+            formData={tripState.formData}
+            setFormData={tripState.setFormData} /> */}
+
         </div>
       </CardHeader>
 

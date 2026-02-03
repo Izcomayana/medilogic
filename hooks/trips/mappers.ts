@@ -18,7 +18,8 @@ export type Trip = {
   shift_window: string | null;
   compliance_flag: boolean | null;
   recurrence_rule: string | null;
-  priority: string | null;
+  priority: 'normal' | 'urgent' | 'stat';
+  // priority: string | null;
   custom_delivery_description: string | null;
 
   // ✅ NEW
