@@ -34,36 +34,36 @@ export function useTrips(tripsPerPage = 10) {
   const { user, loading: userLoading } = useProfile();
 
   const [formData, setFormData] = useState<CreateTripFormData>({
-  clientName: '',
-  clientId: '',
-  pickupLocation: '',
-  dropoffLocation: '',
-  driverName: '',
-  driverId: '',
-  dateTime: '',
-  notes: '',
-  status: 'pending',
+    clientName: '',
+    clientId: '',
+    pickupLocation: '',
+    dropoffLocation: '',
+    driverName: '',
+    driverId: '',
+    dateTime: '',
+    notes: '',
+    status: 'pending',
 
-  // ✅ MUST be a valid union value
-  priority: 'normal',
+    // ✅ MUST be a valid union value
+    priority: 'normal',
 
-  deliveryType: 'clinical_waste',
+    deliveryType: 'clinical_waste',
 
-  // ✅ match optional type
-  customDeliveryDescription: undefined,
+    // ✅ match optional type
+    customDeliveryDescription: undefined,
 
-  cost: '',
-  distanceKm: '',
-  vehicleType: '',
-  locationZone: '',
-  shiftWindow: '',
-  complianceFlag: false,
-  recurrenceRule: 'none',
+    cost: '',
+    distanceKm: '',
+    vehicleType: '',
+    locationZone: '',
+    shiftWindow: '',
+    complianceFlag: false,
+    recurrenceRule: 'none',
 
-  deliveryPin: false,
-  wtnRequired: false,
-  wtnSerialNumber: '',
-});
+    deliveryPin: false,
+    wtnRequired: false,
+    wtnSerialNumber: '',
+  });
 
   // const [formData, setFormData] = useState({
   //   clientName: '',

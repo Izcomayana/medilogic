@@ -38,7 +38,6 @@ export function Filters({
           {/* <CreateTrips
             formData={tripState.formData}
             setFormData={tripState.setFormData} /> */}
-
         </div>
       </CardHeader>
 

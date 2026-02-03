@@ -20,7 +20,7 @@ const PRIORITY_LEVELS = [
   { value: 'stat', label: 'Stat' },
 ] as const;
 
-type Priority = typeof PRIORITY_LEVELS[number]['value'];
+type Priority = (typeof PRIORITY_LEVELS)[number]['value'];
 
 // const PRIORITY_LEVELS: { value: PriorityLevel; label: string }[] = [
 //   { value: 'normal', label: 'Normal' },
