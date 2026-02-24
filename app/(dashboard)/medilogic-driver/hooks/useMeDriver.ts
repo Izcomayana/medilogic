@@ -147,52 +147,93 @@ export default function useMedilogicDriver() {
     try {
       setIsSaving(true);
 
-      const payload = new FormData();
-      payload.append('plan', plan);
+      const payload = new URLSearchParams();
+      payload.append('new_plan', plan);
 
-      const result = await authorizedRequest<SubscribeResponse>(
-        async (token) => {
-          const res = await api.put<SubscribeResponse>(
-            '/Medilogic_drivers/me',
-            payload,
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            }
-          );
-          return res.data;
-        },
-        'Subscription failed'
-      );
+      const result = await authorizedRequest<DriverProfile>(async (token) => {
+        const res = await api.put(
+          '/Medilogic_drivers/driver/subscription',
+          payload,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          }
+        );
+        return res.data;
+      }, 'Subscription failed');
 
       if (!result) {
         throw new Error('Empty subscription response');
       }
 
-      setProfile(result.driver);
-      setFormData(result.driver);
+      setProfile(result);
+      setFormData(result);
 
-      if (result.client_secret) {
-        setPaymentClientSecret(result.client_secret);
-        return;
-      }
-
-      // if (result.client_secret) {
-      //   console.log("Payment required:", result.payment_id);
-      //   toast.info("Redirecting to payment...");
-      //   return;
-      // }
-
-      toast.success(`Subscribed to ${plan} plan`);
+      toast.success(`Subscription updated to ${plan}`);
     } catch (e) {
-      toast.error('Unable to subscribe');
+      toast.error('Unable to change subscription');
     } finally {
       setIsSaving(false);
     }
   };
 
+  //   const subscribeToPlan = async (plan: string) => {
+  //     try {
+  //       setIsSaving(true);
+
+  //       const payload = new FormData();
+  //       payload.append('plan', plan);
+
+  //       const result = await authorizedRequest<SubscribeResponse>(
+  //         async (token) => {
+  //           const res = await api.put<SubscribeResponse>(
+  //             '/Medilogic_drivers/me',
+  //             payload,
+  //             {
+  //               headers: { Authorization: `Bearer ${token}` },
+  //             }
+  //           );
+  //           return res.data;
+  //         },
+  //         'Subscription failed'
+  //       );
+
+  //       if (!result) {
+  //         throw new Error('Empty subscription response');
+  //       }
+
+  //       setProfile(result.driver);
+  //       setFormData(result.driver);
+
+  //       if (result.client_secret) {
+  //   setPaymentClientSecret(result.client_secret);
+  //   toast.info("Complete payment to activate subscription");
+  //   return;
+  // }
+
+  // toast.success(`Subscribed to ${plan} plan`);
+
+  // console.log("Requested plan:", plan);
+  // console.log("Backend returned plan:", result.driver.subscription_plan);
+
+  //       // if (result.client_secret) {
+  //       //   setPaymentClientSecret(result.client_secret);
+  //       //   return;
+  //       // }
+
+  //       toast.success(`Subscribed to ${plan} plan`);
+  //     } catch (e) {
+  //       toast.error('Unable to subscribe');
+  //     } finally {
+  //       setIsSaving(false);
+  //     }
+  //   };
+
   const handlePaymentSuccess = async () => {
-    toast.success('Payment successful');
-    await fetchProfile(); // 🔥 refresh subscription status
+    toast.success('Payment successful 🎉');
+    await fetchProfile();
     setPaymentClientSecret(null);
   };
 

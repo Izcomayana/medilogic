@@ -17,8 +17,8 @@ export default function SubscriptionTab({
 
   const PLANS = [
     { id: 'free', label: 'Free', description: 'Basic access' },
-    { id: 'pro', label: 'Pro', description: 'More jobs, priority access' },
-    { id: 'premium', label: 'Premium', description: 'Unlimited access' },
+    { id: 'green', label: 'Pro', description: 'More jobs, priority access' },
+    { id: 'blue', label: 'Premium', description: 'Unlimited access' },
   ];
 
   return (

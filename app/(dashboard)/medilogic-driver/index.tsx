@@ -64,23 +64,15 @@ export function MedilogicDriver() {
       </div>
 
       {paymentClientSecret && (
-        <Elements
-          stripe={loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)}
-          options={{ clientSecret: paymentClientSecret }}
-        >
-          <StripePaymentModal
-            clientSecret={paymentClientSecret}
-            onSuccess={handlePaymentSuccess}
-          />
-        </Elements>
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+          <div className="bg-gray-900 p-6 rounded-xl w-full max-w-md">
+            <StripePaymentModal
+              clientSecret={paymentClientSecret}
+              onSuccess={handlePaymentSuccess}
+            />
+          </div>
+        </div>
       )}
-      {/* 
-    {paymentClientSecret && (
-  <StripePaymentModal
-    clientSecret={paymentClientSecret}
-    onSuccess={handlePaymentSuccess}
-  />
-)} */}
     </>
   );
 }

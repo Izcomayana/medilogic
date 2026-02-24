@@ -1,9 +1,9 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   Dialog,
   DialogContent,
@@ -11,14 +11,14 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
+} from '@/components/ui/dialog';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from '@/components/ui/select';
 import {
   Table,
   TableBody,
@@ -26,121 +26,35 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { Label } from "@/components/ui/label"
-import { Badge } from "@/components/ui/badge"
-import { SidebarTrigger } from "@/components/ui/sidebar"
-import { Clock3, Edit, Plus, Trash2 } from "lucide-react"
-import { toast } from "sonner"
-import Link from "next/link"
+} from '@/components/ui/table';
+import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
+import { Clock3, Edit, Plus, Trash2 } from 'lucide-react';
+import Link from 'next/link';
 import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
-
-interface AvailabilityEntry {
-  day: string
-  startTime: string | null
-  endTime: string | null
-  isSet: boolean
-}
-
-const initialAvailability: AvailabilityEntry[] = [
-  { day: "Monday", startTime: "09:00", endTime: "17:00", isSet: true },
-  { day: "Tuesday", startTime: "09:00", endTime: "17:00", isSet: true },
-  { day: "Wednesday", startTime: null, endTime: null, isSet: false },
-  { day: "Thursday", startTime: "10:00", endTime: "18:00", isSet: true },
-  { day: "Friday", startTime: "09:00", endTime: "17:00", isSet: true },
-  { day: "Saturday", startTime: null, endTime: null, isSet: false },
-  { day: "Sunday", startTime: null, endTime: null, isSet: false },
-]
-
-const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+import { useAvailability } from '../../hooks/useAvailability';
 
 export default function DriverAvailabilityPage() {
-  const [availability, setAvailability] = useState<AvailabilityEntry[]>(initialAvailability)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedDay, setSelectedDay] = useState("")
-  const [startTime, setStartTime] = useState("")
-  const [endTime, setEndTime] = useState("")
-  const [isEditing, setIsEditing] = useState(false)
-
-  const handleOpenModal = (day?: string) => {
-    if (day) {
-      const entry = availability.find((a) => a.day === day)
-      if (entry) {
-        setSelectedDay(day)
-        setStartTime(entry.startTime || "")
-        setEndTime(entry.endTime || "")
-        setIsEditing(true)
-      }
-    } else {
-      setSelectedDay("")
-      setStartTime("")
-      setEndTime("")
-      setIsEditing(false)
-    }
-    setIsModalOpen(true)
-  }
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false)
-    setSelectedDay("")
-    setStartTime("")
-    setEndTime("")
-    setIsEditing(false)
-  }
-
-  const handleSave = () => {
-    if (!selectedDay) {
-      toast.error("Please select a day")
-      return
-    }
-
-    if (!startTime || !endTime) {
-      toast.error("Please set both start and end times")
-      return
-    }
-
-    if (startTime >= endTime) {
-      toast.error("End time must be after start time")
-      return
-    }
-
-    setAvailability((prev) =>
-      prev.map((a) =>
-        a.day === selectedDay
-          ? { ...a, startTime, endTime, isSet: true }
-          : a
-      )
-    )
-
-    toast.success(`Availability for ${selectedDay} updated`)
-    handleCloseModal()
-  }
-
-  const handleDelete = (day: string) => {
-    setAvailability((prev) =>
-      prev.map((a) =>
-        a.day === day
-          ? { ...a, startTime: null, endTime: null, isSet: false }
-          : a
-      )
-    )
-    toast.success(`Availability for ${day} removed`)
-  }
-
-  const handleSaveAll = () => {
-    toast.success("Your availability has been updated and saved")
-  }
-
-  const formatTime = (time: string | null) => {
-    if (!time) return "Not Set"
-    const [hours, minutes] = time.split(":")
-    const hour = parseInt(hours)
-    const ampm = hour >= 12 ? "PM" : "AM"
-    const displayHour = hour % 12 || 12
-    return `${displayHour}:${minutes} ${ampm}`
-  }
-
-  const totalSetDays = availability.filter((a) => a.isSet).length
+  const {
+    days,
+    availability,
+    isEditing,
+    totalSetDays,
+    handleOpenModal,
+    formatTime,
+    handleDelete,
+    handleSaveAll,
+    handleCloseModal,
+    handleSave,
+    isModalOpen,
+    setIsModalOpen,
+    selectedDay,
+    setSelectedDay,
+    startTime,
+    setStartTime,
+    endTime,
+    setEndTime,
+  } = useAvailability();
 
   return (
     <div className="flex flex-col bg-gray-900">
@@ -158,7 +72,9 @@ export default function DriverAvailabilityPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-3xl font-bold text-blue-500">{totalSetDays}</div>
+              <div className="text-3xl font-bold text-blue-500">
+                {totalSetDays}
+              </div>
               <p className="text-xs text-gray-400 mt-1">out of 7 days</p>
             </CardContent>
           </Card>
@@ -171,13 +87,15 @@ export default function DriverAvailabilityPage() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-bold text-[#15941f]">
-                {availability.reduce((acc, a) => {
-                  if (!a.isSet || !a.startTime || !a.endTime) return acc
-                  const [startH, startM] = a.startTime.split(":").map(Number)
-                  const [endH, endM] = a.endTime.split(":").map(Number)
-                  const hours = (endH + endM / 60) - (startH + startM / 60)
-                  return acc + hours
-                }, 0).toFixed(1)}
+                {availability
+                  .reduce((acc, a) => {
+                    if (!a.isSet || !a.startTime || !a.endTime) return acc;
+                    const [startH, startM] = a.startTime.split(':').map(Number);
+                    const [endH, endM] = a.endTime.split(':').map(Number);
+                    const hours = endH + endM / 60 - (startH + startM / 60);
+                    return acc + hours;
+                  }, 0)
+                  .toFixed(1)}
               </div>
               <p className="text-xs text-gray-400 mt-1">total hours</p>
             </CardContent>
@@ -194,18 +112,27 @@ export default function DriverAvailabilityPage() {
                 <div className="h-3 w-3 bg-green-500 rounded-full"></div>
                 <span className="text-white font-medium">Available</span>
               </div>
-              <p className="text-xs text-gray-400 mt-1">ready for assignments</p>
+              <p className="text-xs text-gray-400 mt-1">
+                ready for assignments
+              </p>
             </CardContent>
           </Card>
         </div>
 
         {/* Weekly Schedule Table */}
         <Card className="bg-gray-800 border border-gray-700 mb-8">
-          <CardHeader>
+          <CardHeader className="flex flex-col md:flex-row justify-between md:items-center">
             <CardTitle className="text-white flex items-center gap-2">
               <Clock3 className="h-5 w-5" />
               Weekly Schedule
             </CardTitle>
+            <Button
+              // onClick={() => handleOpenModal(entry.day)}
+              className="primary-button mt-2 md:mt-0"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Set Availability
+            </Button>
           </CardHeader>
           <CardContent className="p-0">
             <div className="rounded-md border border-gray-700">
@@ -221,19 +148,29 @@ export default function DriverAvailabilityPage() {
                 </TableHeader>
                 <TableBody>
                   {availability.map((entry) => (
-                    <TableRow key={entry.day} className="border-gray-700 hover:bg-gray-800">
-                      <TableCell className="font-medium text-white">{entry.day}</TableCell>
-                      <TableCell className="text-gray-300">
-                        {entry.isSet ? formatTime(entry.startTime) : "Not Set"}
+                    <TableRow
+                      key={entry.day}
+                      className="border-gray-700 hover:bg-gray-800"
+                    >
+                      <TableCell className="font-medium text-white">
+                        {entry.day}
                       </TableCell>
                       <TableCell className="text-gray-300">
-                        {entry.isSet ? formatTime(entry.endTime) : "—"}
+                        {entry.isSet ? formatTime(entry.startTime) : 'Not Set'}
+                      </TableCell>
+                      <TableCell className="text-gray-300">
+                        {entry.isSet ? formatTime(entry.endTime) : 'Not Set'}
                       </TableCell>
                       <TableCell>
                         {entry.isSet ? (
-                          <Badge className="bg-[#15941f] text-white">Available</Badge>
+                          <Badge className="bg-[#15941f] text-white">
+                            Available
+                          </Badge>
                         ) : (
-                          <Badge variant="secondary" className="bg-gray-700 text-gray-300">
+                          <Badge
+                            variant="secondary"
+                            className="bg-gray-700 text-gray-300"
+                          >
                             Not Set
                           </Badge>
                         )}
@@ -288,7 +225,7 @@ export default function DriverAvailabilityPage() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Clock3 className="h-5 w-5 text-blue-500" />
-              {isEditing ? "Edit" : "Add"} Availability
+              {isEditing ? 'Edit' : 'Add'} Availability
             </DialogTitle>
             <DialogDescription className="text-gray-400">
               Set your working hours for a specific day.
@@ -346,7 +283,7 @@ export default function DriverAvailabilityPage() {
             <Button
               variant="outline"
               onClick={handleCloseModal}
-              className="border-gray-600 text-gray-300 hover:bg-gray-700"
+              className="border-gray-600 text-gray-800 hover:bg-gray-700"
             >
               Cancel
             </Button>
@@ -357,5 +294,5 @@ export default function DriverAvailabilityPage() {
         </DialogContent>
       </Dialog>
     </div>
-  )
+  );
 }

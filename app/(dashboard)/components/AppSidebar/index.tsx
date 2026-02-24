@@ -20,6 +20,7 @@ import {
   BadgeAlert,
   MessageSquare,
   CarFront,
+  CalendarCheck,
   // BarChart3,
   // UserRoundPen,
   Star,
@@ -109,6 +110,7 @@ const sidebarLinksByRole: Record<
   driver: [
     { title: 'Dashboard', url: '/driver', icon: Home },
     { title: 'My Trips', url: '/driver/trips', icon: ClipboardList },
+    { title: 'Availability', url: '/driver/availability', icon: CalendarCheck },
     { title: 'PODs', url: '/driver/pods', icon: FileText },
     { title: 'COC', url: '/driver/coc', icon: Link2 },
     { title: 'Incidents', url: '/driver/incidents', icon: ClipboardList },
