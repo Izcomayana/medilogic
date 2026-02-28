@@ -1,9 +1,8 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { api } from '@/lib/api';
 import { useAuthorizedRequest } from '@/hooks/useRequest';
-import { useProfile } from '@/hooks/useProfile';
 import { toast } from 'sonner';
 
 interface AvailabilityEntry {
