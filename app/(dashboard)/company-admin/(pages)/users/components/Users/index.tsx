@@ -39,6 +39,7 @@ import { useEffect, useState } from 'react';
 import { useAuthorizedRequest } from '@/hooks/useRequest';
 import { api } from '@/lib/api';
 import { toast } from 'sonner';
+import { formatTime } from '@/utils/datetime';
 
 type ActiveUsersProps = ReturnType<typeof useUsers>;
 
@@ -101,14 +102,6 @@ export function UsersTab({
 
     setSelectedDriverAvailability(driver.availability);
     setIsAvailabilityModalOpen(true);
-  };
-
-  const formatTime = (time: string) => {
-    const [hours, minutes] = time.split(':');
-    const hour = parseInt(hours);
-    const ampm = hour >= 12 ? 'PM' : 'AM';
-    const displayHour = hour % 12 || 12;
-    return `${displayHour}:${minutes} ${ampm}`;
   };
 
   return (

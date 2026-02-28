@@ -110,3 +110,12 @@ export const formatTimeAgo = (dateTime: string): string => {
   if (hours < 24) return `${hours}h ago`;
   return `${days}d ago`;
 };
+
+export const formatTime = (time: string | null) => {
+  if (!time) return 'Not Set';
+  const [hours, minutes] = time.split(':');
+  const hour = parseInt(hours);
+  const ampm = hour >= 12 ? 'PM' : 'AM';
+  const displayHour = hour % 12 || 12;
+  return `${displayHour}:${minutes} ${ampm}`;
+};

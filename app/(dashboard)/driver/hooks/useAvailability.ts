@@ -135,15 +135,32 @@ export function useAvailability() {
     handleCloseModal();
   };
 
-  const handleDelete = (day: string) => {
-    setAvailability((prev) =>
-      prev.map((a) =>
-        a.day === day
-          ? { ...a, startTime: null, endTime: null, isSet: false }
-          : a
-      )
-    );
-    toast.success(`Availability for ${day} removed`);
+  const handleDelete = async (day: string) => {
+    try {
+      await authorizedRequest(async (token) => {
+        await api.delete(`/availability/day/${day.toLowerCase()}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      }, 'Failed to delete availability');
+
+      // Update UI only AFTER backend success
+      setAvailability((prev) =>
+        prev.map((a) =>
+          a.day === day
+            ? { ...a, startTime: null, endTime: null, isSet: false }
+            : a
+        )
+      );
+
+      toast.success(`Availability for ${day} deleted`);
+    } catch (error: any) {
+      toast.error(
+        error?.response?.data?.detail?.[0]?.msg ??
+          'Failed to delete availability'
+      );
+    }
   };
 
   const formatTimeWithSeconds = (time: string) => {
@@ -184,15 +201,6 @@ export function useAvailability() {
     }
   };
 
-  const formatTime = (time: string | null) => {
-    if (!time) return 'Not Set';
-    const [hours, minutes] = time.split(':');
-    const hour = parseInt(hours);
-    const ampm = hour >= 12 ? 'PM' : 'AM';
-    const displayHour = hour % 12 || 12;
-    return `${displayHour}:${minutes} ${ampm}`;
-  };
-
   const totalSetDays = availability.filter((a) => a.isSet).length;
 
   return {
@@ -212,7 +220,6 @@ export function useAvailability() {
     handleSave,
     handleDelete,
     handleSaveAll,
-    formatTime,
     totalSetDays,
   };
 }
