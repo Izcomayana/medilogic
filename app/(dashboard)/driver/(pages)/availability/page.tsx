@@ -33,6 +33,7 @@ import { Clock3, Edit, Plus, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 import { useAvailability } from '../../hooks/useAvailability';
+import { formatTime } from '@/utils/datetime';
 
 export default function DriverAvailabilityPage() {
   const {
@@ -41,7 +42,6 @@ export default function DriverAvailabilityPage() {
     isEditing,
     totalSetDays,
     handleOpenModal,
-    formatTime,
     handleDelete,
     handleSaveAll,
     handleCloseModal,
@@ -121,18 +121,11 @@ export default function DriverAvailabilityPage() {
 
         {/* Weekly Schedule Table */}
         <Card className="bg-gray-800 border border-gray-700 mb-8">
-          <CardHeader className="flex flex-col md:flex-row justify-between md:items-center">
+          <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
               <Clock3 className="h-5 w-5" />
               Weekly Schedule
             </CardTitle>
-            <Button
-              // onClick={() => handleOpenModal(entry.day)}
-              className="primary-button mt-2 md:mt-0"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Set Availability
-            </Button>
           </CardHeader>
           <CardContent className="p-0">
             <div className="rounded-md border border-gray-700">

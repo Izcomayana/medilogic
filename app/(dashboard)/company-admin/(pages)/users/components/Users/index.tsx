@@ -7,6 +7,7 @@ import {
   Eye,
   MoreHorizontal,
   Power,
+  Clock3,
 } from 'lucide-react';
 import {
   Table,
@@ -34,8 +35,25 @@ import {
   AlertDialogFooter,
 } from '@/components/ui/alert-dialog';
 import { Badge } from '@/components/ui/badge';
+import { useEffect, useState } from 'react';
+import { useAuthorizedRequest } from '@/hooks/useRequest';
+import { api } from '@/lib/api';
+import { toast } from 'sonner';
+import { formatTime } from '@/utils/datetime';
 
 type ActiveUsersProps = ReturnType<typeof useUsers>;
+
+interface DriverAvailability {
+  driver_id: string;
+  driver_name: string;
+  availability: AvailabilitySlot[];
+}
+
+interface AvailabilitySlot {
+  day_of_week: string;
+  start_time: string;
+  end_time: string;
+}
 
 export function UsersTab({
   loading,
@@ -51,6 +69,41 @@ export function UsersTab({
   setIsDetailsModalOpen,
   selectedUser,
 }: ActiveUsersProps) {
+  const [driverAvailability, setDriverAvailability] = useState<
+    DriverAvailability[]
+  >([]);
+  const [isAvailabilityModalOpen, setIsAvailabilityModalOpen] = useState(false);
+  const [selectedDriverAvailability, setSelectedDriverAvailability] = useState<
+    AvailabilitySlot[]
+  >([]);
+
+  const authorizedRequest = useAuthorizedRequest();
+
+  useEffect(() => {
+    const fetchAvailability = async () => {
+      await authorizedRequest(async (token) => {
+        const res = await api.get('/availability/all/grouped', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setDriverAvailability(res.data);
+      }, 'Failed to fetch availability');
+    };
+
+    fetchAvailability();
+  }, []);
+
+  const handleViewAvailability = (user: any) => {
+    const driver = driverAvailability.find((d) => d.driver_id === user.id);
+
+    if (!driver) {
+      toast.error('No availability set for this driver');
+      return;
+    }
+
+    setSelectedDriverAvailability(driver.availability);
+    setIsAvailabilityModalOpen(true);
+  };
+
   return (
     <>
       <TabsContent value="users" className="p-0">
@@ -120,6 +173,15 @@ export function UsersTab({
                             <Eye className="h-4 w-4 mr-2" />
                             View
                           </DropdownMenuItem>
+                          {user.role === 'driver' && (
+                            <DropdownMenuItem
+                              className="cursor-pointer hover:bg-gray-700"
+                              onClick={() => handleViewAvailability(user)}
+                            >
+                              <Clock3 className="h-4 w-4 mr-2" />
+                              Availability
+                            </DropdownMenuItem>
+                          )}
                           {user.status === 'active' ? (
                             <DropdownMenuItem
                               className="cursor-pointer text-red-400 hover:bg-gray-700"
@@ -231,6 +293,45 @@ export function UsersTab({
             <Button
               variant="secondary"
               onClick={() => setIsDetailsModalOpen(false)}
+              className="bg-gray-700 text-gray-300 hover:bg-gray-600"
+            >
+              Close
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Availability modal */}
+      <AlertDialog
+        open={isAvailabilityModalOpen}
+        onOpenChange={setIsAvailabilityModalOpen}
+      >
+        <AlertDialogContent className="bg-gray-800 border-gray-700 text-white max-w-md">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Driver Availability</AlertDialogTitle>
+          </AlertDialogHeader>
+
+          <div className="space-y-3">
+            {selectedDriverAvailability.length === 0 ? (
+              <p className="text-gray-400">No availability set.</p>
+            ) : (
+              selectedDriverAvailability.map((slot) => (
+                <div
+                  key={slot.day_of_week}
+                  className="flex justify-between bg-gray-700 p-2 rounded"
+                >
+                  <span className="capitalize">{slot.day_of_week}</span>
+                  <span>
+                    {formatTime(slot.start_time)} - {formatTime(slot.end_time)}
+                  </span>
+                </div>
+              ))
+            )}
+          </div>
+          <AlertDialogFooter>
+            <Button
+              variant="secondary"
+              onClick={() => setIsAvailabilityModalOpen(false)}
               className="bg-gray-700 text-gray-300 hover:bg-gray-600"
             >
               Close
