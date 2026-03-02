@@ -17,8 +17,8 @@ export default function SubscriptionTab({
 
   const PLANS = [
     { id: 'free', label: 'Free', description: 'Basic access' },
-    { id: 'green', label: 'Pro', description: 'More jobs, priority access' },
-    { id: 'blue', label: 'Premium', description: 'Unlimited access' },
+    { id: 'green', label: 'Green', description: 'More jobs' },
+    { id: 'blue', label: 'Blue', description: 'Unlimited access' },
   ];
 
   return (
@@ -138,80 +138,3 @@ export default function SubscriptionTab({
     </div>
   );
 }
-
-// import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-// import { CreditCard } from "lucide-react";
-// import useMedilogicDriver from "../../hooks/useMeDriver";
-
-// type SubTabProps = ReturnType<typeof useMedilogicDriver>;
-
-// export default function SubscriptionTab({
-//   subscriptionData,
-//   handleChangePlan,
-//   handleCancelSubscription
-// }: SubTabProps) {
-//   return (
-//     <div className="grid gap-6 max-w-2xl">
-//       <Card className="bg-gray-800 border-gray-700">
-//         <CardHeader>
-//           <CardTitle className="text-white flex items-center gap-2">
-//             <CreditCard className="h-5 w-5" />
-//             Current Subscription
-//           </CardTitle>
-//         </CardHeader>
-//         <CardContent className="space-y-6">
-//           <div className="bg-gray-900 rounded-lg p-6 border border-gray-700">
-//             <div className="flex items-center justify-between mb-4">
-//               <div>
-//                 <p className="text-gray-400 text-sm mb-1">Current Plan</p>
-//                 <p className="text-white text-2xl font-bold">{subscriptionData.plan}</p>
-//               </div>
-//               <div
-//                 className={`px-3 py-1 rounded text-xs font-medium ${subscriptionData.status === "active" ? "bg-[#15941f] text-white" : "bg-red-600 text-white"}`}
-//               >
-//                 {subscriptionData.status === "active" ? "Active" : "Cancelled"}
-//               </div>
-//             </div>
-
-//             <div className="space-y-3 text-sm">
-//               <div className="flex justify-between">
-//                 <span className="text-gray-400">Monthly Fee</span>
-//                 <span className="text-white font-medium">£{subscriptionData.monthlyFee.toLocaleString()}</span>
-//               </div>
-//               <div className="flex justify-between">
-//                 <span className="text-gray-400">Renewal Date</span>
-//                 <span className="text-white font-medium">{subscriptionData.renewalDate}</span>
-//               </div>
-//             </div>
-//           </div>
-
-//           {subscriptionData.status === "active" && (
-//             <div className="space-y-3">
-//               <p className="text-gray-300 text-sm">Upgrade to Premium for advanced features</p>
-//               <div className="grid gap-3">
-//                 {["Basic", "Pro", "Premium"].map((plan) => (
-//                   <button
-//                     key={plan}
-//                     onClick={() => handleChangePlan(plan)}
-//                     className={`px-4 py-3 rounded border text-sm font-medium transition ${plan === subscriptionData.plan ? "bg-[#15941f] border-[#15941f] text-white" : "border-gray-600 text-gray-300 hover:border-gray-500"}`}
-//                   >
-//                     {plan}
-//                   </button>
-//                 ))}
-//               </div>
-//             </div>
-//           )}
-
-//           {subscriptionData.status === "active" && (
-//             <button
-//               onClick={handleCancelSubscription}
-//               className="w-full px-4 py-2 rounded border border-red-600 hover:bg-red-600 hover:bg-opacity-20 text-red-600 font-medium transition"
-//             >
-//               Cancel Subscription
-//             </button>
-//           )}
-//         </CardContent>
-//       </Card>
-//     </div>
-//   )
-// }

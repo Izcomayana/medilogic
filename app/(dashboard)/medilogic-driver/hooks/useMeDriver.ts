@@ -56,6 +56,7 @@ export default function useMedilogicDriver() {
   const [paymentClientSecret, setPaymentClientSecret] = useState<string | null>(
     null
   );
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null)
 
   const [activeTab, setActiveTab] = useState<'profile' | 'subscription'>(
     'profile'
@@ -91,11 +92,11 @@ export default function useMedilogicDriver() {
 
   const subscription = profile
     ? {
-        plan: profile.subscription_plan,
-        status: profile.subscription_status as Subscription['status'],
-        start: profile.subscription_start ?? null,
-        end: profile.subscription_end ?? null,
-      }
+      plan: profile.subscription_plan,
+      status: profile.subscription_status as Subscription['status'],
+      start: profile.subscription_start ?? null,
+      end: profile.subscription_end ?? null,
+    }
     : null;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -144,92 +145,27 @@ export default function useMedilogicDriver() {
   };
 
   const subscribeToPlan = async (plan: string) => {
-    try {
-      setIsSaving(true);
+  try {
+    setIsSaving(true)
 
-      const payload = new URLSearchParams();
-      payload.append('new_plan', plan);
+    const setupRes = await authorizedRequest(async (token) => {
+      const res = await api.post(
+        '/Medilogic_drivers/driver/setup-intent',
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+      return res.data
+    }, 'Failed to initialize payment')
 
-      const result = await authorizedRequest<DriverProfile>(async (token) => {
-        const res = await api.put(
-          '/Medilogic_drivers/driver/subscription',
-          payload,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-          }
-        );
-        return res.data;
-      }, 'Subscription failed');
+    setSelectedPlan(plan)
+    setPaymentClientSecret(setupRes.client_secret)
 
-      if (!result) {
-        throw new Error('Empty subscription response');
-      }
-
-      setProfile(result);
-      setFormData(result);
-
-      toast.success(`Subscription updated to ${plan}`);
-    } catch (e) {
-      toast.error('Unable to change subscription');
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  //   const subscribeToPlan = async (plan: string) => {
-  //     try {
-  //       setIsSaving(true);
-
-  //       const payload = new FormData();
-  //       payload.append('plan', plan);
-
-  //       const result = await authorizedRequest<SubscribeResponse>(
-  //         async (token) => {
-  //           const res = await api.put<SubscribeResponse>(
-  //             '/Medilogic_drivers/me',
-  //             payload,
-  //             {
-  //               headers: { Authorization: `Bearer ${token}` },
-  //             }
-  //           );
-  //           return res.data;
-  //         },
-  //         'Subscription failed'
-  //       );
-
-  //       if (!result) {
-  //         throw new Error('Empty subscription response');
-  //       }
-
-  //       setProfile(result.driver);
-  //       setFormData(result.driver);
-
-  //       if (result.client_secret) {
-  //   setPaymentClientSecret(result.client_secret);
-  //   toast.info("Complete payment to activate subscription");
-  //   return;
-  // }
-
-  // toast.success(`Subscribed to ${plan} plan`);
-
-  // console.log("Requested plan:", plan);
-  // console.log("Backend returned plan:", result.driver.subscription_plan);
-
-  //       // if (result.client_secret) {
-  //       //   setPaymentClientSecret(result.client_secret);
-  //       //   return;
-  //       // }
-
-  //       toast.success(`Subscribed to ${plan} plan`);
-  //     } catch (e) {
-  //       toast.error('Unable to subscribe');
-  //     } finally {
-  //       setIsSaving(false);
-  //     }
-  //   };
+  } catch {
+    toast.error('Unable to start subscription')
+  } finally {
+    setIsSaving(false)
+  }
+}
 
   const handlePaymentSuccess = async () => {
     toast.success('Payment successful 🎉');
@@ -287,5 +223,6 @@ export default function useMedilogicDriver() {
     subscribeToPlan,
     handlePaymentSuccess,
     paymentClientSecret,
+    selectedPlan,
   };
 }
