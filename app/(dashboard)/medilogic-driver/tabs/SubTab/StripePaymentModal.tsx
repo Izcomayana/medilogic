@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { api } from '@/lib/api';
 import { useAuthorizedRequest } from '@/hooks/useRequest';
+import useMedilogicDriver from '../../hooks/useMeDriver';
 
 type Props = {
   clientSecret: string;
@@ -19,6 +20,7 @@ export function StripePaymentModal({
   const elements = useElements();
   const authorizedRequest = useAuthorizedRequest();
   const [loading, setLoading] = useState(false);
+  const { fetchProfile } = useMedilogicDriver();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,6 +59,8 @@ export function StripePaymentModal({
         },
       });
     }, 'Subscription failed');
+
+    await fetchProfile();
 
     setLoading(false);
     onSuccess();
