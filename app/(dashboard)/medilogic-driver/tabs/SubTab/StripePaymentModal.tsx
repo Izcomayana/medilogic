@@ -1,98 +1,86 @@
-import {
-  useStripe,
-  useElements,
-  CardElement,
-} from '@stripe/react-stripe-js'
-import { useState } from 'react'
-import { toast } from 'sonner'
-import { api } from '@/lib/api'
-import { useAuthorizedRequest } from '@/hooks/useRequest'
+import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import { api } from '@/lib/api';
+import { useAuthorizedRequest } from '@/hooks/useRequest';
 
 type Props = {
-  clientSecret: string
-  selectedPlan: string
-  onSuccess: () => void
-}
+  clientSecret: string;
+  selectedPlan: string;
+  onSuccess: () => void;
+};
 
 export function StripePaymentModal({
   clientSecret,
   selectedPlan,
   onSuccess,
 }: Props) {
-  const stripe = useStripe()
-  const elements = useElements()
-  const authorizedRequest = useAuthorizedRequest()
-  const [loading, setLoading] = useState(false)
+  const stripe = useStripe();
+  const elements = useElements();
+  const authorizedRequest = useAuthorizedRequest();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    if (!stripe || !elements) return
+    if (!stripe || !elements) return;
 
-    setLoading(true)
+    setLoading(true);
 
-    const cardElement = elements.getElement(CardElement)
-    if (!cardElement) return
+    const cardElement = elements.getElement(CardElement);
+    if (!cardElement) return;
 
-    const { setupIntent, error } = await stripe.confirmCardSetup(
-      clientSecret,
-      {
-        payment_method: {
-          card: cardElement,
-        },
-      }
-    )
+    const { setupIntent, error } = await stripe.confirmCardSetup(clientSecret, {
+      payment_method: {
+        card: cardElement,
+      },
+    });
 
     if (error) {
-      setLoading(false)
-      toast.error(error.message)
-      return
+      setLoading(false);
+      toast.error(error.message);
+      return;
     }
 
-    const paymentMethodId = setupIntent.payment_method as string
+    const paymentMethodId = setupIntent.payment_method as string;
 
     // 🔥 Now call subscription endpoint
-    const payload = new URLSearchParams()
-    payload.append('new_plan', selectedPlan)
-    payload.append('payment_method_id', paymentMethodId)
+    const payload = new URLSearchParams();
+    payload.append('new_plan', selectedPlan);
+    payload.append('payment_method_id', paymentMethodId);
 
     await authorizedRequest(async (token) => {
-      await api.put(
-        '/Medilogic_drivers/driver/subscription',
-        payload,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }
-      )
-    }, 'Subscription failed')
+      await api.put('/Medilogic_drivers/driver/subscription', payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+    }, 'Subscription failed');
 
-    setLoading(false)
-    onSuccess()
-  }
+    setLoading(false);
+    onSuccess();
+  };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <CardElement
-  options={{
-    style: {
-      base: {
-        fontSize: '16px',
-        color: '#ffffff',
-        '::placeholder': {
-          color: '#9ca3af',
-        },
-      },
-      invalid: {
-        color: '#ef4444',
-      },
-    },
-  }}
-  className="p-4 bg-gray-800 border border-gray-700 rounded-lg"
-/>
-      {/* <CardElement className="p-3 bg-white rounded" /> */}
+        options={{
+          style: {
+            base: {
+              fontSize: '16px',
+              color: '#ffffff',
+              '::placeholder': {
+                color: '#9ca3af',
+              },
+            },
+            invalid: {
+              color: '#ef4444',
+            },
+          },
+        }}
+        className="p-4 bg-gray-800 border border-gray-700 rounded-lg"
+      />
 
       <button
         disabled={!stripe || loading}
@@ -101,5 +89,5 @@ export function StripePaymentModal({
         {loading ? 'Processing...' : 'Confirm Payment'}
       </button>
     </form>
-  )
+  );
 }
