@@ -43,12 +43,6 @@ type Subscription = {
   cancel_at_period_end: boolean;
 };
 
-type SubscribeResponse = {
-  driver: DriverProfile;
-  client_secret: string | null;
-  payment_id: string | null;
-};
-
 export default function useMedilogicDriver() {
   const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState<DriverProfile | null>(null);
