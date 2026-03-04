@@ -32,6 +32,7 @@ type DriverProfile = {
   subscription_status: string;
   subscription_start?: string | null;
   subscription_end?: string | null;
+  cancel_at_period_end?: boolean;
 };
 
 type Subscription = {
@@ -39,12 +40,7 @@ type Subscription = {
   status: 'active' | 'none' | 'cancelled';
   start: string | null;
   end: string | null;
-};
-
-type SubscribeResponse = {
-  driver: DriverProfile;
-  client_secret: string | null;
-  payment_id: string | null;
+  cancel_at_period_end: boolean;
 };
 
 export default function useMedilogicDriver() {
@@ -56,6 +52,7 @@ export default function useMedilogicDriver() {
   const [paymentClientSecret, setPaymentClientSecret] = useState<string | null>(
     null
   );
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
 
   const [activeTab, setActiveTab] = useState<'profile' | 'subscription'>(
     'profile'
@@ -95,6 +92,7 @@ export default function useMedilogicDriver() {
         status: profile.subscription_status as Subscription['status'],
         start: profile.subscription_start ?? null,
         end: profile.subscription_end ?? null,
+        cancel_at_period_end: profile.cancel_at_period_end ?? false,
       }
     : null;
 
@@ -147,10 +145,39 @@ export default function useMedilogicDriver() {
     try {
       setIsSaving(true);
 
+      const setupRes = await authorizedRequest(async (token) => {
+        const res = await api.post(
+          '/Medilogic_drivers/driver/setup-intent',
+          {},
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        return res.data;
+      }, 'Failed to initialize payment');
+
+      setSelectedPlan(plan);
+      setPaymentClientSecret(setupRes.client_secret);
+    } catch {
+      toast.error('Unable to start subscription');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handlePaymentSuccess = async () => {
+    toast.success('Payment successful 🎉');
+    await fetchProfile();
+    setPaymentClientSecret(null);
+  };
+
+  const handleChangePlan = async (plan: string) => {
+    try {
+      setIsSaving(true);
+
       const payload = new URLSearchParams();
       payload.append('new_plan', plan);
+      payload.append('payment_method_id', 'existing'); // temporary fix
 
-      const result = await authorizedRequest<DriverProfile>(async (token) => {
+      const result = await authorizedRequest(async (token) => {
         const res = await api.put(
           '/Medilogic_drivers/driver/subscription',
           payload,
@@ -162,107 +189,90 @@ export default function useMedilogicDriver() {
           }
         );
         return res.data;
-      }, 'Subscription failed');
+      }, 'Plan update failed');
 
-      if (!result) {
-        throw new Error('Empty subscription response');
-      }
+      setProfile(result.driver);
+      setFormData(result.driver);
 
-      setProfile(result);
-      setFormData(result);
+      await fetchProfile();
 
       toast.success(`Subscription updated to ${plan}`);
-    } catch (e) {
+    } catch {
       toast.error('Unable to change subscription');
     } finally {
       setIsSaving(false);
     }
   };
 
-  //   const subscribeToPlan = async (plan: string) => {
-  //     try {
-  //       setIsSaving(true);
-
-  //       const payload = new FormData();
-  //       payload.append('plan', plan);
-
-  //       const result = await authorizedRequest<SubscribeResponse>(
-  //         async (token) => {
-  //           const res = await api.put<SubscribeResponse>(
-  //             '/Medilogic_drivers/me',
-  //             payload,
-  //             {
-  //               headers: { Authorization: `Bearer ${token}` },
-  //             }
-  //           );
-  //           return res.data;
-  //         },
-  //         'Subscription failed'
-  //       );
-
-  //       if (!result) {
-  //         throw new Error('Empty subscription response');
-  //       }
-
-  //       setProfile(result.driver);
-  //       setFormData(result.driver);
-
-  //       if (result.client_secret) {
-  //   setPaymentClientSecret(result.client_secret);
-  //   toast.info("Complete payment to activate subscription");
-  //   return;
-  // }
-
-  // toast.success(`Subscribed to ${plan} plan`);
-
-  // console.log("Requested plan:", plan);
-  // console.log("Backend returned plan:", result.driver.subscription_plan);
-
-  //       // if (result.client_secret) {
-  //       //   setPaymentClientSecret(result.client_secret);
-  //       //   return;
-  //       // }
-
-  //       toast.success(`Subscribed to ${plan} plan`);
-  //     } catch (e) {
-  //       toast.error('Unable to subscribe');
-  //     } finally {
-  //       setIsSaving(false);
-  //     }
-  //   };
-
-  const handlePaymentSuccess = async () => {
-    toast.success('Payment successful 🎉');
-    await fetchProfile();
-    setPaymentClientSecret(null);
-  };
-
-  const handleChangePlan = async (plan: string) => {
-    const payload = new FormData();
-    payload.append('plan', plan);
-
+  const cancelSubscription = async (atPeriodEnd: boolean = true) => {
     try {
-      await authorizedRequest(async (token) => {
-        const res = await api.put('/Medilogic_drivers/me', payload, {
+      setIsSaving(true);
+
+      const result = await authorizedRequest(async (token) => {
+        const res = await api.delete(`/Medilogic_drivers/driver/subscription`, {
+          params: { at_period_end: atPeriodEnd },
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data',
           },
         });
 
-        setProfile(res.data);
-        setFormData(res.data);
-        toast.success(`Subscription updated to ${plan}`);
-      }, 'Plan update failed');
+        return res.data;
+      }, 'Cancellation failed');
+
+      setProfile(result);
+      setFormData(result);
+
+      await fetchProfile();
+
+      toast.success(
+        atPeriodEnd
+          ? 'Subscription will cancel at period end.'
+          : 'Subscription cancelled immediately.'
+      );
     } catch {
-      toast.error('Unable to change subscription');
+      toast.error('Unable to cancel subscription');
+    } finally {
+      setIsSaving(false);
     }
   };
 
-  const handleCancelSubscription = () => {
-    if (confirm('Are you sure you want to cancel your subscription?')) {
-      // setSubscriptionData((prev) => ({ ...prev, status: "cancelled" }))
-      toast.success('Subscription cancelled');
+  const resumeSubscription = async () => {
+    if (!subscription) {
+      toast.error('No subscription found');
+      return;
+    }
+
+    try {
+      setIsSaving(true);
+
+      const payload = new URLSearchParams();
+      payload.append('new_plan', subscription.plan);
+
+      const result = await authorizedRequest(async (token) => {
+        const res = await api.put(
+          '/Medilogic_drivers/driver/subscription',
+          payload,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          }
+        );
+
+        return res.data;
+      }, 'Resume failed');
+
+      setProfile(result.driver);
+      setFormData(result.driver);
+
+      toast.success('Subscription resumed successfully');
+
+      await fetchProfile();
+    } catch {
+      toast.error('Unable to resume subscription');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -282,10 +292,12 @@ export default function useMedilogicDriver() {
     handleInputChange,
     handleSaveProfile,
     handleChangePlan,
-    handleCancelSubscription,
+    cancelSubscription,
+    resumeSubscription,
     subscription,
     subscribeToPlan,
     handlePaymentSuccess,
     paymentClientSecret,
+    selectedPlan,
   };
 }

@@ -24,7 +24,7 @@ export default function Navbar() {
   const applyLinks = [
     { name: 'Apply as an Organization', href: '/apply' },
     { name: 'Apply as a Regulator', href: '/apply' },
-    { name: 'Apply as a Driver', href: '/apply' },
+    { name: 'Apply as a Medilogic Driver', href: '/apply' },
   ];
 
   const navLinks = [

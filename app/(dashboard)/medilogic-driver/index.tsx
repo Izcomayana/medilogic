@@ -8,6 +8,10 @@ import { StripePaymentModal } from './tabs/SubTab/StripePaymentModal';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+);
+
 export function MedilogicDriver() {
   const driverState = useMedilogicDriver();
   const {
@@ -16,6 +20,7 @@ export function MedilogicDriver() {
     activeTab,
     paymentClientSecret,
     handlePaymentSuccess,
+    selectedPlan,
   } = driverState;
 
   if (loading) {
@@ -63,16 +68,19 @@ export function MedilogicDriver() {
         </main>
       </div>
 
-      {paymentClientSecret && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-          <div className="bg-gray-900 p-6 rounded-xl w-full max-w-md">
-            <StripePaymentModal
-              clientSecret={paymentClientSecret}
-              onSuccess={handlePaymentSuccess}
-            />
+      <Elements stripe={stripePromise}>
+        {paymentClientSecret && (
+          <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+            <div className="bg-gray-900 p-6 rounded-xl w-full max-w-md">
+              <StripePaymentModal
+                clientSecret={paymentClientSecret}
+                selectedPlan={selectedPlan!}
+                onSuccess={handlePaymentSuccess}
+              />
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </Elements>
     </>
   );
 }
