@@ -92,9 +92,20 @@ export default function SubscriptionTab({
               const isDowngrade = plan.tier < currentTier;
 
               const handleClick = () => {
-                if (isFree) {
+                // Downgrade to Free = Cancel subscription
+                if (plan.id === 'free' && !isFree) {
+                  cancelSubscription(true);
+                  return;
+                }
+
+                // Free → Paid
+                if (isFree && plan.id !== 'free') {
                   subscribeToPlan(plan.id);
-                } else {
+                  return;
+                }
+
+                // Paid → Paid (green ↔ blue)
+                if (!isFree && plan.id !== 'free') {
                   handleChangePlan(plan.id);
                 }
               };
@@ -121,7 +132,10 @@ export default function SubscriptionTab({
                   </div>
 
                   <button
-                    disabled={active || isSaving}
+                    disabled={
+                      active || isSaving || (plan.id === 'free' && isCancelling)
+                    }
+                    // disabled={active || isSaving}
                     onClick={handleClick}
                     className={`w-full py-2 rounded-lg font-medium transition flex items-center justify-center gap-2 ${
                       active
@@ -133,6 +147,16 @@ export default function SubscriptionTab({
                       <Loader2 className="h-4 w-4 animate-spin" />
                     ) : active ? (
                       'Current Plan'
+                    ) : isUpgrade ? (
+                      <>
+                        <ArrowUpCircle className="h-4 w-4" />
+                        Upgrade
+                      </>
+                    ) : plan.id === 'free' && !isFree ? (
+                      <>
+                        <XCircle className="h-4 w-4" />
+                        Cancel Plan
+                      </>
                     ) : isUpgrade ? (
                       <>
                         <ArrowUpCircle className="h-4 w-4" />
@@ -173,9 +197,6 @@ export default function SubscriptionTab({
                 )}
               </div>
             </div>
-
-            {/* Cancel / Resume Buttons */}
-            {/* Cancel / Resume Buttons */}
 
             {/* Cancel button */}
             {canCancel && (

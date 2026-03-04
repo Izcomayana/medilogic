@@ -299,5 +299,6 @@ export default function useMedilogicDriver() {
     handlePaymentSuccess,
     paymentClientSecret,
     selectedPlan,
+    fetchProfile,
   };
 }
