@@ -43,14 +43,14 @@ export default function SubscriptionTab({
     {
       id: 'green',
       label: 'Green',
-      price: '£19/mo',
+      price: '£10.99/mo',
       description: 'More jobs',
       tier: 1,
     },
     {
       id: 'blue',
       label: 'Blue',
-      price: '£39/mo',
+      price: '£15.99/mo',
       description: 'Unlimited access',
       tier: 2,
     },
