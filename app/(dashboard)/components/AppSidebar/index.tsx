@@ -21,7 +21,7 @@ import {
   MessageSquare,
   CarFront,
   CalendarCheck,
-  // BarChart3,
+  BarChart3,
   // UserRoundPen,
   Star,
 } from 'lucide-react';
@@ -106,6 +106,7 @@ const sidebarLinksByRole: Record<
   ],
   medilogic_driver: [
     { title: 'Dashboard', url: '/medilogic-driver', icon: Home },
+    { title: 'Analytics', url: '/medilogic-driver/analytics', icon: BarChart3 },
   ],
   driver: [
     { title: 'Dashboard', url: '/driver', icon: Home },
