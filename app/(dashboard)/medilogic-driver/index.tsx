@@ -68,14 +68,34 @@ export function MedilogicDriver() {
         </main>
       </div>
 
-      <Elements
+      {paymentClientSecret && (
+        <Elements
+          stripe={stripePromise}
+          options={{
+            clientSecret: paymentClientSecret,
+            appearance: { theme: 'night' },
+          }}
+        >
+          <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+            <div className="bg-gray-900 p-6 rounded-xl w-full max-w-md">
+              <StripePaymentModal
+                clientSecret={paymentClientSecret}
+                selectedPlan={selectedPlan!}
+                onSuccess={handlePaymentSuccess}
+              />
+            </div>
+          </div>
+        </Elements>
+      )}
+
+      {/* <Elements
         stripe={stripePromise}
-        // options={{
-        //   clientSecret,
-        //   appearance: {
-        //     theme: 'night',
-        //   },
-        // }}
+        options={{
+          clientSecret: paymentClientSecret!,
+          appearance: {
+            theme: 'night',
+          },
+        }}
       >
         {paymentClientSecret && (
           <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
@@ -88,7 +108,7 @@ export function MedilogicDriver() {
             </div>
           </div>
         )}
-      </Elements>
+      </Elements> */}
     </>
   );
 }

@@ -1,9 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { User, Save, CreditCard } from 'lucide-react';
+import { User, Save } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/ui/spinner';
 import useMedilogicDriver from '../../hooks/useMeDriver';
+import useFeatureAccess from '../../hooks/useFeatureAccess';
+import DocumentsUploadSection from './DocumentsUpload';
 
 type ProfileTabProps = ReturnType<typeof useMedilogicDriver>;
 
@@ -14,7 +16,10 @@ export default function ProfileTab({
   isSaving,
   handleInputChange,
   handleSaveProfile,
+  uploadDocuments,
 }: ProfileTabProps) {
+  const { badge } = useFeatureAccess();
+
   return (
     <div className="max-w-2xl">
       <Card className="bg-gray-800 border-gray-700">
@@ -23,6 +28,13 @@ export default function ProfileTab({
             <User className="h-5 w-5" />
             Personal Information
           </CardTitle>
+
+          {/* badge */}
+          {/* {badge === "blue" && (
+            <span className="px-2 py-1 text-xs bg-blue-500 rounded">
+              Verified Driver
+            </span>
+          )} */}
 
           <button
             onClick={() => setIsEditing(!isEditing)}
@@ -204,16 +216,18 @@ export default function ProfileTab({
             </div>
           </div>
 
+          <DocumentsUploadSection uploadDocuments={uploadDocuments} />
+
           {isEditing && (
             <button
               onClick={handleSaveProfile}
               disabled={isSaving}
               className={`w-full mt-6 px-4 py-2 rounded flex items-center justify-center gap-2 font-medium transition
-      ${
-        isSaving
-          ? 'bg-[#15941f]/70 cursor-not-allowed'
-          : 'bg-[#15941f] hover:bg-[#12831c]'
-      } text-white`}
+              ${
+                isSaving
+                  ? 'bg-[#15941f]/70 cursor-not-allowed'
+                  : 'bg-[#15941f] hover:bg-[#12831c]'
+              } text-white`}
             >
               {isSaving ? (
                 <>

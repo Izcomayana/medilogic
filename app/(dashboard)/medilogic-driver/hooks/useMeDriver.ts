@@ -33,6 +33,12 @@ type DriverProfile = {
   subscription_start?: string | null;
   subscription_end?: string | null;
   cancel_at_period_end?: boolean;
+
+  badge_type: 'none' | 'green' | 'blue';
+
+  can_upload_docs: boolean;
+  can_view_analytics: boolean;
+  can_see_org_names: boolean;
 };
 
 type Subscription = {
@@ -276,6 +282,27 @@ export default function useMedilogicDriver() {
     }
   };
 
+  const uploadDocuments = async (files: File[]) => {
+    const formData = new FormData();
+
+    files.forEach((file) => {
+      formData.append('files', file);
+    });
+
+    await authorizedRequest(async (token) => {
+      await api.put('/Medilogic_drivers/me', formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+    }, 'Upload failed');
+
+    await fetchProfile();
+
+    toast.success('Documents uploaded successfully');
+  };
+
   return {
     isEditing,
     setIsEditing,
@@ -300,5 +327,6 @@ export default function useMedilogicDriver() {
     paymentClientSecret,
     selectedPlan,
     fetchProfile,
+    uploadDocuments,
   };
 }
