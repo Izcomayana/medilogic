@@ -33,32 +33,41 @@ export function StripePaymentModal({
 
     setLoading(true);
 
+    // REQUIRED for PaymentElement
+    const { error: submitError } = await elements.submit();
+
+    if (submitError) {
+      toast.error(submitError.message);
+      setLoading(false);
+      return;
+    }
+
     const { error, setupIntent } = await stripe.confirmSetup({
       elements,
       clientSecret,
-      redirect: 'if_required',
+      redirect: "if_required",
     });
 
     if (error) {
-      setLoading(false);
       toast.error(error.message);
+      setLoading(false);
       return;
     }
 
     const paymentMethodId = setupIntent?.payment_method as string;
 
     const payload = new URLSearchParams();
-    payload.append('new_plan', selectedPlan);
-    payload.append('payment_method_id', paymentMethodId);
+    payload.append("new_plan", selectedPlan);
+    payload.append("payment_method_id", paymentMethodId);
 
     await authorizedRequest(async (token) => {
-      await api.put('/Medilogic_drivers/driver/subscription', payload, {
+      await api.put("/Medilogic_drivers/driver/subscription", payload, {
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/x-www-form-urlencoded',
+          "Content-Type": "application/x-www-form-urlencoded",
         },
       });
-    }, 'Subscription failed');
+    }, "Subscription failed");
 
     await fetchProfile();
 
@@ -66,8 +75,10 @@ export function StripePaymentModal({
     onSuccess();
   };
 
-  {
-    !stripe && <div className="animate-pulse h-20 bg-gray-800 rounded" />;
+  if (!stripe || !elements) {
+    return (
+      <div className="animate-pulse h-20 bg-gray-800 rounded" />
+    );
   }
 
   return (
@@ -77,7 +88,7 @@ export function StripePaymentModal({
       </div>
 
       <button
-        disabled={!stripe || loading}
+        disabled={!stripe || !elements || loading}
         className="w-full py-2 rounded bg-[#15941f] text-white"
       >
         {loading ? 'Processing...' : 'Confirm Payment'}
