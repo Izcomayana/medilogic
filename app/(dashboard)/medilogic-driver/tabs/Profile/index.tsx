@@ -29,13 +29,6 @@ export default function ProfileTab({
             Personal Information
           </CardTitle>
 
-          {/* badge */}
-          {/* {badge === "blue" && (
-            <span className="px-2 py-1 text-xs bg-blue-500 rounded">
-              Verified Driver
-            </span>
-          )} */}
-
           <button
             onClick={() => setIsEditing(!isEditing)}
             className={`px-4 py-1.5 rounded text-sm font-medium transition ${
@@ -200,6 +193,18 @@ export default function ProfileTab({
                   value={formData.experience_years ?? ''}
                   onChange={handleInputChange}
                   disabled={!isEditing}
+                />
+              </div>
+
+              <div>
+                <Label className="text-xs text-gray-400">DVLA Check Code</Label>
+                <Input
+                  name="dvla_check_code"
+                  className="text-gray-200"
+                  value={formData.dvla_check_code ?? ''}
+                  onChange={handleInputChange}
+                  disabled={!isEditing}
+                  placeholder="Enter DVLA check code"
                 />
               </div>
 
