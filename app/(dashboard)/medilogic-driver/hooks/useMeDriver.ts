@@ -27,6 +27,7 @@ type DriverProfile = {
   vehicle_type?: string;
   preferred_role?: string;
   experience_years?: number;
+  dvla_check_code?: string | null;
 
   subscription_plan: string;
   subscription_status: string;
