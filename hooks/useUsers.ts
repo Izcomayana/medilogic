@@ -34,7 +34,7 @@ export function useUsers() {
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState<User[]>([]);
   const [deletedUsers, setDeletedUsers] = useState<DeletedUser[]>([]);
-  const [activeTab, setActiveTab] = useState<'users' | 'deleted'>('users');
+  const [activeTab, setActiveTab] = useState<'users' | 'deleted' | 'medilogic-drivers'>('users');
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
