@@ -1,13 +1,6 @@
 import { TabsContent } from '@radix-ui/react-tabs';
 import { useUsers } from '@/hooks/useUsers';
-import {
-  Mail,
-  Users,
-  Eye,
-  MoreHorizontal,
-  Power,
-  Clock3,
-} from 'lucide-react';
+import { Mail, Users, Eye, MoreHorizontal, Power, Clock3 } from 'lucide-react';
 import {
   Table,
   TableBody,

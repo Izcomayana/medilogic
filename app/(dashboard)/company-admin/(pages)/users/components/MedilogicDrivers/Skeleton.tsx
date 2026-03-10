@@ -14,13 +14,13 @@ export function MedilogicTableSkeleton() {
     <div className="rounded-md border border-gray-700">
       <Table>
         <TableHeader className="bg-gray-800 text-gray-400">
-              <TableRow>
-                <TableHead className="px-4 py-3">Name</TableHead>
-                <TableHead className="px-4 py-3">Email</TableHead>
-                <TableHead className="px-4 py-3">Country</TableHead>
-                <TableHead className="px-4 py-3">Plan</TableHead>
-              </TableRow>
-            </TableHeader>
+          <TableRow>
+            <TableHead className="px-4 py-3">Name</TableHead>
+            <TableHead className="px-4 py-3">Email</TableHead>
+            <TableHead className="px-4 py-3">Country</TableHead>
+            <TableHead className="px-4 py-3">Plan</TableHead>
+          </TableRow>
+        </TableHeader>
         <TableBody>
           {Array.from({ length: 10 }).map((_, i) => (
             <TableRow key={i} className="border-gray-700">

@@ -80,7 +80,7 @@ export default function UsersPage() {
                 </TabsList>
               </div>
 
-              {activeTab !== "medilogic-drivers" && <Filters {...userState} />}
+              {activeTab !== 'medilogic-drivers' && <Filters {...userState} />}
 
               {/* Users Tab */}
               <UsersTab {...userState} />
