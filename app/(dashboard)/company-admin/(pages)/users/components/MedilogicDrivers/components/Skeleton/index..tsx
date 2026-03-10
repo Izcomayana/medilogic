@@ -9,17 +9,16 @@ import {
 } from '@/components/ui/table';
 
 // Skeleton Loader for Trips Table
-export function UsersTableSkeleton() {
+export function MedilogicTableSkeleton() {
   return (
     <div className="rounded-md border border-gray-700">
       <Table>
-        <TableHeader>
-          <TableRow className="border-gray-700 hover:bg-gray-800">
-            <TableHead className="text-gray-300">Name</TableHead>
-            <TableHead className="text-gray-300">Email</TableHead>
-            <TableHead className="text-gray-300">Role</TableHead>
-            <TableHead className="text-gray-300">Status</TableHead>
-            <TableHead className="text-gray-300">Actions</TableHead>
+        <TableHeader className="bg-gray-800 text-gray-400">
+          <TableRow>
+            <TableHead className="px-4 py-3">Name</TableHead>
+            <TableHead className="px-4 py-3">Email</TableHead>
+            <TableHead className="px-4 py-3">Country</TableHead>
+            <TableHead className="px-4 py-3">Plan</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -37,10 +36,7 @@ export function UsersTableSkeleton() {
                 <Skeleton className="h-4 w-24 bg-gray-700" />
               </TableCell>
               <TableCell>
-                <Skeleton className="h-4 w-24 bg-gray-700" />
-              </TableCell>
-              <TableCell>
-                <Skeleton className="h-4 w-8 bg-gray-700 rounded-md" />
+                <Skeleton className="h-4 w-20 bg-gray-700" />
               </TableCell>
             </TableRow>
           ))}

@@ -1,14 +1,6 @@
 import { TabsContent } from '@radix-ui/react-tabs';
 import { useUsers } from '@/hooks/useUsers';
-import {
-  Calendar,
-  Mail,
-  Users,
-  Eye,
-  MoreHorizontal,
-  Power,
-  Clock3,
-} from 'lucide-react';
+import { Mail, Users, Eye, MoreHorizontal, Power, Clock3 } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -130,7 +122,6 @@ export function UsersTab({
                   <TableHead className="text-gray-300">Email</TableHead>
                   <TableHead className="text-gray-300">Role</TableHead>
                   <TableHead className="text-gray-300">Status</TableHead>
-                  <TableHead className="text-gray-300">Date Joined</TableHead>
                   <TableHead className="text-gray-300">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -147,10 +138,6 @@ export function UsersTab({
                     </TableCell>
                     <TableCell>{getRoleBadge(user.role)}</TableCell>
                     <TableCell>{getStatusBadge(user.status)}</TableCell>
-                    <TableCell className="text-gray-300 flex items-center gap-1">
-                      <Calendar className="h-3 w-3" />
-                      {formatDate(user.dateJoined)}
-                    </TableCell>
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>

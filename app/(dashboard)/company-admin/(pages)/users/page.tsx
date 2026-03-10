@@ -4,12 +4,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Users, UserX, UserCheck } from 'lucide-react';
+import { Users, UserX, UserCheck, BadgeCheck } from 'lucide-react';
 import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 import { useUsers } from '@/hooks/useUsers';
 import { Filters } from './components/Filters';
 import { UsersTab } from './components/Users';
 import { DeletedUsersTab } from './components/DeletedUsers';
+import { MedilogicDrivers } from './components/MedilogicDrivers';
 
 export default function UsersPage() {
   const {
@@ -27,7 +28,7 @@ export default function UsersPage() {
 
   const userState = useUsers();
 
-  type TabType = 'users' | 'deleted';
+  type TabType = 'users' | 'deleted' | 'medilogic-drivers';
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
@@ -54,7 +55,7 @@ export default function UsersPage() {
               className="w-full"
             >
               <div className="border-b border-gray-700 px-6">
-                <TabsList className="grid w-full grid-cols-3 bg-transparent h-auto p-0 max-w-2xl">
+                <TabsList className="grid w-full lg:grid-cols-3 bg-transparent h-auto p-0 max-w-2xl">
                   <TabsTrigger
                     value="users"
                     className="flex items-center gap-2 py-3 px-4 data-[state=active]:bg-gray-800 data-[state=active]:text-white text-gray-400 hover:text-white border-b-2 border-transparent data-[state=active]:border-b-[#15941f] rounded-none"
@@ -69,17 +70,26 @@ export default function UsersPage() {
                     <UserX className="h-4 w-4" />
                     Deleted Users ({filteredDeletedUsers.length})
                   </TabsTrigger>
+                  <TabsTrigger
+                    value="medilogic-drivers"
+                    className="flex items-center gap-2 py-3 px-4 data-[state=active]:bg-gray-800 data-[state=active]:text-white text-gray-400 hover:text-white border-b-2 border-transparent data-[state=active]:border-b-[#15941f] rounded-none"
+                  >
+                    <BadgeCheck className="h-4 w-4" />
+                    Medilogic Drivers
+                  </TabsTrigger>
                 </TabsList>
               </div>
 
-              {/* Filters */}
-              <Filters {...userState} />
+              {activeTab !== 'medilogic-drivers' && <Filters {...userState} />}
 
               {/* Users Tab */}
               <UsersTab {...userState} />
 
               {/* Deleted Users Tab */}
               <DeletedUsersTab {...userState} />
+
+              {/* Medilogic Drivers */}
+              <MedilogicDrivers />
 
               {/* Pagination */}
               {totalPages > 1 && (
