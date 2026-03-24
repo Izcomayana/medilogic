@@ -16,7 +16,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { Download, Eye, MoreHorizontal } from 'lucide-react';
+import { MoreHorizontal } from 'lucide-react';
 import { MedilogicTableSkeleton } from './components/Skeleton/index.';
 import { useMedilogicDrivers } from './useDrivers';
 import DocumentsModal from './components/DocumentsModal';
@@ -26,17 +26,7 @@ import MedilogicFilters from './components/Filters';
 export function MedilogicDrivers() {
   const driverState = useMedilogicDrivers();
 
-  const {
-    filters,
-    setFilters,
-    loading,
-    drivers,
-    fetchSingleDriver,
-    viewDocuments,
-    driverModalOpen,
-    setDriverModalOpen,
-    selectedDriver,
-  } = driverState;
+  const { loading, drivers, fetchSingleDriver, viewDocuments } = driverState;
 
   const getPlanBadge = (plan: string) => {
     const styles: Record<string, string> = {
@@ -77,7 +67,9 @@ export function MedilogicDrivers() {
             </TableHeader>
 
             <TableBody>
-              <p className="text-gray-400">No drivers found.</p>
+              <TableRow className="text-gray-200 py-6">
+                No drivers found.
+              </TableRow>
             </TableBody>
           </Table>
         </div>
