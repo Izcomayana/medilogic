@@ -23,20 +23,22 @@ type MedilogicDriver = {
 };
 
 type Filters = {
-  country: string;
+  search: string;
   status: string;
   min_experience: string;
 };
 
 export function useMedilogicDrivers() {
   const [drivers, setDrivers] = useState<MedilogicDriver[]>([]);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [selectedDriver, setSelectedDriver] = useState<any>(null);
   const [driverModalOpen, setDriverModalOpen] = useState(false);
   const [documentsModalOpen, setDocumentsModalOpen] = useState(false);
 
   const [filters, setFilters] = useState<Filters>({
-    country: '',
+    search: '',
     status: '',
     min_experience: '',
   });
@@ -50,15 +52,21 @@ export function useMedilogicDrivers() {
       const res = await api.get('/Medilogic_drivers/', {
         headers: { Authorization: `Bearer ${token}` },
         params: {
-          ...(filters.country && { country: filters.country }),
+          ...(filters.search && { search: filters.search }),
           ...(filters.status && { status: filters.status }),
           ...(filters.min_experience && {
             min_experience: filters.min_experience,
           }),
+          page,
+          page_size: 10,
         },
       });
 
-      setDrivers(res.data);
+      console.log('result:', res.data.results);
+
+      setDrivers(res.data.results);
+      setTotal(res.data.total);
+      setPage(res.data.page);
     }, 'failed to fetch drivers');
 
     setLoading(false);

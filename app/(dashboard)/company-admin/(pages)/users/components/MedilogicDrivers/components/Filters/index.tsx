@@ -6,8 +6,19 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useMedilogicDrivers } from '../../useDrivers';
+import { Button } from '@/components/ui/button';
+import { Field } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { useMemo, useState } from 'react';
 
 type MedilogicDriversProps = ReturnType<typeof useMedilogicDrivers>;
+
+const locations = [
+  { country: 'Nigeria', region: 'Lagos' },
+  { country: 'Nigeria', region: 'Abuja' },
+  { country: 'UK', region: 'London' },
+  { country: 'UK', region: 'Manchester' },
+];
 
 export default function MedilogicFilters({
   filters,
@@ -31,20 +42,18 @@ export default function MedilogicFilters({
         </SelectContent>
       </Select>
 
-      <Select
-        value={filters.country}
-        onValueChange={(value) =>
-          setFilters((prev) => ({ ...prev, country: value }))
+      <Input
+        type="search"
+        placeholder="Search country or region..."
+        value={filters.search}
+        onChange={(e) =>
+          setFilters((prev) => ({
+            ...prev,
+            search: e.target.value,
+          }))
         }
-      >
-        <SelectTrigger className="w-[160px]">
-          <SelectValue placeholder="Country" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="Nigeria">Nigeria</SelectItem>
-          <SelectItem value="UK">UK</SelectItem>
-        </SelectContent>
-      </Select>
+        className="max-w-md"
+      />
 
       <Select
         value={filters.min_experience}
