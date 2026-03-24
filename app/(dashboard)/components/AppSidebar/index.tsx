@@ -82,11 +82,11 @@ const sidebarLinksByRole: Record<
       url: '/company-admin/tripsanalytics',
       icon: Waypoints,
     },
-    {
-      title: 'Medilogic Drivers',
-      url: '/company-admin/medilogic-drivers',
-      icon: CarFront,
-    },
+    // {
+    //   title: 'Medilogic Drivers',
+    //   url: '/company-admin/medilogic-drivers',
+    //   icon: CarFront,
+    // },
     {
       title: 'Charts',
       url: '/company-admin/charts',
