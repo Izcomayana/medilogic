@@ -68,11 +68,11 @@ const Forgotpassword: React.FC = () => {
   };
 
   return (
-    <div       
+    <div
       className="relative min-h-screen flex items-center justify-center px-4 pt-8 pb-12 bg-cover bg-center"
       style={{ backgroundImage: "url('/auth2.png')" }}
     >
-       <div className="absolute inset-0 bg-black opacity-50"></div>
+      <div className="absolute inset-0 bg-black opacity-50"></div>
 
       <div className="w-full max-w-md">
         <div className="text-center mb-8">

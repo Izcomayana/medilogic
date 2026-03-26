@@ -17,6 +17,7 @@ import { EditTripFormData } from '@/app/(dashboard)/company-admin/(pages)/trips/
 import { CreateTripFormData } from '@/app/(dashboard)/company-admin/(pages)/trips/components/CreateTrip/TripForm';
 
 export type DateRangeLocal = { from?: Date; to?: Date };
+export type ExportDateRange = { from?: Date; to?: Date };
 
 export function useTrips(tripsPerPage = 10) {
   const [tripsList, setTripsList] = useState<any[]>([]);
@@ -64,33 +65,6 @@ export function useTrips(tripsPerPage = 10) {
     wtnRequired: false,
     wtnSerialNumber: '',
   });
-
-  // const [formData, setFormData] = useState({
-  //   clientName: '',
-  //   clientId: '',
-  //   pickupLocation: '',
-  //   dropoffLocation: '',
-  //   driverName: '',
-  //   driverId: '',
-  //   dateTime: '',
-  //   notes: '',
-  //   status: 'pending',
-  //   priority: 'normal',
-  //   deliveryType: 'clinical_waste',
-  //   customDeliveryDescription: '',
-  //   cost: '',
-  //   distanceKm: '',
-  //   vehicleType: '',
-  //   locationZone: '',
-  //   shiftWindow: '',
-  //   complianceFlag: false,
-  //   recurrenceRule: 'none',
-
-  //   // ✅ NEW
-  //   deliveryPin: false,
-  //   wtnRequired: false,
-  //   wtnSerialNumber: '',
-  // });
 
   const authorizedRequest = useAuthorizedRequest();
 
@@ -178,24 +152,19 @@ export function useTrips(tripsPerPage = 10) {
   }, [statusFilter, searchTerm, dateRange, currentPage]);
 
   const handleExport = useCallback(
-    async (format: 'csv' | 'pdf') => {
+    async (format: 'csv' | 'pdf', range?: ExportDateRange) => {
       toast('Preparing your export...');
 
       await authorizedRequest<void>(async (token) => {
         const params = new URLSearchParams({
           format,
-          ...(statusFilter !== 'all' && { status: statusFilter }),
-          ...(searchTerm && {
-            driver_name: searchTerm,
-            client_name: searchTerm,
+          ...(range?.from && {
+            start_date: formatDateStart(range.from),
           }),
-          ...(dateRange?.from && {
-            start_date: formatDateStart(dateRange.from),
-          }),
-          ...(dateRange?.to
-            ? { end_date: formatDateEnd(dateRange.to) }
-            : dateRange?.from
-              ? { end_date: formatDateEnd(dateRange.from) }
+          ...(range?.to
+            ? { end_date: formatDateEnd(range.to) }
+            : range?.from
+              ? { end_date: formatDateEnd(range.from) }
               : {}),
         });
 
@@ -208,8 +177,10 @@ export function useTrips(tripsPerPage = 10) {
         );
 
         if (!res.ok) throw new Error('Export request failed');
+
         const blob = await res.blob();
         const url = window.URL.createObjectURL(blob);
+
         const a = document.createElement('a');
         a.href = url;
         a.download = `trips.${format}`;
@@ -220,8 +191,54 @@ export function useTrips(tripsPerPage = 10) {
 
       toast.success('Export ready!');
     },
-    [authorizedRequest, statusFilter, searchTerm, dateRange]
+    [authorizedRequest]
   );
+
+  // const handleExport = useCallback(
+  //   async (format: 'csv' | 'pdf') => {
+  //     toast('Preparing your export...');
+
+  //     await authorizedRequest<void>(async (token) => {
+  //       const params = new URLSearchParams({
+  //         format,
+  //         ...(statusFilter !== 'all' && { status: statusFilter }),
+  //         ...(searchTerm && {
+  //           driver_name: searchTerm,
+  //           client_name: searchTerm,
+  //         }),
+  //         ...(dateRange?.from && {
+  //           start_date: formatDateStart(dateRange.from),
+  //         }),
+  //         ...(dateRange?.to
+  //           ? { end_date: formatDateEnd(dateRange.to) }
+  //           : dateRange?.from
+  //             ? { end_date: formatDateEnd(dateRange.from) }
+  //             : {}),
+  //       });
+
+  //       const res = await fetch(
+  //         `https://medilogic-backend.onrender.com/export/trips/export?${params.toString()}`,
+  //         {
+  //           method: 'GET',
+  //           headers: { Authorization: `Bearer ${token}` },
+  //         }
+  //       );
+
+  //       if (!res.ok) throw new Error('Export request failed');
+  //       const blob = await res.blob();
+  //       const url = window.URL.createObjectURL(blob);
+  //       const a = document.createElement('a');
+  //       a.href = url;
+  //       a.download = `trips.${format}`;
+  //       document.body.appendChild(a);
+  //       a.click();
+  //       a.remove();
+  //     }, 'Failed to export trips');
+
+  //     toast.success('Export ready!');
+  //   },
+  //   [authorizedRequest, statusFilter, searchTerm, dateRange]
+  // );
 
   const filteredTrips = tripsList;
   const paginatedTrips = tripsList;
