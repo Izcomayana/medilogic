@@ -69,7 +69,9 @@ export const ExportTripsDialog: React.FC<Props> = ({ onExport }) => {
       <AlertDialog open={open} onOpenChange={setOpen}>
         <AlertDialogContent className="bg-gray-900 border-gray-700">
           <AlertDialogHeader>
-            <AlertDialogTitle className='text-gray-200'>Select Export Date Range</AlertDialogTitle>
+            <AlertDialogTitle className="text-gray-200">
+              Select Export Date Range
+            </AlertDialogTitle>
           </AlertDialogHeader>
 
           <div className="py-4">
@@ -85,7 +87,10 @@ export const ExportTripsDialog: React.FC<Props> = ({ onExport }) => {
               Cancel
             </AlertDialogCancel>
 
-            <AlertDialogAction onClick={handleConfirm} className='primary-button'>
+            <AlertDialogAction
+              onClick={handleConfirm}
+              className="primary-button"
+            >
               Export {format.toUpperCase()}
             </AlertDialogAction>
           </AlertDialogFooter>
