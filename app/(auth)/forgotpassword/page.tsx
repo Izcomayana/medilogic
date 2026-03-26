@@ -68,13 +68,18 @@ const Forgotpassword: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center px-4 pt-8 pb-12">
+    <div
+      className="relative min-h-screen flex items-center justify-center px-4 pt-8 pb-12 bg-cover bg-center"
+      style={{ backgroundImage: "url('/auth2.png')" }}
+    >
+      <div className="absolute inset-0 bg-black opacity-50"></div>
+
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <HomeLogo />
         </div>
 
-        <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
+        <div className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100 relative w-full max-w-md z-10">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <Label

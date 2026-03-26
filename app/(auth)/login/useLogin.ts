@@ -77,9 +77,11 @@ export function useLogin() {
   const handleStep1Submit = async (e: FormEvent) => {
     e.preventDefault();
     setSuccessMessage(null);
+
     if (!validateForm()) return;
 
     setLoading(true);
+
     try {
       const response = await axios.post(
         'https://medilogic-backend.onrender.com/access/login-step-1',
@@ -99,56 +101,115 @@ export function useLogin() {
           description: 'OTP sent to your email.',
         });
 
-        setLoading(false);
         return;
-      } else {
-        setErrors({ general: 'Session ID not received. Please try again.' });
       }
+
+      setErrors({ general: 'Session ID not received. Please try again.' });
     } catch (error: any) {
-      const msg =
-        error?.response?.data?.detail ??
-        error?.message ??
-        'An unexpected error occurred. Please try again.';
-      console.log('error:', error);
-      console.log('error2:', error?.response?.data?.detail);
-      const errorMessage = typeof msg === 'string' ? msg : JSON.stringify(msg);
+      const data = error?.response?.data;
 
-      // 🔎 If account is deactivated
+      const code = data?.code;
+      const detail = data?.detail || 'An unexpected error occurred.';
+
+      let message = '';
+
       if (
-        errorMessage.toLowerCase().includes('deactivated') ||
-        errorMessage.toLowerCase().includes('inactive')
+        code === 'ACCOUNT_DEACTIVATED' ||
+        detail.toLowerCase().includes('deactivated')
       ) {
-        setErrors({
-          general:
-            'Sorry, your account has been deactivated or deleted. please reach out to our support team.',
-        });
-        toast.error('Account Deactivated', {
-          description:
-            'Sorry, your account has been deactivated or deleted. please reach out to our support team.',
-        });
+        message =
+          'Sorry, your account has been deactivated or deleted. Please contact support.';
+      } else if (code === 'INVALID_CREDENTIALS') {
+        message = 'Invalid email or password.';
       } else {
-        const errorMessage =
-          typeof msg === 'string' ? msg : JSON.stringify(msg);
-
-        // If backend always says "Invalid credentials", show something more helpful
-        if (errorMessage.toLowerCase().includes('invalid')) {
-          setErrors({
-            general:
-              'Login failed. Your account may be deactivated, deleted or your credentials are incorrect.',
-          });
-          toast.error('Login failed', {
-            description:
-              'Your account may be deactivated or your credentials are incorrect.',
-          });
-        } else {
-          setErrors({ general: errorMessage });
-          toast.error('Login failed', { description: errorMessage });
-        }
+        message = detail;
       }
+
+      setErrors({ general: message });
+
+      toast.error('Login failed', {
+        description: message,
+      });
     } finally {
       setLoading(false);
     }
   };
+
+  // const handleStep1Submit = async (e: FormEvent) => {
+  //   e.preventDefault();
+  //   setSuccessMessage(null);
+  //   if (!validateForm()) return;
+
+  //   setLoading(true);
+  //   try {
+  //     const response = await axios.post(
+  //       'https://medilogic-backend.onrender.com/access/login-step-1',
+  //       qs.stringify({ username: email, password }),
+  //       {
+  //         headers: {
+  //           'Content-Type': 'application/x-www-form-urlencoded',
+  //         },
+  //       }
+  //     );
+
+  //     if (response.data.session_id) {
+  //       setSessionId(response.data.session_id);
+  //       setStep(2);
+
+  //       toast.success('Sent!', {
+  //         description: 'OTP sent to your email.',
+  //       });
+
+  //       setLoading(false);
+  //       return;
+  //     } else {
+  //       setErrors({ general: 'Session ID not received. Please try again.' });
+  //     }
+  //   } catch (error: any) {
+  //     const msg =
+  //       error?.response?.data?.detail ??
+  //       error?.message ??
+  //       'An unexpected error occurred. Please try again.';
+  //     console.log('error:', error);
+  //     console.log('error2:', error?.response?.data?.detail);
+  //     const errorMessage = typeof msg === 'string' ? msg : JSON.stringify(msg);
+
+  //     // 🔎 If account is deactivated
+  //     if (
+  //       errorMessage.toLowerCase().includes('deactivated') ||
+  //       errorMessage.toLowerCase().includes('inactive')
+  //     ) {
+  //       setErrors({
+  //         general:
+  //           'Sorry, your account has been deactivated or deleted. please reach out to our support team.',
+  //       });
+  //       toast.error('Account Deactivated', {
+  //         description:
+  //           'Sorry, your account has been deactivated or deleted. please reach out to our support team.',
+  //       });
+  //     } else {
+  //       const errorMessage =
+  //         typeof msg === 'string' ? msg : JSON.stringify(msg);
+
+  //       // If backend always says "Invalid credentials", show something more helpful
+  //       if (errorMessage.toLowerCase().includes('invalid')) {
+  //         setErrors({
+  //           general:
+  //             'Login failed. Your account may be deactivated, deleted or your credentials are incorrect.',
+  //         });
+  //         toast.error('Login failed', {
+  //           description:
+  //             'Your account may be deactivated or your credentials are incorrect.',
+  //         });
+  //       } else {
+  //         setErrors({ general: errorMessage });
+  //         toast.error('Login failed', { description: errorMessage });
+  //       }
+  //     }
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleStep2Submit = async (e: FormEvent) => {
     e.preventDefault();
