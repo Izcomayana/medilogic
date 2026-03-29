@@ -1,5 +1,3 @@
-import { formatDateTime } from '@/utils/datetime';
-
 export type Trip = {
   driver_id: string;
   driver_name: string | null;
