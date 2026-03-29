@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin, Search, Filter } from 'lucide-react';
-import { DateRangeLocal, useTrips } from '@/hooks/trips/useTrips';
+import { useTrips } from '@/hooks/trips/useTrips';
 import {
   Select,
   SelectContent,
@@ -35,9 +35,6 @@ export function Filters({
           </CardTitle>
 
           <CreateTrips {...tripState} />
-          {/* <CreateTrips
-            formData={tripState.formData}
-            setFormData={tripState.setFormData} /> */}
         </div>
       </CardHeader>
 

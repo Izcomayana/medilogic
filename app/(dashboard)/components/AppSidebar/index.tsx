@@ -126,9 +126,9 @@ const sidebarLinksByRole: Record<
   ],
   client: [
     { title: 'Dashboard', url: '/client', icon: Home },
+    { title: 'My Trips', url: '/client/trips', icon: ClipboardList },
     { title: 'Settings', url: '/client/settings', icon: Settings },
     { title: 'Invoices', url: '/client/invoices', icon: Receipt },
-    { title: 'My Trips', url: '/client/#', icon: ClipboardList },
     { title: 'Support', url: '/client/support', icon: MessageSquare },
   ],
 };

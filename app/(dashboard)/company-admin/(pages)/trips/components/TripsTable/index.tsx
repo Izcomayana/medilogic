@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+'use client';
 
 import { Card, CardContent } from '@/components/ui/card';
-import { useTrips } from '@/hooks/trips/useTrips';
 import {
   MapPin,
   Eye,
@@ -30,8 +30,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Badge } from '@/components/ui/badge';
-import { TripsTableSkeleton } from './tripSkeleton';
-import { getTripStatusBadge } from '../../../../../../../utils/badge';
+import { TripsTableSkeleton } from '@/app/(dashboard)/components/Trips/tripSkeleton';
+import { getTripStatusBadge } from '@/utils/badge';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -44,12 +44,30 @@ import {
 } from '@/components/ui/alert-dialog';
 import { useState } from 'react';
 import { formatDateTime } from '@/utils/datetime';
+import { UiTrip } from '@/hooks/trips/mappers';
 
-type TableProps = ReturnType<typeof useTrips>;
+type TripsTableProps = {
+  trips: UiTrip[];
+  loading: boolean;
+
+  // pagination
+  currentPage: number;
+  setCurrentPage: (page: number) => void;
+  totalPages: number;
+  startIndex: number;
+  tripsPerPage: number;
+
+  // actions (optional)
+  handleViewDetails?: (trip: UiTrip) => void;
+  handleEdit?: (trip: UiTrip) => void;
+  handleQuickStatusUpdate?: (id: string, status: string) => void;
+  handleDeleteTrip?: (id: string) => void;
+
+  isClientView?: boolean;
+};
 
 export function TripsTable({
-  filteredTrips,
-  paginatedTrips,
+  trips,
   handleViewDetails,
   handleEdit,
   handleQuickStatusUpdate,
@@ -60,7 +78,8 @@ export function TripsTable({
   currentPage,
   setCurrentPage,
   loading,
-}: TableProps) {
+  isClientView, // ✅ FIX
+}: TripsTableProps) {
   const [tripToDelete, setTripToDelete] = useState<string | null>(null);
 
   function getPriorityBadge(priority?: string | null) {
@@ -89,6 +108,9 @@ export function TripsTable({
         );
     }
   }
+
+  const filteredTrips = trips;
+  const paginatedTrips = trips;
 
   return (
     <>
@@ -123,7 +145,7 @@ export function TripsTable({
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {paginatedTrips.map((trip: any) => (
+                    {paginatedTrips.map((trip) => (
                       <TableRow
                         key={trip.id}
                         className="border-gray-700 hover:bg-gray-800"
@@ -176,57 +198,64 @@ export function TripsTable({
                                   <MoreHorizontal className="h-4 w-4" />
                                 </Button>
                               </DropdownMenuTrigger>
+
                               <DropdownMenuContent
                                 align="end"
                                 className="bg-gray-700 border-gray-600"
                               >
-                                <DropdownMenuItem
-                                  onClick={() => handleViewDetails(trip)}
-                                  className="text-gray-300 hover:bg-gray-600"
-                                >
-                                  <Eye className="h-3 w-3 mr-1" />
-                                  View
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  className="text-gray-300 hover:bg-gray-600"
-                                  onClick={() => handleEdit(trip)}
-                                >
-                                  <Edit className="mr-2 h-4 w-4" />
-                                  Edit Trip
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  className="text-gray-300 hover:bg-gray-600"
-                                  onClick={() =>
-                                    handleQuickStatusUpdate(
-                                      trip.id,
-                                      'completed'
-                                    )
-                                  }
-                                  disabled={trip.status === 'completed'}
-                                >
-                                  <CheckCircle className="mr-2 h-4 w-4" />
-                                  Mark Complete
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  className="text-yellow-400 hover:bg-gray-600"
-                                  onClick={() =>
-                                    handleQuickStatusUpdate(
-                                      trip.id,
-                                      'cancelled'
-                                    )
-                                  }
-                                  disabled={trip.status === 'cancelled'}
-                                >
-                                  <XCircle className="mr-2 h-4 w-4" />
-                                  Cancel Trip
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  className="text-red-400 hover:bg-gray-600"
-                                  onClick={() => setTripToDelete(trip.id)} // ✅ set state instead
-                                >
-                                  <Trash2 className="mr-2 h-4 w-4" />
-                                  Delete
-                                </DropdownMenuItem>
+                                {!isClientView && (
+                                  <>
+                                    <DropdownMenuItem
+                                      onClick={() => handleViewDetails?.(trip)}
+                                      className="text-gray-300 hover:bg-gray-600"
+                                    >
+                                      <Eye className="h-3 w-3 mr-1" />
+                                      View
+                                    </DropdownMenuItem>
+
+                                    <DropdownMenuItem
+                                      onClick={() => handleEdit?.(trip)}
+                                      className="text-gray-300 hover:bg-gray-600"
+                                    >
+                                      <Edit className="mr-2 h-4 w-4" />
+                                      Edit Trip
+                                    </DropdownMenuItem>
+
+                                    <DropdownMenuItem
+                                      onClick={() =>
+                                        handleQuickStatusUpdate?.(
+                                          trip.id,
+                                          'completed'
+                                        )
+                                      }
+                                      disabled={trip.status === 'completed'}
+                                    >
+                                      <CheckCircle className="mr-2 h-4 w-4" />
+                                      Mark Complete
+                                    </DropdownMenuItem>
+
+                                    <DropdownMenuItem
+                                      onClick={() =>
+                                        handleQuickStatusUpdate?.(
+                                          trip.id,
+                                          'cancelled'
+                                        )
+                                      }
+                                      disabled={trip.status === 'cancelled'}
+                                    >
+                                      <XCircle className="mr-2 h-4 w-4" />
+                                      Cancel Trip
+                                    </DropdownMenuItem>
+
+                                    <DropdownMenuItem
+                                      className="text-red-400"
+                                      onClick={() => setTripToDelete(trip.id)}
+                                    >
+                                      <Trash2 className="mr-2 h-4 w-4" />
+                                      Delete
+                                    </DropdownMenuItem>
+                                  </>
+                                )}
                               </DropdownMenuContent>
                             </DropdownMenu>
                           </div>
@@ -294,6 +323,7 @@ export function TripsTable({
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
+                if (!handleDeleteTrip) return;
                 if (tripToDelete) handleDeleteTrip(tripToDelete); // ✅ use state value
                 setTripToDelete(null); // close modal after action
               }}

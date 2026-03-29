@@ -10,6 +10,20 @@ import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 export default function TripsPage() {
   const tripState = useTrips();
 
+  const {
+    filteredTrips,
+    loading,
+    currentPage,
+    setCurrentPage,
+    totalPages,
+    startIndex,
+    tripsPerPage,
+    handleViewDetails,
+    handleEdit,
+    handleQuickStatusUpdate,
+    handleDeleteTrip,
+  } = tripState;
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
       <PageHeader
@@ -22,7 +36,19 @@ export default function TripsPage() {
         <Filters {...tripState} />
 
         {/* Trips Table */}
-        <TripsTable {...tripState} />
+        <TripsTable
+          trips={filteredTrips}
+          loading={loading}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalPages={totalPages}
+          startIndex={startIndex}
+          tripsPerPage={tripsPerPage}
+          handleViewDetails={handleViewDetails}
+          handleEdit={handleEdit}
+          handleQuickStatusUpdate={handleQuickStatusUpdate}
+          handleDeleteTrip={handleDeleteTrip}
+        />
       </main>
 
       {/* Trip Details Modal */}

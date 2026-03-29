@@ -194,52 +194,6 @@ export function useTrips(tripsPerPage = 10) {
     [authorizedRequest]
   );
 
-  // const handleExport = useCallback(
-  //   async (format: 'csv' | 'pdf') => {
-  //     toast('Preparing your export...');
-
-  //     await authorizedRequest<void>(async (token) => {
-  //       const params = new URLSearchParams({
-  //         format,
-  //         ...(statusFilter !== 'all' && { status: statusFilter }),
-  //         ...(searchTerm && {
-  //           driver_name: searchTerm,
-  //           client_name: searchTerm,
-  //         }),
-  //         ...(dateRange?.from && {
-  //           start_date: formatDateStart(dateRange.from),
-  //         }),
-  //         ...(dateRange?.to
-  //           ? { end_date: formatDateEnd(dateRange.to) }
-  //           : dateRange?.from
-  //             ? { end_date: formatDateEnd(dateRange.from) }
-  //             : {}),
-  //       });
-
-  //       const res = await fetch(
-  //         `https://medilogic-backend.onrender.com/export/trips/export?${params.toString()}`,
-  //         {
-  //           method: 'GET',
-  //           headers: { Authorization: `Bearer ${token}` },
-  //         }
-  //       );
-
-  //       if (!res.ok) throw new Error('Export request failed');
-  //       const blob = await res.blob();
-  //       const url = window.URL.createObjectURL(blob);
-  //       const a = document.createElement('a');
-  //       a.href = url;
-  //       a.download = `trips.${format}`;
-  //       document.body.appendChild(a);
-  //       a.click();
-  //       a.remove();
-  //     }, 'Failed to export trips');
-
-  //     toast.success('Export ready!');
-  //   },
-  //   [authorizedRequest, statusFilter, searchTerm, dateRange]
-  // );
-
   const filteredTrips = tripsList;
   const paginatedTrips = tripsList;
   const totalPages = Math.ceil(totalTrips / tripsPerPage);
@@ -500,48 +454,6 @@ export function useTrips(tripsPerPage = 10) {
 
     await updateTrip(selectedTrip.id, payload);
   };
-
-  // const handleUpdateTrip = async () => {
-  //   if (!selectedTrip) return;
-
-  //   if (userLoading) {
-  //     toast(
-  //       'Organization info is still loading, please try again after few seconds.'
-  //     );
-  //     return;
-  //   }
-
-  //   if (!user?.organization.id) {
-  //     toast.error('No organization found for this user');
-  //     return;
-  //   }
-
-  //   const payload: Partial<Trip> = {
-  //     driver_name: formData.driverName || undefined,
-  //     driver_id: formData.driverId || undefined,
-  //     delivery_type: formData.deliveryType,
-  //     scheduled_time: formData.dateTime
-  //       ? new Date(formData.dateTime).toISOString()
-  //       : undefined,
-  //     cost: formData.cost || undefined,
-  //     distance_km: formData.distanceKm || undefined,
-  //     client_id: formData.clientId,
-  //     client_name: formData.clientName,
-  //     organization_id: user?.organization?.id || undefined,
-  //     pickup_location: formData.pickupLocation || undefined,
-  //     dropoff_location: formData.dropoffLocation || undefined,
-  //     status: formData.status,
-  //     vehicle_type: formData.vehicleType || undefined,
-  //     location_zone: formData.locationZone || undefined,
-  //     shift_window: formData.shiftWindow || undefined,
-  //     compliance_flag: formData.complianceFlag,
-  //     recurrence_rule: formData.recurrenceRule,
-  //     priority: formData.priority,
-  //     custom_delivery_description: formData.customDeliveryDescription,
-  //   };
-
-  //   await updateTrip(selectedTrip.id, payload);
-  // };
 
   return {
     loading,
