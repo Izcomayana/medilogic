@@ -11,6 +11,7 @@ export type ClientTripsFilters = {
   status?: string;
   deliveryType?: string;
   dateRange?: { from?: Date; to?: Date };
+  searchTerm?: string;
 };
 
 export function useClientTrips() {
@@ -26,7 +27,10 @@ export function useClientTrips() {
     try {
       await authorizedRequest(async (token) => {
         const params = new URLSearchParams({
-          ...(filters.status && { status: filters.status }),
+          ...(filters.status &&
+            filters.status !== 'all' && {
+              status: filters.status,
+            }),
           ...(filters.deliveryType && {
             delivery_type: filters.deliveryType,
           }),

@@ -22,7 +22,8 @@ export type DateRangeLocal = { from?: Date; to?: Date };
 
 interface DateRangeFilterProps {
   value?: DateRangeLocal;
-  onChange: React.Dispatch<React.SetStateAction<DateRangeLocal | undefined>>;
+  onChange: (value: DateRangeLocal | undefined) => void;
+  // onChange: React.Dispatch<React.SetStateAction<DateRangeLocal | undefined>>;
   placeholder?: string;
 }
 
