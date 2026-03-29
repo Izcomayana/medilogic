@@ -10,9 +10,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import DateRangeFilter, {
-  DateRangeLocal,
-} from '../../../DateRange';
+import DateRangeFilter, { DateRangeLocal } from '../../../DateRange';
 
 type TripsFiltersProps = {
   totalCount: number;

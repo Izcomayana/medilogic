@@ -78,12 +78,6 @@ export function InvoiceDetails({
                   Invoice Information
                 </h3>
                 <div className="space-y-3">
-                  {/* <div>
-                    <Label className="text-gray-400 text-sm">
-                      Client / Organization
-                    </Label>
-                    <p className="text-white">{selectedInvoice.client}</p>
-                  </div> */}
                   <div>
                     <Label className="text-gray-400 text-sm">Status</Label>
                     <div className="mt-1">
@@ -111,32 +105,6 @@ export function InvoiceDetails({
                 </div>
               </div>
             </div>
-
-            {/* Trip Breakdown */}
-            {/* <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-white border-b border-gray-700 pb-2">
-                Trip Breakdown
-              </h3>
-              <div className="space-y-2">
-                {selectedInvoice.tripDetails.map((trip, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-3 bg-gray-700 rounded-lg border border-gray-600"
-                  >
-                    <div className="flex-1">
-                      <p className="text-white font-medium">{trip.tripId}</p>
-                      <p className="text-gray-400 text-sm">
-                        {trip.description}
-                      </p>
-                    </div>
-                    <p className="text-white font-semibold flex items-center gap-1">
-                      <DollarSign className="h-4 w-4" />£
-                      {trip.amount.toFixed(2)}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div> */}
 
             {/* Cost Breakdown */}
             <div className="bg-gray-700 rounded-lg p-4 border border-gray-600">
