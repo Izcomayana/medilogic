@@ -1,11 +1,12 @@
 'use client';
 
 import { useTrips } from '@/hooks/trips/useTrips';
-import { Filters } from './components/Filters';
-import { TripsTable } from './components/TripsTable';
+import { TripsFilters } from '../../../components/Trips/components/Filters';
+import { TripsTable } from '../../../components/Trips/components/TripsTable';
 import { EditTripModal } from './components/EditTrips';
 import { TripsDetailModal } from './components/TripDetail';
 import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
+import { CreateTrips } from './components/CreateTrip';
 
 export default function TripsPage() {
   const tripState = useTrips();
@@ -33,7 +34,17 @@ export default function TripsPage() {
 
       <main className="flex-1 p-6">
         {/* Filters and Controls */}
-        <Filters {...tripState} />
+        <TripsFilters
+          totalCount={tripState.filteredTrips.length}
+          searchTerm={tripState.searchTerm}
+          setSearchTerm={tripState.setSearchTerm}
+          statusFilter={tripState.statusFilter}
+          setStatusFilter={tripState.setStatusFilter}
+          dateRange={tripState.dateRange}
+          setDateRange={tripState.setDateRange}
+        >
+          <CreateTrips {...tripState} />
+        </TripsFilters>
 
         {/* Trips Table */}
         <TripsTable

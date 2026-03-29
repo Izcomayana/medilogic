@@ -2,7 +2,8 @@
 
 import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 import { useClientTrips } from '../../hooks/useClientTrips';
-import { TripsTable } from '@/app/(dashboard)/company-admin/(pages)/trips/components/TripsTable';
+import { TripsTable } from '@/app/(dashboard)/components/Trips/components/TripsTable';
+import { TripsFilters } from '@/app/(dashboard)/components/Trips/components/Filters';
 
 export default function Trips() {
   const { trips, loading, filters, setFilters } = useClientTrips();
@@ -15,6 +16,22 @@ export default function Trips() {
       />
 
       <main className="flex-1 p-6">
+        <TripsFilters
+          totalCount={trips.length}
+          searchTerm={filters.searchTerm || ''}
+          setSearchTerm={(val) =>
+            setFilters((prev) => ({ ...prev, searchTerm: val }))
+          }
+          statusFilter={filters.status || 'all'}
+          setStatusFilter={(val) =>
+            setFilters((prev) => ({ ...prev, status: val }))
+          }
+          dateRange={filters.dateRange}
+          setDateRange={(val) =>
+            setFilters((prev) => ({ ...prev, dateRange: val }))
+          }
+        />
+
         <TripsTable
           trips={trips}
           loading={loading}

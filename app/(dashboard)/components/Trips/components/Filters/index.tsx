@@ -1,6 +1,7 @@
+// components/TripsFilters.tsx
+
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin, Search, Filter } from 'lucide-react';
-import { useTrips } from '@/hooks/trips/useTrips';
 import {
   Select,
   SelectContent,
@@ -9,41 +10,52 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
-import DateRangeFilter from '../../../../../components/DateRange';
-import { CreateTrips } from '../CreateTrip';
+import DateRangeFilter, { DateRangeLocal } from '../../../DateRange';
 
-type FiltersProps = ReturnType<typeof useTrips>;
+type TripsFiltersProps = {
+  totalCount: number;
 
-export function Filters({
-  filteredTrips,
+  searchTerm: string;
+  setSearchTerm: (val: string) => void;
+
+  statusFilter: string;
+  setStatusFilter: (val: string) => void;
+
+  dateRange?: DateRangeLocal;
+  setDateRange: (val: DateRangeLocal | undefined) => void;
+
+  children?: React.ReactNode; // 👈 for CreateTrips button (admin only)
+};
+
+export function TripsFilters({
+  totalCount,
   searchTerm,
   setSearchTerm,
-  dateRange,
   statusFilter,
   setStatusFilter,
+  dateRange,
   setDateRange,
-}: FiltersProps) {
-  const tripState = useTrips();
 
+  children,
+}: TripsFiltersProps) {
   return (
     <Card className="dashboard-card mb-6 w-full items-start">
       <CardHeader className="w-full">
         <div className="flex flex-col md:flex-row justify-between md:items-center">
-          <CardTitle className="text-white flex  gap-2">
+          <CardTitle className="text-white flex gap-2">
             <MapPin className="h-5 w-5" />
-            Trips Management ({filteredTrips.length})
+            Trips ({totalCount})
           </CardTitle>
-
-          <CreateTrips {...tripState} />
+          {children} {/* ✅ Inject CreateTrips here */}
         </div>
       </CardHeader>
 
       <CardContent>
-        <div className="flex flex-col md:flex-row  gap-4 mb-4">
+        <div className="flex flex-col md:flex-row gap-4 mb-4">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
             <Input
-              placeholder="Search by driver, client, or location..."
+              placeholder="Search trips..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10 bg-gray-700 border-gray-600 text-white placeholder-gray-400"
