@@ -77,7 +77,7 @@ export function useClientTrips() {
     fetchClientTrips();
   }, [fetchClientTrips]);
 
-    const createClientTrip = useCallback(
+  const createClientTrip = useCallback(
     async (payload: CreateClientTripPayload) => {
       try {
         await authorizedRequest(async (token) => {
@@ -91,13 +91,9 @@ export function useClientTrips() {
         // 🔥 refresh trips
         fetchClientTrips();
       } catch (error: any) {
-        const msg =
-          error?.response?.data?.detail ??
-          'Failed to create trip';
+        const msg = error?.response?.data?.detail ?? 'Failed to create trip';
 
-        toast.error(
-          typeof msg === 'string' ? msg : JSON.stringify(msg)
-        );
+        toast.error(typeof msg === 'string' ? msg : JSON.stringify(msg));
       }
     },
     [authorizedRequest]
@@ -109,6 +105,6 @@ export function useClientTrips() {
     filters,
     setFilters,
     refetch: fetchClientTrips,
-    createClientTrip
+    createClientTrip,
   };
 }

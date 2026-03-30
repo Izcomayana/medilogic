@@ -12,7 +12,13 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { toast } from 'sonner';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -91,10 +97,12 @@ export function CreateClientTripModal({ createClientTrip }: Props) {
             <AlertDialogTitle>Create Trip</AlertDialogTitle>
           </AlertDialogHeader>
 
- <div className='grid gap-6 max-h-[70vh] overflow-y-auto'>
+          <div className="grid gap-6 max-h-[70vh] overflow-y-auto">
             <div className="">
               <Label className="text-gray-300">Delivery Type</Label>
-              <Select onValueChange={(val) => handleChange('delivery_type', val)}>
+              <Select
+                onValueChange={(val) => handleChange('delivery_type', val)}
+              >
                 <SelectTrigger className="bg-gray-700 border-gray-600 text-white mt-2">
                   <SelectValue placeholder="Select type of delivery" />
                 </SelectTrigger>
@@ -137,7 +145,9 @@ export function CreateClientTripModal({ createClientTrip }: Props) {
                 id="pickup"
                 placeholder="Pickup Location"
                 value={form.pickup_location}
-                onChange={(e) => handleChange('pickup_location', e.target.value)}
+                onChange={(e) =>
+                  handleChange('pickup_location', e.target.value)
+                }
                 className="bg-gray-700 border-gray-600 text-white mt-2"
               />
             </div>
@@ -150,7 +160,9 @@ export function CreateClientTripModal({ createClientTrip }: Props) {
                 id="dropoff"
                 placeholder="Dropoff Location"
                 value={form.dropoff_location}
-                onChange={(e) => handleChange('dropoff_location', e.target.value)}
+                onChange={(e) =>
+                  handleChange('dropoff_location', e.target.value)
+                }
                 className="bg-gray-700 border-gray-600 text-white mt-2"
               />
             </div>
@@ -169,38 +181,40 @@ export function CreateClientTripModal({ createClientTrip }: Props) {
               />
             </div>
 
-<div className="flex flex-col md:flex-row md:justify-between">
+            <div className="flex flex-col md:flex-row md:justify-between">
               <div className="">
-              <Label htmlFor="datetime" className="text-gray-300">
-                Trip Date & Time
-              </Label>
-              <Input
-                id="datetime"
-                type="datetime-local"
-                value={form.scheduled_time}
-                onChange={(e) => handleChange('scheduled_time', e.target.value)}
-                className="bg-gray-700 border-gray-600 text-white mt-2"
-              />
-            </div>
+                <Label htmlFor="datetime" className="text-gray-300">
+                  Trip Date & Time
+                </Label>
+                <Input
+                  id="datetime"
+                  type="datetime-local"
+                  value={form.scheduled_time}
+                  onChange={(e) =>
+                    handleChange('scheduled_time', e.target.value)
+                  }
+                  className="bg-gray-700 border-gray-600 text-white mt-2"
+                />
+              </div>
 
-            <div className="">
-              <Label className="text-gray-300 mb-2">Select Priority</Label>
+              <div className="">
+                <Label className="text-gray-300 mb-2">Select Priority</Label>
 
-              <Select
-                value={form.priority}
-                onValueChange={(val) => handleChange('priority', val)}
-              >
-                <SelectTrigger className="bg-gray-700 border-gray-600">
-                  <SelectValue placeholder="Priority" />
-                </SelectTrigger>
-                <SelectContent className="bg-gray-700">
-                  <SelectItem value="normal">Normal</SelectItem>
-                  <SelectItem value="urgent">Urgent</SelectItem>
-                  <SelectItem value="stat">Stat</SelectItem>
-                </SelectContent>
-              </Select>
+                <Select
+                  value={form.priority}
+                  onValueChange={(val) => handleChange('priority', val)}
+                >
+                  <SelectTrigger className="bg-gray-700 border-gray-600">
+                    <SelectValue placeholder="Priority" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-700">
+                    <SelectItem value="normal">Normal</SelectItem>
+                    <SelectItem value="urgent">Urgent</SelectItem>
+                    <SelectItem value="stat">Stat</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-</div>
 
             <div>
               <Label className="text-gray-300 mb-2">Delivery Pin</Label>
@@ -226,7 +240,7 @@ export function CreateClientTripModal({ createClientTrip }: Props) {
           </div>
 
           <AlertDialogFooter className="border-t border-gray-700 pt-4 sticky z-20">
-            <AlertDialogCancel 
+            <AlertDialogCancel
               disabled={loading}
               className="text-gray-700 hover:text-gray-300 hover:bg-gray-700"
             >

@@ -82,27 +82,27 @@ export const ComplianceSection = ({ formData, setFormData }: Props) => {
 
         {/* Delivery Pin */}
         <div className="">
-            {/* WTN Required */}
-            <Label className="text-gray-300 mb-2">WTN Required</Label>
-            <Select
-              value={formData.wtnRequired ? 'yes' : 'no'}
-              onValueChange={(v) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  wtnRequired: v === 'yes',
-                  wtnSerialNumber: v === 'yes' ? prev.wtnSerialNumber : '',
-                }))
-              }
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="WTN required?" />
-              </SelectTrigger>
+          {/* WTN Required */}
+          <Label className="text-gray-300 mb-2">WTN Required</Label>
+          <Select
+            value={formData.wtnRequired ? 'yes' : 'no'}
+            onValueChange={(v) =>
+              setFormData((prev) => ({
+                ...prev,
+                wtnRequired: v === 'yes',
+                wtnSerialNumber: v === 'yes' ? prev.wtnSerialNumber : '',
+              }))
+            }
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="WTN required?" />
+            </SelectTrigger>
 
-              <SelectContent>
-                <SelectItem value="yes">Yes</SelectItem>
-                <SelectItem value="no">No</SelectItem>
-              </SelectContent>
-            </Select>
+            <SelectContent>
+              <SelectItem value="yes">Yes</SelectItem>
+              <SelectItem value="no">No</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {/* WTN Serial Dropdown (only if yes) */}

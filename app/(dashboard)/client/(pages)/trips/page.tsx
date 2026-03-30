@@ -7,13 +7,8 @@ import { TripsFilters } from '@/app/(dashboard)/components/Trips/components/Filt
 import { CreateClientTripModal } from './CreateTrips';
 
 export default function Trips() {
-  const { 
-    trips, 
-    loading, 
-    filters, 
-    setFilters, 
-    createClientTrip,
-  } = useClientTrips();
+  const { trips, loading, filters, setFilters, createClientTrip } =
+    useClientTrips();
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
