@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { toast } from 'sonner';
 import { useAuthorizedRequest } from '@/hooks/useRequest';
-import { mapApiTripToUiTrip, Trip, UiTrip } from '@/hooks/trips/mappers';
+import { mapApiTripToUiTrip, UiTrip } from '@/hooks/trips/mappers';
 import { formatDateStart, formatDateEnd } from '@/utils/datetime';
 import { api } from '@/lib/api';
 
@@ -12,6 +12,12 @@ export type ClientTripsFilters = {
   deliveryType?: string;
   dateRange?: { from?: Date; to?: Date };
   searchTerm?: string;
+};
+
+type AssignedTripsResponse = {
+  client_id: string;
+  total_trips: number;
+  assigned_trips: Trip[];
 };
 
 type CreateClientTripPayload = {
@@ -25,33 +31,41 @@ type CreateClientTripPayload = {
   requires_pin: boolean;
 };
 
-export function useClientTrips() {
+type Trip = any;
+
+export function useClientTrips(clientId?: string) {
   const authorizedRequest = useAuthorizedRequest();
 
-  const [trips, setTrips] = useState<UiTrip[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [filters, setFilters] = useState<ClientTripsFilters>({});
+  const [createdTrips, setCreatedTrips] = useState<Trip[]>([]);
+  const [assignedTrips, setAssignedTrips] = useState<Trip[]>([]);
 
-  const fetchClientTrips = useCallback(async () => {
-    setLoading(true);
+  const [loadingCreated, setLoadingCreated] = useState(false);
+  const [loadingAssigned, setLoadingAssigned] = useState(false);
 
+  const [createdFilters, setCreatedFilters] = useState<ClientTripsFilters>({});
+  const [assignedFilters, setAssignedFilters] = useState<ClientTripsFilters>(
+    {}
+  );
+
+  const fetchCreatedTrips = async () => {
     try {
+      setLoadingCreated(true);
       await authorizedRequest(async (token) => {
         const params = new URLSearchParams({
-          ...(filters.status &&
-            filters.status !== 'all' && {
-              status: filters.status,
+          ...(createdFilters.status &&
+            createdFilters.status !== 'all' && {
+              status: createdFilters.status,
             }),
-          ...(filters.deliveryType && {
-            delivery_type: filters.deliveryType,
+          ...(createdFilters.deliveryType && {
+            delivery_type: createdFilters.deliveryType,
           }),
-          ...(filters.dateRange?.from && {
-            start_date: formatDateStart(filters.dateRange.from),
+          ...(createdFilters.dateRange?.from && {
+            start_date: formatDateStart(createdFilters.dateRange.from),
           }),
-          ...(filters.dateRange?.to
-            ? { end_date: formatDateEnd(filters.dateRange.to) }
-            : filters.dateRange?.from
-              ? { end_date: formatDateEnd(filters.dateRange.from) }
+          ...(createdFilters.dateRange?.to
+            ? { end_date: formatDateEnd(createdFilters.dateRange.to) }
+            : createdFilters.dateRange?.from
+              ? { end_date: formatDateEnd(createdFilters.dateRange.from) }
               : {}),
         });
 
@@ -64,18 +78,65 @@ export function useClientTrips() {
 
         const mapped = res.data.map(mapApiTripToUiTrip);
 
-        setTrips(mapped);
+        setCreatedTrips(mapped);
       }, 'Failed to fetch client trips');
-    } catch {
-      toast.error('Failed to fetch client trips');
+    } catch (err) {
+      console.error(err);
     } finally {
-      setLoading(false);
+      setLoadingCreated(false);
     }
-  }, [authorizedRequest, filters]);
+  };
+
+  const fetchAssignedTrips = async () => {
+    if (!clientId) return;
+
+    try {
+      setLoadingAssigned(true);
+
+      await authorizedRequest(async (token) => {
+        const params = new URLSearchParams();
+
+        if (assignedFilters.status && assignedFilters.status !== 'all') {
+          params.append('status', assignedFilters.status);
+        }
+
+        if (assignedFilters.dateRange?.from) {
+          params.append(
+            'start_date',
+            assignedFilters.dateRange.from.toISOString()
+          );
+        }
+
+        if (assignedFilters.dateRange?.to) {
+          params.append('end_date', assignedFilters.dateRange.to.toISOString());
+        }
+        const res = await api.get<AssignedTripsResponse>(
+          `/client/trips/client/${clientId}/trips?${params.toString()}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        const data = res.data;
+
+        const mapped = (data.assigned_trips || []).map(mapApiTripToUiTrip);
+
+        setAssignedTrips(mapped);
+      }, 'Failed to get assigned trips');
+    } catch (err) {
+      console.error('Assigned trips error:', err);
+    } finally {
+      setLoadingAssigned(false);
+    }
+  };
 
   useEffect(() => {
-    fetchClientTrips();
-  }, [fetchClientTrips]);
+    fetchCreatedTrips();
+  }, [createdFilters]);
+
+  useEffect(() => {
+    fetchAssignedTrips();
+  }, [assignedFilters, clientId]);
 
   const createClientTrip = useCallback(
     async (payload: CreateClientTripPayload) => {
@@ -89,7 +150,7 @@ export function useClientTrips() {
         toast.success('Trip created successfully');
 
         // 🔥 refresh trips
-        fetchClientTrips();
+        fetchCreatedTrips();
       } catch (error: any) {
         const msg = error?.response?.data?.detail ?? 'Failed to create trip';
 
@@ -99,12 +160,41 @@ export function useClientTrips() {
     [authorizedRequest]
   );
 
+  const cancelClientTrip = useCallback(
+    async (tripId: string) => {
+      try {
+        await authorizedRequest(async (token) => {
+          await api.patch(
+            `/client/trips/${tripId}/status`,
+            { status: 'cancelled' },
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+        }, 'Failed to cancel trip');
+
+        toast.success('Trip cancelled successfully');
+        fetchCreatedTrips(); // refresh
+      } catch {
+        toast.error('Failed to cancel trip');
+      }
+    },
+    [authorizedRequest, fetchCreatedTrips]
+  );
+
   return {
-    trips,
-    loading,
-    filters,
-    setFilters,
-    refetch: fetchClientTrips,
+    createdTrips,
+    loadingCreated,
+    createdFilters,
+    setCreatedFilters,
+
+    // assigned
+    assignedTrips,
+    loadingAssigned,
+    assignedFilters,
+    setAssignedFilters,
+    refetch: fetchCreatedTrips,
     createClientTrip,
+    cancelClientTrip,
   };
 }
