@@ -37,7 +37,6 @@ export function CreateClientTripModal({ createClientTrip }: Props) {
     custom_delivery_description: '',
     pickup_location: '',
     dropoff_location: '',
-    distance_km: '',
     scheduled_time: '',
     priority: 'normal',
     requires_pin: false,
@@ -62,7 +61,6 @@ export function CreateClientTripModal({ createClientTrip }: Props) {
     try {
       await createClientTrip({
         ...form,
-        distance_km: Number(form.distance_km || 0),
         scheduled_time: new Date(form.scheduled_time).toISOString(),
       });
 
@@ -73,7 +71,6 @@ export function CreateClientTripModal({ createClientTrip }: Props) {
         custom_delivery_description: '',
         pickup_location: '',
         dropoff_location: '',
-        distance_km: '',
         scheduled_time: '',
         priority: 'normal',
         requires_pin: false,
@@ -163,20 +160,6 @@ export function CreateClientTripModal({ createClientTrip }: Props) {
                 onChange={(e) =>
                   handleChange('dropoff_location', e.target.value)
                 }
-                className="bg-gray-700 border-gray-600 text-white mt-2"
-              />
-            </div>
-
-            <div className="">
-              <Label htmlFor="distanceKm" className="text-gray-300">
-                Distance (km)
-              </Label>
-              <Input
-                id="distanceKm"
-                type="number"
-                placeholder="Distance (km)"
-                value={form.distance_km}
-                onChange={(e) => handleChange('distance_km', e.target.value)}
                 className="bg-gray-700 border-gray-600 text-white mt-2"
               />
             </div>

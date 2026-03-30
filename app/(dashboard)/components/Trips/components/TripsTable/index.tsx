@@ -203,7 +203,21 @@ export function TripsTable({
                                 align="end"
                                 className="bg-gray-700 border-gray-600"
                               >
-                                {!isClientView && (
+                                {isClientView ? (
+                                  <DropdownMenuItem
+                                    onClick={() =>
+                                      handleQuickStatusUpdate?.(
+                                        trip.id,
+                                        'cancelled'
+                                      )
+                                    }
+                                    disabled={trip.status === 'cancelled'}
+                                    className="text-gray-100"
+                                  >
+                                    <XCircle className="mr-2 h-4 w-4" />
+                                    Cancel Trip
+                                  </DropdownMenuItem>
+                                ) : (
                                   <>
                                     <DropdownMenuItem
                                       onClick={() => handleViewDetails?.(trip)}

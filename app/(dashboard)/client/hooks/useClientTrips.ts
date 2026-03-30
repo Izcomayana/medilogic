@@ -99,6 +99,28 @@ export function useClientTrips() {
     [authorizedRequest]
   );
 
+  const cancelClientTrip = useCallback(
+    async (tripId: string) => {
+      try {
+        await authorizedRequest(async (token) => {
+          await api.patch(
+            `/client/trips/${tripId}/status`,
+            { status: 'cancelled' },
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+        }, 'Failed to cancel trip');
+
+        toast.success('Trip cancelled successfully');
+        fetchClientTrips(); // refresh
+      } catch {
+        toast.error('Failed to cancel trip');
+      }
+    },
+    [authorizedRequest, fetchClientTrips]
+  );
+
   return {
     trips,
     loading,
@@ -106,5 +128,6 @@ export function useClientTrips() {
     setFilters,
     refetch: fetchClientTrips,
     createClientTrip,
+    cancelClientTrip,
   };
 }
