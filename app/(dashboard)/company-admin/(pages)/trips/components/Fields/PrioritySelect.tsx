@@ -20,20 +20,6 @@ const PRIORITY_LEVELS = [
   { value: 'stat', label: 'Stat' },
 ] as const;
 
-type Priority = (typeof PRIORITY_LEVELS)[number]['value'];
-
-// const PRIORITY_LEVELS: { value: PriorityLevel; label: string }[] = [
-//   { value: 'normal', label: 'Normal' },
-//   { value: 'urgent', label: 'Urgent' },
-//   { value: 'stat', label: 'Stat' },
-// ];
-
-// const PRIORITY_LEVELS = [
-//   { value: 'normal', label: 'Normal' },
-//   { value: 'urgent', label: 'Urgent' },
-//   { value: 'stat', label: 'Stat' },
-// ];
-
 export const PrioritySelect = ({ formData, setFormData }: Props) => {
   return (
     <div>
