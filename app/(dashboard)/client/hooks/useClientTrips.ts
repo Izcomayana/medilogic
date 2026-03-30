@@ -14,6 +14,17 @@ export type ClientTripsFilters = {
   searchTerm?: string;
 };
 
+type CreateClientTripPayload = {
+  delivery_type: string;
+  custom_delivery_description?: string;
+  pickup_location: string;
+  dropoff_location: string;
+  distance_km: number;
+  scheduled_time: string;
+  priority: string;
+  requires_pin: boolean;
+};
+
 export function useClientTrips() {
   const authorizedRequest = useAuthorizedRequest();
 
@@ -66,11 +77,38 @@ export function useClientTrips() {
     fetchClientTrips();
   }, [fetchClientTrips]);
 
+    const createClientTrip = useCallback(
+    async (payload: CreateClientTripPayload) => {
+      try {
+        await authorizedRequest(async (token) => {
+          await api.post('/client/trips/', payload, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+        }, 'Failed to create trip');
+
+        toast.success('Trip created successfully');
+
+        // 🔥 refresh trips
+        fetchClientTrips();
+      } catch (error: any) {
+        const msg =
+          error?.response?.data?.detail ??
+          'Failed to create trip';
+
+        toast.error(
+          typeof msg === 'string' ? msg : JSON.stringify(msg)
+        );
+      }
+    },
+    [authorizedRequest]
+  );
+
   return {
     trips,
     loading,
     filters,
     setFilters,
     refetch: fetchClientTrips,
+    createClientTrip
   };
 }

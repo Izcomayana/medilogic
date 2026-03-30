@@ -82,7 +82,6 @@ export const ComplianceSection = ({ formData, setFormData }: Props) => {
 
         {/* Delivery Pin */}
         <div className="">
-          <div>
             {/* WTN Required */}
             <Label className="text-gray-300 mb-2">WTN Required</Label>
             <Select
@@ -104,7 +103,6 @@ export const ComplianceSection = ({ formData, setFormData }: Props) => {
                 <SelectItem value="no">No</SelectItem>
               </SelectContent>
             </Select>
-          </div>
         </div>
 
         {/* WTN Serial Dropdown (only if yes) */}

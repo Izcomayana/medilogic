@@ -4,9 +4,16 @@ import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 import { useClientTrips } from '../../hooks/useClientTrips';
 import { TripsTable } from '@/app/(dashboard)/components/Trips/components/TripsTable';
 import { TripsFilters } from '@/app/(dashboard)/components/Trips/components/Filters';
+import { CreateClientTripModal } from './CreateTrips';
 
 export default function Trips() {
-  const { trips, loading, filters, setFilters } = useClientTrips();
+  const { 
+    trips, 
+    loading, 
+    filters, 
+    setFilters, 
+    createClientTrip,
+  } = useClientTrips();
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">
@@ -30,7 +37,9 @@ export default function Trips() {
           setDateRange={(val) =>
             setFilters((prev) => ({ ...prev, dateRange: val }))
           }
-        />
+        >
+          <CreateClientTripModal createClientTrip={createClientTrip} />
+        </TripsFilters>
 
         <TripsTable
           trips={trips}
