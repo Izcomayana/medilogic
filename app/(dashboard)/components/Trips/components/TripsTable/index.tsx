@@ -64,6 +64,7 @@ type TripsTableProps = {
   handleDeleteTrip?: (id: string) => void;
 
   isClientView?: boolean;
+  allowCancel?: boolean;
 };
 
 export function TripsTable({
@@ -78,7 +79,8 @@ export function TripsTable({
   currentPage,
   setCurrentPage,
   loading,
-  isClientView, // ✅ FIX
+  isClientView,
+  allowCancel,
 }: TripsTableProps) {
   const [tripToDelete, setTripToDelete] = useState<string | null>(null);
 
@@ -110,7 +112,7 @@ export function TripsTable({
   }
 
   const filteredTrips = trips;
-  const paginatedTrips = trips;
+  const paginatedTrips = trips.slice(startIndex, startIndex + tripsPerPage);
 
   return (
     <>
@@ -206,12 +208,16 @@ export function TripsTable({
                                 {isClientView ? (
                                   <DropdownMenuItem
                                     onClick={() =>
+                                      allowCancel &&
                                       handleQuickStatusUpdate?.(
                                         trip.id,
                                         'cancelled'
                                       )
                                     }
-                                    disabled={trip.status === 'cancelled'}
+                                    disabled={
+                                      !allowCancel ||
+                                      trip.status === 'cancelled'
+                                    }
                                     className="text-gray-100"
                                   >
                                     <XCircle className="mr-2 h-4 w-4" />
