@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 import { formatDeliveryType } from '@/hooks/utils';
 
-export const Client = () => {
+export const ClientDashboard = () => {
   const clientId = '025995c9-4794-4e03-b361-4c2d5e7cf75b'; // TODO: replace dynamically
   const { data, loading } = useClientDashboard(clientId);
 

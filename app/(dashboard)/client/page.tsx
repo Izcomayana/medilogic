@@ -1,10 +1,10 @@
 import { RoleGuard } from '@/components/RoleGuard';
-import { Client } from '.';
+import { ClientDashboard } from '.';
 
 export default function Page() {
   return (
     <RoleGuard allowedRoles={['client']}>
-      <Client />
+      <ClientDashboard />
     </RoleGuard>
   );
 }
