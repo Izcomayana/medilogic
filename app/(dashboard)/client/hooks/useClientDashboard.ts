@@ -12,7 +12,7 @@ export type ClientDashboardFilters = {
   dateRange?: { from?: Date; to?: Date };
 };
 
-export function useClientDashboard(clientId: string) {
+export function useClientDashboard(clientId?: string) {
   const authorizedRequest = useAuthorizedRequest();
 
   const [data, setData] = useState<any>(null);

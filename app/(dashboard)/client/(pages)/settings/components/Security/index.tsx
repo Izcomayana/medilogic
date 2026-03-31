@@ -51,7 +51,7 @@ export function SecurityTab({
           </div>
 
           {/* Login Sessions */}
-          <div className="space-y-4">
+          {/* <div className="space-y-4">
             <h4 className="text-white font-medium">Active Login Sessions</h4>
             <div className="space-y-3">
               {loginSessions.map((session) => (
@@ -93,7 +93,7 @@ export function SecurityTab({
                 </div>
               ))}
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </TabsContent>

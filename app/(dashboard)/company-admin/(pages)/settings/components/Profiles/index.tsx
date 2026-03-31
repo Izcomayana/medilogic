@@ -23,7 +23,6 @@ export function ProfileTab({
 }: ProfileProps) {
   return (
     <TabsContent value="profile" className="p-6 space-y-10">
-      {/* ================= PERSONAL ACCOUNT ================= */}
       <section className="space-y-6">
         <h3 className="text-lg font-semibold text-white">Personal Account</h3>
 
