@@ -77,6 +77,7 @@ const sidebarLinksByRole: Record<
     { title: 'Dashboard', url: '/company-admin', icon: Home },
     { title: 'Users', url: '/company-admin/users', icon: Users },
     { title: 'Trips', url: '/company-admin/trips', icon: Route },
+    { title: 'Client Trips', url: '/company-admin/client-trips', icon: Route },
     {
       title: 'Trips Analytics',
       url: '/company-admin/tripsanalytics',
@@ -127,9 +128,9 @@ const sidebarLinksByRole: Record<
   client: [
     { title: 'Dashboard', url: '/client', icon: Home },
     { title: 'My Trips', url: '/client/trips', icon: ClipboardList },
-    { title: 'Settings', url: '/client/settings', icon: Settings },
     { title: 'Invoices', url: '/client/invoices', icon: Receipt },
     { title: 'Support', url: '/client/support', icon: MessageSquare },
+    { title: 'Settings', url: '/client/settings', icon: Settings },
   ],
 };
 

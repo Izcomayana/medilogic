@@ -206,23 +206,21 @@ export function TripsTable({
                                 className="bg-gray-700 border-gray-600"
                               >
                                 {isClientView ? (
-                                  <DropdownMenuItem
-                                    onClick={() =>
-                                      allowCancel &&
-                                      handleQuickStatusUpdate?.(
-                                        trip.id,
-                                        'cancelled'
-                                      )
-                                    }
-                                    disabled={
-                                      !allowCancel ||
-                                      trip.status === 'cancelled'
-                                    }
-                                    className="text-gray-100"
-                                  >
-                                    <XCircle className="mr-2 h-4 w-4" />
-                                    Cancel Trip
-                                  </DropdownMenuItem>
+                                  allowCancel && (
+                                    <DropdownMenuItem
+                                      onClick={() =>
+                                        handleQuickStatusUpdate?.(
+                                          trip.id,
+                                          'cancelled'
+                                        )
+                                      }
+                                      disabled={trip.status === 'cancelled'}
+                                      className="text-gray-100"
+                                    >
+                                      <XCircle className="mr-2 h-4 w-4" />
+                                      Cancel Trip
+                                    </DropdownMenuItem>
+                                  )
                                 ) : (
                                   <>
                                     <DropdownMenuItem
