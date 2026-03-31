@@ -11,9 +11,11 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { formatDeliveryType } from '@/hooks/utils';
+import { useProfile } from '@/hooks/useProfile';
 
 export const ClientDashboard = () => {
-  const clientId = '025995c9-4794-4e03-b361-4c2d5e7cf75b'; // TODO: replace dynamically
+  const { user } = useProfile();
+  const clientId = user?.user_id || undefined;
   const { data, loading } = useClientDashboard(clientId);
 
   if (loading) {
