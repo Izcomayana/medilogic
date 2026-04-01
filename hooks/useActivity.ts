@@ -1,9 +1,11 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import axios from 'axios';
 import { useAuthorizedRequest } from '@/hooks/useRequest';
 import { format } from 'date-fns';
+import { DateRangeLocal } from '@/app/(dashboard)/components/DateRange';
+import { formatDateEnd, formatDateStart } from '@/utils/datetime';
 
 export type ActivityLog = {
   id: string;
@@ -174,6 +176,51 @@ export function useActivityLogs(logsPerPage = 20) {
     startIndex + logsPerPage
   );
 
+  const handleExportLogs = useCallback(
+    async (format: 'csv' | 'pdf', range?: DateRangeLocal) => {
+      const isCSV = format === 'csv';
+
+      isCSV ? setExportingcsv(true) : setExportingpdf(true);
+
+      try {
+        await authorizedRequest(async (token) => {
+          const params = new URLSearchParams({
+            ...(range?.from && {
+              start_date: formatDateStart(range.from),
+            }),
+            ...(range?.to
+              ? { end_date: formatDateEnd(range.to) }
+              : range?.from
+                ? { end_date: formatDateEnd(range.from) }
+                : {}),
+          });
+
+          const res = await fetch(
+            `https://medilogic-backend.onrender.com/activity-logs/export/${format}?${params.toString()}`,
+            {
+              method: 'GET',
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+
+          if (!res.ok) throw new Error('Export failed');
+
+          const blob = await res.blob();
+          const url = window.URL.createObjectURL(blob);
+
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `activity-logs-${Date.now()}.${format}`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        }, `Failed to export ${format.toUpperCase()}`);
+      } finally {
+        isCSV ? setExportingcsv(false) : setExportingpdf(false);
+      }
+    },
+    [authorizedRequest]
+  );
   const exportLogsCSV = async () => {
     try {
       setExportingcsv(true);
@@ -276,5 +323,6 @@ export function useActivityLogs(logsPerPage = 20) {
     exportLogsCSV,
     exportingpdf,
     exportLogsPDF,
+    handleExportLogs,
   };
 }
