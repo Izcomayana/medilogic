@@ -26,7 +26,7 @@ type Props = {
   onExport: (format: 'csv' | 'pdf', range?: DateRangeLocal) => void;
 };
 
-export const ExportTripsDialog: React.FC<Props> = ({ onExport }) => {
+export const ExportActivityLogsDialog: React.FC<Props> = ({ onExport }) => {
   const [open, setOpen] = useState(false);
   const [format, setFormat] = useState<'csv' | 'pdf'>('csv');
   const [range, setRange] = useState<DateRangeLocal>();
@@ -44,30 +44,30 @@ export const ExportTripsDialog: React.FC<Props> = ({ onExport }) => {
 
   return (
     <>
-      <div className="flex gap-2">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button className="text-gray-700" variant="outline">
-              Export Trips
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem onClick={() => handleExportClick('csv')}>
-              <Download className="h-4 w-4" />
-              CSV
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => handleExportClick('pdf')}>
-              <Download className="h-4 w-4" />
-              PDF
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" className="text-gray-700 border-gray-600">
+            Export Logs
+          </Button>
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent>
+          <DropdownMenuItem onClick={() => handleExportClick('csv')}>
+            <Download className="h-4 w-4 mr-2" />
+            CSV
+          </DropdownMenuItem>
+
+          <DropdownMenuItem onClick={() => handleExportClick('pdf')}>
+            <Download className="h-4 w-4 mr-2" />
+            PDF
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
 
       <AlertDialog open={open} onOpenChange={setOpen}>
-        <AlertDialogContent className="bg-gray-900 border-gray-700">
+        <AlertDialogContent className="bg-[#162235] border-[#2c3a52]">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-gray-200">
+            <AlertDialogTitle className="text-blue-400">
               Select Export Date Range
             </AlertDialogTitle>
           </AlertDialogHeader>
@@ -77,17 +77,11 @@ export const ExportTripsDialog: React.FC<Props> = ({ onExport }) => {
           </div>
 
           <AlertDialogFooter>
-            <AlertDialogCancel
-              onClick={() => {
-                setRange(undefined);
-              }}
-            >
-              Cancel
-            </AlertDialogCancel>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
 
             <AlertDialogAction
               onClick={handleConfirm}
-              className="primary-button"
+              className="bg-blue-600 hover:bg-blue-700"
             >
               Export {format.toUpperCase()}
             </AlertDialogAction>
