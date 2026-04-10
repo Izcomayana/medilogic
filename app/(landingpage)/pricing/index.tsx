@@ -10,21 +10,8 @@ import RevenueTransparency from './components/RevenueTransparency';
 import ValueProposition from './components/ValueProposition';
 import PricingCTA from './components/PricingCTA/indes';
 import OrgSubscriptionTab from './components/SubscriptionsPlans';
-// import useOrgSubscription from '@/hooks/useOrgSub';
 
 export const Pricing = () => {
-  // const {
-  //   subscription,
-  //   loading,
-  //   paymentClientSecret,
-  //   isSaving,
-  //   subscribeOrg,
-  //   handlePaymentSuccess,
-  //   cancelSubscription,
-  //   resumeSubscription,
-  //   setPaymentClientSecret,
-  // } = useOrgSubscription();
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white overflow-x-hidden">
       <Hero
@@ -41,17 +28,6 @@ export const Pricing = () => {
         descBadgeText2={'No Long-term Commitments'}
       />
       <FreeTrial />
-      {/* <OrgSubscriptionTab 
-        subscription={subscription} 
-        loading={loading} 
-        paymentClientSecret={paymentClientSecret} 
-        isSaving={isSaving} 
-        subscribeOrg={subscribeOrg} 
-        handlePaymentSuccess={handlePaymentSuccess} 
-        cancelSubscription={cancelSubscription} 
-        resumeSubscription={resumeSubscription} 
-        setPaymentClientSecret={setPaymentClientSecret} 
-      /> */}
       <SubscriptionPlans />
       <MarketAffordability />
       {/* <RevenueTransparency /> */}
