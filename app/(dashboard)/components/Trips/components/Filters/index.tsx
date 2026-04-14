@@ -46,7 +46,7 @@ export function TripsFilters({
             <MapPin className="h-5 w-5" />
             Trips ({totalCount})
           </CardTitle>
-          {children} {/* ✅ Inject CreateTrips here */}
+          {children}
         </div>
       </CardHeader>
 
