@@ -7,6 +7,8 @@ import { EditTripModal } from './components/EditTrips';
 import { TripsDetailModal } from './components/TripDetail';
 import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 import { CreateTrips } from './components/CreateTrip';
+import { useEffect } from 'react';
+import { useBillingAccess } from '@/hooks/useBillingAccess';
 
 export default function TripsPage() {
   const tripState = useTrips();
@@ -24,6 +26,14 @@ export default function TripsPage() {
     handleQuickStatusUpdate,
     handleDeleteTrip,
   } = tripState;
+
+const { showWarningIfNeeded, loadingSub } = useBillingAccess();
+
+useEffect(() => {
+  if (!loadingSub) {
+    showWarningIfNeeded();
+  }
+}, [loading]);
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">

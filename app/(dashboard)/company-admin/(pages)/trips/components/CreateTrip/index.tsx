@@ -16,6 +16,8 @@ import TripForm, { CreateTripFormData } from './TripForm';
 import Link from 'next/link';
 import { Spinner } from '@/components/ui/spinner';
 import { ExportTripsDialog } from '../ExportTrip';
+import { BillingModal } from '@/app/(dashboard)/components/Billing';
+import { useBillingAccess } from '@/hooks/useBillingAccess';
 
 type CreateTripsProps = ReturnType<typeof useTrips> & {
   formData: CreateTripFormData;
@@ -32,6 +34,18 @@ export function CreateTrips({
   handleExport,
 }: CreateTripsProps) {
   const isSubmitDisabled = loading || !formData.clientId || !formData.dateTime;
+
+  const {
+    requireAccess,
+    showBillingModal,
+    setShowBillingModal,
+  } = useBillingAccess();
+
+  const handleOpenCreateTrip = () => {
+    requireAccess(() => {
+      setIsCreateModalOpen(true);
+    });
+  };
 
   return (
     <>
@@ -52,12 +66,10 @@ export function CreateTrips({
 
           <ExportTripsDialog onExport={handleExport} />
 
-          <AlertDialogTrigger asChild>
-            <Button className="primary-button">
-              <Plus className="h-4 w-4" />
-              New Trip{' '}
-            </Button>
-          </AlertDialogTrigger>
+          <Button className="primary-button" onClick={handleOpenCreateTrip}>
+            <Plus className="h-4 w-4" />
+            New Trip
+          </Button>
         </div>
 
         <AlertDialogContent className="bg-gray-800 border-gray-700 text-white lg:max-w-3xl">
@@ -96,6 +108,17 @@ export function CreateTrips({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {showBillingModal && (
+        <BillingModal
+          open={showBillingModal}
+          onClose={() => setShowBillingModal(false)}
+          onSuccess={() => {
+            setShowBillingModal(false);
+            setIsCreateModalOpen(true); // resume flow
+          }}
+        />
+      )}
     </>
   );
 }

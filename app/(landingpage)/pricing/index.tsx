@@ -2,14 +2,12 @@
 
 import { Hero } from '@/components/Hero';
 import { DollarSign, Shield, Zap } from 'lucide-react';
-import React from 'react';
 import FreeTrial from './components/FreeTrial';
 import SubscriptionPlans from './components/SubscriptionsPlans';
 import MarketAffordability from './components/MarketAffordability';
 import RevenueTransparency from './components/RevenueTransparency';
 import ValueProposition from './components/ValueProposition';
 import PricingCTA from './components/PricingCTA/indes';
-import OrgSubscriptionTab from './components/SubscriptionsPlans';
 
 export const Pricing = () => {
   return (
