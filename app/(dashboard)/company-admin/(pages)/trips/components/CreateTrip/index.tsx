@@ -35,11 +35,8 @@ export function CreateTrips({
 }: CreateTripsProps) {
   const isSubmitDisabled = loading || !formData.clientId || !formData.dateTime;
 
-  const {
-    requireAccess,
-    showBillingModal,
-    setShowBillingModal,
-  } = useBillingAccess();
+  const { requireAccess, showBillingModal, setShowBillingModal } =
+    useBillingAccess();
 
   const handleOpenCreateTrip = () => {
     requireAccess(() => {
