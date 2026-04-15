@@ -27,13 +27,13 @@ export default function TripsPage() {
     handleDeleteTrip,
   } = tripState;
 
-const { showWarningIfNeeded, loadingSub } = useBillingAccess();
+  const { showWarningIfNeeded, loadingSub } = useBillingAccess();
 
-useEffect(() => {
-  if (!loadingSub) {
-    showWarningIfNeeded();
-  }
-}, [loading]);
+  useEffect(() => {
+    if (!loadingSub) {
+      showWarningIfNeeded();
+    }
+  }, [loading]);
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-900">

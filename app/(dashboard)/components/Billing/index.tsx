@@ -23,9 +23,6 @@ const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 );
 
-// =======================
-// 🔥 MAIN MODAL
-// =======================
 export function BillingModal({
   open,
   onClose,
@@ -56,6 +53,8 @@ export function BillingModal({
     };
 
     init();
+
+    console.log('clientSecret:', clientSecret);
   }, [open]);
 
   return (
@@ -70,10 +69,7 @@ export function BillingModal({
             Preparing payment...
           </div>
         ) : (
-          <Elements
-            stripe={stripePromise}
-            options={{ clientSecret }}
-          >
+          <Elements stripe={stripePromise} options={{ clientSecret }}>
             <PaymentForm onSuccess={onSuccess} />
           </Elements>
         )}
@@ -82,9 +78,6 @@ export function BillingModal({
   );
 }
 
-// =======================
-// 💳 PAYMENT FORM
-// =======================
 function PaymentForm({ onSuccess }: { onSuccess: () => void }) {
   const stripe = useStripe();
   const elements = useElements();
@@ -138,9 +131,6 @@ function PaymentForm({ onSuccess }: { onSuccess: () => void }) {
     </div>
   );
 }
-
-
-
 
 // old card element
 

@@ -52,11 +52,11 @@ export function useBillingAccess() {
     }
   };
 
-const showWarningIfNeeded = () => {
-  if (!loadingSub && !hasPaymentMethod) {
-    toast.warning('Payment required to create trips');
-  }
-};
+  const showWarningIfNeeded = () => {
+    if (!loadingSub && !hasPaymentMethod) {
+      toast.warning('Payment required to create trips');
+    }
+  };
 
   return {
     status,
