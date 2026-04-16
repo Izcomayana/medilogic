@@ -44,8 +44,10 @@ export function useBillingAccess() {
     return hasPaymentMethod; // 🔥 ONLY THIS MATTERS NOW
   };
 
+  const hasAccess = canAccess();
+
   const requireAccess = (onAllowed: () => void) => {
-    if (canAccess()) {
+    if (hasAccess) {
       onAllowed();
     } else {
       setShowBillingModal(true);
@@ -67,5 +69,6 @@ export function useBillingAccess() {
     showBillingModal,
     setShowBillingModal,
     showWarningIfNeeded,
+    hasAccess,
   };
 }
