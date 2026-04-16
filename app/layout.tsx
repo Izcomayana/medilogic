@@ -13,7 +13,7 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
   title: 'Medilogic',
   description:
-    'Medilogic is a powerful, AI-enhanced logistics platform designed for the UK healthcare sector. It provides a secure and intelligent system to manage clinical waste transport, medical deliveries, and compliance with regulations such as GDPR, ISO 27001, and the NHS DSP Toolkit.',
+    'Medilogic is a powerful, AI-enhanced logistics platform designed for the UK healthcare sector...',
   keywords: [
     'Medilogic',
     'Healthcare Logistics',
@@ -26,45 +26,45 @@ export const metadata: Metadata = {
     'Healthcare Technology',
     'UK Healthcare',
   ],
-  authors: [{ name: 'Medilogic Team', url: 'https://your-domain.com' }],
+  authors: [{ name: 'Medilogic Team', url: 'www.medilogicglobal.co.uk' }],
   creator: 'Medilogic',
   publisher: 'Medilogic',
-  robots: 'index, follow', // allow search engines
+  robots: 'index, follow',
+
   openGraph: {
     title: 'Medilogic',
     description:
       'Medilogic is a powerful, AI-enhanced logistics platform designed for the UK healthcare sector.',
-    url: 'https://your-domain.com', // replace with actual domain
+    url: 'www.medilogicglobal.co.uk',
     siteName: 'Medilogic',
     locale: 'en_GB',
     type: 'website',
     images: [
       {
-        url: 'https://your-domain.com/og-image.png', // create an OG image (1200x630 recommended)
+        url: 'www.medilogicglobal.co.uk/og-image.png',
         width: 1200,
         height: 630,
         alt: 'Medilogic - AI-enhanced healthcare logistics platform',
       },
     ],
   },
+
   twitter: {
     card: 'summary_large_image',
     title: 'Medilogic',
-    description:
-      'AI-powered logistics platform for the UK healthcare sector — secure, compliant, and efficient.',
-    site: '@yourtwitterhandle', // optional
-    creator: '@yourtwitterhandle', // optional
-    images: ['https://your-domain.com/og-image.png'],
+    description: 'AI-powered logistics platform for the UK healthcare sector',
+    images: ['www.medilogicglobal.co.uk/og-image.png'],
   },
+
+  // ✅ FIXED HERE
   icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon-16x16.png',
-    apple: '/apple-touch-icon.png',
+    icon: '/favicon.svg',
   },
+
   manifest: '/site.webmanifest',
   category: 'Healthcare Logistics',
   alternates: {
-    canonical: 'https://your-domain.com',
+    canonical: 'www.medilogicglobal.co.uk',
   },
 };
 
