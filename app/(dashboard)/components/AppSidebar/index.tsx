@@ -24,6 +24,7 @@ import {
   BarChart3,
   // UserRoundPen,
   Star,
+  CreditCard,
 } from 'lucide-react';
 import { useAuth } from '@/components/auth';
 import {
@@ -103,6 +104,7 @@ const sidebarLinksByRole: Record<
     { title: 'Support', url: '/company-admin/support', icon: MessageSquare },
     { title: 'Compliance', url: '/company-admin/compliance', icon: Shield },
     { title: 'Activity Logs', url: '/company-admin/activity-logs', icon: Logs },
+    { title: 'Billing', url: '/company-admin/billing', icon: CreditCard },
     { title: 'Settings', url: '/company-admin/settings', icon: Settings },
   ],
   medilogic_driver: [
