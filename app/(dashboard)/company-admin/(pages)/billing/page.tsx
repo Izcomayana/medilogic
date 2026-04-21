@@ -23,6 +23,8 @@ export default function BillingPage() {
 
   const authorizedRequest = useAuthorizedRequest();
 
+  const isCancelable = data?.subscription_status === 'active';
+
   const fetchData = async () => {
     setLoading(true);
 
@@ -69,6 +71,22 @@ export default function BillingPage() {
 
     toast.success('Subscription synced');
     fetchData();
+  };
+
+  const handleManagePayment = async () => {
+    const newTab = window.open('', '_blank'); // open immediately
+
+    await authorizedRequest(async (token) => {
+      const res = await api.post(
+        '/billing/portal',
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (newTab) newTab.location.href = res.data.url;
+    }, 'Failed to open billing portal');
   };
 
   if (loading) {
@@ -140,8 +158,20 @@ export default function BillingPage() {
               </Button>
 
               <Button
+                onClick={handleManagePayment}
+                className="bg-purple-600 hover:bg-purple-500"
+              >
+                Manage Payment Method
+              </Button>
+
+              <Button
                 onClick={handleCancel}
-                className="bg-red-600 hover:bg-red-500"
+                disabled={!isCancelable}
+                className={`${
+                  isCancelable
+                    ? 'bg-red-600 hover:bg-red-500'
+                    : 'bg-gray-600 cursor-not-allowed'
+                }`}
               >
                 Cancel Subscription
               </Button>
