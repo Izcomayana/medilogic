@@ -85,16 +85,6 @@ export default function PaymentForm({
           throw err;
         }
       }
-
-      // await api.post(
-      //   '/subscribe',
-      //   {},
-      //   {
-      //     headers: {
-      //       Authorization: `Bearer ${token}`,
-      //     },
-      //   }
-      // );
     }, 'Subscription failed');
 
     toast.success('Card added & subscription activated');
