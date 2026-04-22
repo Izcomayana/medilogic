@@ -43,20 +43,20 @@ export default function BillingPage() {
     fetchData();
   }, []);
 
-  const handleCancel = async () => {
-    await authorizedRequest(async (token) => {
-      await api.post(
-        '/billing/cancel',
-        {},
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-    }, 'Cancel failed');
+  // const handleCancel = async () => {
+  //   await authorizedRequest(async (token) => {
+  //     await api.post(
+  //       '/billing/cancel',
+  //       {},
+  //       {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       }
+  //     );
+  //   }, 'Cancel failed');
 
-    toast.success('Subscription will cancel at period end');
-    fetchData();
-  };
+  //   toast.success('Subscription will cancel at period end');
+  //   fetchData();
+  // };
 
   const handleSync = async () => {
     await authorizedRequest(async (token) => {
@@ -172,7 +172,7 @@ export default function BillingPage() {
                 Manage Payment Method
               </Button>
 
-              <Button
+              {/* <Button
                 onClick={handleCancel}
                 disabled={!isCancelable}
                 className={`${
@@ -182,7 +182,7 @@ export default function BillingPage() {
                 }`}
               >
                 Cancel Subscription
-              </Button>
+              </Button> */}
             </div>
           </CardContent>
         </Card>
