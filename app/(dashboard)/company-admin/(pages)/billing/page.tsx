@@ -149,6 +149,14 @@ export default function BillingPage() {
               </p>
             </div>
 
+            <div className="">
+              {data.monthly_total === 0 && (
+                <p className="text-yellow-400 text-sm">
+                  Add drivers or clients to activate billing.
+                </p>
+              )}
+            </div>
+
             <div className="flex gap-2 pt-4">
               <Button
                 onClick={handleSync}

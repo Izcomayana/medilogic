@@ -34,18 +34,24 @@ export function BillingModal({
 }) {
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="bg-gray-900 border-gray-800 text-white max-w-md">
+      <DialogContent className="bg-gray-900 border-gray-800 text-white max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Add Payment Method</DialogTitle>
         </DialogHeader>
 
-        <BillingContent onSuccess={onSuccess} />
+        <BillingContent isOpen={open} onSuccess={onSuccess} />
       </DialogContent>
     </Dialog>
   );
 }
 
-function BillingContent({ onSuccess }: { onSuccess: () => void }) {
+function BillingContent({
+  onSuccess,
+  isOpen,
+}: {
+  onSuccess: () => void;
+  isOpen: boolean;
+}) {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -56,26 +62,29 @@ function BillingContent({ onSuccess }: { onSuccess: () => void }) {
     setLoading(true);
     setError(null);
 
-    await authorizedRequest(async (token) => {
-      const res = await api.post(
+    const res = await authorizedRequest(async (token) => {
+      return await api.post(
         '/billing/setup-intent',
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+    }, 'Failed to load payment form');
 
-      setClientSecret(res.data.client_secret);
-    }, 'Failed to load payment form').catch(() => {
+    if (!res) {
       setError('Failed to load payment form');
-    });
+      setLoading(false);
+      return;
+    }
 
+    setClientSecret(res.data.client_secret);
     setLoading(false);
   };
 
   useEffect(() => {
-    if (open()) init();
-  }, []);
+    if (isOpen) init();
+  }, [isOpen]);
 
   if (loading) {
     return (
@@ -124,37 +133,70 @@ function PaymentForm({
   const authorizedRequest = useAuthorizedRequest();
 
   const handleSubmit = async () => {
-    if (!stripe || !elements) return;
-
-    setLoading(true);
-
-    const { error } = await stripe.confirmSetup({
-      elements,
-      clientSecret,
-      redirect: 'if_required',
-    });
-
-    if (error) {
-      toast.error(error.message);
-      setLoading(false);
+    if (!stripe || !elements) {
+      toast.error('Payment system not ready');
       return;
     }
 
-    // 🔥 auto subscribe
-    await authorizedRequest(async (token) => {
-      await api.post(
-        '/subscribe',
-        {},
-        {
+    setLoading(true);
+
+    try {
+      // ✅ STEP 1: validate + confirm
+      const { error: submitError } = await elements.submit();
+      if (submitError) {
+        toast.error(submitError.message);
+        return;
+      }
+
+      const { error } = await stripe.confirmSetup({
+        elements,
+        clientSecret,
+        redirect: 'if_required',
+      });
+
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
+
+      // 🔥 STEP 2: CHECK BILL FIRST
+      const billing = await authorizedRequest(async (token) => {
+        return await api.get('/billing/summary', {
           headers: { Authorization: `Bearer ${token}` },
-        }
+        });
+      }, 'Failed to fetch billing');
+
+      const total = billing?.data?.monthly_total || 0;
+
+      if (total > 0) {
+        // ✅ ONLY subscribe if billable
+        await authorizedRequest(async (token) => {
+          return await api.post(
+            '/subscribe',
+            {},
+            {
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+        }, 'Subscription failed');
+
+        toast.success('Subscription activated');
+      } else {
+        toast.info(
+          'Card saved. Subscription will start once you add drivers or clients.'
+        );
+      }
+
+      // toast.success('Card added successfully');
+      onSuccess();
+    } catch (err: any) {
+      console.error('🔥 FULL ERROR:', err);
+      toast.error(
+        err?.response?.data?.detail || err?.message || 'Something went wrong'
       );
-    }, 'Subscription failed');
-
-    toast.success('Card added successfully');
-    onSuccess();
-
-    setLoading(false);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -165,7 +207,7 @@ function PaymentForm({
 
       <Button
         onClick={handleSubmit}
-        disabled={loading}
+        disabled={loading || !stripe || !elements}
         className="w-full bg-blue-600 hover:bg-blue-500"
       >
         {loading ? 'Processing...' : 'Save & Subscribe'}
@@ -173,89 +215,3 @@ function PaymentForm({
     </div>
   );
 }
-
-// 'use client';
-
-// import { useEffect, useState } from 'react';
-// import {
-//   Dialog,
-//   DialogContent,
-//   DialogHeader,
-//   DialogTitle,
-// } from '@/components/ui/dialog';
-// import { loadStripe } from '@stripe/stripe-js';
-// import { Elements } from '@stripe/react-stripe-js';
-// import { useAuthorizedRequest } from '@/hooks/useRequest';
-// import { api } from '@/lib/api';
-// import PaymentForm from './PaymentForm';
-
-// const stripePromise = loadStripe(
-//   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
-// );
-
-// export function BillingModal({
-//   open,
-//   onClose,
-//   onSuccess,
-// }: {
-//   open: boolean;
-//   onClose: () => void;
-//   onSuccess: () => void;
-// }) {
-//   const [clientSecret, setClientSecret] = useState<string | null>(null);
-//   const [loading, setLoading] = useState(true);
-//   const authorizedRequest = useAuthorizedRequest();
-
-//   useEffect(() => {
-//     if (!open) return;
-
-//     const init = async () => {
-//       setLoading(true);
-
-//       await authorizedRequest(async (token) => {
-//         const res = await api.post(
-//           '/billing/setup-intent',
-//           {},
-//           {
-//             headers: { Authorization: `Bearer ${token}` },
-//           }
-//         );
-
-//         setClientSecret(res.data.client_secret);
-//       }, 'Failed to initialize payment');
-
-//       setLoading(false);
-//     };
-
-//     init();
-//   }, [open]);
-
-//   ('use client');
-
-//   return (
-//     <Dialog open={open} onOpenChange={onClose}>
-//       <DialogContent className="bg-gray-900 border-gray-800 text-white max-w-md max-h-[90vh] overflow-y-auto">
-//         <DialogHeader>
-//           <DialogTitle>Add Payment Method</DialogTitle>
-//         </DialogHeader>
-
-//         {loading && (
-//           <div className="text-center text-gray-400">Preparing payment...</div>
-//         )}
-
-//         {!loading && clientSecret && (
-//           <Elements
-//             stripe={stripePromise}
-//             options={{ clientSecret }} // 🔥 REQUIRED
-//           >
-//             <PaymentForm clientSecret={clientSecret} onSuccess={onSuccess} />
-//           </Elements>
-//         )}
-
-//         {!loading && !clientSecret && (
-//           <div className="text-red-400">Failed to load payment form</div>
-//         )}
-//       </DialogContent>
-//     </Dialog>
-//   );
-// }
