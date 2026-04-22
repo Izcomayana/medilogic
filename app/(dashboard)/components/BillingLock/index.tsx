@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { CreditCard } from 'lucide-react';
 
 export function BillingLock({ children }: { children: React.ReactNode }) {
-  const { hasAccess, hasPaymentMethod, loadingSub } = useBillingAccess();
+  const { hasAccess, loadingSub, getMessage, getCTA } = useBillingAccess();
   const [showBillingModal, setShowBillingModal] = useState(false);
 
   if (loadingSub) return null;
@@ -28,17 +28,13 @@ export function BillingLock({ children }: { children: React.ReactNode }) {
 
           <h2 className="text-xl font-semibold text-white">Payment Required</h2>
 
-          <p className="text-gray-400 text-sm">
-            {hasPaymentMethod
-              ? 'Activate your subscription to access this feature.'
-              : 'Add a payment method to unlock this feature.'}
-          </p>
+          <p className="text-gray-400 text-sm">{getMessage()}</p>
 
           <Button
             onClick={() => setShowBillingModal(true)}
             className="w-full bg-blue-600 hover:bg-blue-500"
           >
-            {hasPaymentMethod ? 'Activate Subscription' : 'Add Payment Method'}
+            {getCTA()}
           </Button>
         </div>
       </div>
