@@ -4,6 +4,7 @@ import { PageHeader } from '@/app/(dashboard)/components/PageHeader';
 import { TripsTable } from '@/app/(dashboard)/components/Trips/components/TripsTable';
 import { useAdminClientTrips } from '@/hooks/trips/useAdminClientTrips';
 import { BillingLock } from '@/app/(dashboard)/components/BillingLock';
+import { useBillingAccess } from '@/hooks/useBillingAccess';
 
 import {
   Select,
@@ -14,8 +15,14 @@ import {
 } from '@/components/ui/select';
 
 export default function ClientTripsPage() {
+  const { hasAccess, loadingSub } = useBillingAccess();
+
   const { trips, clients, selectedClientId, setSelectedClientId, loading } =
-    useAdminClientTrips();
+    useAdminClientTrips({
+      enabled: hasAccess,
+    });
+
+  if (loadingSub) return null;
 
   return (
     <BillingLock>

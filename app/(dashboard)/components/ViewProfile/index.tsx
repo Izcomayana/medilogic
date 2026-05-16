@@ -28,16 +28,64 @@ import {
 import { useAuth } from '@/components/auth';
 import { useProfile } from '@/hooks/useProfile';
 import { useState } from 'react';
+import { toast } from 'sonner';
+import { api } from '@/lib/api';
+import { useAuthorizedRequest } from '@/hooks/useRequest';
 
 export function ViewProfileDropdown() {
   const { user, loading } = useProfile();
   const { logout } = useAuth();
   const [copied, setCopied] = useState(false);
 
-  const handleCopy = (code: string) => {
+  const authorizedRequest = useAuthorizedRequest();
+
+  const handleCopy = async (code: string) => {
     navigator.clipboard.writeText(code);
+
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000); // reset after 2s
+
+    const res = await authorizedRequest(async (token) => {
+      return await api.get('/billing/preview-change', {
+        params: {
+          add_drivers: 1,
+          add_clients: 0,
+        },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    }, 'Failed to preview billing');
+
+    // fallback if endpoint fails
+    if (!res?.data) {
+      toast.success('Organisation code copied', {
+        description: 'Adding a driver or client may affect your billing.',
+        duration: 5000,
+      });
+
+      setTimeout(() => setCopied(false), 2000);
+      return;
+    }
+
+    // defensive parsing
+    const immediateCharge =
+      res.data.immediate_charge ??
+      res.data.charge_today ??
+      res.data.today_charge ??
+      150;
+
+    const monthlyTotal =
+      res.data.new_monthly_total ??
+      res.data.monthly_total ??
+      res.data.total ??
+      350;
+
+    toast.success('Organisation code copied', {
+      description: `Adding a driver or client will charge £${immediateCharge} today and increase your monthly bill to £${monthlyTotal}.`,
+      duration: 7000,
+    });
+
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
@@ -109,12 +157,6 @@ export function ViewProfileDropdown() {
                         )}
                       </div>
                     )}
-                    {/* {user.organization.address && (
-                      <div className="flex items-center gap-2">
-                        <MapPin className="h-4 w-4" />
-                        <span>{user.organization.address}</span>
-                      </div>
-                    )} */}
                     {user.organization.phone_number && (
                       <div className="flex items-center gap-2">
                         <Phone className="h-4 w-4" />

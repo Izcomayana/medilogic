@@ -21,12 +21,30 @@ export const useAuthorizedRequest = () => {
           }
           validToken = refreshed;
         }
+
         return await requestFn(validToken);
       } catch (err: any) {
-        const msg = err?.response?.data?.detail || err.message || errorMessage;
+        let msg = errorMessage;
+
+        if (err?.response?.data?.detail) {
+          const detail = err.response.data.detail;
+
+          msg =
+            typeof detail === 'string'
+              ? detail
+              : detail.message || errorMessage;
+        } else if (err.message) {
+          msg = err.message;
+        }
+
         toast.error(msg);
         return null;
       }
+      // } catch (err: any) {
+      //   const msg = err?.response?.data?.detail || err.message || errorMessage;
+      //   toast.error(msg);
+      //   return null;
+      // }
     },
     [token, refreshAccessToken]
   );

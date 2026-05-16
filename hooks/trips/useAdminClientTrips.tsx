@@ -56,7 +56,8 @@ function adaptAdminTripToFullTrip(trip: ApiTrip): any {
   };
 }
 
-export function useAdminClientTrips() {
+// export function useAdminClientTrips(p0: { enabled: boolean; }) {
+export function useAdminClientTrips({ enabled = true } = {}) {
   const authorizedRequest = useAuthorizedRequest();
 
   const [trips, setTrips] = useState<UiTrip[]>([]);
@@ -108,8 +109,10 @@ export function useAdminClientTrips() {
   };
 
   useEffect(() => {
+    if (!enabled) return;
+
     fetchTrips();
-  }, []);
+  }, [enabled]);
 
   const filteredTrips = trips.filter(
     (trip: any) => trip.clientId === selectedClientId
